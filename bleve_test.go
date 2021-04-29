@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -15,6 +16,7 @@ var indexName string = "userIndex"
 //创建索引
 func TestCreate(t *testing.T) {
 
+	os.RemoveAll(indexName)
 	// open a new index
 	mapping := bleve.NewIndexMapping()
 	//userMapping := bleve.NewDocumentMapping()
@@ -42,13 +44,13 @@ func TestSave(t *testing.T) {
 		Id         string
 		Name       string
 		Address    string
-		age        int
+		Age        int
 		CreateTime time.Time
 	}{
 		Id:         "userId",
 		Name:       "测试中文名称",
 		Address:    "中国  zhengzhou",
-		age:        30,
+		Age:        30,
 		CreateTime: time.Now(),
 	}
 
@@ -56,14 +58,14 @@ func TestSave(t *testing.T) {
 		Id         string
 		Name       string
 		Address    string
-		age        int
+		Age        int
 		CreateTime time.Time
 		Other      string
 	}{
 		Id:         "userId 2",
 		Name:       "测试中文名称 2",
 		Address:    "zhongguo  zhengzhou",
-		age:        30,
+		Age:        35,
 		CreateTime: time.Now(),
 		Other:      "test Other ",
 	}
@@ -75,7 +77,7 @@ func TestSave(t *testing.T) {
 }
 
 // 根据ID查询
-func TestSearch1(t *testing.T) {
+func TestSearchID(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	query := bleve.NewDocIDQuery([]string{"userId"})
 	searchRequest := bleve.NewSearchRequest(query)
@@ -84,17 +86,17 @@ func TestSearch1(t *testing.T) {
 }
 
 //根据关键字查询
-func TestSearch2(t *testing.T) {
+func TestSearchKey(t *testing.T) {
 	index, _ := bleve.Open(indexName)
-	query := bleve.NewQueryStringQuery("中文")
+	queryKey := bleve.NewQueryStringQuery("中文2")
 
-	searchRequest := bleve.NewSearchRequest(query)
+	searchRequest := bleve.NewSearchRequest(queryKey)
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
 
 //精确查询指定的字段,类似SQL语句中的 where name='abc' ,要求name 字段必须使用keyword分词器
-func TestSearch3(t *testing.T) {
+func TestSearchJingQue(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
 	query := bleve.NewTermQuery("zhongguo  zhengzhou")
@@ -104,6 +106,63 @@ func TestSearch3(t *testing.T) {
 	searchRequest := bleve.NewSearchRequest(query)
 
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
+
+	searchResult, _ := index.Search(searchRequest)
+	fmt.Println(searchResult)
+}
+
+//数字范围查询
+func TestSearchNum(t *testing.T) {
+	index, _ := bleve.Open(indexName)
+	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
+	var min float64 = 20.00
+	var max float64 = 32.00
+	querynum := bleve.NewNumericRangeQuery(&min, &max)
+	//指定查询的字段
+	querynum.SetField("Age")
+
+	searchRequest := bleve.NewSearchRequest(querynum)
+
+	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
+
+	searchResult, _ := index.Search(searchRequest)
+	fmt.Println(searchResult)
+}
+
+//日期范围查询
+func TestSearchDate(t *testing.T) {
+	index, _ := bleve.Open(indexName)
+	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
+	start := time.Now().Add(time.Hour * -1)
+	end := time.Now()
+	querynum := bleve.NewDateRangeQuery(start, end)
+	//指定查询的字段
+	querynum.SetField("CreateTime")
+
+	searchRequest := bleve.NewSearchRequest(querynum)
+
+	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
+
+	searchResult, _ := index.Search(searchRequest)
+	fmt.Println(searchResult)
+}
+
+//符合查询,类似SQL中的 WHERE 后的条件语句
+func TestSearchWhere(t *testing.T) {
+	index, _ := bleve.Open(indexName)
+	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
+	var min float64 = 20.00
+	var max float64 = 40.00
+	queryNum := bleve.NewNumericRangeQuery(&min, &max)
+	//指定查询的字段
+	queryNum.SetField("Age")
+
+	queryKey := bleve.NewQueryStringQuery("复合查询")
+
+	//多个条件联查
+	query := bleve.NewConjunctionQuery(queryNum, queryKey)
+
+	searchRequest := bleve.NewSearchRequest(query)
 
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
