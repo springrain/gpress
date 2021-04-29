@@ -22,7 +22,7 @@ func main() {
 	router.Run(":8080")
 }
 
-//处理函数
+//请求响应函数
 func IndexApi(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{"name": "test"})
 	return
