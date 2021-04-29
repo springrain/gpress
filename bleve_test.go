@@ -6,7 +6,8 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/token/keyword"
+
+	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 var indexName string = "userIndex"
@@ -22,18 +23,16 @@ func TestCreate(t *testing.T) {
 
 	// Address的mapping映射,此字段不使用分词,只保存,用于term的绝对精确查询,类似 sql的 where = 条件查询
 	addressMapping := bleve.NewTextFieldMapping()
-	//不分词,只保存
+	//不分词,只保存,需要使用keyword分词器,注意是 github.com/blevesearch/bleve/v2/analysis/analyzer/keyword, token下也有一个keyword,别引错了!!!!!
 	//addressMapping.Index = false
-	//addressMapping.Analyzer = ""
-	//addressMapping.DocValues = false
 	//addressMapping.SkipFreqNorm = true
-	//addressMapping.Index = false
+	addressMapping.DocValues = false
 	addressMapping.Analyzer = keyword.Name
 
 	//设置字段映射
 	mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
-	//mapping.DefaultAnalyzer = "zh"
-	bleve.New(indexName, mapping)
+	_, err := bleve.New(indexName, mapping)
+	fmt.Println(err)
 
 }
 
