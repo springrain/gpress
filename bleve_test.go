@@ -147,7 +147,7 @@ func TestSearchDate(t *testing.T) {
 	fmt.Println(searchResult)
 }
 
-//符合查询,类似SQL中的 WHERE 后的条件语句
+//复合查询,类似SQL中的 WHERE 后的条件语句
 func TestSearchWhere(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
