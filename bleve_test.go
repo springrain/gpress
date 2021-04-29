@@ -10,7 +10,7 @@ import (
 
 var indexName string = "userIndex"
 
-//测试用例1：以字符分割
+//创建索引
 func TestCreate(t *testing.T) {
 	// open a new index
 	mapping := bleve.NewIndexMapping()
@@ -18,6 +18,7 @@ func TestCreate(t *testing.T) {
 
 }
 
+//保存数据
 func TestSave(t *testing.T) {
 	user := struct {
 		Id         string
@@ -54,6 +55,8 @@ func TestSave(t *testing.T) {
 	index.Index(user2.Id, user2)
 
 }
+
+// 根据ID查询
 func TestSearch1(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	query := bleve.NewDocIDQuery([]string{"userId"})
@@ -61,6 +64,8 @@ func TestSearch1(t *testing.T) {
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
+
+//根据关键字查询
 func TestSearch2(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	query := bleve.NewQueryStringQuery("zhengzhou")
@@ -69,6 +74,7 @@ func TestSearch2(t *testing.T) {
 	fmt.Println(searchResult)
 }
 
+//查询指定的字段
 func TestSearch3(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	query := bleve.NewTermQuery("zhengzhou")
