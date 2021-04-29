@@ -86,7 +86,7 @@ func TestSearch1(t *testing.T) {
 //根据关键字查询
 func TestSearch2(t *testing.T) {
 	index, _ := bleve.Open(indexName)
-	query := bleve.NewQueryStringQuery("zhongguo  zhengzhou")
+	query := bleve.NewQueryStringQuery("中文")
 
 	searchRequest := bleve.NewSearchRequest(query)
 	searchResult, _ := index.Search(searchRequest)
@@ -96,7 +96,7 @@ func TestSearch2(t *testing.T) {
 //查询指定的字段
 func TestSearch3(t *testing.T) {
 	index, _ := bleve.Open(indexName)
-	//查询的关键字,需要找到绝对匹配的方式,目前还是分词匹配
+	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
 	query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
