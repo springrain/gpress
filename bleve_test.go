@@ -91,6 +91,10 @@ func TestSearchKey(t *testing.T) {
 	queryKey := bleve.NewQueryStringQuery("中文2")
 
 	searchRequest := bleve.NewSearchRequest(queryKey)
+
+	//指定返回的字段
+	searchRequest.Fields = []string{"Age"}
+
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
@@ -157,13 +161,19 @@ func TestSearchWhere(t *testing.T) {
 	//指定查询的字段
 	queryNum.SetField("Age")
 
-	queryKey := bleve.NewQueryStringQuery("复合查询")
+	queryKey := bleve.NewQueryStringQuery("中文")
 
 	//多个条件联查
 	query := bleve.NewConjunctionQuery(queryNum, queryKey)
 
 	searchRequest := bleve.NewSearchRequest(query)
 
+	//查询所有的字段
+	searchRequest.Fields = []string{"*"}
+	//指定返回的字段
+	//searchRequest.Fields = []string{"Name", "Age"}
+
 	searchResult, _ := index.Search(searchRequest)
+
 	fmt.Println(searchResult)
 }
