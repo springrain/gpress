@@ -6,14 +6,33 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/analysis/token/keyword"
 )
 
 var indexName string = "userIndex"
 
 //创建索引
 func TestCreate(t *testing.T) {
+
 	// open a new index
 	mapping := bleve.NewIndexMapping()
+	//userMapping := bleve.NewDocumentMapping()
+	//userMapping.AddFieldMappingsAt("Address", bleve.NewBooleanFieldMapping())
+	//mapping.DefaultMapping = userMapping
+
+	// Address的mapping映射,此字段不使用分词,只保存,用于term的绝对精确查询,类似 sql的 where = 条件查询
+	addressMapping := bleve.NewTextFieldMapping()
+	//不分词,只保存
+	//addressMapping.Index = false
+	//addressMapping.Analyzer = ""
+	//addressMapping.DocValues = false
+	//addressMapping.SkipFreqNorm = true
+	//addressMapping.Index = false
+	addressMapping.Analyzer = keyword.Name
+
+	//设置字段映射
+	mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
+	//mapping.DefaultAnalyzer = "zh"
 	bleve.New(indexName, mapping)
 
 }
@@ -28,8 +47,8 @@ func TestSave(t *testing.T) {
 		CreateTime time.Time
 	}{
 		Id:         "userId",
-		Name:       "zcmsmessage",
-		Address:    "zhongguo  zhengzhou",
+		Name:       "测试中文名称",
+		Address:    "中国  zhengzhou",
 		age:        30,
 		CreateTime: time.Now(),
 	}
@@ -43,7 +62,7 @@ func TestSave(t *testing.T) {
 		Other      string
 	}{
 		Id:         "userId 2",
-		Name:       "zcmsmessage 2",
+		Name:       "测试中文名称 2",
 		Address:    "zhongguo  zhengzhou",
 		age:        30,
 		CreateTime: time.Now(),
@@ -68,7 +87,8 @@ func TestSearch1(t *testing.T) {
 //根据关键字查询
 func TestSearch2(t *testing.T) {
 	index, _ := bleve.Open(indexName)
-	query := bleve.NewQueryStringQuery("zhengzhou")
+	query := bleve.NewQueryStringQuery("zhongguo  zhengzhou")
+
 	searchRequest := bleve.NewSearchRequest(query)
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
@@ -78,10 +98,14 @@ func TestSearch2(t *testing.T) {
 func TestSearch3(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	//查询的关键字,需要找到绝对匹配的方式,目前还是分词匹配
-	query := bleve.NewTermQuery("zhengzhou")
+	query := bleve.NewTermQuery("zhongguo  zhengzhou")
+	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
 	query.SetField("Address")
 	searchRequest := bleve.NewSearchRequest(query)
+
+	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
+
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
