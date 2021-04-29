@@ -29,7 +29,11 @@ func IndexApi(c *gin.Context) {
 }
 
 //自定义函数
-func MD5(in string) (string, error) {
+func MD5(in string) ([]string, error) {
+	list := make([]string, 2)
+
 	hash := md5.Sum([]byte(in))
-	return hex.EncodeToString(hash[:]), nil
+	list[0] = in
+	list[1] = hex.EncodeToString(hash[:])
+	return list, nil
 }
