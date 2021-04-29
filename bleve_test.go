@@ -93,7 +93,7 @@ func TestSearch2(t *testing.T) {
 	fmt.Println(searchResult)
 }
 
-//查询指定的字段
+//精确查询指定的字段,类似SQL语句中的 where name='abc' ,要求name 字段必须使用keyword分词器
 func TestSearch3(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
