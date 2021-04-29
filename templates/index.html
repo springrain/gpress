@@ -7,6 +7,11 @@
   <body>
     <h3>This is index</h3>
     template data: {{ . }} </br>
-    MD5加密:{{md5 .name}}
+    MD5加密name:{{md5 .name}}  </br>
+
+    循环:
+    {{range $i, $v := (md5 .name)}}
+        {{ $i }}:{{ $v }}
+    {{end}}    
   </body>
 </html>
