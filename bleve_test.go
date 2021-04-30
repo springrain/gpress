@@ -70,9 +70,17 @@ func TestSave(t *testing.T) {
 		Other:      "test Other ",
 	}
 
+	user3 := make(map[string]interface{})
+	user3["Id"] = "userId 3"
+	user3["Name"] = "测试中文名称 3"
+	user3["Address"] = "中国 北京"
+	user3["Age"] = 36
+	user3["CreateTime"] = time.Now()
+
 	index, _ := bleve.Open(indexName)
 	index.Index(user.Id, user)
 	index.Index(user2.Id, user2)
+	index.Index("userId 3", user3)
 
 }
 
