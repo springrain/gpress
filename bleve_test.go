@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/yanyiwu/gojieba"
 	"os"
+	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -183,5 +186,36 @@ func TestSearchWhere(t *testing.T) {
 
 	searchResult, _ := index.Search(searchRequest)
 
+	fmt.Println(searchResult)
+}
+
+func TestGojieba(t *testing.T) {
+	str := "我是一个测试语句"
+	var words []string
+	use_hmm := true
+	x := gojieba.NewJieba()
+	defer x.Free()
+
+	words = x.CutForSearch(str, use_hmm)
+	fmt.Println(str)
+	fmt.Println("搜索引擎模式:", strings.Join(words, "/"))
+
+	index, _ := bleve.Open(indexName)
+
+	for i := 0; i < len(words); i++ {
+		jiebas := make(map[string]interface{})
+		jiebas["index"] = words[i]
+		jiebas["str"] = str
+		index.Index(strconv.FormatInt(time.Now().Unix(), 10), jiebas)
+	}
+
+	queryKey := bleve.NewQueryStringQuery("测试")
+
+	searchRequest := bleve.NewSearchRequest(queryKey)
+
+	//指定返回的字段
+	searchRequest.Fields = []string{"str"}
+
+	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
