@@ -219,3 +219,80 @@ func TestGojieba(t *testing.T) {
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
+
+func TestGojieba02(t *testing.T) {
+	os.RemoveAll(indexName)
+
+	message := []struct {
+		Id   string
+		Body string
+	}{
+		{
+			Id:   "1",
+			Body: "你好",
+		},
+		{
+			Id:   "2",
+			Body: "交代",
+		},
+		{
+			Id:   "3",
+			Body: "长江大桥",
+		},
+	}
+
+	indexMapping := bleve.NewIndexMapping()
+	//添加自定义标记生成器
+	err := indexMapping.AddCustomTokenizer("gojieba", map[string]interface{}{
+		"dictpath":     gojieba.DICT_DIR,
+		"hmmpath":      gojieba.HMM_PATH,
+		"userdictpath": gojieba.USER_DICT_PATH,
+		"idf":          gojieba.IDF_PATH,
+		"stop_words":   gojieba.STOP_WORDS_PATH,
+		"type":         "gojieba",
+	})
+
+	if err != nil {
+		panic(err)
+	}
+	err = indexMapping.AddCustomAnalyzer("gojieba", map[string]interface{}{
+		"type":      "gojieba",
+		"tokenizer": "gojieba",
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	index, err := bleve.New(indexName, indexMapping)
+	for _, msg := range message {
+		if err := index.Index(msg.Id, msg); err != nil {
+			panic(err)
+		}
+	}
+
+	querys := []string{
+		"你好世界",
+		"亲口交代",
+		"长江",
+	}
+
+	for _, q := range querys {
+		req := bleve.NewSearchRequest(bleve.NewQueryStringQuery(q))
+		req.Highlight = bleve.NewHighlight()
+		res, err := index.Search(req)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(res)
+	}
+
+	if jieba, ok := (index.Mapping().AnalyzerNamed("gojieba").Tokenizer).(*JiebaTokenizer); !ok {
+		panic("jieba.free() failed")
+	} else {
+		jieba.Free()
+	}
+	index.Close()
+
+	fmt.Println(err)
+}
