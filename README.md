@@ -35,6 +35,7 @@
 | IndexCode   | string      | 索引代码     | 否       |  类似表名  |
 | IndexName   | string      | 索引名称     | 否       |  类似表名中文说明  |
 | IndexType   | string      | 索引类型     | 否       | 处理多个Module的问题,同一种类型存在不同IndexCode,默认和 IndexCode 一致 |
+| BusinessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
 | FieldCode   | string      | 字段代码     |否       |    -  |
 | FieldName   | string      | 字段中文名称 | 否       |    -  |
 | FieldType   | int         | 字段类型     | -       | 数字(1),日期(2),文本(3),下拉框(4),单选(5),多选(6),上传图片(7),上传附件(8),轮播图(9)  |
@@ -42,7 +43,7 @@
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  默认 admin  |
-| SortNo      | int         | 排序        | -       |  正序  |
+| SortNo      | int         | 排序         | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
 ### 用户(索引名:User)
