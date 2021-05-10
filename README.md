@@ -25,7 +25,7 @@
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 
 
-## 字段属性(索引名:FieldInfo)
+### 字段属性(索引名:FieldInfo)
 记录所有索引字段code和中文说明,用于前台界面渲染展示.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
