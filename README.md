@@ -31,10 +31,13 @@
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键        | 否       |    -  |
-| IndexName   | string      | 索引名称     | 否       |    -  |
+| IndexCode   | string      | 索引代码     | 否       |  类似表名  |
+| IndexName   | string      | 索引名称     | 否       |  类似表名中文说明  |
+| IndexType   | string      | 索引类型     | 否       | 处理多个Module的问题,同一种类型存在不同IndexCode,默认和 IndexCode 一致 |
 | FieldCode   | string      | 字段代码     |否       |    -  |
 | FieldName   | string      | 字段中文名称 | 否       |    -  |
 | FieldType   | int         | 字段类型     | -       | 数字(1),日期(2),文本(3),下拉框(4),单选(5),多选(6),上传图片(7),上传附件(8),轮播图(9)  |
+| AnalyzerName| string      | 分词器名称    | -       | 为 '' 不分词  |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  默认 admin  |
@@ -82,11 +85,32 @@
 | HrefURL     | string      | 跳转路径     | 否       |    -  |
 | HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | PID         | string      | 父菜单ID     | 否       | 父菜单ID  |
+| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型 |
 | ComCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
 | TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | SortNo      | int         | 排序        | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+
+
+### 模型(索引名:Module)
+文章模型,只是用来声明字段,具体信息会有Content索引全部继承
+
+| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
+| ----------- | ----------- | ----------- | ------- | ----------- |
+| ID          | string      | 主键         | 否      |    -  |
+| ModuleName  | string      | 模型名称     | 否      |    -  |
+| Title       | string      | 文章标题     | 是      |     -  |
+| KeyWords    | string      | 关键字       | 否      |     -  |
+| Description | string      | 站点描述     | 否      |     -  |
+| Subtitle    | string      | 副标题       | 是      |     -  |
+| Content     | string      | 文章内容     | 是      |       |
+| CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
+| UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| CreateUser  | string      | 创建人       | -       |  默认 admin  |
+| SortNo      | int         | 排序        | -       |  正序  |
+| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+
 
 ### 文章内容(索引名:Content)
 文章内容表
@@ -94,10 +118,7 @@
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
-| Title       | string      | 文章标题     | 是      |     -  |
-| KeyWords    | string      | 关键字       | 否      |     -  |
-| Description | string      | 站点描述     | 否      |     -  |
-| Subtitle    | string      | 副标题       | 是      |     -  |
+| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型.所有字段在此展开,Content具有所有的字段,方便检索 |
 | NavMenuId   | string      | 导航ID       | 否      | 最好处理一下 分号 分词 类似in的效果  |
 | NavMenuName | string      | 导航名称     | 是      | 最好处理一下 分号 分词 类似in的效果  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
@@ -107,3 +128,4 @@
 | CreateUser  | string      | 创建人       | -       |  默认 admin  |
 | SortNo      | int         | 排序        | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+
