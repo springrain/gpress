@@ -96,8 +96,8 @@
 | KeyWords    | string      | 关键字       | 否      |     -  |
 | Description | string      | 站点描述     | 否      |     -  |
 | Subtitle    | string      | 副标题       | 是      |     -  |
-| NavMenuId   | string      | 导航ID       | 否      |     -  |
-| NavMenuName | string      | 导航名称     | 是      |     -  |
+| NavMenuId   | string      | 导航ID       | 否      | 最好处理一下 , 分词 类似in的效果  |
+| NavMenuName | string      | 导航名称     | 是      | 最好处理一下 , 分词 类似in的效果  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
 | Content     | string      | 文章内容     | 是      |       |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
