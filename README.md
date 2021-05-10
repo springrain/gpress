@@ -25,7 +25,7 @@
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 
 
-## 字段属性(索引名:fieldInfo)
+## 字段属性(索引名:FieldInfo)
 记录所有索引字段code和中文说明,用于前台界面渲染展示.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
@@ -41,8 +41,7 @@
 | SortNo      | int         | 排序        | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
-
-### 用户(索引名:user)
+### 用户(索引名:User)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
@@ -52,4 +51,58 @@
 | PassWord    | string      | 密码        | 否       |    -  |
 | UserName    | string      | 中文名称     | 否       |    -  |
 
+### 站点信息(SiteInfo)
+站点的信息,例如 title,logo,keywords,description等
 
+| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
+| ----------- | ----------- | ----------- | ------- | ----------- |
+| ID          | string      | 主键         | 否      |    -  |
+| Title       | string      | 站点名称     | 否      |     -  |
+| KeyWords    | string      | 关键字       | 否      |     -  |
+| Description | string      | 站点描述     | 否      |     -  |
+| Logo        | string      | logo        | 否      |     -  |
+| Favicon     | string      | Favicon     | 否      |     -  |
+
+### 页面模板(索引名:PageTemplate)
+后台只有一个用户,账号admin 密码默认admin 可以自己修改.
+
+| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
+| ----------- | ----------- | ----------- | ------- | ----------- |
+| ID          | string      | 主键        | 否       |    -  |
+| TemplateName| string      | 模板名称     | 否       |    -  |
+| TemplatePath| string      | 模板路径     | 否       |    -  |
+| SortNo      | int         | 排序        | -       |  正序  |
+| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+
+### 导航菜单(索引名:NavMenu)
+| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
+| ----------- | ----------- | ----------- | ------- | ----------- |
+| ID          | string      | 主键        | 否       |    -  |
+| MenuName    | string      | 菜单名称     | 否       |    -  |
+| HrefURL     | string      | 跳转路径     | 否       |    -  |
+| HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
+| TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
+| ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| SortNo      | int         | 排序        | -       |  正序  |
+| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+
+### 文章内容(索引名:Content)
+文章内容的核心
+
+| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
+| ----------- | ----------- | ----------- | ------- | ----------- |
+| ID          | string      | 主键         | 否      |    -  |
+| Title       | string      | 站点名称     | 是      |     -  |
+| KeyWords    | string      | 关键字       | 否      |     -  |
+| Description | string      | 站点描述     | 否      |     -  |
+| Subtitle    | string      | 副标题       | 是      |     -  |
+| NavMenuId   | string      | 导航ID       | 否      |     -  |
+| TemplateID  | string      | 模板Id       | 否      | 模板  |
+
+| Content     | string      | 文章内容     | 是      |       |
+
+| CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
+| UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| CreateUser  | string      | 创建人       | -       |  默认 admin  |
+| SortNo      | int         | 排序        | -       |  正序  |
+| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
