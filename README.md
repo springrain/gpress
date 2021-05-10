@@ -95,6 +95,7 @@
 
 ### 模型(索引名:Module)
 文章模型,只是用来声明字段,具体信息会有Content索引全部继承
+暂时不使用了,使用 FieldInfo.IndexType='Module' 代替,这里只做参考
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
@@ -118,6 +119,7 @@
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
+| HrefURL     | string      | 页面路径     | 否       |    -  |
 | FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型字段.所有字段在此展开,Content具有所有的字段,方便检索 |
 | NavMenuId   | string      | 导航ID       | 否      | 最好处理一下 分号 分词 类似in的效果  |
 | NavMenuName | string      | 导航名称     | 是      | 最好处理一下 分号 分词 类似in的效果  |
