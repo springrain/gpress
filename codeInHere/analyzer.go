@@ -3,8 +3,8 @@ package codeInHere
 import (
 	"errors"
 
-	"github.com/blevesearch/bleve/analysis"
-	"github.com/blevesearch/bleve/registry"
+	"github.com/blevesearch/bleve/v2/analysis"
+	"github.com/blevesearch/bleve/v2/registry"
 )
 
 // 当调用analysis这个包时  会执行这里的方法

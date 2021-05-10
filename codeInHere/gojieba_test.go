@@ -3,13 +3,14 @@ package codeInHere
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/blevesearch/bleve"
-	"github.com/yanyiwu/gojieba"
 	"log"
 	"os"
 	"runtime"
 	"runtime/pprof"
 	"testing"
+
+	"github.com/blevesearch/bleve/v2"
+	"github.com/yanyiwu/gojieba"
 )
 
 func BenchmarkExample(b *testing.B) {
