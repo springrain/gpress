@@ -81,6 +81,8 @@
 | MenuName    | string      | 菜单名称     | 否       |    -  |
 | HrefURL     | string      | 跳转路径     | 否       |    -  |
 | HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
+| PID         | string      | 父菜单ID     | 否       | 父菜单ID  |
+| comCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
 | TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | SortNo      | int         | 排序        | -       |  正序  |
