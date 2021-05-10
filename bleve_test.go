@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/yanyiwu/gojieba"
 	"os"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/yanyiwu/gojieba"
 
 	"github.com/blevesearch/bleve/v2"
 
