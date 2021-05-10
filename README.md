@@ -87,7 +87,7 @@
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
 ### 文章内容(索引名:Content)
-文章内容的核心
+文章内容表
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
@@ -97,6 +97,7 @@
 | Description | string      | 站点描述     | 否      |     -  |
 | Subtitle    | string      | 副标题       | 是      |     -  |
 | NavMenuId   | string      | 导航ID       | 否      |     -  |
+| NavMenuName | string      | 导航名称     | 是      |     -  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
 | Content     | string      | 文章内容     | 是      |       |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
