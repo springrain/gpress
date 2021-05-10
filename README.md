@@ -98,9 +98,7 @@
 | Subtitle    | string      | 副标题       | 是      |     -  |
 | NavMenuId   | string      | 导航ID       | 否      |     -  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
-
 | Content     | string      | 文章内容     | 是      |       |
-
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  默认 admin  |
