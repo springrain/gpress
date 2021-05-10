@@ -85,7 +85,7 @@
 | HrefURL     | string      | 跳转路径     | 否       |    -  |
 | HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | PID         | string      | 父菜单ID     | 否       | 父菜单ID  |
-| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型 |
+| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型字段 |
 | ComCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
 | TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
@@ -118,7 +118,7 @@
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
-| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型.所有字段在此展开,Content具有所有的字段,方便检索 |
+| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型字段.所有字段在此展开,Content具有所有的字段,方便检索 |
 | NavMenuId   | string      | 导航ID       | 否      | 最好处理一下 分号 分词 类似in的效果  |
 | NavMenuName | string      | 导航名称     | 是      | 最好处理一下 分号 分词 类似in的效果  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
