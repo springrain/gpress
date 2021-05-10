@@ -32,7 +32,7 @@
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键        | 否       |    -  |
-| IndexCode   | string      | 索引代码     | 否       |  类似表名  |
+| IndexCode   | string      | 索引代码     | 否       |  类似表名 User,SiteInfo,PageTemplate,NavMenu,Module,Content  |
 | IndexName   | string      | 索引名称     | 否       |  类似表名中文说明  |
 | IndexType   | string      | 索引类型     | 否       | 处理多个Module的问题,同一种类型存在不同IndexCode,默认和 IndexCode 一致 |
 | BusinessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
