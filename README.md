@@ -50,7 +50,7 @@
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序         | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 ### 用户(索引名:User)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
@@ -83,7 +83,7 @@
 | TemplateName| string      | 模板名称     | 否       |    -  |
 | TemplatePath| string      | 模板路径     | 否       |    -  |
 | SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 ### 导航菜单(索引名:NavMenu)
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
@@ -99,7 +99,7 @@
 | TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 
 ### 模型(索引名:Module)
@@ -117,7 +117,7 @@
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 ### 模型数据(索引名:Module_demo)
 在IndexField表里设置IndexCode='Module',记录所有的Module.  
@@ -136,7 +136,7 @@
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 
 ### 文章内容(索引名:Content)
@@ -155,5 +155,5 @@
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
