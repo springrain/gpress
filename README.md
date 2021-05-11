@@ -48,7 +48,7 @@
 | AnalyzerName| string      | 分词器名称    | -       | 为 '' 不分词  |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
-| CreateUser  | string      | 创建人       | -       |  默认 admin  |
+| CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序         | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
@@ -115,7 +115,7 @@
 | ModuleName  | string      | 模型名称     | 否      |    -  |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
-| CreateUser  | string      | 创建人       | -       |  默认 admin  |
+| CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序        | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
@@ -134,7 +134,7 @@
 | Content     | string      | 文章内容     | 是      |       |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
-| CreateUser  | string      | 创建人       | -       |  默认 admin  |
+| CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序        | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
@@ -153,7 +153,7 @@
 | Content     | string      | 文章内容     | 是      |       |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
-| CreateUser  | string      | 创建人       | -       |  默认 admin  |
+| CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序        | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
