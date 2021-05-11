@@ -34,9 +34,9 @@
 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)  
 这个可能是唯一的Struct......
 
-用于处理类型字段,需要这两个字段
-FieldFormat | string      | 数据格式,用于日期或者数字| 否    
-DefaultValue| string      | 默认值| 否  
+用于处理类型字段,需要这两个字段    
+FieldFormat | string      | 数据格式,用于日期或者数字| 否      
+DefaultValue| string      | 默认值| 否      
 
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
