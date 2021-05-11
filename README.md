@@ -43,7 +43,7 @@
 | BusinessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
 | FieldCode   | string      | 字段代码     |否       |    -  |
 | FieldName   | string      | 字段中文名称 | 否       |    -  |
-| FieldType   | int         | 字段类型     | -       | 数字(1),日期(2),文本(3),下拉框(4),单选(5),多选(6),上传图片(7),上传附件(8),轮播图(9)  |
+| FieldType   | int         | 字段类型     | -       | 数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)  |
 | AnalyzerName| string      | 分词器名称    | -       | 为 '' 不分词  |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
@@ -89,6 +89,7 @@
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键        | 否       |    -  |
 | MenuName    | string      | 菜单名称     | 否       |    -  |
+| MenuName    | string      | 菜单名称     | 否       |    -  |
 | HrefURL     | string      | 跳转路径     | 否       |    -  |
 | HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | PID         | string      | 父菜单ID     | 否       | 父菜单ID  |
@@ -127,6 +128,7 @@
 | Title       | string      | 文章标题     | 是      |     -  |
 | KeyWords    | string      | 关键字       | 否      |     -  |
 | Description | string      | 站点描述     | 否      |     -  |
+| PageURL     | string      | 自身页面路径 | 否       |    -  |
 | Subtitle    | string      | 副标题       | 是      |     -  |
 | Content     | string      | 文章内容     | 是      |       |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
@@ -142,8 +144,8 @@
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
+| ModuleIndexCode| string   | 模型的Code   | 否      |  文章使用的模型字段 |
 | HrefURL     | string      | 页面路径     | 否       |    -  |
-| ModuleIndexCode| string   | 模型的Code   | 否   |  文章默认使用的模型字段 |
 | NavMenuId   | string      | 导航ID       | 否      | 最好实现 分号(,)分词器 类似in的效果  |
 | NavMenuName | string      | 导航名称     | 是      | 最好实现 分号(,)分词器 类似in的效果  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
