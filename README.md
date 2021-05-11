@@ -24,10 +24,10 @@
 所有的数据结构都使用Map实现,不再使用struct.因使用Bleve做NoSQL数据库,所以map可以任意添加字段.  
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 还需要实现 分号(,) 的分词器,实现类似sql in 的效果.  
-在FieldInfo表里设置IndexCode='Module',然后为每个实例化的Module创建一个Index.  
+在IndexField表里设置IndexCode='Module',然后为每个实例化的Module创建一个Index.  
 
 
-### 字段属性(索引名:FieldInfo)
+### 字段属性(索引名:IndexField)
 记录所有索引字段code和中文说明,用于前台界面渲染展示.  
 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,统一从这里查询出来.(目前建议这样做,因为全是Map)
 
@@ -88,7 +88,7 @@
 | HrefURL     | string      | 跳转路径     | 否       |    -  |
 | HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | PID         | string      | 父菜单ID     | 否       | 父菜单ID  |
-| ModuleCode  | string      | Module的索引名称 | 否    |  导航菜单下的文章默认使用的模型字段 |
+| ModuleIndexCode| string | Module的索引名称 | 否    |  导航菜单下的文章默认使用的模型字段 |
 | ComCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
 | TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
@@ -96,15 +96,28 @@
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
 
-### 模型(索引名:Module)
+### 模型数据(索引名:Module_demo)
 ~~文章模型,只是用来声明字段,具体信息会有Content索引全部继承~~  
 暂时不使用了,这里只做参考.  
-在FieldInfo表里设置IndexCode='Module',然后为每个实例化的Module创建一个Index.
+在IndexField表里设置IndexCode='Module',然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
+| ModuleIndexCode | string  | 模型Code     | 否      |    -  |
 | ModuleName  | string      | 模型名称     | 否      |    -  |
+| CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
+| UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| CreateUser  | string      | 创建人       | -       |  默认 admin  |
+| SortNo      | int         | 排序        | -       |  正序  |
+| Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
+
+### 模型数据(索引名:Module_demo)
+在IndexField表里设置IndexCode='Module',然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
+
+| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
+| ----------- | ----------- | ----------- | ------- | ----------- |
+| ID          | string      | 主键         | 否      |    -  |
 | Title       | string      | 文章标题     | 是      |     -  |
 | KeyWords    | string      | 关键字       | 否      |     -  |
 | Description | string      | 站点描述     | 否      |     -  |
@@ -124,7 +137,7 @@
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
 | HrefURL     | string      | 页面路径     | 否       |    -  |
-| ModuleCode  | string      | Module的索引名称 | 否    |  导航菜单下的文章默认使用的模型字段 |
+| ModuleIndexCode| string   | 模型的Code   | 否   |  文章默认使用的模型字段 |
 | NavMenuId   | string      | 导航ID       | 否      | 最好处理一下 分号 分词 类似in的效果  |
 | NavMenuName | string      | 导航名称     | 是      | 最好处理一下 分号 分词 类似in的效果  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
