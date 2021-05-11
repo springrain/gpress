@@ -35,8 +35,7 @@
 这个可能是唯一的Struct......
 
 用于处理类型字段,需要这两个字段    
-FieldFormat | string      | 数据格式,用于日期或者数字| 否      
-DefaultValue| string      | 默认值| 否      
+
 
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
@@ -48,6 +47,8 @@ DefaultValue| string      | 默认值| 否
 | FieldCode   | string      | 字段代码     |否       |    -  |
 | FieldName   | string      | 字段中文名称 | 否       |    -  |
 | FieldType   | int         | 字段类型     | -       | 数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)  |
+| FieldFormat | string      | 数据格式,用于日期或者数字| 否 |  -  |    
+| DefaultValue| string      | 默认值       | 否      |       -  |
 | AnalyzerName| string      | 分词器名称    | -       | 为 '' 不设置  |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
