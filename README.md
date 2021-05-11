@@ -23,6 +23,8 @@
 ## 数据结构
 所有的数据结构都使用Map实现,不再使用struct.因使用Bleve做NoSQL数据库,所以map可以任意添加字段.  
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
+还需要实现 分号(,) 的分词器,实现类似sql in 的效果.  
+在FieldInfo表里设置IndexCode='Module',然后为每个实例化的Module创建一个Index.  
 
 
 ### 字段属性(索引名:FieldInfo)
@@ -34,7 +36,6 @@
 | ID          | string      | 主键        | 否       |    -  |
 | IndexCode   | string      | 索引代码     | 否       |  类似表名 User,SiteInfo,PageTemplate,NavMenu,Module,Content  |
 | IndexName   | string      | 索引名称     | 否       |  类似表名中文说明  |
-| IndexType   | string      | 索引类型     | 否       | 处理多个Module的问题,同一种类型存在不同IndexCode,默认和 IndexCode 一致 |
 | BusinessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
 | FieldCode   | string      | 字段代码     |否       |    -  |
 | FieldName   | string      | 字段中文名称 | 否       |    -  |
@@ -87,7 +88,7 @@
 | HrefURL     | string      | 跳转路径     | 否       |    -  |
 | HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | PID         | string      | 父菜单ID     | 否       | 父菜单ID  |
-| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型字段 |
+| ModuleCode  | string      | Module的索引名称 | 否    |  导航菜单下的文章默认使用的模型字段 |
 | ComCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
 | TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
@@ -97,7 +98,8 @@
 
 ### 模型(索引名:Module)
 ~~文章模型,只是用来声明字段,具体信息会有Content索引全部继承~~  
-暂时不使用了,使用 FieldInfo.IndexType='Module' 代替,这里只做参考
+暂时不使用了,这里只做参考.  
+在FieldInfo表里设置IndexCode='Module',然后为每个实例化的Module创建一个Index.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
@@ -122,7 +124,7 @@
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
 | HrefURL     | string      | 页面路径     | 否       |    -  |
-| FieldInfoIndexName    | string   | 模型字段的ID,FieldInfo.IndexType='Module' | 否 |  导航菜单下的文章默认使用的模型字段.所有字段在此展开,Content具有所有的字段,方便检索 |
+| ModuleCode  | string      | Module的索引名称 | 否    |  导航菜单下的文章默认使用的模型字段 |
 | NavMenuId   | string      | 导航ID       | 否      | 最好处理一下 分号 分词 类似in的效果  |
 | NavMenuName | string      | 导航名称     | 是      | 最好处理一下 分号 分词 类似in的效果  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
