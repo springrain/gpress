@@ -144,8 +144,8 @@
 | ID          | string      | 主键         | 否      |    -  |
 | HrefURL     | string      | 页面路径     | 否       |    -  |
 | ModuleIndexCode| string   | 模型的Code   | 否   |  文章默认使用的模型字段 |
-| NavMenuId   | string      | 导航ID       | 否      | 最好处理一下 分号 分词 类似in的效果  |
-| NavMenuName | string      | 导航名称     | 是      | 最好处理一下 分号 分词 类似in的效果  |
+| NavMenuId   | string      | 导航ID       | 否      | 最好实现 分号(,)分词器 类似in的效果  |
+| NavMenuName | string      | 导航名称     | 是      | 最好实现 分号(,)分词器 类似in的效果  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
 | Content     | string      | 文章内容     | 是      |       |
 | CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
