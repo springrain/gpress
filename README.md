@@ -24,7 +24,7 @@
 所有的数据结构都使用Map实现,不再使用struct.因使用Bleve做NoSQL数据库,所以map可以任意添加字段.  
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 还需要实现 分号(,) 的分词器,实现类似sql in 的效果.  
-在IndexField表里设置IndexCode='Module',然后为每个实例化的Module创建一个Index.  
+在IndexField表里设置IndexCode='Module',然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index  
 
 
 ### 字段属性(索引名:IndexField)
