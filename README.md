@@ -27,7 +27,7 @@
 在IndexField表里设置IndexCode='Module',然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index  
 
 
-### 字段属性(索引名:IndexField)
+### 索引和字段(索引名:IndexField)
 记录所有索引字段code和中文说明,用于前台界面渲染展示.  
 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,统一从这里查询出来.(目前建议这样做,因为全是Map)
 
