@@ -24,7 +24,9 @@
 所有的数据结构都使用Map实现,不再使用struct.因使用Bleve做NoSQL数据库,所以map可以任意添加字段.  
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 还需要实现 分号(,) 的分词器,实现类似sql in 的效果.  
-在IndexField表里设置IndexCode='Module',然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index  
+
+在IndexField表里设置IndexCode='Module',记录所有的Module.  
+然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 
 
 ### 索引和字段(索引名:IndexField)
@@ -101,7 +103,8 @@
 ### 模型(索引名:Module)
 ~~文章模型,只是用来声明字段,具体信息会有Content索引全部继承~~  
 暂时不使用了,这里只做参考.  
-在IndexField表里设置IndexCode='Module',然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
+在IndexField表里设置IndexCode='Module',记录所有的Module.  
+然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
@@ -115,7 +118,8 @@
 | Active      | int         | 是否有效     | -       |  无效(0),有效(1)  |
 
 ### 模型数据(索引名:Module_demo)
-在IndexField表里设置IndexCode='Module',然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
+在IndexField表里设置IndexCode='Module',记录所有的Module.  
+然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
