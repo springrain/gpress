@@ -6,7 +6,7 @@ import (
 	"github.com/blevesearch/bleve/v2/registry"
 )
 
-const commaName = "comma"
+const commaAnalyzerName = "comma"
 
 func commaTokenizerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Tokenizer, error) {
 	return character.NewCharacterTokenizer(isComma), nil
@@ -26,7 +26,7 @@ func isComma(r rune) bool {
 
 }
 func commaAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (*analysis.Analyzer, error) {
-	commaTokenizer, err := cache.TokenizerNamed(commaName)
+	commaTokenizer, err := cache.TokenizerNamed(commaAnalyzerName)
 	if err != nil {
 		return nil, err
 	}
@@ -38,6 +38,6 @@ func commaAnalyzerConstructor(config map[string]interface{}, cache *registry.Cac
 
 // 注册分词器
 func init() {
-	registry.RegisterTokenizer(commaName, commaTokenizerConstructor)
-	registry.RegisterAnalyzer(commaName, commaAnalyzerConstructor)
+	registry.RegisterTokenizer(commaAnalyzerName, commaTokenizerConstructor)
+	registry.RegisterAnalyzer(commaAnalyzerName, commaAnalyzerConstructor)
 }
