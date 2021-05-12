@@ -3,12 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
 	"testing"
 	"time"
-
-	"github.com/yanyiwu/gojieba"
 
 	"github.com/blevesearch/bleve/v2"
 )
@@ -31,7 +27,8 @@ func TestCreate(t *testing.T) {
 	//addressMapping.Index = false
 	//addressMapping.SkipFreqNorm = true
 	addressMapping.DocValues = false
-	addressMapping.Analyzer = CommaName
+	//addressMapping.Analyzer = keyword.Name
+	addressMapping.Analyzer = commaAnalyzerName
 
 	//设置字段映射
 	mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
@@ -51,7 +48,7 @@ func TestSave(t *testing.T) {
 	}{
 		Id:         "userId",
 		Name:       "测试中文名称",
-		Address:    "中国  zhengzhou",
+		Address:    "中国,zhengzhou",
 		Age:        30,
 		CreateTime: time.Now(),
 	}
@@ -66,7 +63,7 @@ func TestSave(t *testing.T) {
 	}{
 		Id:         "userId 2",
 		Name:       "测试中文名称 2",
-		Address:    "zhongguo  zhengzhou",
+		Address:    "zhongguo,zhengzhou",
 		Age:        35,
 		CreateTime: time.Now(),
 		Other:      "test Other ",
@@ -75,7 +72,7 @@ func TestSave(t *testing.T) {
 	user3 := make(map[string]interface{})
 	user3["Id"] = "userId 3"
 	user3["Name"] = "测试中文名称 3"
-	user3["Address"] = "中国 北京"
+	user3["Address"] = "中国 1,北京 2"
 	user3["Age"] = 36
 	user3["CreateTime"] = time.Now()
 
@@ -103,7 +100,7 @@ func TestSearchKey(t *testing.T) {
 	searchRequest := bleve.NewSearchRequest(queryKey)
 
 	//指定返回的字段
-	searchRequest.Fields = []string{"Age"}
+	searchRequest.Fields = []string{"*"}
 
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
@@ -113,14 +110,15 @@ func TestSearchKey(t *testing.T) {
 func TestSearchJingQue(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleve.NewTermQuery("zhongguo  zhengzhou")
+	query := bleve.NewTermQuery("北京 2")
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
 	query.SetField("Address")
 	searchRequest := bleve.NewSearchRequest(query)
 
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
-
+	//查询所有的字段
+	searchRequest.Fields = []string{"*"}
 	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
@@ -185,36 +183,5 @@ func TestSearchWhere(t *testing.T) {
 
 	searchResult, _ := index.Search(searchRequest)
 
-	fmt.Println(searchResult)
-}
-
-func TestGojieba(t *testing.T) {
-	str := "我是一个测试语句"
-	var words []string
-	use_hmm := true
-	x := gojieba.NewJieba()
-	defer x.Free()
-
-	words = x.CutForSearch(str, use_hmm)
-	fmt.Println(str)
-	fmt.Println("搜索引擎模式:", strings.Join(words, "/"))
-
-	index, _ := bleve.Open(indexName)
-
-	for i := 0; i < len(words); i++ {
-		jiebas := make(map[string]interface{})
-		jiebas["index"] = words[i]
-		jiebas["str"] = str
-		index.Index(strconv.FormatInt(time.Now().Unix(), 10), jiebas)
-	}
-
-	queryKey := bleve.NewQueryStringQuery("测试")
-
-	searchRequest := bleve.NewSearchRequest(queryKey)
-
-	//指定返回的字段
-	searchRequest.Fields = []string{"str"}
-
-	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
