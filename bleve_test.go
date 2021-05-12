@@ -11,8 +11,6 @@ import (
 	"github.com/yanyiwu/gojieba"
 
 	"github.com/blevesearch/bleve/v2"
-
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 var indexName string = "userIndex"
@@ -33,7 +31,7 @@ func TestCreate(t *testing.T) {
 	//addressMapping.Index = false
 	//addressMapping.SkipFreqNorm = true
 	addressMapping.DocValues = false
-	addressMapping.Analyzer = keyword.Name
+	addressMapping.Analyzer = CommaName
 
 	//设置字段映射
 	mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
