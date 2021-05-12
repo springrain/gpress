@@ -6,4 +6,5 @@ require (
 	github.com/blevesearch/bleve/v2 v2.0.3
 	github.com/gin-gonic/gin v1.7.1
 	github.com/yanyiwu/gojieba v1.1.2
+	gitee.com/chunanyong/gouuid v1.3.2
 )
