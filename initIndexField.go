@@ -62,6 +62,11 @@ type IndexFieldStruct struct {
 	Active int
 }
 
+//初始化调用
+func init() {
+	checkInstall()
+}
+
 //checkInstall 检查是不是初始化安装,如果是就创建文件夹目录
 func checkInstall() (bool, error) {
 	//索引数据目录是否存在
@@ -113,11 +118,6 @@ func initIndexField() (bool, error) {
 	}
 	bleveIndexMap[indexFieldIndexName] = index
 	return true, nil
-}
-
-//初始化调用
-func init() {
-	checkInstall()
 }
 
 //FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
