@@ -15,7 +15,7 @@ const indexDataDir = "./zcmsdatadir/index/"
 const createUser = "system"
 
 // 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
-var bleveIndexMap map[string]bleve.Index = make(map[string]bleve.Index)
+var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
 
 //索引名称
 const (
@@ -85,7 +85,7 @@ func checkInstall() (bool, error) {
 
 			//打开所有的索引,放到map里,一个索引只能打开一次.
 			index, _ := bleve.Open(indexDataDir + dir.Name())
-			bleveIndexMap[indexDataDir+dir.Name()] = index
+			IndexMap[indexDataDir+dir.Name()] = index
 		}
 		return true, errPathExists
 	}
@@ -116,7 +116,7 @@ func initIndexField() (bool, error) {
 		FuncLogError(err)
 		return false, err
 	}
-	bleveIndexMap[indexFieldIndexName] = index
+	IndexMap[indexFieldIndexName] = index
 	return true, nil
 }
 
