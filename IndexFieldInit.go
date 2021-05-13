@@ -64,25 +64,27 @@ type IndexFieldStruct struct {
 
 //checkInstall 检查是不是初始化安装,如果是就创建文件夹目录
 func checkInstall() (bool, error) {
+	//索引数据目录是否存在
 	exists, errPathExists := pathExists(indexDataDir)
 	if errPathExists != nil {
 		FuncLogError(errPathExists)
 		return false, errPathExists
 	}
 
-	if exists { //如果已经存在目录,遍历索引文件夹,放到全局map里
+	if exists { //如果已经存在目录,遍历索引,放到全局map里
 		fileInfo, _ := ioutil.ReadDir(indexDataDir)
 		for _, dir := range fileInfo {
 			if !dir.IsDir() {
 				continue
 			}
 
+			//打开所有的索引,放到map里,一个索引只能打开一次.
 			index, _ := bleve.Open(indexDataDir + dir.Name())
 			bleveIndexMap[indexDataDir+dir.Name()] = index
 		}
 		return true, errPathExists
 	}
-	//如果是初次安装,创建数据目录,默认的 ./zcmsdatadir 必须存在,和打包的二进制文件放到同一个路径下,里面有页面模板文件夹 ./zcmsdatadir/template
+	//如果是初次安装,创建数据目录,默认的 ./zcmsdatadir 必须存在,页面模板文件夹 ./zcmsdatadir/template
 	errMkdir := os.Mkdir(indexDataDir, os.ModePerm)
 	if errMkdir != nil {
 		FuncLogError(errMkdir)
@@ -116,10 +118,12 @@ func initIndexField() (bool, error) {
 // initIndexField 初始化创建IndexField索引
 func initUser() (bool, error) {
 
-	//设置IndexField数据
-	index := bleveIndexMap[indexFieldIndexName]
-
+	// 获取索引字段的表
+	indexField := bleveIndexMap[indexFieldIndexName]
+	//当前时间
 	now := time.Now()
+
+	//用户表的 ID 字段
 	userId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
@@ -133,8 +137,9 @@ func initUser() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	index.Index(userId.ID, userId)
+	indexField.Index(userId.ID, userId)
 
+	//用户表的 Account 字段
 	userAccount := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
@@ -148,7 +153,8 @@ func initUser() (bool, error) {
 		SortNo:       2,
 		Active:       1,
 	}
-	index.Index(userAccount.ID, userAccount)
+	indexField.Index(userAccount.ID, userAccount)
+	//用户表的 PassWord 字段
 	userPassWord := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
@@ -162,7 +168,8 @@ func initUser() (bool, error) {
 		SortNo:       3,
 		Active:       1,
 	}
-	index.Index(userPassWord.ID, userPassWord)
+	indexField.Index(userPassWord.ID, userPassWord)
+	//用户表的 UserName 字段
 	userName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
@@ -176,7 +183,7 @@ func initUser() (bool, error) {
 		SortNo:       4,
 		Active:       1,
 	}
-	index.Index(userName.ID, userName)
+	indexField.Index(userName.ID, userName)
 
 	//创建用户表的索引
 	mapping := bleve.NewIndexMapping()
