@@ -108,12 +108,12 @@ func TestSearchKey(t *testing.T) {
 
 //精确查询指定的字段,类似SQL语句中的 where name='abc' ,要求name 字段必须使用keyword分词器
 func TestSearchJingQue(t *testing.T) {
-	index, _ := bleve.Open(indexName)
+	index := IndexMap[userIndexName]
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleve.NewTermQuery("北京 2")
+	query := bleve.NewTermQuery("admin")
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
-	query.SetField("Address")
+	query.SetField("Account")
 	searchRequest := bleve.NewSearchRequest(query)
 
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
@@ -183,5 +183,27 @@ func TestSearchWhere(t *testing.T) {
 
 	searchResult, _ := index.Search(searchRequest)
 
+	fmt.Println(searchResult)
+}
+
+func TestSearchOrder(t *testing.T) {
+	index := IndexMap[indexFieldIndexName]
+	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
+	query := bleve.NewTermQuery(userIndexName)
+	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
+	//指定查询的字段
+	query.SetField("IndexCode")
+	searchRequest := bleve.NewSearchRequest(query)
+
+	// 按照 SortNo 正序排列.
+	// 先将按"SortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
+	searchRequest.SortBy([]string{"SortNo", "-_score", "_id"})
+	// 按照 SortNo 降序排列.
+	//searchRequest.SortBy([]string{"-SortNo", "-_score", "_id"})
+
+	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
+	//查询所有的字段
+	searchRequest.Fields = []string{"SortNo"}
+	searchResult, _ := index.Search(searchRequest)
 	fmt.Println(searchResult)
 }
