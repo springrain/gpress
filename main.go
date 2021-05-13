@@ -25,7 +25,7 @@ func main() {
 //请求响应函数
 func IndexApi(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{"name": "test"})
-	return
+
 }
 
 //自定义函数
