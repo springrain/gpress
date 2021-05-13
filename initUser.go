@@ -11,7 +11,7 @@ import (
 func initUser() (bool, error) {
 
 	// 获取索引字段的表
-	indexField := bleveIndexMap[indexFieldIndexName]
+	indexField := IndexMap[indexFieldIndexName]
 	//当前时间
 	now := time.Now()
 
@@ -86,7 +86,7 @@ func initUser() (bool, error) {
 		FuncLogError(err)
 		return false, err
 	}
-	bleveIndexMap[userIndexName] = userIndex
+	IndexMap[userIndexName] = userIndex
 
 	//初始化数据
 	user := make(map[string]string)
