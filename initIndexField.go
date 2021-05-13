@@ -10,8 +10,7 @@ import (
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
-//数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
-const indexDataDir = "./zcmsdatadir/index/"
+// 数据默认的创建用户
 const createUser = "system"
 
 // 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
@@ -19,6 +18,8 @@ var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
 
 //索引名称
 const (
+	//数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
+	indexDataDir = "./zcmsdatadir/index/"
 	//索引字段的名称
 	indexFieldIndexName = indexDataDir + "IndexField"
 	//User 用户的索引名称
