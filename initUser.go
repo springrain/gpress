@@ -7,7 +7,7 @@ import (
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
-// initIndexField 初始化创建IndexField索引
+// initUser 初始化创建User索引
 func initUser() (bool, error) {
 
 	// 获取索引字段的表
