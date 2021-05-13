@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 	"time"
 
@@ -65,7 +66,16 @@ func checkInstall() (bool, error) {
 		return false, errPathExists
 	}
 
-	if exists {
+	if exists { //如果已经存在目录,遍历索引文件夹,放到全局map里
+		fileInfo, _ := ioutil.ReadDir(indexDataDir)
+		for _, dir := range fileInfo {
+			if !dir.IsDir() {
+				continue
+			}
+
+			index, _ := bleve.Open(indexDataDir + dir.Name())
+			bleveIndexMap[indexDataDir+dir.Name()] = index
+		}
 		return true, errPathExists
 	}
 	//如果是初次安装,创建数据目录,默认的 ./zcmsdatadir 必须存在,和打包的二进制文件放到同一个路径下,里面有页面模板文件夹 ./zcmsdatadir/template
