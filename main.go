@@ -17,7 +17,7 @@ func main() {
 	router.GET("/", IndexApi)
 	//LoadHTMLFiles(templates...)
 	//router.LoadHTMLGlob("templates/**/*")
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("zcmsdatadir/template/*")
 
 	router.Run(":8080")
 }
