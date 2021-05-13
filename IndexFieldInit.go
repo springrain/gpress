@@ -14,7 +14,7 @@ import (
 const indexDataDir = "./zcmsdatadir/index/"
 const createUser = "system"
 
-// 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引文件夹只能打开一次,类似数据库连接,只能用一个对象操作
+// 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
 var bleveIndexMap map[string]bleve.Index = make(map[string]bleve.Index)
 
 //索引名称
