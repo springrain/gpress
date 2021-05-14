@@ -77,7 +77,10 @@ ID统一使用UUID字符串,确保全局唯一
 | Title       | string      | 站点名称     | 否      |     -  |
 | KeyWords    | string      | 关键字       | 否      |     -  |
 | Description | string      | 站点描述     | 否      |     -  |
-| theme       | string      | 主题        | 否      | 默认使用default  |
+| theme       | string      | 默认主题        | 否      | 默认使用default  |
+| themePC     | string      | PC主题      | 否      | 根据Header头判断,默认使用default  |
+| themeWAP    | string      | 手机主题     | 否      | 根据Header头判断,默认使用default  |
+| themeWEIXIN | string      | 微信主题     | 否      | 根据Header头判断,默认使用default  |
 | Logo        | string      | logo        | 否      |     -  |
 | Favicon     | string      | Favicon     | 否      |     -  |
 
