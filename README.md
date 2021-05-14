@@ -77,8 +77,10 @@ ID统一使用UUID字符串,确保全局唯一
 | Title       | string      | 站点名称     | 否      |     -  |
 | KeyWords    | string      | 关键字       | 否      |     -  |
 | Description | string      | 站点描述     | 否      |     -  |
+| theme       | string      | 主题        | 否      | 默认使用default  |
 | Logo        | string      | logo        | 否      |     -  |
 | Favicon     | string      | Favicon     | 否      |     -  |
+
 
 ### 页面模板(索引名:PageTemplate)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
