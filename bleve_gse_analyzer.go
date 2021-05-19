@@ -49,10 +49,11 @@ func (t *gseTokenizer) Tokenize(sentence []byte) analysis.TokenStream {
 }
 
 func gseTokenizerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Tokenizer, error) {
-	dicts := datadir + "/dict/zh/dict.txt"
 	var segmenter gse.Segmenter
 	segmenter.SkipLog = true
-	segmenter.LoadDict(dicts)
+
+	segmenter.LoadDict(datadir+"/dict/zh/dict.txt", datadir+"/dict/dictionary.txt")
+	segmenter.LoadStop(datadir+"/dict/stop_word.txt", datadir+"/dict/stop_tokens.txt")
 
 	return &gseTokenizer{&segmenter}, nil
 
