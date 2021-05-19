@@ -4,6 +4,7 @@
 *.iml
 *.iws
 zcmsdatadir/index/*
+testIndex/
 
 .vscode/
 

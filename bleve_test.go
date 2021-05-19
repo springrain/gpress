@@ -76,7 +76,7 @@ func TestSave(t *testing.T) {
 	user3 := make(map[string]interface{})
 	user3["Id"] = "userId 3"
 	user3["Name"] = "测试中文名称 3"
-	user3["Address"] = "中国 1,北京 2"
+	user3["Address"] = "完,美"
 	user3["Age"] = 36
 	user3["CreateTime"] = time.Now()
 
@@ -112,12 +112,12 @@ func TestSearchKey(t *testing.T) {
 
 //精确查询指定的字段,类似SQL语句中的 where name='abc' ,要求name 字段必须使用keyword分词器
 func TestSearchJingQue(t *testing.T) {
-	index := IndexMap[indexName]
+	index, _ := bleve.Open(indexName)
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleve.NewTermQuery("admin")
+	query := bleve.NewTermQuery("完美")
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
-	query.SetField("Account")
+	query.SetField("Address")
 	searchRequest := bleve.NewSearchRequest(query)
 
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
