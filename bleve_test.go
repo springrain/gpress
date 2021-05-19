@@ -9,7 +9,7 @@ import (
 	"github.com/blevesearch/bleve/v2"
 )
 
-var indexName string = "userIndex"
+var indexName string = "testIndex"
 
 //创建索引
 func TestCreate(t *testing.T) {
@@ -23,11 +23,15 @@ func TestCreate(t *testing.T) {
 
 	// Address的mapping映射,此字段不使用分词,只保存,用于term的绝对精确查询,类似 sql的 where = 条件查询
 	addressMapping := bleve.NewTextFieldMapping()
-	//不分词,只保存,需要使用keyword分词器,注意是 github.com/blevesearch/bleve/v2/analysis/analyzer/keyword, token下也有一个keyword,别引错了!!!!!
+
 	//addressMapping.Index = false
 	//addressMapping.SkipFreqNorm = true
 	addressMapping.DocValues = false
+	//不分词,只保存,需要使用keyword分词器,注意是 github.com/blevesearch/bleve/v2/analysis/analyzer/keyword, token下也有一个keyword,别引错了!!!!!
 	//addressMapping.Analyzer = keyword.Name
+	//gse中文分词器
+	//addressMapping.Analyzer = gseName
+	// 逗号(,)分词器
 	addressMapping.Analyzer = commaAnalyzerName
 
 	//设置字段映射
@@ -108,7 +112,7 @@ func TestSearchKey(t *testing.T) {
 
 //精确查询指定的字段,类似SQL语句中的 where name='abc' ,要求name 字段必须使用keyword分词器
 func TestSearchJingQue(t *testing.T) {
-	index := IndexMap[userIndexName]
+	index := IndexMap[indexName]
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
 	query := bleve.NewTermQuery("admin")
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
