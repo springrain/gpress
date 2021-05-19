@@ -3,6 +3,7 @@
 *.ipr
 *.iml
 *.iws
+zcmsdatadir/index/*
 
 .vscode/
 
