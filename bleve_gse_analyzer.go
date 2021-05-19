@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	gseName = "gse"
+	gseAnalyzerName = "gse"
 )
 
 func gseAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (*analysis.Analyzer, error) {
 
-	tokenizer, err := cache.TokenizerNamed(gseName)
+	tokenizer, err := cache.TokenizerNamed(gseAnalyzerName)
 	if err != nil {
 		return nil, err
 	}
@@ -21,8 +21,8 @@ func gseAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache
 }
 
 func init() {
-	registry.RegisterTokenizer(gseName, gseTokenizerConstructor)
-	registry.RegisterAnalyzer(gseName, gseAnalyzerConstructor)
+	registry.RegisterTokenizer(gseAnalyzerName, gseTokenizerConstructor)
+	registry.RegisterAnalyzer(gseAnalyzerName, gseAnalyzerConstructor)
 }
 
 type gseTokenizer struct {
