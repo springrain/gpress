@@ -19,9 +19,9 @@ var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
 //索引名称
 const (
 	//基本目录
-	datadir = "./zcmsdatadir"
+	datadir = "./zcmsdatadir/"
 	//数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
-	indexDataDir = datadir + "/index/"
+	indexDataDir = datadir + "index/"
 	//索引字段的名称
 	indexFieldIndexName = indexDataDir + "IndexField"
 	//User 用户的索引名称

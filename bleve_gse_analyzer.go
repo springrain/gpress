@@ -52,8 +52,8 @@ func gseTokenizerConstructor(config map[string]interface{}, cache *registry.Cach
 	var segmenter gse.Segmenter
 	segmenter.SkipLog = true
 
-	segmenter.LoadDict(datadir+"/dict/zh/dict.txt", datadir+"/dict/dictionary.txt")
-	segmenter.LoadStop(datadir+"/dict/stop_word.txt", datadir+"/dict/stop_tokens.txt")
+	segmenter.LoadDict(datadir+"dict/zh/dict.txt", datadir+"dict/dictionary.txt")
+	segmenter.LoadStop(datadir+"dict/stop_word.txt", datadir+"dict/stop_tokens.txt")
 
 	return &gseTokenizer{&segmenter}, nil
 
