@@ -130,9 +130,9 @@ func TestSearchJingQue(t *testing.T) {
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
 	query.SetField("Address")
-	searchRequest := bleve.NewSearchRequest(query)
+	//searchRequest := bleve.NewSearchRequest(query)
+	searchRequest := bleve.NewSearchRequestOptions(query, size, from, false)
 
-	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 	//查询所有的字段
 	searchRequest.Fields = []string{"*"}
 	searchResult, _ := index.SearchInContext(ctx, searchRequest)
@@ -154,8 +154,6 @@ func TestSearchNum(t *testing.T) {
 	//searchRequest := bleve.NewSearchRequest(querynum)
 	searchRequest := bleve.NewSearchRequestOptions(querynum, size, from, false)
 
-	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
-
 	searchResult, _ := index.SearchInContext(ctx, searchRequest)
 	//本次查询的总条数,用于分页
 	fmt.Println("总条数:", searchResult.Total)
@@ -174,8 +172,6 @@ func TestSearchDate(t *testing.T) {
 
 	//searchRequest := bleve.NewSearchRequest(querynum)
 	searchRequest := bleve.NewSearchRequestOptions(querynum, size, from, false)
-
-	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 
 	searchResult, _ := index.SearchInContext(ctx, searchRequest)
 	//本次查询的总条数,用于分页
