@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"testing"
@@ -10,6 +11,11 @@ import (
 )
 
 var indexName string = "testIndex"
+
+var size int = 10
+var from int = 0
+
+var ctx context.Context = context.Background()
 
 //创建索引
 func TestCreate(t *testing.T) {
@@ -32,7 +38,7 @@ func TestCreate(t *testing.T) {
 	//gse中文分词器
 	//addressMapping.Analyzer = gseAnalyzerName
 	// 逗号(,)分词器
-	addressMapping.Analyzer = commaAnalyzerName
+	addressMapping.Analyzer = gseAnalyzerName
 
 	//设置字段映射
 	mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
@@ -91,8 +97,10 @@ func TestSave(t *testing.T) {
 func TestSearchID(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	query := bleve.NewDocIDQuery([]string{"userId"})
-	searchRequest := bleve.NewSearchRequest(query)
-	searchResult, _ := index.Search(searchRequest)
+	//searchRequest := bleve.NewSearchRequest(query)
+	searchRequest := bleve.NewSearchRequestOptions(query, size, from, false)
+
+	searchResult, _ := index.SearchInContext(ctx, searchRequest)
 	fmt.Println(searchResult)
 }
 
@@ -101,12 +109,16 @@ func TestSearchKey(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	queryKey := bleve.NewQueryStringQuery("中文2")
 
-	searchRequest := bleve.NewSearchRequest(queryKey)
+	//searchRequest := bleve.NewSearchRequest(queryKey)
+	searchRequest := bleve.NewSearchRequestOptions(queryKey, size, from, false)
 
 	//指定返回的字段
 	searchRequest.Fields = []string{"*"}
 
-	searchResult, _ := index.Search(searchRequest)
+	//查询结果
+	searchResult, _ := index.SearchInContext(ctx, searchRequest)
+	//本次查询的总条数,用于分页
+	fmt.Println("总条数:", searchResult.Total)
 	fmt.Println(searchResult)
 }
 
@@ -114,7 +126,7 @@ func TestSearchKey(t *testing.T) {
 func TestSearchJingQue(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	//查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleve.NewTermQuery("完美")
+	query := bleve.NewTermQuery("完")
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
 	query.SetField("Address")
@@ -123,7 +135,9 @@ func TestSearchJingQue(t *testing.T) {
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 	//查询所有的字段
 	searchRequest.Fields = []string{"*"}
-	searchResult, _ := index.Search(searchRequest)
+	searchResult, _ := index.SearchInContext(ctx, searchRequest)
+	//本次查询的总条数,用于分页
+	fmt.Println("总条数:", searchResult.Total)
 	fmt.Println(searchResult)
 }
 
@@ -137,11 +151,14 @@ func TestSearchNum(t *testing.T) {
 	//指定查询的字段
 	querynum.SetField("Age")
 
-	searchRequest := bleve.NewSearchRequest(querynum)
+	//searchRequest := bleve.NewSearchRequest(querynum)
+	searchRequest := bleve.NewSearchRequestOptions(querynum, size, from, false)
 
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 
-	searchResult, _ := index.Search(searchRequest)
+	searchResult, _ := index.SearchInContext(ctx, searchRequest)
+	//本次查询的总条数,用于分页
+	fmt.Println("总条数:", searchResult.Total)
 	fmt.Println(searchResult)
 }
 
@@ -155,11 +172,14 @@ func TestSearchDate(t *testing.T) {
 	//指定查询的字段
 	querynum.SetField("CreateTime")
 
-	searchRequest := bleve.NewSearchRequest(querynum)
+	//searchRequest := bleve.NewSearchRequest(querynum)
+	searchRequest := bleve.NewSearchRequestOptions(querynum, size, from, false)
 
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 
-	searchResult, _ := index.Search(searchRequest)
+	searchResult, _ := index.SearchInContext(ctx, searchRequest)
+	//本次查询的总条数,用于分页
+	fmt.Println("总条数:", searchResult.Total)
 	fmt.Println(searchResult)
 }
 
@@ -178,14 +198,17 @@ func TestSearchWhere(t *testing.T) {
 	//多个条件联查
 	query := bleve.NewConjunctionQuery(queryNum, queryKey)
 
-	searchRequest := bleve.NewSearchRequest(query)
+	//searchRequest := bleve.NewSearchRequest(query)
+	searchRequest := bleve.NewSearchRequestOptions(query, size, from, false)
 
 	//查询所有的字段
 	searchRequest.Fields = []string{"*"}
 	//指定返回的字段
 	//searchRequest.Fields = []string{"Name", "Age"}
 
-	searchResult, _ := index.Search(searchRequest)
+	searchResult, _ := index.SearchInContext(ctx, searchRequest)
+	//本次查询的总条数,用于分页
+	fmt.Println("总条数:", searchResult.Total)
 
 	fmt.Println(searchResult)
 }
@@ -197,7 +220,8 @@ func TestSearchOrder(t *testing.T) {
 	//query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	//指定查询的字段
 	query.SetField("IndexCode")
-	searchRequest := bleve.NewSearchRequest(query)
+	//searchRequest := bleve.NewSearchRequest(query)
+	searchRequest := bleve.NewSearchRequestOptions(query, size, from, false)
 
 	// 按照 SortNo 正序排列.
 	// 先将按"SortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
@@ -208,6 +232,8 @@ func TestSearchOrder(t *testing.T) {
 	//searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 	//查询所有的字段
 	searchRequest.Fields = []string{"SortNo"}
-	searchResult, _ := index.Search(searchRequest)
+	searchResult, _ := index.SearchInContext(ctx, searchRequest)
+	//本次查询的总条数,用于分页
+	fmt.Println("总条数:", searchResult.Total)
 	fmt.Println(searchResult)
 }
