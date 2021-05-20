@@ -6,7 +6,6 @@
 zcmsdatadir/index/*
 testIndex/
 dict/
-idf.txt
 
 .vscode/
 
