@@ -38,7 +38,7 @@ func TestCreate(t *testing.T) {
 	//gse中文分词器
 	//addressMapping.Analyzer = gseAnalyzerName
 	// 逗号(,)分词器
-	addressMapping.Analyzer = gseAnalyzerName
+	addressMapping.Analyzer = commaAnalyzerName
 
 	//设置字段映射
 	mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
