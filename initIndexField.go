@@ -26,6 +26,18 @@ const (
 	indexFieldIndexName = indexDataDir + "IndexField"
 	//User 用户的索引名称
 	userIndexName = indexDataDir + "User"
+	//siteInfo  站点信息
+	sitenIndexName = indexDataDir + "sitenInfo"
+	//页面模板
+	pageTemplateName = indexDataDir + "pageTemplate"
+	//导航菜单
+	navMenuName = indexDataDir + "NavMenu"
+	//模型
+	moduleName = indexDataDir + "Module"
+	//模型数据
+	moduleDemoName = indexDataDir + "ModuleDemo"
+	//文章内容
+	contentName = indexDataDir + "Content"
 )
 
 // IndexFieldStruct 索引和字段(索引名:IndexField)
@@ -105,6 +117,8 @@ func checkInstall() (bool, error) {
 	//初始化用户表
 	initUser()
 
+	//初始化站点信息表
+	initSitenInfo()
 	return true, nil
 }
 
