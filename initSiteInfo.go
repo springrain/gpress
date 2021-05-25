@@ -58,7 +58,7 @@ func initSitenInfo() (bool, error) {
 		FieldCode:    "KeyWords",
 		FieldName:    "关键字",
 		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: commaAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -66,7 +66,7 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoKeyWords.ID, sitenInfoKeyWords)
 
-	//KeyWords 字段使用 逗号分词器的mapping commaAnalyzerName
+	//KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", commaAnalyzerMapping)
 
 	sitenInfoDescription := IndexFieldStruct{
@@ -76,7 +76,7 @@ func initSitenInfo() (bool, error) {
 		FieldCode:    "Description",
 		FieldName:    "站点描述",
 		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,

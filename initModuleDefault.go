@@ -6,7 +6,7 @@ import (
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
-func initmoduleDefault() (bool, error) {
+func initModuleDefault() (bool, error) {
 	indexField := IndexMap[moduleDefaultName]
 
 	//获取当前时间
