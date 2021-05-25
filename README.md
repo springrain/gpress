@@ -130,7 +130,7 @@ ID统一使用UUID字符串,确保全局唯一
 | SortNo      | int         | 排序        | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 模型数据(索引名:Module_demo)
+### 模型数据(索引名:Module_default)
 在IndexField表里设置IndexCode='Module',记录所有的Module.  
 然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 
@@ -138,7 +138,7 @@ ID统一使用UUID字符串,确保全局唯一
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
 | Title       | string      | 文章标题     | 是      |     -  |
-| KeyWords    | string      | 关键字       | 否      |     -  |
+| KeyWords    | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
 | Description | string      | 站点描述     | 否      |     -  |
 | PageURL     | string      | 自身页面路径 | 否       |    -  |
 | Subtitle    | string      | 副标题       | 是      |     -  |
@@ -151,14 +151,18 @@ ID统一使用UUID字符串,确保全局唯一
 
 
 ### 文章内容(索引名:Content)
-文章内容表
+文章内容表,默认使用 Module_default 的模型字段
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键         | 否      |    -  |
 | ModuleIndexCode| string   | 模型的Code   | 否      |  文章使用的模型字段 |
-| HrefURL     | string      | 页面路径     | 否       |    -  |
-| NavMenuId   | string      | 导航ID,逗号(,)隔开| 否  | 使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
+| Title       | string      | 文章标题     | 是      |     -  |
+| KeyWords    | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
+| Description | string      | 站点描述     | 否      |     -  |
+| PageURL     | string      | 自身页面路径 | 否       |    -  |
+| Subtitle    | string      | 副标题       | 是      |     -  |
+| NavMenuId   | string      | 导航ID,逗号(,)隔开| 是  | 使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
 | NavMenuName | string      | 导航名称     | 是      | -  |
 | TemplateID  | string      | 模板Id       | 否      | 模板  |
 | Content     | string      | 文章内容     | 是      |       |

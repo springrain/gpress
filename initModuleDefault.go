@@ -30,13 +30,14 @@ func initModuleDefault() (bool, error) {
 	indexField.Index(moduleDefaultId.ID, moduleDefaultId)
 
 	moduleDefaultTitle := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "Title",
-		FieldName:    "标题",
-		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		ID:        FuncGenerateStringID(),
+		IndexCode: moduleDefaultName,
+		IndexName: "模型数据",
+		FieldCode: "Title",
+		FieldName: "标题",
+		FieldType: 3,
+		//文章标题使用中文分词
+		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -45,13 +46,14 @@ func initModuleDefault() (bool, error) {
 	indexField.Index(moduleDefaultTitle.ID, moduleDefaultTitle)
 
 	moduleDefaultKeyWords := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "KeyWords",
-		FieldName:    "关键字",
-		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		ID:        FuncGenerateStringID(),
+		IndexCode: moduleDefaultName,
+		IndexName: "模型数据",
+		FieldCode: "KeyWords",
+		FieldName: "关键字",
+		FieldType: 3,
+		//文章关键字使用逗号分词器
+		AnalyzerName: commaAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -60,13 +62,14 @@ func initModuleDefault() (bool, error) {
 	indexField.Index(moduleDefaultKeyWords.ID, moduleDefaultKeyWords)
 
 	moduleDefaultDescription := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "Description",
-		FieldName:    "站点描述",
-		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		ID:        FuncGenerateStringID(),
+		IndexCode: moduleDefaultName,
+		IndexName: "模型数据",
+		FieldCode: "Description",
+		FieldName: "站点描述",
+		FieldType: 3,
+		//文章描述使用中文分词器
+		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -90,13 +93,14 @@ func initModuleDefault() (bool, error) {
 	indexField.Index(moduleDefaultPageURL.ID, moduleDefaultPageURL)
 
 	moduleDefaultSubtitle := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "Subtitle",
-		FieldName:    "副标题",
-		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		ID:        FuncGenerateStringID(),
+		IndexCode: moduleDefaultName,
+		IndexName: "模型数据",
+		FieldCode: "Subtitle",
+		FieldName: "副标题",
+		FieldType: 3,
+		//文章副标题使用中文分词器
+		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -105,13 +109,14 @@ func initModuleDefault() (bool, error) {
 	indexField.Index(moduleDefaultSubtitle.ID, moduleDefaultSubtitle)
 
 	moduleDefaultContent := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "Content",
-		FieldName:    "文章内容",
-		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		ID:        FuncGenerateStringID(),
+		IndexCode: moduleDefaultName,
+		IndexName: "模型数据",
+		FieldCode: "Content",
+		FieldName: "文章内容",
+		FieldType: 3,
+		//文章内容使用中文分词器
+		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
