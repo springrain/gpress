@@ -135,7 +135,7 @@ func checkInstall() (bool, error) {
 
 	//初始化文章模型的类型表
 	initModule()
-	//初始化文章默默人模型的记录
+	//初始化文章默认模型的记录,往Module表里插入记录,不创建Index
 	initModuleDefault()
 
 	//初始化文章内容
