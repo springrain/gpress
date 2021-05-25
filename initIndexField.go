@@ -133,8 +133,10 @@ func checkInstall() (bool, error) {
 	//初始化站点信息表
 	initSitenInfo()
 
-	//初始化文章模型
+	//初始化文章模型的类型表
 	initModule()
+	//初始化文章默默人模型的记录
+	initModuleDefault()
 
 	//初始化文章内容
 	initContent()
