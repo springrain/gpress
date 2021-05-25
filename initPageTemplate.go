@@ -95,7 +95,10 @@ func initpageTemplateName() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	_, err := bleve.New(pageTemplateName, mapping)
+	pageTemplateIndex, err := bleve.New(pageTemplateName, mapping)
+
+	//放到IndexMap中
+	IndexMap[pageTemplateName] = pageTemplateIndex
 
 	if err != nil {
 		FuncLogError(err)

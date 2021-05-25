@@ -140,7 +140,24 @@ func initModule() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	_, err := bleve.New(moduleName, mapping)
+	moduleIndex, err := bleve.New(moduleName, mapping)
+	//放到IndexMap中
+	IndexMap[moduleName] = moduleIndex
+
+	//初始化数据
+	module := make(map[string]interface{})
+	id := FuncGenerateStringID()
+	module["ID"] = id
+	module["ModuleIndexCode"] = "Module_Default"
+	module["ModuleName"] = "默认模型"
+	module["CreateTime"] = now
+	module["UpdateTime"] = now
+	module["CreateUser"] = createUser
+	module["SortNo"] = 0
+	module["Active"] = 1
+
+	//初始化
+	moduleIndex.Index(id, module)
 
 	if err != nil {
 		FuncLogError(err)

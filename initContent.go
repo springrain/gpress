@@ -1,14 +1,20 @@
 package main
 
 import (
+	"time"
+
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
-	"time"
 )
 
 func initContent() (bool, error) {
 
 	indexField := IndexMap[contentName]
+
+	//创建用户表的索引
+	mapping := bleve.NewIndexMapping()
+	//指定默认的分词器
+	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name //这是要换成逗号分词吧
 
 	//获取当前时间
 	now := time.Now()
@@ -75,6 +81,9 @@ func initContent() (bool, error) {
 	}
 	indexField.Index(contentNavMenuId.ID, contentNavMenuId)
 
+	//NavMenuId 字段使用 逗号分词器的mapping commaAnalyzerName
+	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuId", commaAnalyzerMapping)
+
 	contentNavMenuName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    contentName,
@@ -89,6 +98,9 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentNavMenuName.ID, contentNavMenuName)
+
+	//NavMenuName 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuName", gseAnalyzerMapping)
 
 	contentTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -119,6 +131,9 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentContent.ID, contentContent)
+
+	//Content 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("Content", gseAnalyzerMapping)
 
 	contentCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -195,11 +210,9 @@ func initContent() (bool, error) {
 	}
 	indexField.Index(moduleActive.ID, moduleActive)
 
-	//创建用户表的索引
-	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name //这是要换成逗号分词吧
-	_, err := bleve.New(contentName, mapping)
+	contentIndex, err := bleve.New(contentName, mapping)
+	//放到IndexMap中
+	IndexMap[moduleName] = contentIndex
 
 	if err != nil {
 		FuncLogError(err)

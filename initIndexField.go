@@ -8,6 +8,7 @@ import (
 	"gitee.com/chunanyong/gouuid"
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
+	"github.com/blevesearch/bleve/v2/mapping"
 )
 
 // 数据默认的创建用户
@@ -35,10 +36,16 @@ const (
 	//模型
 	moduleName = indexDataDir + "Module"
 	//模型数据
-	moduleDemoName = indexDataDir + "ModuleDemo"
+	moduleDefaultName = "moduleDefault"
 	//文章内容
 	contentName = indexDataDir + "Content"
 )
+
+//逗号分词器的mapping
+var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
+
+//中文分词器的mapping
+var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
 
 // IndexFieldStruct 索引和字段(索引名:IndexField)
 // 记录所有索引字段code和中文说明.
@@ -79,6 +86,12 @@ type IndexFieldStruct struct {
 
 //初始化调用
 func init() {
+	//初始化分词器
+	commaAnalyzerMapping.DocValues = false
+	commaAnalyzerMapping.Analyzer = commaAnalyzerName
+	gseAnalyzerMapping.DocValues = false
+	gseAnalyzerMapping.Analyzer = gseAnalyzerName
+
 	checkInstall()
 }
 
@@ -119,6 +132,9 @@ func checkInstall() (bool, error) {
 
 	//初始化站点信息表
 	initSitenInfo()
+
+	//初始化文章模型
+	initModule()
 
 	//初始化文章内容
 	initContent()

@@ -16,7 +16,6 @@ func initSitenInfo() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-
 	//获取当前时间
 	now := time.Now()
 
@@ -67,11 +66,8 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoKeyWords.ID, sitenInfoKeyWords)
 
-	//KeyWords 字段使用 逗号分词器 commaAnalyzerName
-	keyWordsMapping := bleve.NewTextFieldMapping()
-	keyWordsMapping.DocValues = false
-	keyWordsMapping.Analyzer = commaAnalyzerName
-	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", keyWordsMapping)
+	//KeyWords 字段使用 逗号分词器的mapping commaAnalyzerName
+	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", commaAnalyzerMapping)
 
 	sitenInfoDescription := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -88,11 +84,8 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoDescription.ID, sitenInfoDescription)
 
-	//Description 字段使用 中文分词器 gseAnalyzerName
-	descriptionMapping := bleve.NewTextFieldMapping()
-	descriptionMapping.DocValues = false
-	descriptionMapping.Analyzer = gseAnalyzerName
-	mapping.DefaultMapping.AddFieldMappingsAt("Description", descriptionMapping)
+	//Description 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("Description", gseAnalyzerMapping)
 
 	sitenInfoTheme := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -184,7 +177,9 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoFavicon.ID, sitenInfoFavicon)
 
-	_, err := bleve.New(sitenIndexName, mapping)
+	sitenIndexIndex, err := bleve.New(sitenIndexName, mapping)
+	//放到IndexMap中
+	IndexMap[sitenIndexName] = sitenIndexIndex
 
 	if err != nil {
 		FuncLogError(err)

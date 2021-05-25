@@ -1,9 +1,10 @@
 package main
 
 import (
+	"time"
+
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
-	"time"
 )
 
 //导航菜单
@@ -200,7 +201,10 @@ func initNavMenu() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	_, err := bleve.New(navMenuName, mapping)
+	navMenuIndex, err := bleve.New(navMenuName, mapping)
+
+	//放到IndexMap中
+	IndexMap[navMenuName] = navMenuIndex
 
 	if err != nil {
 		FuncLogError(err)
