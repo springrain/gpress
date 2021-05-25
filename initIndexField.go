@@ -119,6 +119,15 @@ func checkInstall() (bool, error) {
 
 	//初始化站点信息表
 	initSitenInfo()
+
+	//初始化文章内容
+	initContent()
+
+	//初始化导航菜单
+	initNavMenu()
+
+	//初始化页面模板
+	initpageTemplateName()
 	return true, nil
 }
 

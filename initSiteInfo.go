@@ -1,15 +1,21 @@
 package main
 
 import (
+	"time"
+
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
-	"time"
 )
 
 //初始化站点信息
 func initSitenInfo() (bool, error) {
 
 	indexField := IndexMap[sitenIndexName]
+
+	//创建用户表的索引
+	mapping := bleve.NewIndexMapping()
+	//指定默认的分词器
+	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
 
 	//获取当前时间
 	now := time.Now()
@@ -61,6 +67,12 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoKeyWords.ID, sitenInfoKeyWords)
 
+	//KeyWords 字段使用 逗号分词器 commaAnalyzerName
+	keyWordsMapping := bleve.NewTextFieldMapping()
+	keyWordsMapping.DocValues = false
+	keyWordsMapping.Analyzer = commaAnalyzerName
+	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", keyWordsMapping)
+
 	sitenInfoDescription := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    sitenIndexName,
@@ -75,6 +87,12 @@ func initSitenInfo() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(sitenInfoDescription.ID, sitenInfoDescription)
+
+	//Description 字段使用 中文分词器 gseAnalyzerName
+	descriptionMapping := bleve.NewTextFieldMapping()
+	descriptionMapping.DocValues = false
+	descriptionMapping.Analyzer = gseAnalyzerName
+	mapping.DefaultMapping.AddFieldMappingsAt("Description", descriptionMapping)
 
 	sitenInfoTheme := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -166,10 +184,6 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoFavicon.ID, sitenInfoFavicon)
 
-	//创建用户表的索引
-	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
 	_, err := bleve.New(sitenIndexName, mapping)
 
 	if err != nil {
