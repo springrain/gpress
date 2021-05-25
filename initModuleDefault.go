@@ -1,21 +1,21 @@
 package main
 
 import (
-	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 	"time"
+
+	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
-func initModuleDemo() (bool, error) {
-	indexField := IndexMap[moduleDemoName]
+func initmoduleDefault() (bool, error) {
+	indexField := IndexMap[moduleDefaultName]
 
 	//获取当前时间
 	now := time.Now()
 
 	//初始化各个字段
-	moduleDemoId := IndexFieldStruct{
+	moduleDefaultId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "ID",
 		FieldName:    "模型数据ID",
@@ -27,11 +27,11 @@ func initModuleDemo() (bool, error) {
 		Active:       3,
 	}
 	//放入文件中
-	indexField.Index(moduleDemoId.ID, moduleDemoId)
+	indexField.Index(moduleDefaultId.ID, moduleDefaultId)
 
-	moduleDemoTitle := IndexFieldStruct{
+	moduleDefaultTitle := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "Title",
 		FieldName:    "标题",
@@ -42,11 +42,11 @@ func initModuleDemo() (bool, error) {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(moduleDemoTitle.ID, moduleDemoTitle)
+	indexField.Index(moduleDefaultTitle.ID, moduleDefaultTitle)
 
-	moduleDemoKeyWords := IndexFieldStruct{
+	moduleDefaultKeyWords := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "KeyWords",
 		FieldName:    "关键字",
@@ -57,11 +57,11 @@ func initModuleDemo() (bool, error) {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(moduleDemoKeyWords.ID, moduleDemoKeyWords)
+	indexField.Index(moduleDefaultKeyWords.ID, moduleDefaultKeyWords)
 
-	moduleDemoDescription := IndexFieldStruct{
+	moduleDefaultDescription := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "Description",
 		FieldName:    "站点描述",
@@ -72,11 +72,11 @@ func initModuleDemo() (bool, error) {
 		SortNo:       4,
 		Active:       3,
 	}
-	indexField.Index(moduleDemoDescription.ID, moduleDemoDescription)
+	indexField.Index(moduleDefaultDescription.ID, moduleDefaultDescription)
 
-	moduleDemoPageURL := IndexFieldStruct{
+	moduleDefaultPageURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "PageURL",
 		FieldName:    "自身页面路径",
@@ -87,11 +87,11 @@ func initModuleDemo() (bool, error) {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(moduleDemoPageURL.ID, moduleDemoPageURL)
+	indexField.Index(moduleDefaultPageURL.ID, moduleDefaultPageURL)
 
-	moduleDemoSubtitle := IndexFieldStruct{
+	moduleDefaultSubtitle := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "Subtitle",
 		FieldName:    "副标题",
@@ -102,11 +102,11 @@ func initModuleDemo() (bool, error) {
 		SortNo:       6,
 		Active:       3,
 	}
-	indexField.Index(moduleDemoSubtitle.ID, moduleDemoSubtitle)
+	indexField.Index(moduleDefaultSubtitle.ID, moduleDefaultSubtitle)
 
-	moduleDemoContent := IndexFieldStruct{
+	moduleDefaultContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "Content",
 		FieldName:    "文章内容",
@@ -117,11 +117,11 @@ func initModuleDemo() (bool, error) {
 		SortNo:       7,
 		Active:       3,
 	}
-	indexField.Index(moduleDemoContent.ID, moduleDemoContent)
+	indexField.Index(moduleDefaultContent.ID, moduleDefaultContent)
 
-	moduleDemoCreateTime := IndexFieldStruct{
+	moduleDefaultCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
@@ -132,11 +132,11 @@ func initModuleDemo() (bool, error) {
 		SortNo:       8,
 		Active:       3,
 	}
-	indexField.Index(moduleDemoCreateTime.ID, moduleDemoCreateTime)
+	indexField.Index(moduleDefaultCreateTime.ID, moduleDefaultCreateTime)
 
 	moduleUpdateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
@@ -151,7 +151,7 @@ func initModuleDemo() (bool, error) {
 
 	moduleCreateUser := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
@@ -166,7 +166,7 @@ func initModuleDemo() (bool, error) {
 
 	moduleSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
@@ -181,7 +181,7 @@ func initModuleDemo() (bool, error) {
 
 	moduleActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDemoName,
+		IndexCode:    moduleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
@@ -194,15 +194,23 @@ func initModuleDemo() (bool, error) {
 	}
 	indexField.Index(moduleActive.ID, moduleActive)
 
-	//创建用户表的索引
-	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	_, err := bleve.New(moduleDemoName, mapping)
+	/*
+		//在IndexField表里设置IndexCode='Module',记录所有的Module.
+		//然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 
-	if err != nil {
-		FuncLogError(err)
-		return false, err
-	}
+		//创建用户表的索引
+		mapping := bleve.NewIndexMapping()
+		//指定默认的分词器
+		mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+		moduleDefaultIndex, err := bleve.New(moduleDefaultName, mapping)
+		//放到IndexMap中
+		IndexMap[moduleName] = moduleDefaultIndex
+
+		if err != nil {
+			FuncLogError(err)
+			return false, err
+		}
+	*/
+
 	return true, nil
 }
