@@ -9,9 +9,9 @@ import (
 
 func initContent() (bool, error) {
 
-	indexField := IndexMap[contentName]
+	indexField := IndexMap[indexFieldIndexName]
 
-	//创建用户表的索引
+	//创建内容表的索引
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name //这是要换成逗号分词吧
@@ -280,7 +280,7 @@ func initContent() (bool, error) {
 
 	contentIndex, err := bleve.New(contentName, mapping)
 	//放到IndexMap中
-	IndexMap[moduleName] = contentIndex
+	IndexMap[contentName] = contentIndex
 
 	if err != nil {
 		FuncLogError(err)
