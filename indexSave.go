@@ -14,7 +14,7 @@ func saveNexIndex(newIndex map[string]interface{}, tableName string) (map[string
 		return m, err
 	}
 	id := FuncGenerateStringID()
-	newIndex["id"] = id
+	newIndex["ID"] = id
 	result := SearchResult.Hits
 
 	for _, v := range result {
@@ -26,6 +26,8 @@ func saveNexIndex(newIndex map[string]interface{}, tableName string) (map[string
 				m["msg"] = tmp + "不能为空"
 				return m, nil
 			}
+
+		} else {
 			m["code"] = "401"
 			m["msg"] = tmp + "不能为空"
 			return m, nil

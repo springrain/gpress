@@ -136,7 +136,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "ComCode",
 		FieldName:    "逗号隔开的全路径",
 		FieldType:    3,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: commaAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       8,
