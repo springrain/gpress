@@ -9,7 +9,7 @@ import (
 
 func initModule() (bool, error) {
 
-	indexField := IndexMap[moduleName]
+	indexField := IndexMap[indexFieldIndexName]
 
 	//获取当前时间
 	now := time.Now()
