@@ -34,7 +34,7 @@ func getFields(tableName string, isRequired float64) (err error, result *bleve.S
 		var f2 float64 = 2.00
 		queryIsReqired := bleve.NewNumericRangeQuery(&f, &f2)
 		//queryIsReqired := bleve.NewTermQuery("1")
-		queryIndexCode.SetField("Required")
+		queryIsReqired.SetField("Required")
 		//queryIsReqired.SetField("Required")
 		query = bleve.NewConjunctionQuery(queryIndexCode, queryIsReqired)
 	}
