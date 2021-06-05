@@ -45,7 +45,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       2,
 		Active:       3,
-		Required:     0,
+		Required:     1,
 	}
 	indexField.Index(navMenuMenuName.ID, navMenuMenuName)
 

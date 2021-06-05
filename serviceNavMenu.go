@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/search/query"
@@ -29,9 +30,8 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 
 	} else {
 		var f float64 = float64(isRequired)
-		var f2 float64 = float64(isRequired)
 		inclusive := true
-		queryIsReqired := bleve.NewNumericRangeInclusiveQuery(&f, &f2, &inclusive, &inclusive)
+		queryIsReqired := bleve.NewNumericRangeInclusiveQuery(&f, &f, &inclusive, &inclusive)
 		queryIsReqired.SetField("Required")
 		query = bleve.NewConjunctionQuery(queryIndexCode, queryIsReqired)
 	}
@@ -49,5 +49,42 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 	}
 
 	return result, nil
+
+}
+func saveNexIndex(newIndex map[string]interface{}) (map[string]string, error) {
+
+	tableName := fmt.Sprintf("%v", newIndex["IndexCode"])
+	SearchResult, err := findIndexFields(tableName, 1)
+	m := make(map[string]string, 2)
+
+	if err != nil {
+		FuncLogError(err)
+		m["code"] = "303"
+		m["msg"] = "查询异常"
+		return m, err
+	}
+	id := FuncGenerateStringID()
+	newIndex["id"] = id
+	result := SearchResult.Hits
+	for _, v := range result {
+		tmp := fmt.Sprintf("%v", v.Fields["FieldCode"]) //转为字符串
+		_, ok := newIndex[tmp]
+		if ok {
+			if newIndex[tmp] == nil || fmt.Sprintf("%v", newIndex[tmp]) == "" {
+				m["code"] = "401"
+				m["msg"] = tmp + "不能为空"
+				return m, nil
+			}
+			m["code"] = "401"
+			m["msg"] = tmp + "不能为空"
+			return m, nil
+		}
+
+	}
+	//保存
+	IndexMap[tableName].Index(id, newIndex)
+	m["code"] = "200"
+	m["msg"] = "保存成功"
+	return m, nil
 
 }
