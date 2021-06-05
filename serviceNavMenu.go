@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/search/query"
@@ -15,7 +14,7 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 	//打开文件
 	index := IndexMap[indexFieldIndexName]
 	if err != nil {
-		fmt.Errorf("getFields() 异常: %v", err)
+		FuncLogError(err)
 		return nil, err
 	}
 
@@ -45,7 +44,7 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 	result, err = index.SearchInContext(context.Background(), serarch)
 
 	if err != nil {
-		fmt.Errorf("getFields() 异常: %v", err)
+		FuncLogError(err)
 		return nil, err
 	}
 
