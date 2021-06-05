@@ -51,9 +51,8 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 	return result, nil
 
 }
-func saveNexIndex(newIndex map[string]interface{}) (map[string]string, error) {
+func saveNexIndex(newIndex map[string]interface{}, tableName string) (map[string]string, error) {
 
-	tableName := fmt.Sprintf("%v", newIndex["IndexCode"])
 	SearchResult, err := findIndexFields(tableName, 1)
 	m := make(map[string]string, 2)
 
@@ -81,8 +80,8 @@ func saveNexIndex(newIndex map[string]interface{}) (map[string]string, error) {
 		}
 
 	}
-	//保存
 	IndexMap[tableName].Index(id, newIndex)
+
 	m["code"] = "200"
 	m["msg"] = "保存成功"
 	return m, nil
