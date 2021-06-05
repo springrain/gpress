@@ -10,7 +10,7 @@ import (
 //导航菜单
 func initNavMenu() (bool, error) {
 
-	indexField := IndexMap[navMenuName]
+	indexField := IndexMap[indexFieldIndexName]
 
 	//获取当前时间
 	now := time.Now()

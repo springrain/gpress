@@ -9,7 +9,7 @@ import (
 
 func initpageTemplateName() (bool, error) {
 
-	indexField := IndexMap[pageTemplateName]
+	indexField := IndexMap[indexFieldIndexName]
 
 	//获取当前时间
 	now := time.Now()

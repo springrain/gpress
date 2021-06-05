@@ -10,7 +10,7 @@ import (
 //初始化站点信息
 func initSitenInfo() (bool, error) {
 
-	indexField := IndexMap[sitenIndexName]
+	indexField := IndexMap[indexFieldIndexName]
 
 	//创建用户表的索引
 	mapping := bleve.NewIndexMapping()
