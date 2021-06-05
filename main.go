@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"github.com/blevesearch/bleve/v2"
 	"html/template"
 	"net/http"
 
@@ -28,6 +30,38 @@ func main() {
 			panic(err)
 		}
 		c.JSON(200, r)
+	})
+
+	router.GET("/add", func(c *gin.Context) {
+		fmt.Println("1")
+		test := make(map[string]interface{})
+		test["MenuName"] = "测试菜单"
+		test["HrefURL"] = "localhost:8080"
+		test["HrefTarget"] = "跳转方式"
+		test["PID"] = "0"
+		test["ComCode"] = "阿斯弗,sfs"
+		test["TemplateID"] = "模板Id"
+		test["ModuleIndexCode"] = "ModuleIndexCode"
+		test["ChildTemplateID"] = "子页面模板Id"
+		test["ComCode"] = "SortNo"
+		test["Active"] = "1"
+		test["themePC"] = "PC主题"
+		m, _ := saveNexIndex(test, navMenuName)
+		c.JSON(200, m)
+	})
+	router.GET("/getThis", func(c *gin.Context) {
+		fmt.Println("1")
+		index := IndexMap[navMenuName]
+		queryIndexCode := bleve.NewTermQuery("测试菜单")
+		//查询指定字段
+		queryIndexCode.SetField("MenuName")
+		query := bleve.NewConjunctionQuery(queryIndexCode)
+		serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
+		//查询所有字段
+		serarch.Fields = []string{"*"}
+
+		result, _ := index.SearchInContext(context.Background(), serarch)
+		c.JSON(200, result)
 	})
 
 	router.Run(":8080")
