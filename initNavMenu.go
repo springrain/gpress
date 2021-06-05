@@ -28,6 +28,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       1,
 		Active:       3,
+		Required:     1,
 	}
 	//放入文件中
 	indexField.Index(navMenuId.ID, navMenuId)
@@ -44,6 +45,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       2,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuMenuName.ID, navMenuMenuName)
 
@@ -59,6 +61,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       3,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuHrefURL.ID, navMenuHrefURL)
 
@@ -74,6 +77,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       4,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuHrefTarget.ID, navMenuHrefTarget)
 
@@ -89,6 +93,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       5,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuPID.ID, navMenuPID)
 
@@ -104,6 +109,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       6,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuThemePC.ID, navMenuThemePC)
 
@@ -119,6 +125,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       7,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuModuleIndexCode.ID, navMenuModuleIndexCode)
 
@@ -134,6 +141,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       8,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuComCode.ID, navMenuComCode)
 
@@ -149,6 +157,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       9,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuTemplateID.ID, navMenuTemplateID)
 
@@ -164,6 +173,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       10,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuChildTemplateID.ID, navMenuChildTemplateID)
 
@@ -179,6 +189,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       11,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuSortNo.ID, navMenuSortNo)
 
@@ -194,6 +205,7 @@ func initNavMenu() (bool, error) {
 		CreateUser:   createUser,
 		SortNo:       12,
 		Active:       3,
+		Required:     0,
 	}
 	indexField.Index(navMenuActive.ID, navMenuActive)
 
