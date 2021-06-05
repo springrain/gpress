@@ -68,6 +68,8 @@ type IndexFieldStruct struct {
 	FieldType int
 	// FieldFormat 数据格式,用于日期或者数字
 	FieldFormat string
+	// Required 字段是否为空. 0可以为空,1必填
+	Required int
 	// DefaultValue  默认值
 	DefaultValue string
 	// AnalyzerName  分词器名称
