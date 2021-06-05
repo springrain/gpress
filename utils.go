@@ -24,18 +24,16 @@ func getFields(tableName string, isRequired float64) (err error, result *bleve.S
 	// 查询指定表
 	queryIndexCode := bleve.NewTermQuery(tableName)
 	//查询指定字段
-	queryIndexCode.SetField("FieldCode")
-
+	queryIndexCode.SetField("IndexCode")
 	if isRequired != 1 && isRequired != 0 {
 		query = bleve.NewConjunctionQuery(queryIndexCode)
 
 	} else {
-		var f float64 = 0.00
-		var f2 float64 = 2.00
-		queryIsReqired := bleve.NewNumericRangeQuery(&f, &f2)
-		//queryIsReqired := bleve.NewTermQuery("1")
+		var f float64 = 1.00
+		var f2 float64 = 1.00
+		inclusive := true
+		queryIsReqired := bleve.NewNumericRangeInclusiveQuery(&f, &f2, &inclusive, &inclusive)
 		queryIsReqired.SetField("Required")
-		//queryIsReqired.SetField("Required")
 		query = bleve.NewConjunctionQuery(queryIndexCode, queryIsReqired)
 	}
 
