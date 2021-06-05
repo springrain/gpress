@@ -22,7 +22,7 @@ func main() {
 
 	router.GET("/test", func(c *gin.Context) {
 		fmt.Println("1")
-		r, err := getFields(navMenuName, 1)
+		r, err := findIndexFields(navMenuName, 1)
 		fmt.Println(err)
 		if err != nil {
 			panic(err)

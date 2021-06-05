@@ -9,28 +9,28 @@ import (
 )
 
 //获取表中符合条件字段
-//tableName: 表名
+//indexName: 表名
 //isRequired: 是否可以为空
-func getFields(tableName string, isRequired float64) (err error, result *bleve.SearchResult) {
+func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResult, err error) {
 	//打开文件
 	index := IndexMap[indexFieldIndexName]
 	if err != nil {
 		fmt.Errorf("getFields() 异常: %v", err)
-		return err, nil
+		return nil, err
 	}
 
 	var query *query.ConjunctionQuery
 
 	// 查询指定表
-	queryIndexCode := bleve.NewTermQuery(tableName)
+	queryIndexCode := bleve.NewTermQuery(indexName)
 	//查询指定字段
 	queryIndexCode.SetField("IndexCode")
 	if isRequired != 1 && isRequired != 0 {
 		query = bleve.NewConjunctionQuery(queryIndexCode)
 
 	} else {
-		var f float64 = 1.00
-		var f2 float64 = 1.00
+		var f float64 = float64(isRequired)
+		var f2 float64 = float64(isRequired)
 		inclusive := true
 		queryIsReqired := bleve.NewNumericRangeInclusiveQuery(&f, &f2, &inclusive, &inclusive)
 		queryIsReqired.SetField("Required")
@@ -46,9 +46,9 @@ func getFields(tableName string, isRequired float64) (err error, result *bleve.S
 
 	if err != nil {
 		fmt.Errorf("getFields() 异常: %v", err)
-		return err, nil
+		return nil, err
 	}
 
-	return nil, result
+	return result, nil
 
 }
