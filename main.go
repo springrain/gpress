@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -14,10 +15,20 @@ func main() {
 	//设置自定义i函数.要在LoadHTMLGlob加载模板之前.
 	router.SetFuncMap(template.FuncMap{"md5": MD5})
 
-	router.GET("/", IndexApi)
+	//router.GET("/", IndexApi)
 	//LoadHTMLFiles(templates...)
 	//router.LoadHTMLGlob("templates/**/*")
 	router.LoadHTMLGlob(datadir + "theme/default/default/*")
+
+	router.GET("/test", func(c *gin.Context) {
+		fmt.Println("1")
+		r, err := getFields("./zcmsdatadir/NavMenu", 1)
+		fmt.Println(err)
+		if err != nil {
+			panic(err)
+		}
+		c.JSON(200, r)
+	})
 
 	router.Run(":8080")
 }
