@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/search/query"
@@ -10,16 +11,17 @@ import (
 //获取表中符合条件字段
 //indexName: 表名
 //isRequired: 是否可以为空
+//打开文件
+var inclusive = true
+
 func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResult, err error) {
-	//打开文件
-	index := IndexMap[indexFieldIndexName]
 	if err != nil {
 		FuncLogError(err)
 		return nil, err
 	}
 
 	var query *query.ConjunctionQuery
-
+	var index = IndexMap[indexFieldIndexName]
 	// 查询指定表
 	queryIndexCode := bleve.NewTermQuery(indexName)
 	//查询指定字段
@@ -28,8 +30,8 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 		query = bleve.NewConjunctionQuery(queryIndexCode)
 
 	} else {
+
 		var f float64 = float64(isRequired)
-		inclusive := true
 		queryIsReqired := bleve.NewNumericRangeInclusiveQuery(&f, &f, &inclusive, &inclusive)
 		queryIsReqired.SetField("Required")
 		query = bleve.NewConjunctionQuery(queryIndexCode, queryIsReqired)
@@ -48,5 +50,38 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 	}
 
 	return result, nil
+}
+
+//获取菜单树 pid 为0 为一级菜单
+
+func getNavMenu(pid string) (interface{}, error) {
+
+	navIndex := IndexMap[indexNavMenuName]
+	//PID 跟 Active 为查询字段
+	queryPID := bleve.NewTermQuery(pid)
+	queryPID.SetField("PID")
+	queryActive := bleve.NewTermQuery("1")
+	queryActive.SetField("Active")
+	query := bleve.NewConjunctionQuery(queryPID, queryActive)
+	serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
+	serarch.Fields = []string{"*"}
+	result, err := navIndex.SearchInContext(context.Background(), serarch)
+
+	if err != nil {
+		FuncLogError(err)
+		return nil, err
+	}
+	data := make([]map[string]interface{}, len(result.Hits))
+	for i, v := range result.Hits {
+		id := fmt.Sprintf("%v", v.Fields["ID"])
+
+		if id != "" && id != "nil" {
+			value, _ := getNavMenu(id)
+			v.Fields["childs"] = value
+		}
+		data[i] = v.Fields
+	}
+
+	return data, err
 
 }

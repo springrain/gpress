@@ -22,7 +22,7 @@ func initSitenInfo() (bool, error) {
 	//初始化各个字段
 	sitenInfoId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "ID",
 		FieldName:    "站点信息ID",
@@ -38,7 +38,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoTitle := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Title",
 		FieldName:    "标题",
@@ -53,7 +53,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoKeyWords := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "KeyWords",
 		FieldName:    "关键字",
@@ -71,7 +71,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoDescription := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Description",
 		FieldName:    "站点描述",
@@ -89,7 +89,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoTheme := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "theme",
 		FieldName:    "默认主题",
@@ -104,7 +104,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
@@ -119,7 +119,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoThemeWAP := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "themeWAP",
 		FieldName:    "手机主题",
@@ -134,7 +134,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoThemeWEIXIN := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "sitenInfoThemeWEIXIN",
 		FieldName:    "微信主题",
@@ -149,7 +149,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoLogo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Logo",
 		FieldName:    "Logo",
@@ -164,7 +164,7 @@ func initSitenInfo() (bool, error) {
 
 	sitenInfoFavicon := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexSitenIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Favicon",
 		FieldName:    "Favicon",
@@ -177,9 +177,9 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoFavicon.ID, sitenInfoFavicon)
 
-	sitenIndexIndex, err := bleve.New(sitenIndexName, mapping)
+	sitenIndexIndex, err := bleve.New(indexSitenIndexName, mapping)
 	//放到IndexMap中
-	IndexMap[sitenIndexName] = sitenIndexIndex
+	IndexMap[indexSitenIndexName] = sitenIndexIndex
 
 	if err != nil {
 		FuncLogError(err)
