@@ -190,7 +190,7 @@ func initModuleDefault() (bool, error) {
 		IndexName:    "模型数据",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
-		FieldType:    3,
+		FieldType:    1,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
 		CreateUser:   createUser,

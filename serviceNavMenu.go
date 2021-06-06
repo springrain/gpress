@@ -53,6 +53,7 @@ func findIndexFields(indexName string, isRequired int) (result *bleve.SearchResu
 }
 
 //获取菜单树 pid 为0 为一级菜单
+var active float64 = 1
 
 func getNavMenu(pid string) (interface{}, error) {
 
@@ -60,7 +61,7 @@ func getNavMenu(pid string) (interface{}, error) {
 	//PID 跟 Active 为查询字段
 	queryPID := bleve.NewTermQuery(pid)
 	queryPID.SetField("PID")
-	queryActive := bleve.NewTermQuery("1")
+	queryActive := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
 	queryActive.SetField("Active")
 	query := bleve.NewConjunctionQuery(queryPID, queryActive)
 	serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
