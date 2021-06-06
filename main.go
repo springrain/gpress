@@ -5,9 +5,10 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"github.com/blevesearch/bleve/v2"
 	"html/template"
 	"net/http"
+
+	"github.com/blevesearch/bleve/v2"
 
 	"github.com/gin-gonic/gin"
 )
@@ -90,10 +91,10 @@ func main() {
 	router.GET("/getThis", func(c *gin.Context) {
 		fmt.Println("1")
 		index := IndexMap[indexNavMenuName]
-		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
+		//queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
 		//查询指定字段
-		queryIndexCode.SetField("Active")
-		query := bleve.NewConjunctionQuery(queryIndexCode)
+		//queryIndexCode.SetField("Active")
+		query := bleve.NewQueryStringQuery("")
 		serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
 		//查询所有字段
 		serarch.Fields = []string{"*"}
