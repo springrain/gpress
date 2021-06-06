@@ -49,7 +49,7 @@ func main() {
 		test := make(map[string]interface{})
 		test["MenuName"] = "测试菜单"
 		test["ID"] = "716ba31d-37c2-4db3-adaf-a682dfebae2d"
-		test["Active"] = "1"
+		test["Active"] = 1
 		test["ComCode"] = "阿斯弗,sfs!!!!"
 		r := IndexMap[indexNavMenuName].Index("10421e2b-7e8f-456c-941b-7d414bace172", indexNavMenuName)
 		//m, _ := saveNexIndex(test, indexNavMenuName)
@@ -66,7 +66,7 @@ func main() {
 		test["TemplateID"] = "模板Id"
 		test["ModuleIndexCode"] = "ModuleIndexCode"
 		test["ChildTemplateID"] = "子页面模板Id"
-		test["Active"] = "1"
+		test["Active"] = 1
 		test["themePC"] = "PC主题"
 		m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, m)
@@ -82,7 +82,7 @@ func main() {
 		test["TemplateID"] = "模板Id"
 		test["ModuleIndexCode"] = "ModuleIndexCode"
 		test["ChildTemplateID"] = "子页面模板Id"
-		test["Active"] = "1"
+		test["Active"] = 1
 		test["themePC"] = "PC主题"
 		m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, m)
