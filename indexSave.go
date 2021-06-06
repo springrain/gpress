@@ -14,7 +14,7 @@ func saveNexIndex(newIndex map[string]interface{}, tableName string) (map[string
 		return m, err
 	}
 	id := FuncGenerateStringID()
-	newIndex["ID"] = id
+	newIndex["ID"] = "716ba31d-37c2-4db3-adaf-a682dfebae2d"
 	result := SearchResult.Hits
 
 	for _, v := range result {
