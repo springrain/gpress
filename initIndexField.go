@@ -28,17 +28,17 @@ const (
 	//User 用户的索引名称
 	userIndexName = indexDataDir + "User"
 	//siteInfo  站点信息
-	sitenIndexName = indexDataDir + "sitenInfo"
+	indexSitenIndexName = indexDataDir + "sitenInfo"
 	//页面模板
-	pageTemplateName = indexDataDir + "pageTemplate"
+	indexPageTemplateName = indexDataDir + "pageTemplate"
 	//导航菜单
-	navMenuName = indexDataDir + "NavMenu"
+	indexNavMenuName = indexDataDir + "NavMenu"
 	//模型
-	moduleName = indexDataDir + "Module"
+	indexModuleName = indexDataDir + "Module"
 	//模型数据
-	moduleDefaultName = "moduleDefault"
+	indexModuleDefaultName = "moduleDefault"
 	//文章内容
-	contentName = indexDataDir + "Content"
+	indexContentName = indexDataDir + "Content"
 )
 
 //逗号分词器的mapping

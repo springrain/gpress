@@ -24,7 +24,7 @@ func main() {
 
 	router.GET("/test", func(c *gin.Context) {
 		fmt.Println("1")
-		r, err := findIndexFields(navMenuName, 1)
+		r, err := findIndexFields(indexNavMenuName, 1)
 		fmt.Println(err)
 		if err != nil {
 			panic(err)
@@ -43,24 +43,61 @@ func main() {
 		test["TemplateID"] = "模板Id"
 		test["ModuleIndexCode"] = "ModuleIndexCode"
 		test["ChildTemplateID"] = "子页面模板Id"
-		test["ComCode"] = "SortNo"
 		test["Active"] = "1"
 		test["themePC"] = "PC主题"
-		m, _ := saveNexIndex(test, navMenuName)
+		m, _ := saveNexIndex(test, indexNavMenuName)
+		c.JSON(200, m)
+	})
+	router.GET("/add2", func(c *gin.Context) {
+		fmt.Println("1")
+		test := make(map[string]interface{})
+		test["MenuName"] = "一级菜单"
+		test["HrefURL"] = "localhost:8080"
+		test["HrefTarget"] = "跳转方式"
+		test["PID"] = "0"
+		test["ComCode"] = "阿斯弗,sfs"
+		test["TemplateID"] = "模板Id"
+		test["ModuleIndexCode"] = "ModuleIndexCode"
+		test["ChildTemplateID"] = "子页面模板Id"
+		test["Active"] = "1"
+		test["themePC"] = "PC主题"
+		m, _ := saveNexIndex(test, indexNavMenuName)
+		c.JSON(200, m)
+	})
+	router.GET("/add3", func(c *gin.Context) {
+		fmt.Println("1")
+		test := make(map[string]interface{})
+		test["MenuName"] = "我是个子集"
+		test["HrefURL"] = "localhost:8080"
+		test["HrefTarget"] = "跳转方式"
+		test["PID"] = "7216c38e-78fb-4ad9-95bf-294582faa685"
+		test["ComCode"] = "阿斯弗,sfs"
+		test["TemplateID"] = "模板Id"
+		test["ModuleIndexCode"] = "ModuleIndexCode"
+		test["ChildTemplateID"] = "子页面模板Id"
+		test["Active"] = "1"
+		test["themePC"] = "PC主题"
+		m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, m)
 	})
 	router.GET("/getThis", func(c *gin.Context) {
 		fmt.Println("1")
-		index := IndexMap[navMenuName]
-		queryIndexCode := bleve.NewTermQuery("测试菜单")
+		index := IndexMap[indexNavMenuName]
+		queryIndexCode := bleve.NewTermQuery("1")
 		//查询指定字段
-		queryIndexCode.SetField("MenuName")
+		queryIndexCode.SetField("Active")
 		query := bleve.NewConjunctionQuery(queryIndexCode)
 		serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
 		//查询所有字段
 		serarch.Fields = []string{"*"}
 
 		result, _ := index.SearchInContext(context.Background(), serarch)
+		c.JSON(200, result)
+	})
+
+	router.GET("/getnav", func(c *gin.Context) {
+		fmt.Println("1")
+		result, _ := getNavMenu("0")
 		c.JSON(200, result)
 	})
 

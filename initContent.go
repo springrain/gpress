@@ -22,7 +22,7 @@ func initContent() (bool, error) {
 	//初始化各个字段
 	contentId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "ID",
 		FieldName:    "文章内容ID",
@@ -38,7 +38,7 @@ func initContent() (bool, error) {
 
 	contentModuleIndexCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "ModuleIndexCode",
 		FieldName:    "模型的Code",
@@ -52,7 +52,7 @@ func initContent() (bool, error) {
 	indexField.Index(contentModuleIndexCode.ID, contentModuleIndexCode)
 	contentTitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: contentName,
+		IndexCode: indexContentName,
 		IndexName: "文章内容",
 		FieldCode: "Title",
 		FieldName: "标题",
@@ -70,7 +70,7 @@ func initContent() (bool, error) {
 
 	contentKeyWords := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: contentName,
+		IndexCode: indexContentName,
 		IndexName: "文章内容",
 		FieldCode: "KeyWords",
 		FieldName: "关键字",
@@ -88,7 +88,7 @@ func initContent() (bool, error) {
 
 	contentDescription := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: contentName,
+		IndexCode: indexContentName,
 		IndexName: "文章内容",
 		FieldCode: "Description",
 		FieldName: "站点描述",
@@ -106,7 +106,7 @@ func initContent() (bool, error) {
 
 	contentPageURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "PageURL",
 		FieldName:    "自身页面路径",
@@ -121,7 +121,7 @@ func initContent() (bool, error) {
 
 	contentSubtitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: contentName,
+		IndexCode: indexContentName,
 		IndexName: "文章内容",
 		FieldCode: "Subtitle",
 		FieldName: "副标题",
@@ -139,7 +139,7 @@ func initContent() (bool, error) {
 
 	contentNavMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "NavMenuId",
 		FieldName:    "导航ID,逗号(,)隔开",
@@ -156,7 +156,7 @@ func initContent() (bool, error) {
 
 	contentNavMenuName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "NavMenuName",
 		FieldName:    "导航名称",
@@ -173,7 +173,7 @@ func initContent() (bool, error) {
 
 	contentTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "TemplateID",
 		FieldName:    "模板Id",
@@ -188,7 +188,7 @@ func initContent() (bool, error) {
 
 	contentContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "Content",
 		FieldName:    "文章内容",
@@ -205,7 +205,7 @@ func initContent() (bool, error) {
 
 	contentCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
@@ -220,7 +220,7 @@ func initContent() (bool, error) {
 
 	moduleUpdateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
@@ -235,7 +235,7 @@ func initContent() (bool, error) {
 
 	moduleCreateUser := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
@@ -250,7 +250,7 @@ func initContent() (bool, error) {
 
 	moduleSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
@@ -265,7 +265,7 @@ func initContent() (bool, error) {
 
 	moduleActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    contentName,
+		IndexCode:    indexContentName,
 		IndexName:    "文章内容",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
@@ -278,9 +278,9 @@ func initContent() (bool, error) {
 	}
 	indexField.Index(moduleActive.ID, moduleActive)
 
-	contentIndex, err := bleve.New(contentName, mapping)
+	contentIndex, err := bleve.New(indexContentName, mapping)
 	//放到IndexMap中
-	IndexMap[contentName] = contentIndex
+	IndexMap[indexContentName] = contentIndex
 
 	if err != nil {
 		FuncLogError(err)

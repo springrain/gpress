@@ -15,7 +15,7 @@ func initModuleDefault() (bool, error) {
 	//初始化各个字段
 	moduleDefaultId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
+		IndexCode:    indexModuleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "ID",
 		FieldName:    "模型数据ID",
@@ -31,7 +31,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleDefaultTitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: moduleDefaultName,
+		IndexCode: indexModuleDefaultName,
 		IndexName: "模型数据",
 		FieldCode: "Title",
 		FieldName: "标题",
@@ -47,7 +47,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleDefaultKeyWords := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: moduleDefaultName,
+		IndexCode: indexModuleDefaultName,
 		IndexName: "模型数据",
 		FieldCode: "KeyWords",
 		FieldName: "关键字",
@@ -63,7 +63,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleDefaultDescription := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: moduleDefaultName,
+		IndexCode: indexModuleDefaultName,
 		IndexName: "模型数据",
 		FieldCode: "Description",
 		FieldName: "站点描述",
@@ -79,7 +79,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleDefaultPageURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
+		IndexCode:    indexModuleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "PageURL",
 		FieldName:    "自身页面路径",
@@ -94,7 +94,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleDefaultSubtitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: moduleDefaultName,
+		IndexCode: indexModuleDefaultName,
 		IndexName: "模型数据",
 		FieldCode: "Subtitle",
 		FieldName: "副标题",
@@ -110,7 +110,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleDefaultContent := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: moduleDefaultName,
+		IndexCode: indexModuleDefaultName,
 		IndexName: "模型数据",
 		FieldCode: "Content",
 		FieldName: "文章内容",
@@ -126,7 +126,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleDefaultCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
+		IndexCode:    indexModuleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
@@ -141,7 +141,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleUpdateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
+		IndexCode:    indexModuleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
@@ -156,7 +156,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleCreateUser := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
+		IndexCode:    indexModuleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
@@ -171,7 +171,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
+		IndexCode:    indexModuleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
@@ -186,7 +186,7 @@ func initModuleDefault() (bool, error) {
 
 	moduleActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleDefaultName,
+		IndexCode:    indexModuleDefaultName,
 		IndexName:    "模型数据",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",

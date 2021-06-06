@@ -18,7 +18,7 @@ func initNavMenu() (bool, error) {
 	//初始化各个字段
 	navMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "ID",
 		FieldName:    "导航菜单ID",
@@ -35,7 +35,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuMenuName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "MenuName",
 		FieldName:    "菜单名称",
@@ -51,7 +51,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuHrefURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "HrefURL",
 		FieldName:    "跳转路径",
@@ -67,7 +67,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuHrefTarget := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "HrefTarget",
 		FieldName:    "跳转方式",
@@ -83,7 +83,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuPID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "PID",
 		FieldName:    "父菜单ID",
@@ -99,7 +99,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
@@ -115,7 +115,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuModuleIndexCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "ModuleIndexCode",
 		FieldName:    "Module的索引名称",
@@ -131,7 +131,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuComCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "ComCode",
 		FieldName:    "逗号隔开的全路径",
@@ -147,7 +147,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "TemplateID",
 		FieldName:    "模板Id",
@@ -163,7 +163,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuChildTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "ChildTemplateID",
 		FieldName:    "子页面模板Id",
@@ -179,7 +179,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
@@ -195,7 +195,7 @@ func initNavMenu() (bool, error) {
 
 	navMenuActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    navMenuName,
+		IndexCode:    indexNavMenuName,
 		IndexName:    "导航菜单",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
@@ -213,10 +213,10 @@ func initNavMenu() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	navMenuIndex, err := bleve.New(navMenuName, mapping)
+	navMenuIndex, err := bleve.New(indexNavMenuName, mapping)
 
 	//放到IndexMap中
-	IndexMap[navMenuName] = navMenuIndex
+	IndexMap[indexNavMenuName] = navMenuIndex
 
 	if err != nil {
 		FuncLogError(err)

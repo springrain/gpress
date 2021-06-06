@@ -17,7 +17,7 @@ func initModule() (bool, error) {
 	//初始化各个字段
 	moduleId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "ID",
 		FieldName:    "模型ID",
@@ -33,7 +33,7 @@ func initModule() (bool, error) {
 
 	moduleModuleIndexCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "ModuleIndexCode",
 		FieldName:    "模型Code",
@@ -48,7 +48,7 @@ func initModule() (bool, error) {
 
 	moduleModuleName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "ModuleName",
 		FieldName:    "模型名称",
@@ -63,7 +63,7 @@ func initModule() (bool, error) {
 
 	moduleCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
@@ -78,7 +78,7 @@ func initModule() (bool, error) {
 
 	moduleUpdateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
@@ -93,7 +93,7 @@ func initModule() (bool, error) {
 
 	moduleCreateUser := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
@@ -108,7 +108,7 @@ func initModule() (bool, error) {
 
 	moduleSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
@@ -123,7 +123,7 @@ func initModule() (bool, error) {
 
 	moduleActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    moduleName,
+		IndexCode:    indexModuleName,
 		IndexName:    "模型",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
@@ -140,9 +140,9 @@ func initModule() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	moduleIndex, err := bleve.New(moduleName, mapping)
+	moduleIndex, err := bleve.New(indexModuleName, mapping)
 	//放到IndexMap中
-	IndexMap[moduleName] = moduleIndex
+	IndexMap[indexModuleName] = moduleIndex
 
 	//初始化数据
 	module := make(map[string]interface{})

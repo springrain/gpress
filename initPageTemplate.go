@@ -17,7 +17,7 @@ func initpageTemplateName() (bool, error) {
 	//初始化各个字段
 	pageId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    pageTemplateName,
+		IndexCode:    indexPageTemplateName,
 		IndexName:    "页面模板",
 		FieldCode:    "ID",
 		FieldName:    "页面模板id",
@@ -33,7 +33,7 @@ func initpageTemplateName() (bool, error) {
 
 	pageTemplateNameName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexPageTemplateName,
 		IndexName:    "页面模板",
 		FieldCode:    "TemplateName",
 		FieldName:    "模板名称",
@@ -48,7 +48,7 @@ func initpageTemplateName() (bool, error) {
 
 	pageTemplateNamePath := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexPageTemplateName,
 		IndexName:    "页面模板",
 		FieldCode:    "TemplatePath",
 		FieldName:    "模板路径",
@@ -63,7 +63,7 @@ func initpageTemplateName() (bool, error) {
 
 	pageSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexPageTemplateName,
 		IndexName:    "页面模板",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
@@ -78,7 +78,7 @@ func initpageTemplateName() (bool, error) {
 
 	pageActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    sitenIndexName,
+		IndexCode:    indexPageTemplateName,
 		IndexName:    "页面模板",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
@@ -95,10 +95,10 @@ func initpageTemplateName() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	//指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	pageTemplateIndex, err := bleve.New(pageTemplateName, mapping)
+	pageTemplateIndex, err := bleve.New(indexPageTemplateName, mapping)
 
 	//放到IndexMap中
-	IndexMap[pageTemplateName] = pageTemplateIndex
+	IndexMap[indexPageTemplateName] = pageTemplateIndex
 
 	if err != nil {
 		FuncLogError(err)
