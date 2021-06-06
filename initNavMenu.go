@@ -199,7 +199,7 @@ func initNavMenu() (bool, error) {
 		IndexName:    "导航菜单",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
-		FieldType:    3,
+		FieldType:    1,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
 		CreateUser:   createUser,

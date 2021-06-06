@@ -90,7 +90,7 @@ func main() {
 	router.GET("/getThis", func(c *gin.Context) {
 		fmt.Println("1")
 		index := IndexMap[indexNavMenuName]
-		queryIndexCode := bleve.NewTermQuery("1")
+		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
 		//查询指定字段
 		queryIndexCode.SetField("Active")
 		query := bleve.NewConjunctionQuery(queryIndexCode)
