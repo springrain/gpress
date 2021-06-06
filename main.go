@@ -52,7 +52,7 @@ func main() {
 		test["ID"] = "716ba31d-37c2-4db3-adaf-a682dfebae2d"
 		test["Active"] = 1
 		test["ComCode"] = "阿斯弗,sfs!!!!"
-		r := IndexMap[indexNavMenuName].Index("10421e2b-7e8f-456c-941b-7d414bace172", indexNavMenuName)
+		r := IndexMap[indexNavMenuName].Index("7faed298-157b-4a1e-9546-b0f83d13e401", indexNavMenuName)
 		//m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, r)
 	})
@@ -91,11 +91,11 @@ func main() {
 	router.GET("/getThis", func(c *gin.Context) {
 		fmt.Println("1")
 		index := IndexMap[indexNavMenuName]
-		//queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
+		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
 		//查询指定字段
-		//queryIndexCode.SetField("Active")
-		query := bleve.NewQueryStringQuery("")
-		serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
+		queryIndexCode.SetField("Active")
+		//query := bleve.NewQueryStringQuery("")
+		serarch := bleve.NewSearchRequestOptions(queryIndexCode, 1000, 0, false)
 		//查询所有字段
 		serarch.Fields = []string{"*"}
 
