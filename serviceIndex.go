@@ -14,7 +14,7 @@ var inclusive = true
 // findIndexFieldResult 获取表中符合条件字段
 // indexName: 表名/索引名
 // isRequired: 是否可以为空
-func findIndexFieldResult(ctx context.Context, indexName string, isRequired int, page *Page) (*bleve.SearchResult, *Page, error) {
+func findIndexFieldResult(ctx context.Context, indexName string, isRequired int) (*bleve.SearchResult, error) {
 
 	var query *query.ConjunctionQuery
 	var index = IndexMap[indexFieldIndexName]
@@ -33,13 +33,7 @@ func findIndexFieldResult(ctx context.Context, indexName string, isRequired int,
 	}
 
 	//query: 条件  size:大小  from :起始
-	queryfrom := 0
-	querysize := 1000
-	if page != nil {
-		queryfrom = page.PageSize * (page.PageNo - 1)
-		querysize = page.PageSize
-	}
-	searchRequest := bleve.NewSearchRequestOptions(query, querysize, queryfrom, false)
+	searchRequest := bleve.NewSearchRequestOptions(query, 1000, 0, false)
 	//查询所有字段
 	searchRequest.Fields = []string{"*"}
 
@@ -51,17 +45,14 @@ func findIndexFieldResult(ctx context.Context, indexName string, isRequired int,
 
 	if err != nil {
 		FuncLogError(err)
-		return nil, page, err
+		return nil, err
 	}
-	//设置总条数
-	page.setTotalCount(int(searchResult.Total))
-
-	return searchResult, page, nil
+	return searchResult, nil
 }
 
 func saveNexIndex(ctx context.Context, newIndex map[string]interface{}, tableName string) (map[string]string, error) {
 
-	SearchResult, _, err := findIndexFieldResult(ctx, tableName, 1, nil)
+	SearchResult, err := findIndexFieldResult(ctx, tableName, 1)
 	m := make(map[string]string, 2)
 
 	if err != nil {

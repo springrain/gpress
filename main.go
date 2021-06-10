@@ -25,7 +25,7 @@ func main() {
 
 	router.GET("/test", func(c *gin.Context) {
 		fmt.Println("1")
-		r, _, err := findIndexFieldResult(c.Request.Context(), indexNavMenuName, 1, nil)
+		r, err := findIndexFieldResult(c.Request.Context(), indexNavMenuName, 1)
 		fmt.Println(err)
 		if err != nil {
 			panic(err)
