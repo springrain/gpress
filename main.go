@@ -25,7 +25,7 @@ func main() {
 
 	router.GET("/test", func(c *gin.Context) {
 		fmt.Println("1")
-		r, err := findIndexFields(indexNavMenuName, 1)
+		r, _, err := findIndexFieldResult(c.Request.Context(), indexNavMenuName, 1, nil)
 		fmt.Println(err)
 		if err != nil {
 			panic(err)
@@ -42,7 +42,7 @@ func main() {
 		test["PID"] = "0"
 		test["ComCode"] = "阿斯弗,sfs!!!!"
 
-		m, _ := saveNexIndex(test, indexNavMenuName)
+		m, _ := saveNexIndex(c.Request.Context(), test, indexNavMenuName)
 		c.JSON(200, m)
 	})
 	router.GET("/save", func(c *gin.Context) {
@@ -69,7 +69,7 @@ func main() {
 		test["ChildTemplateID"] = "子页面模板Id"
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
-		m, _ := saveNexIndex(test, indexNavMenuName)
+		m, _ := saveNexIndex(c.Request.Context(), test, indexNavMenuName)
 		c.JSON(200, m)
 	})
 	router.GET("/add3", func(c *gin.Context) {
@@ -85,7 +85,7 @@ func main() {
 		test["ChildTemplateID"] = "子页面模板Id"
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
-		m, _ := saveNexIndex(test, indexNavMenuName)
+		m, _ := saveNexIndex(c.Request.Context(), test, indexNavMenuName)
 		c.JSON(200, m)
 	})
 	router.GET("/getThis", func(c *gin.Context) {
