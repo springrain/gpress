@@ -33,16 +33,23 @@ func main() {
 		c.JSON(200, r)
 	})
 
+	//测试新增数据
 	router.GET("/add", func(c *gin.Context) {
 		fmt.Println("1")
-		test := make(map[string]interface{})
-		test["MenuName"] = "测试菜单"
+		test := make(map[string]interface{}) //新建map
+		test["MenuName"] = "一级菜单名称"
 		test["HrefURL"] = "localhost:8080"
 		test["HrefTarget"] = "跳转方式"
-		test["PID"] = "0"
-		test["ComCode"] = "阿斯弗,sfs!!!!"
+		test["PID"] = "0" //顶级菜单目录
+		test["ComCode"] = "使用逗号分割,字符串,测试"
+		test["Active"] = 1    //是否有效
+		test["themePC"] = "1" //是否pc主题
+		test["ModuleIndexCode"] = "Module的索引名称"
+		test["TemplateID"] = "010101"      //模板Id
+		test["ChildTemplateID"] = "010201" //子页面模板Id
+		test["SortNo"] = "1"               //排序
 
-		m, _ := saveNexIndex(c.Request.Context(), test, indexNavMenuName)
+		m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
 		c.JSON(200, m)
 	})
 	router.GET("/save", func(c *gin.Context) {
@@ -69,7 +76,7 @@ func main() {
 		test["ChildTemplateID"] = "子页面模板Id"
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
-		m, _ := saveNexIndex(c.Request.Context(), test, indexNavMenuName)
+		m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
 		c.JSON(200, m)
 	})
 	router.GET("/add3", func(c *gin.Context) {
@@ -85,7 +92,7 @@ func main() {
 		test["ChildTemplateID"] = "子页面模板Id"
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
-		m, _ := saveNexIndex(c.Request.Context(), test, indexNavMenuName)
+		m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
 		c.JSON(200, m)
 	})
 	router.GET("/getThis", func(c *gin.Context) {
