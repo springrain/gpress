@@ -29,7 +29,7 @@ func getNavMenu(pid string) (interface{}, error) {
 	}
 	data := make([]map[string]interface{}, len(result.Hits))
 	for i, v := range result.Hits {
-		id := fmt.Sprintf("%v", v.Fields["ID"])
+		id := fmt.Sprintf("%v", v.Fields["ID"]) //强转为string
 
 		if id != "" && id != "nil" {
 			value, _ := getNavMenu(id)

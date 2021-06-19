@@ -50,7 +50,7 @@ func findIndexFieldResult(ctx context.Context, indexName string, isRequired int)
 	return searchResult, nil
 }
 
-func saveNexIndex(ctx context.Context, newIndex map[string]interface{}, tableName string) (map[string]string, error) {
+func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableName string) (map[string]string, error) {
 
 	SearchResult, err := findIndexFieldResult(ctx, tableName, 1)
 	m := make(map[string]string, 2)
