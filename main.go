@@ -48,20 +48,22 @@ func main() {
 		test["TemplateID"] = "010101"      //模板Id
 		test["ChildTemplateID"] = "010201" //子页面模板Id
 		test["SortNo"] = "1"               //排序
-
-		m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
-		c.JSON(200, m)
+		test["ID"] = "001"
+		//m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
+		r := IndexMap[indexNavMenuName].Index("001", test)
+		c.JSON(200, r)
 	})
-	router.GET("/save", func(c *gin.Context) {
+	router.GET("/update", func(c *gin.Context) {
 		fmt.Println("1")
 		test := make(map[string]interface{})
-		test["MenuName"] = "测试菜单"
-		test["ID"] = "716ba31d-37c2-4db3-adaf-a682dfebae2d"
-		test["Active"] = 1
-		test["ComCode"] = "阿斯弗,sfs!!!!"
-		r := IndexMap[indexNavMenuName].Index("7faed298-157b-4a1e-9546-b0f83d13e401", indexNavMenuName)
+		test["ID"] = "001"
+
+		test["ChildTemplateID"] = "010202" //子页面模板Id
+		test["SortNo"] = "1"               //排序
+		//r := IndexMap[indexNavMenuName].Index("001", test)
+		x := editIndex(context.Background(), "001", indexNavMenuName, test)
 		//m, _ := saveNexIndex(test, indexNavMenuName)
-		c.JSON(200, r)
+		c.JSON(200, x)
 	})
 	router.GET("/add2", func(c *gin.Context) {
 		fmt.Println("1")
