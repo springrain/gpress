@@ -50,6 +50,7 @@ func findIndexFieldResult(ctx context.Context, indexName string, isRequired int)
 	return searchResult, nil
 }
 
+// 保存新索引
 func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableName string) (map[string]string, error) {
 
 	SearchResult, err := findIndexFieldResult(ctx, tableName, 1)
@@ -87,5 +88,33 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 	m["code"] = "200"
 	m["msg"] = "保存成功"
 	return m, nil
+}
 
+func editIndex(ctx context.Context, indexId string, tableName string, newMap map[string]interface{}) error {
+	//查出原始数据
+	var index = IndexMap[tableName]           //拿到index
+	queryIndex := bleve.NewTermQuery(indexId) //查询索引
+	queryIndex.SetField("ID")
+	serarchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
+	serarchRequest.Fields = []string{"*"} //查询所有字段
+	result, err := index.SearchInContext(ctx, serarchRequest)
+
+	if err != nil {
+		FuncLogError(err)
+		return err
+	}
+	//如果没有查出来数据 证明数据错误
+	if len(result.Hits) == 0 {
+		FuncLogError(err)
+		return fmt.Errorf("此数据不存在 ,请检查数据")
+	}
+	oldMap := result.Hits[0].Fields
+	for k, v := range oldMap {
+		if _, ok := newMap[k]; !ok {
+			//如果key不存在
+			newMap[k] = v
+		}
+	}
+	index.Index(indexId, newMap)
+	return nil
 }
