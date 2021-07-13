@@ -90,11 +90,12 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 	return m, nil
 }
 
-func editIndex(ctx context.Context, indexId string, tableName string, newMap map[string]interface{}) error {
+func updateIndex(ctx context.Context, tableName string, indexId string, newMap map[string]interface{}) error {
 	//查出原始数据
-	var index = IndexMap[tableName]           //拿到index
-	queryIndex := bleve.NewTermQuery(indexId) //查询索引
-	queryIndex.SetField("ID")
+	var index = IndexMap[tableName]                      //拿到index
+	queryIndex := bleve.NewDocIDQuery([]string{indexId}) //查询索引
+	//queryIndex := bleve.NewTermQuery(indexId)            //查询索引
+	//queryIndex.SetField("ID")
 	serarchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
 	serarchRequest.Fields = []string{"*"} //查询所有字段
 	result, err := index.SearchInContext(ctx, serarchRequest)
@@ -104,15 +105,17 @@ func editIndex(ctx context.Context, indexId string, tableName string, newMap map
 		return err
 	}
 	//如果没有查出来数据 证明数据错误
-	if len(result.Hits) == 0 {
+	if len(result.Hits) <= 0 {
 		FuncLogError(err)
 		return fmt.Errorf("此数据不存在 ,请检查数据")
 	}
 	oldMap := result.Hits[0].Fields
+
 	for k, v := range oldMap {
+		newV := v
 		if _, ok := newMap[k]; !ok {
 			//如果key不存在
-			newMap[k] = v
+			newMap[k] = newV
 		}
 	}
 	index.Index(indexId, newMap)
