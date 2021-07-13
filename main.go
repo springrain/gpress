@@ -61,7 +61,7 @@ func main() {
 		test["ChildTemplateID"] = "010202" //子页面模板Id
 		test["SortNo"] = "1"               //排序
 		//r := IndexMap[indexNavMenuName].Index("001", test)
-		x := editIndex(context.Background(), "001", indexNavMenuName, test)
+		x := updateIndex(context.Background(), indexNavMenuName, "001", test)
 		//m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, x)
 	})
