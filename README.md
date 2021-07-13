@@ -31,7 +31,7 @@
 然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 
 
-ID统一使用UUID字符串,确保全局唯一      
+ID默认使用时间戳(23位)+随机数(9位),全局唯一      
 
 
 ### 索引和字段(索引名:IndexField)
