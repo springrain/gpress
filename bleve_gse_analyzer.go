@@ -10,6 +10,12 @@ const (
 	gseAnalyzerName = "gse"
 )
 
+// 注册分词器
+func init() {
+	registry.RegisterTokenizer(gseAnalyzerName, gseTokenizerConstructor)
+	registry.RegisterAnalyzer(gseAnalyzerName, gseAnalyzerConstructor)
+}
+
 func gseAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (*analysis.Analyzer, error) {
 
 	tokenizer, err := cache.TokenizerNamed(gseAnalyzerName)
@@ -18,11 +24,6 @@ func gseAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache
 	}
 	alz := &analysis.Analyzer{Tokenizer: tokenizer}
 	return alz, nil
-}
-
-func init() {
-	registry.RegisterTokenizer(gseAnalyzerName, gseTokenizerConstructor)
-	registry.RegisterAnalyzer(gseAnalyzerName, gseAnalyzerConstructor)
 }
 
 type gseTokenizer struct {
