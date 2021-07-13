@@ -35,6 +35,7 @@ func main() {
 
 	//测试新增数据
 	router.GET("/add", func(c *gin.Context) {
+
 		fmt.Println("1")
 		test := make(map[string]interface{}) //新建map
 		test["MenuName"] = "一级菜单名称"
@@ -54,6 +55,7 @@ func main() {
 		c.JSON(200, r)
 	})
 	router.GET("/update", func(c *gin.Context) {
+		ctx := c.Request.Context()
 		fmt.Println("1")
 		test := make(map[string]interface{})
 		test["ID"] = "001"
@@ -61,7 +63,7 @@ func main() {
 		test["ChildTemplateID"] = "010202" //子页面模板Id
 		test["SortNo"] = "1"               //排序
 		//r := IndexMap[indexNavMenuName].Index("001", test)
-		x := updateIndex(context.Background(), indexNavMenuName, "001", test)
+		x := updateIndex(ctx, indexNavMenuName, "001", test)
 		//m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, x)
 	})
