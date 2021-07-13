@@ -8,6 +8,12 @@ import (
 
 const commaAnalyzerName = "comma"
 
+// 注册分词器
+func init() {
+	registry.RegisterTokenizer(commaAnalyzerName, commaTokenizerConstructor)
+	registry.RegisterAnalyzer(commaAnalyzerName, commaAnalyzerConstructor)
+}
+
 func commaTokenizerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Tokenizer, error) {
 	return character.NewCharacterTokenizer(isComma), nil
 }
@@ -34,10 +40,4 @@ func commaAnalyzerConstructor(config map[string]interface{}, cache *registry.Cac
 		Tokenizer: commaTokenizer,
 	}
 	return &rv, nil
-}
-
-// 注册分词器
-func init() {
-	registry.RegisterTokenizer(commaAnalyzerName, commaTokenizerConstructor)
-	registry.RegisterAnalyzer(commaAnalyzerName, commaAnalyzerConstructor)
 }
