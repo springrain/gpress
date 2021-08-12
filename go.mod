@@ -1,4 +1,4 @@
-module gitee.com/chunanyong/zcms
+module gitee.com/chunanyong/gpress
 
 go 1.16
 
