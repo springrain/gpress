@@ -1,7 +1,7 @@
-# zcms
+# gpress
 
 ## 介绍
-云原生高性能CMS,基于gin + golang template + Bleve全文检索实现,100M内存即可完美运行  
+云原生高性能内容平台,基于gin + golang template + Bleve全文检索实现,100M内存即可完美运行  
 
 功能说明:  
 - 后台就一种用户,登录就是管理员,菜单路由写死,不需要权限分配  

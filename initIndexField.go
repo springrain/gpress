@@ -23,7 +23,7 @@ var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
 //索引名称
 const (
 	//基本目录
-	datadir = "./zcmsdatadir/"
+	datadir = "./gpressdatadir/"
 	//数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
 	indexDataDir = datadir + "index/"
 	//索引字段的名称
@@ -122,7 +122,7 @@ func checkInstall() (bool, error) {
 		}
 		return true, errPathExists
 	}
-	//如果是初次安装,创建数据目录,默认的 ./zcmsdatadir 必须存在,页面模板文件夹 ./zcmsdatadir/template
+	//如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
 	errMkdir := os.Mkdir(indexDataDir, os.ModePerm)
 	if errMkdir != nil {
 		FuncLogError(errMkdir)
