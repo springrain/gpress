@@ -5,27 +5,37 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"html/template"
-	"net/http"
 
 	"github.com/blevesearch/bleve/v2"
 
-	"github.com/gin-gonic/gin"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 func main() {
-	router := gin.Default()
-	//设置自定义i函数.要在LoadHTMLGlob加载模板之前.
-	router.SetFuncMap(template.FuncMap{"md5": MD5})
 
+	// server.Default() creates a Hertz with recovery middleware.
+	// If you need a pure hertz, you can use server.New()
+	h := server.Default(server.WithHostPorts(":8080"))
+
+	//h.StaticFS("/", &app.FS{Root: "./", GenerateIndexPages: true})
+
+	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {
+		c.String(consts.StatusOK, "Hello hertz!")
+	})
+	//router := gin.Default()
+	//设置自定义i函数.要在LoadHTMLGlob加载模板之前.
+	//router.SetFuncMap(template.FuncMap{"md5": MD5})
 	//router.GET("/", IndexApi)
 	//LoadHTMLFiles(templates...)
 	//router.LoadHTMLGlob("templates/**/*")
-	router.LoadHTMLGlob(datadir + "theme/default/default/*")
+	//router.LoadHTMLGlob(datadir + "theme/default/default/*")
 
-	router.GET("/test", func(c *gin.Context) {
+	//router.GET("/test", func(c *gin.Context) {
+	h.GET("/test", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
-		r, err := findIndexFieldResult(c.Request.Context(), indexNavMenuName, 1)
+		r, err := findIndexFieldResult(ctx, indexNavMenuName, 1)
 		fmt.Println(err)
 		if err != nil {
 			panic(err)
@@ -34,7 +44,8 @@ func main() {
 	})
 
 	//测试新增数据
-	router.GET("/add", func(c *gin.Context) {
+	//router.GET("/add", func(c *gin.Context) {
+	h.GET("/add", func(ctx context.Context, c *app.RequestContext) {
 
 		fmt.Println("1")
 		test := make(map[string]interface{}) //新建map
@@ -54,8 +65,8 @@ func main() {
 		r := IndexMap[indexNavMenuName].Index("001", test)
 		c.JSON(200, r)
 	})
-	router.GET("/update", func(c *gin.Context) {
-		ctx := c.Request.Context()
+	//router.GET("/update", func(c *gin.Context) {
+	h.GET("/update", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
 		test := make(map[string]interface{})
 		test["ID"] = "001"
@@ -67,7 +78,8 @@ func main() {
 		//m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, x)
 	})
-	router.GET("/add2", func(c *gin.Context) {
+	//router.GET("/add2", func(c *gin.Context) {
+	h.GET("/add2", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
 		test := make(map[string]interface{})
 		test["MenuName"] = "一级菜单"
@@ -80,10 +92,11 @@ func main() {
 		test["ChildTemplateID"] = "子页面模板Id"
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
-		m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
+		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
 		c.JSON(200, m)
 	})
-	router.GET("/add3", func(c *gin.Context) {
+	//router.GET("/add3", func(c *gin.Context) {
+	h.GET("/add3", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
 		test := make(map[string]interface{})
 		test["MenuName"] = "我是个子集"
@@ -96,10 +109,11 @@ func main() {
 		test["ChildTemplateID"] = "子页面模板Id"
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
-		m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
+		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
 		c.JSON(200, m)
 	})
-	router.GET("/getThis", func(c *gin.Context) {
+	//router.GET("/getThis", func(c *gin.Context) {
+	h.GET("/getThis", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
 		index := IndexMap[indexNavMenuName]
 		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
@@ -114,20 +128,23 @@ func main() {
 		c.JSON(200, result)
 	})
 
-	router.GET("/getnav", func(c *gin.Context) {
+	//router.GET("/getnav", func(c *gin.Context) {
+	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
 		result, _ := getNavMenu("0")
 		c.JSON(200, result)
 	})
-
-	router.Run(":8080")
+	h.Spin()
+	//router.Run(":8080")
 }
 
 //请求响应函数
+/*
 func IndexApi(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{"name": "test"})
 
 }
+*/
 
 //自定义函数
 func MD5(in string) ([]string, error) {
