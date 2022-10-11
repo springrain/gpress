@@ -1,7 +1,7 @@
 # gpress
 
 ## 介绍
-云原生高性能内容平台,基于gin + golang template + Bleve全文检索实现,100M内存即可完美运行  
+云原生高性能内容平台,基于Hertz + Go template + Bleve全文检索实现,100M内存即可完美运行  
 
 功能说明:  
 - 后台就一种用户,登录就是管理员,菜单路由写死,不需要权限分配  
@@ -12,7 +12,7 @@
 
 
 ## 软件架构
-使用 gin + golang template + Bleve全文检索,不使用数据库  
+使用 Hertz +  Go template + Bleve全文检索,不使用数据库  
 使用golang 1.16 的新特性 Go embed,打包静态资源文件  
 
 不使用struct对象,全部使用map保存数据,可以随时增加属性字段.记录所有字段的名称,类型,中文名,code
