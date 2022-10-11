@@ -13,7 +13,7 @@
 
 ## 软件架构
 使用 Hertz +  Go template + Bleve全文检索,不使用数据库  
-使用golang 1.16 的新特性 Go embed,打包静态资源文件  
+使用 Go 1.16 的新特性 Go embed,打包静态资源文件  
 
 不使用struct对象,全部使用map保存数据,可以随时增加属性字段.记录所有字段的名称,类型,中文名,code
 
