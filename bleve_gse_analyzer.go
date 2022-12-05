@@ -16,13 +16,13 @@ func init() {
 	registry.RegisterAnalyzer(gseAnalyzerName, gseAnalyzerConstructor)
 }
 
-func gseAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (*analysis.Analyzer, error) {
+func gseAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Analyzer, error) {
 
 	tokenizer, err := cache.TokenizerNamed(gseAnalyzerName)
 	if err != nil {
 		return nil, err
 	}
-	alz := &analysis.Analyzer{Tokenizer: tokenizer}
+	alz := &analysis.DefaultAnalyzer{Tokenizer: tokenizer}
 	return alz, nil
 }
 
