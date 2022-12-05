@@ -9,10 +9,10 @@ import (
 func initModuleDefault() (bool, error) {
 	indexField := IndexMap[indexFieldIndexName]
 
-	//获取当前时间
+	// 获取当前时间
 	now := time.Now()
 
-	//初始化各个字段
+	// 初始化各个字段
 	moduleDefaultId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
@@ -26,7 +26,7 @@ func initModuleDefault() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	//放入文件中
+	// 放入文件中
 	indexField.Index(moduleDefaultId.ID, moduleDefaultId)
 
 	moduleDefaultTitle := IndexFieldStruct{
@@ -36,7 +36,7 @@ func initModuleDefault() (bool, error) {
 		FieldCode: "Title",
 		FieldName: "标题",
 		FieldType: 3,
-		//文章标题使用中文分词
+		// 文章标题使用中文分词
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -52,7 +52,7 @@ func initModuleDefault() (bool, error) {
 		FieldCode: "KeyWords",
 		FieldName: "关键字",
 		FieldType: 3,
-		//文章关键字使用逗号分词器
+		// 文章关键字使用逗号分词器
 		AnalyzerName: commaAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -68,7 +68,7 @@ func initModuleDefault() (bool, error) {
 		FieldCode: "Description",
 		FieldName: "站点描述",
 		FieldType: 3,
-		//文章描述使用中文分词器
+		// 文章描述使用中文分词器
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -99,7 +99,7 @@ func initModuleDefault() (bool, error) {
 		FieldCode: "Subtitle",
 		FieldName: "副标题",
 		FieldType: 3,
-		//文章副标题使用中文分词器
+		// 文章副标题使用中文分词器
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -115,7 +115,7 @@ func initModuleDefault() (bool, error) {
 		FieldCode: "Content",
 		FieldName: "文章内容",
 		FieldType: 3,
-		//文章内容使用中文分词器
+		// 文章内容使用中文分词器
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
