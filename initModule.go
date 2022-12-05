@@ -8,13 +8,12 @@ import (
 )
 
 func initModule() (bool, error) {
-
 	indexField := IndexMap[indexFieldIndexName]
 
-	//获取当前时间
+	// 获取当前时间
 	now := time.Now()
 
-	//初始化各个字段
+	// 初始化各个字段
 	moduleId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleName,
@@ -28,7 +27,7 @@ func initModule() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	//放入文件中
+	// 放入文件中
 	indexField.Index(moduleId.ID, moduleId)
 
 	moduleModuleIndexCode := IndexFieldStruct{
@@ -136,15 +135,15 @@ func initModule() (bool, error) {
 	}
 	indexField.Index(moduleActive.ID, moduleActive)
 
-	//创建用户表的索引
+	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
+	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
 	moduleIndex, err := bleve.New(indexModuleName, mapping)
-	//放到IndexMap中
+	// 放到IndexMap中
 	IndexMap[indexModuleName] = moduleIndex
 
-	//初始化数据
+	// 初始化数据
 	module := make(map[string]interface{})
 	id := FuncGenerateStringID()
 	module["ID"] = id
@@ -156,7 +155,7 @@ func initModule() (bool, error) {
 	module["SortNo"] = 0
 	module["Active"] = 1
 
-	//初始化
+	// 初始化
 	moduleIndex.Index(id, module)
 
 	if err != nil {
@@ -165,5 +164,4 @@ func initModule() (bool, error) {
 	}
 
 	return true, nil
-
 }

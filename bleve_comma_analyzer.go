@@ -29,8 +29,8 @@ func isComma(r rune) bool {
 		return true
 	*/
 	return r-44 != 0
-
 }
+
 func commaAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Analyzer, error) {
 	commaTokenizer, err := cache.TokenizerNamed(commaAnalyzerName)
 	if err != nil {
