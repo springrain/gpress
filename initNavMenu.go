@@ -7,15 +7,14 @@ import (
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
-//导航菜单
+// 导航菜单
 func initNavMenu() (bool, error) {
-
 	indexField := IndexMap[indexFieldIndexName]
 
-	//获取当前时间
+	// 获取当前时间
 	now := time.Now()
 
-	//初始化各个字段
+	// 初始化各个字段
 	navMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
@@ -30,7 +29,7 @@ func initNavMenu() (bool, error) {
 		Active:       3,
 		Required:     1,
 	}
-	//放入文件中
+	// 放入文件中
 	indexField.Index(navMenuId.ID, navMenuId)
 
 	navMenuMenuName := IndexFieldStruct{
@@ -209,13 +208,13 @@ func initNavMenu() (bool, error) {
 	}
 	indexField.Index(navMenuActive.ID, navMenuActive)
 
-	//创建用户表的索引
+	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
+	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
 	navMenuIndex, err := bleve.New(indexNavMenuName, mapping)
 
-	//放到IndexMap中
+	// 放到IndexMap中
 	IndexMap[indexNavMenuName] = navMenuIndex
 
 	if err != nil {

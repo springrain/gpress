@@ -7,19 +7,18 @@ import (
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
-//初始化站点信息
+// 初始化站点信息
 func initSitenInfo() (bool, error) {
-
 	indexField := IndexMap[indexFieldIndexName]
 
-	//创建用户表的索引
+	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
+	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	//获取当前时间
+	// 获取当前时间
 	now := time.Now()
 
-	//初始化各个字段
+	// 初始化各个字段
 	sitenInfoId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexSitenIndexName,
@@ -33,7 +32,7 @@ func initSitenInfo() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	//放入文件中
+	// 放入文件中
 	indexField.Index(sitenInfoId.ID, sitenInfoId)
 
 	sitenInfoTitle := IndexFieldStruct{
@@ -66,7 +65,7 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoKeyWords.ID, sitenInfoKeyWords)
 
-	//KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
+	// KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", commaAnalyzerMapping)
 
 	sitenInfoDescription := IndexFieldStruct{
@@ -84,7 +83,7 @@ func initSitenInfo() (bool, error) {
 	}
 	indexField.Index(sitenInfoDescription.ID, sitenInfoDescription)
 
-	//Description 字段使用 中文分词器的mapping gseAnalyzerMapping
+	// Description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Description", gseAnalyzerMapping)
 
 	sitenInfoTheme := IndexFieldStruct{
@@ -178,7 +177,7 @@ func initSitenInfo() (bool, error) {
 	indexField.Index(sitenInfoFavicon.ID, sitenInfoFavicon)
 
 	sitenIndexIndex, err := bleve.New(indexSitenIndexName, mapping)
-	//放到IndexMap中
+	// 放到IndexMap中
 	IndexMap[indexSitenIndexName] = sitenIndexIndex
 
 	if err != nil {

@@ -16,12 +16,11 @@ import (
 )
 
 func main() {
-
 	// server.Default() creates a Hertz with recovery middleware.
 	// If you need a pure hertz, you can use server.New()
 	h := server.Default(server.WithHostPorts(":8080"))
 
-	//h.StaticFS("/", &app.FS{Root: datadir + "theme/default/default/*", GenerateIndexPages: true})
+	// h.StaticFS("/", &app.FS{Root: datadir + "theme/default/default/*", GenerateIndexPages: true})
 
 	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusOK, "Hello hertz!")
@@ -39,24 +38,23 @@ func main() {
 		c.JSON(200, r)
 	})
 
-	//测试新增数据
+	// 测试新增数据
 	h.GET("/add", func(ctx context.Context, c *app.RequestContext) {
-
 		fmt.Println("1")
-		test := make(map[string]interface{}) //新建map
+		test := make(map[string]interface{}) // 新建map
 		test["MenuName"] = "一级菜单名称"
 		test["HrefURL"] = "localhost:8080"
 		test["HrefTarget"] = "跳转方式"
-		test["PID"] = "0" //顶级菜单目录
+		test["PID"] = "0" // 顶级菜单目录
 		test["ComCode"] = "使用逗号分割,字符串,测试"
-		test["Active"] = 1    //是否有效
-		test["themePC"] = "1" //是否pc主题
+		test["Active"] = 1    // 是否有效
+		test["themePC"] = "1" // 是否pc主题
 		test["ModuleIndexCode"] = "Module的索引名称"
-		test["TemplateID"] = "010101"      //模板Id
-		test["ChildTemplateID"] = "010201" //子页面模板Id
-		test["SortNo"] = "1"               //排序
+		test["TemplateID"] = "010101"      // 模板Id
+		test["ChildTemplateID"] = "010201" // 子页面模板Id
+		test["SortNo"] = "1"               // 排序
 		test["ID"] = "001"
-		//m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
+		// m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
 		r := IndexMap[indexNavMenuName].Index("001", test)
 		c.JSON(200, r)
 	})
@@ -65,11 +63,11 @@ func main() {
 		test := make(map[string]interface{})
 		test["ID"] = "001"
 
-		test["ChildTemplateID"] = "010202" //子页面模板Id
-		test["SortNo"] = "1"               //排序
-		//r := IndexMap[indexNavMenuName].Index("001", test)
+		test["ChildTemplateID"] = "010202" // 子页面模板Id
+		test["SortNo"] = "1"               // 排序
+		// r := IndexMap[indexNavMenuName].Index("001", test)
 		x := updateIndex(ctx, indexNavMenuName, "001", test)
-		//m, _ := saveNexIndex(test, indexNavMenuName)
+		// m, _ := saveNexIndex(test, indexNavMenuName)
 		c.JSON(200, x)
 	})
 	h.GET("/add2", func(ctx context.Context, c *app.RequestContext) {
@@ -108,11 +106,11 @@ func main() {
 		fmt.Println("1")
 		index := IndexMap[indexNavMenuName]
 		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
-		//查询指定字段
+		// 查询指定字段
 		queryIndexCode.SetField("Active")
-		//query := bleve.NewQueryStringQuery("")
+		// query := bleve.NewQueryStringQuery("")
 		serarch := bleve.NewSearchRequestOptions(queryIndexCode, 1000, 0, false)
-		//查询所有字段
+		// 查询所有字段
 		serarch.Fields = []string{"*"}
 
 		result, _ := index.SearchInContext(context.Background(), serarch)
@@ -124,17 +122,17 @@ func main() {
 		result, _ := getNavMenu("0")
 		c.JSON(200, result)
 	})
-	//启动服务
+	// 启动服务
 	h.Spin()
 }
 
-//请求响应函数
+// 请求响应函数
 
 func IndexApi(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, "index.html", map[string]string{"name": "test"})
 }
 
-//自定义函数
+// 自定义函数
 func MD5(in string) ([]string, error) {
 	list := make([]string, 2)
 

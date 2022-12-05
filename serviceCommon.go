@@ -8,23 +8,21 @@ import (
 	"github.com/blevesearch/bleve/v2/search/query"
 )
 
-//是否包含
+// 是否包含
 var inclusive = true
 
 // findIndexFieldResult 获取表中符合条件字段
 // indexName: 表名/索引名
 // isRequired: 是否可以为空
 func findIndexFieldResult(ctx context.Context, indexName string, isRequired int) (*bleve.SearchResult, error) {
-
 	var query *query.ConjunctionQuery
-	var index = IndexMap[indexFieldIndexName]
+	index := IndexMap[indexFieldIndexName]
 	// 查询指定表
 	queryIndexCode := bleve.NewTermQuery(indexName)
-	//查询指定字段
+	// 查询指定字段
 	queryIndexCode.SetField("IndexCode")
 	if isRequired != 1 && isRequired != 0 {
 		query = bleve.NewConjunctionQuery(queryIndexCode)
-
 	} else {
 		var f float64 = float64(isRequired)
 		queryIsReqired := bleve.NewNumericRangeInclusiveQuery(&f, &f, &inclusive, &inclusive)
@@ -32,9 +30,9 @@ func findIndexFieldResult(ctx context.Context, indexName string, isRequired int)
 		query = bleve.NewConjunctionQuery(queryIndexCode, queryIsReqired)
 	}
 
-	//query: 条件  size:大小  from :起始
+	// query: 条件  size:大小  from :起始
 	searchRequest := bleve.NewSearchRequestOptions(query, 1000, 0, false)
-	//查询所有字段
+	// 查询所有字段
 	searchRequest.Fields = []string{"*"}
 
 	// 按照 SortNo 正序排列.
@@ -42,7 +40,6 @@ func findIndexFieldResult(ctx context.Context, indexName string, isRequired int)
 	searchRequest.SortBy([]string{"SortNo", "-_score", "_id"})
 
 	searchResult, err := index.SearchInContext(ctx, searchRequest)
-
 	if err != nil {
 		FuncLogError(err)
 		return nil, err
@@ -52,7 +49,6 @@ func findIndexFieldResult(ctx context.Context, indexName string, isRequired int)
 
 // 保存新索引
 func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableName string) (map[string]string, error) {
-
 	SearchResult, err := findIndexFieldResult(ctx, tableName, 1)
 	m := make(map[string]string, 2)
 
@@ -67,7 +63,7 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 	result := SearchResult.Hits
 
 	for _, v := range result {
-		tmp := fmt.Sprintf("%v", v.Fields["FieldCode"]) //转为字符串
+		tmp := fmt.Sprintf("%v", v.Fields["FieldCode"]) // 转为字符串
 		_, ok := newIndex[tmp]
 		if ok {
 			if newIndex[tmp] == nil || fmt.Sprintf("%v", newIndex[tmp]) == "" {
@@ -75,7 +71,6 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 				m["msg"] = tmp + "不能为空"
 				return m, nil
 			}
-
 		} else {
 			m["code"] = "401"
 			m["msg"] = tmp + "不能为空"
@@ -91,20 +86,19 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 }
 
 func updateIndex(ctx context.Context, tableName string, indexId string, newMap map[string]interface{}) error {
-	//查出原始数据
-	var index = IndexMap[tableName]                      //拿到index
-	queryIndex := bleve.NewDocIDQuery([]string{indexId}) //查询索引
-	//queryIndex := bleve.NewTermQuery(indexId)            //查询索引
-	//queryIndex.SetField("ID")
+	// 查出原始数据
+	index := IndexMap[tableName]                         // 拿到index
+	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
+	// queryIndex := bleve.NewTermQuery(indexId)            //查询索引
+	// queryIndex.SetField("ID")
 	serarchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
-	serarchRequest.Fields = []string{"*"} //查询所有字段
+	serarchRequest.Fields = []string{"*"} // 查询所有字段
 	result, err := index.SearchInContext(ctx, serarchRequest)
-
 	if err != nil {
 		FuncLogError(err)
 		return err
 	}
-	//如果没有查出来数据 证明数据错误
+	// 如果没有查出来数据 证明数据错误
 	if len(result.Hits) <= 0 {
 		FuncLogError(err)
 		return fmt.Errorf("此数据不存在 ,请检查数据")
@@ -114,7 +108,7 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	for k, v := range oldMap {
 		newV := v
 		if _, ok := newMap[k]; !ok {
-			//如果key不存在
+			// 如果key不存在
 			newMap[k] = newV
 		}
 	}

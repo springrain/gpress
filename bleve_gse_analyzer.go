@@ -17,7 +17,6 @@ func init() {
 }
 
 func gseAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Analyzer, error) {
-
 	tokenizer, err := cache.TokenizerNamed(gseAnalyzerName)
 	if err != nil {
 		return nil, err
@@ -33,7 +32,7 @@ type gseTokenizer struct {
 func (t *gseTokenizer) Tokenize(sentence []byte) analysis.TokenStream {
 	result := make(analysis.TokenStream, 0)
 	pos := 1
-	//segments := t.segmenter.ModeSegment(sentence, true)
+	// segments := t.segmenter.ModeSegment(sentence, true)
 	segments := t.segmenter.Segment(sentence)
 	for _, seg := range segments {
 		token := analysis.Token{
@@ -57,5 +56,4 @@ func gseTokenizerConstructor(config map[string]interface{}, cache *registry.Cach
 	segmenter.LoadStop(datadir+"dict/stop_word.txt", datadir+"dict/stop_tokens.txt")
 
 	return &gseTokenizer{&segmenter}, nil
-
 }

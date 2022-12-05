@@ -8,18 +8,17 @@ import (
 )
 
 func initContent() (bool, error) {
-
 	indexField := IndexMap[indexFieldIndexName]
 
-	//创建内容表的索引
+	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name //这是要换成逗号分词吧
+	// 指定默认的分词器
+	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name // 这是要换成逗号分词吧
 
-	//获取当前时间
+	// 获取当前时间
 	now := time.Now()
 
-	//初始化各个字段
+	// 初始化各个字段
 	contentId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
@@ -33,7 +32,7 @@ func initContent() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	//放入文件中
+	// 放入文件中
 	indexField.Index(contentId.ID, contentId)
 
 	contentModuleIndexCode := IndexFieldStruct{
@@ -57,7 +56,7 @@ func initContent() (bool, error) {
 		FieldCode: "Title",
 		FieldName: "标题",
 		FieldType: 3,
-		//文章标题使用中文分词
+		// 文章标题使用中文分词
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -65,7 +64,7 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentTitle.ID, contentTitle)
-	//Title 字段使用 中文分词器的mapping gseAnalyzerMapping
+	// Title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Title", gseAnalyzerMapping)
 
 	contentKeyWords := IndexFieldStruct{
@@ -75,7 +74,7 @@ func initContent() (bool, error) {
 		FieldCode: "KeyWords",
 		FieldName: "关键字",
 		FieldType: 3,
-		//文章关键字使用逗号分词器
+		// 文章关键字使用逗号分词器
 		AnalyzerName: commaAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -83,7 +82,7 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentKeyWords.ID, contentKeyWords)
-	//KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
+	// KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", commaAnalyzerMapping)
 
 	contentDescription := IndexFieldStruct{
@@ -93,7 +92,7 @@ func initContent() (bool, error) {
 		FieldCode: "Description",
 		FieldName: "站点描述",
 		FieldType: 3,
-		//文章描述使用中文分词器
+		// 文章描述使用中文分词器
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -101,7 +100,7 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentDescription.ID, contentDescription)
-	//Description 字段使用 中文分词器的mapping gseAnalyzerMapping
+	// Description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Description", gseAnalyzerMapping)
 
 	contentPageURL := IndexFieldStruct{
@@ -126,7 +125,7 @@ func initContent() (bool, error) {
 		FieldCode: "Subtitle",
 		FieldName: "副标题",
 		FieldType: 3,
-		//文章副标题使用中文分词器
+		// 文章副标题使用中文分词器
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
@@ -134,7 +133,7 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentSubtitle.ID, contentSubtitle)
-	//Subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
+	// Subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Subtitle", gseAnalyzerMapping)
 
 	contentNavMenuId := IndexFieldStruct{
@@ -151,7 +150,7 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentNavMenuId.ID, contentNavMenuId)
-	//NavMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
+	// NavMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuId", commaAnalyzerMapping)
 
 	contentNavMenuName := IndexFieldStruct{
@@ -168,7 +167,7 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentNavMenuName.ID, contentNavMenuName)
-	//NavMenuName 字段使用 中文分词器的mapping gseAnalyzerMapping
+	// NavMenuName 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuName", gseAnalyzerMapping)
 
 	contentTemplateID := IndexFieldStruct{
@@ -200,7 +199,7 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentContent.ID, contentContent)
-	//Content 字段使用 中文分词器的mapping gseAnalyzerMapping
+	// Content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Content", gseAnalyzerMapping)
 
 	contentCreateTime := IndexFieldStruct{
@@ -279,7 +278,7 @@ func initContent() (bool, error) {
 	indexField.Index(moduleActive.ID, moduleActive)
 
 	contentIndex, err := bleve.New(indexContentName, mapping)
-	//放到IndexMap中
+	// 放到IndexMap中
 	IndexMap[indexContentName] = contentIndex
 
 	if err != nil {

@@ -8,13 +8,12 @@ import (
 )
 
 func initpageTemplateName() (bool, error) {
-
 	indexField := IndexMap[indexFieldIndexName]
 
-	//获取当前时间
+	// 获取当前时间
 	now := time.Now()
 
-	//初始化各个字段
+	// 初始化各个字段
 	pageId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexPageTemplateName,
@@ -28,7 +27,7 @@ func initpageTemplateName() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	//放入文件中
+	// 放入文件中
 	indexField.Index(pageId.ID, pageId)
 
 	pageTemplateNameName := IndexFieldStruct{
@@ -91,13 +90,13 @@ func initpageTemplateName() (bool, error) {
 	}
 	indexField.Index(pageActive.ID, pageActive)
 
-	//创建用户表的索引
+	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
-	//指定默认的分词器
+	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
 	pageTemplateIndex, err := bleve.New(indexPageTemplateName, mapping)
 
-	//放到IndexMap中
+	// 放到IndexMap中
 	IndexMap[indexPageTemplateName] = pageTemplateIndex
 
 	if err != nil {
@@ -106,5 +105,4 @@ func initpageTemplateName() (bool, error) {
 	}
 
 	return true, nil
-
 }
