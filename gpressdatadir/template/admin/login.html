@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{basePath}}/public/favicon.png">
-    <!-- Bulma Version 0.9.4-->
-    <link rel="stylesheet" href="https://cdn.staticfile.org/bulma/0.9.4/css/bulma.min.css" />
+{{template "admin/header.html"}}
 
     <title>Login - gpress</title>
     <link rel="stylesheet" type="text/css" href="{{basePath}}/admin/css/login.css">
@@ -26,24 +18,23 @@
                         <figure class="avatar">
                             <img src="{{basePath}}/public/logo.png">
                         </figure>
-
-                        <form>
+                        <!-- 应该使用ajax登录,获取到jwt token 保存到 localStorage,然后重定向到 admin/index页面-->
+                        <form action="{{basePath}}/admin/login" method="post" >
                             <div class="field">
                                 <div class="control">
-                                    <input class="input is-large" type="email" placeholder="请输入账号" autofocus="">
+                                    <input class="input is-large" name="userName" type="text" placeholder="请输入账号" autofocus="">
                                 </div>
                             </div>
 
                             <div class="field">
                                 <div class="control">
-                                    <input class="input is-large" type="password" placeholder="请输入密码">
+                                    <input class="input is-large" name="password" type="password" placeholder="请输入密码">
                                 </div>
                             </div>
                             <div class="field">
                                 <label class="checkbox">
-                  <input type="checkbox">
-                  记住我
-                </label>
+                                 <input type="checkbox">记住我
+                                </label>
                             </div>
                             <button class="button is-block is-info is-large is-fullwidth">登录 <i class="fa fa-sign-in" aria-hidden="true"></i></button>
                         </form>
