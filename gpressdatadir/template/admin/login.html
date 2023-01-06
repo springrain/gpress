@@ -2,7 +2,7 @@
 
     <title>Login - gpress</title>
     <link rel="stylesheet" type="text/css" href="{{basePath}}/admin/css/login.css">
-
+   
 </head>
 
 <body>
@@ -19,7 +19,7 @@
                             <img src="{{basePath}}/public/logo.png">
                         </figure>
                         <!-- 应该使用ajax登录,获取到jwt token 保存到 localStorage,然后重定向到 admin/index页面-->
-                        <form action="{{basePath}}/admin/login" method="post" >
+                        <form id="loginForm" action="{{basePath}}/admin/login" method="post" >
                             <div class="field">
                                 <div class="control">
                                     <input class="input is-large" name="userName" type="text" placeholder="请输入账号" autofocus="">
@@ -48,6 +48,8 @@
             </div>
         </div>
     </section>
+
+    <script async type="text/javascript" src="{{basePath}}/admin/js/login.js"></script>
 </body>
 
 </html>
