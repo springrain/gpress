@@ -3,7 +3,7 @@
 *.ipr
 *.iml
 *.iws
-gpressdatadir/index/*
+gpressdatadir/bleve/*
 testIndex/
 dict/
 
