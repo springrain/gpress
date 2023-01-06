@@ -23,25 +23,25 @@ var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
 // 索引名称
 const (
 	// 基本目录
-	datadir = "./gpressdatadir/"
+	datadir = "gpressdatadir/"
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
-	indexDataDir = datadir + "index/"
+	bleveDataDir = datadir + "bleve/"
 	// 索引字段的名称
-	indexFieldIndexName = indexDataDir + "IndexField"
+	indexFieldIndexName = bleveDataDir + "IndexField"
 	// User 用户的索引名称
-	userIndexName = indexDataDir + "User"
+	userIndexName = bleveDataDir + "User"
 	// siteInfo  站点信息
-	indexSitenIndexName = indexDataDir + "sitenInfo"
+	indexSitenIndexName = bleveDataDir + "sitenInfo"
 	// 页面模板
-	indexPageTemplateName = indexDataDir + "pageTemplate"
+	indexPageTemplateName = bleveDataDir + "pageTemplate"
 	// 导航菜单
-	indexNavMenuName = indexDataDir + "NavMenu"
+	indexNavMenuName = bleveDataDir + "NavMenu"
 	// 模型
-	indexModuleName = indexDataDir + "Module"
+	indexModuleName = bleveDataDir + "Module"
 	// 模型数据
 	indexModuleDefaultName = "moduleDefault"
 	// 文章内容
-	indexContentName = indexDataDir + "Content"
+	indexContentName = bleveDataDir + "Content"
 )
 
 // 逗号分词器的mapping
@@ -103,27 +103,27 @@ func init() {
 // checkInstall 检查是不是初始化安装,如果是就创建文件夹目录
 func checkInstall() (bool, error) {
 	// 索引数据目录是否存在
-	exists, errPathExists := pathExists(indexDataDir)
+	exists, errPathExists := pathExists(bleveDataDir)
 	if errPathExists != nil {
 		FuncLogError(errPathExists)
 		return false, errPathExists
 	}
 
 	if exists { // 如果已经存在目录,遍历索引,放到全局map里
-		fileInfo, _ := ioutil.ReadDir(indexDataDir)
+		fileInfo, _ := ioutil.ReadDir(bleveDataDir)
 		for _, dir := range fileInfo {
 			if !dir.IsDir() {
 				continue
 			}
 
 			// 打开所有的索引,放到map里,一个索引只能打开一次.
-			index, _ := bleve.Open(indexDataDir + dir.Name())
-			IndexMap[indexDataDir+dir.Name()] = index
+			index, _ := bleve.Open(bleveDataDir + dir.Name())
+			IndexMap[bleveDataDir+dir.Name()] = index
 		}
 		return true, errPathExists
 	}
 	// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
-	errMkdir := os.Mkdir(indexDataDir, os.ModePerm)
+	errMkdir := os.Mkdir(bleveDataDir, os.ModePerm)
 	if errMkdir != nil {
 		FuncLogError(errMkdir)
 		return false, errMkdir
