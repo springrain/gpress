@@ -15,6 +15,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/protocol"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
@@ -178,11 +179,17 @@ func main() {
 		userName := c.PostForm("userName")
 		password := c.PostForm("password")
 		fmt.Printf("userName:%s,password:%s", userName, password)
-		c.JSON(http.StatusOK, "jwttoken-test")
+		//c.HTML(http.StatusOK, "admin/index.html", nil)
+		c.SetCookie("jwttoken", "jwttoken-test", 1800, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+
+		c.Redirect(http.StatusOK, []byte("/admin/index"))
 	})
 
 	// 后台管理员首页
 	h.GET("/admin/index", func(ctx context.Context, c *app.RequestContext) {
+		jwttoken := c.Cookie("jwttoken")
+		fmt.Println(string(jwttoken))
+		//fmt.Println(c.Request.Body())
 		c.HTML(http.StatusOK, "admin/index.html", nil)
 	})
 
