@@ -18,10 +18,10 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-var themeDir = datadir + "html/"
+var templateDir = datadir + "template/"
 
 // 模板路径,正常应该从siteInfo里获取,这里用于演示
-var themePath = themeDir + "theme/default/"
+var themePath = templateDir + "theme/default/"
 
 func main() {
 
@@ -33,12 +33,12 @@ func main() {
 	//h.LoadHTMLGlob(datadir + "html/theme/default/*")
 	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
 	tmpl := template.New("").Delims("", "").Funcs(funcMap)
-	err := filepath.Walk(themeDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
 		// 如果是静态资源
 		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
-			relativePath := path[len(themeDir):]
+			relativePath := path[len(templateDir):]
 			h.StaticFile(relativePath, path)
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			//创建对应的模板
