@@ -26,7 +26,7 @@ var themePath = templateDir + "theme/default/"
 func main() {
 
 	h := server.Default(server.WithHostPorts(":8080"))
-	funcMap := template.FuncMap{"md5": MD5}
+	funcMap := template.FuncMap{"md5": MD5, "basePath": BasePath}
 	h.SetFuncMap(funcMap)
 
 	//h.LoadHTMLFiles(themePath + "index.html")
@@ -164,6 +164,11 @@ func main() {
 		result, _ := getNavMenu("0")
 		c.JSON(200, result)
 	})
+	// 后台管理员登录
+	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
+		c.HTML(http.StatusOK, templateDir+"admin/login.html", nil)
+	})
+
 	// 启动服务
 	h.Spin()
 }
@@ -181,4 +186,8 @@ func MD5(in string) ([]string, error) {
 	list[0] = in
 	list[1] = hex.EncodeToString(hash[:])
 	return list, nil
+}
+
+func BasePath() string {
+	return ""
 }

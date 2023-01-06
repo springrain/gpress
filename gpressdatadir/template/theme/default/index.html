@@ -12,6 +12,8 @@
     循环:
     {{range $i, $v := (md5 .name)}}
         {{ $i }}:{{ $v }}
-    {{end}}    
+    {{end}}   
+    
+    basePath: {{basePath}}
   </body>
 </html>
