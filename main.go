@@ -15,6 +15,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 var templateDir = datadir + "template/"
@@ -46,7 +47,9 @@ func main() {
 		relativePath := path[len(templateDir):]
 		// 如果是静态资源
 		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
-			h.StaticFile(relativePath, path)
+			if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { //过滤掉压缩包
+				h.StaticFile(relativePath, path)
+			}
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			//创建对应的模板
 			t := tmpl.New(relativePath)
