@@ -15,7 +15,6 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 var templateDir = datadir + "template/"
@@ -71,24 +70,24 @@ func main() {
 	//设置默认的静态文件,实际路径会拼接为 datadir/public
 	h.Static("/public", datadir)
 
+	// 默认首页
+	h.GET("/", funcIndex)
+
 	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {
-		c.String(consts.StatusOK, "Hello hertz!")
+		c.String(http.StatusOK, "hello gpress!")
 	})
 
-	h.GET("/", IndexApi)
 	h.GET("/test", func(ctx context.Context, c *app.RequestContext) {
-		fmt.Println("1")
 		r, err := findIndexFieldResult(ctx, indexNavMenuName, 1)
-		fmt.Println(err)
 		if err != nil {
+			FuncLogError(err)
 			panic(err)
 		}
-		c.JSON(200, r)
+		c.JSON(http.StatusOK, r)
 	})
 
 	// 测试新增数据
 	h.GET("/add", func(ctx context.Context, c *app.RequestContext) {
-		fmt.Println("1")
 		test := make(map[string]interface{}) // 新建map
 		test["MenuName"] = "一级菜单名称"
 		test["HrefURL"] = "localhost:8080"
@@ -104,10 +103,9 @@ func main() {
 		test["ID"] = "001"
 		// m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
 		r := IndexMap[indexNavMenuName].Index("001", test)
-		c.JSON(200, r)
+		c.JSON(http.StatusOK, r)
 	})
 	h.GET("/update", func(ctx context.Context, c *app.RequestContext) {
-		fmt.Println("1")
 		test := make(map[string]interface{})
 		test["ID"] = "001"
 
@@ -116,10 +114,9 @@ func main() {
 		// r := IndexMap[indexNavMenuName].Index("001", test)
 		x := updateIndex(ctx, indexNavMenuName, "001", test)
 		// m, _ := saveNexIndex(test, indexNavMenuName)
-		c.JSON(200, x)
+		c.JSON(http.StatusOK, x)
 	})
 	h.GET("/add2", func(ctx context.Context, c *app.RequestContext) {
-		fmt.Println("1")
 		test := make(map[string]interface{})
 		test["MenuName"] = "一级菜单"
 		test["HrefURL"] = "localhost:8080"
@@ -132,10 +129,9 @@ func main() {
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
 		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
-		c.JSON(200, m)
+		c.JSON(http.StatusOK, m)
 	})
 	h.GET("/add3", func(ctx context.Context, c *app.RequestContext) {
-		fmt.Println("1")
 		test := make(map[string]interface{})
 		test["MenuName"] = "我是个子集"
 		test["HrefURL"] = "localhost:8080"
@@ -148,10 +144,9 @@ func main() {
 		test["Active"] = 1
 		test["themePC"] = "PC主题"
 		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
-		c.JSON(200, m)
+		c.JSON(http.StatusOK, m)
 	})
 	h.GET("/getThis", func(ctx context.Context, c *app.RequestContext) {
-		fmt.Println("1")
 		index := IndexMap[indexNavMenuName]
 		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
 		// 查询指定字段
@@ -162,13 +157,13 @@ func main() {
 		serarch.Fields = []string{"*"}
 
 		result, _ := index.SearchInContext(context.Background(), serarch)
-		c.JSON(200, result)
+		c.JSON(http.StatusOK, result)
 	})
 
 	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
 		result, _ := getNavMenu("0")
-		c.JSON(200, result)
+		c.JSON(http.StatusOK, result)
 	})
 	// 后台管理员登录
 	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
@@ -180,7 +175,7 @@ func main() {
 }
 
 // 请求响应函数
-func IndexApi(ctx context.Context, c *app.RequestContext) {
+func funcIndex(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, themePath+"index.html", map[string]string{"name": "test"})
 }
 
