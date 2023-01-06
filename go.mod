@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/blevesearch/bleve/v2 v2.3.6
 	github.com/cloudwego/hertz v0.4.2
-	github.com/go-ego/gse v0.70.2
+	github.com/go-ego/gse v0.80.0
 
 )
 
