@@ -23,10 +23,16 @@ var templateDir = datadir + "template/"
 // 模板路径,正常应该从siteInfo里获取,这里用于演示
 var themePath = templateDir + "theme/default/"
 
+// hertz对象,可以在其他地方使用
+var h *server.Hertz
+
+func init() {
+	h = server.Default(server.WithHostPorts(":8080"))
+}
+
 func main() {
 
-	h := server.Default(server.WithHostPorts(":8080"))
-	funcMap := template.FuncMap{"md5": MD5, "basePath": BasePath}
+	funcMap := template.FuncMap{"md5": funcMD5, "basePath": funcBasePath}
 	h.SetFuncMap(funcMap)
 
 	//h.LoadHTMLFiles(themePath + "index.html")
@@ -178,8 +184,8 @@ func IndexApi(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, themePath+"index.html", map[string]string{"name": "test"})
 }
 
-// 自定义函数
-func MD5(in string) ([]string, error) {
+// 测试自定义函数
+func funcMD5(in string) ([]string, error) {
 	list := make([]string, 2)
 
 	hash := md5.Sum([]byte(in))
@@ -188,6 +194,7 @@ func MD5(in string) ([]string, error) {
 	return list, nil
 }
 
-func BasePath() string {
+//funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
+func funcBasePath() string {
 	return ""
 }
