@@ -12,6 +12,7 @@ dict/
 *.swp
 
 # temp ignore
+*.hertz.gz
 *.log
 *.cache
 *.diff
