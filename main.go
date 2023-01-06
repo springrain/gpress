@@ -24,18 +24,16 @@ var themeDir = datadir + "html/"
 var themePath = themeDir + "theme/default/"
 
 func main() {
-	// server.Default() creates a Hertz with recovery middleware.
-	// If you need a pure hertz, you can use server.New()
+
 	h := server.Default(server.WithHostPorts(":8080"))
 	funcMap := template.FuncMap{"md5": MD5}
 	h.SetFuncMap(funcMap)
 
 	//h.LoadHTMLFiles(themePath + "index.html")
 	//h.LoadHTMLGlob(datadir + "html/theme/default/*")
-
 	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
 	tmpl := template.New("").Delims("", "").Funcs(funcMap)
-	filepath.Walk(themeDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(themeDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
 		// 如果是静态资源
@@ -45,16 +43,27 @@ func main() {
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			//创建对应的模板
 			t := tmpl.New(path)
-			b, _ := os.ReadFile(path)
+			b, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
 			//对应模板内容
-			t.Parse(string(b))
+			_, err = t.Parse(string(b))
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	})
+	if err != nil {
+		FuncLogError(err)
+		panic(err)
+	}
+	//设置模板
 	h.SetHTMLTemplate(tmpl)
 
-	//设置默认的静态文件
-	h.Static("/public", datadir+"public")
+	//设置默认的静态文件,实际路径会拼接为 datadir/public
+	h.Static("/public", datadir)
 
 	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusOK, "Hello hertz!")
@@ -160,7 +169,6 @@ func main() {
 }
 
 // 请求响应函数
-
 func IndexApi(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, themePath+"index.html", map[string]string{"name": "test"})
 }
