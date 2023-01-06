@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login - gpress</title>
-
+    <link rel="icon" type="image/png" sizes="16x16" href="{{basePath}}/public/favicon.png">
     <!-- Bulma Version 0.9.4-->
     <link rel="stylesheet" href="https://cdn.staticfile.org/bulma/0.9.4/css/bulma.min.css" />
-    <link rel="stylesheet" type="text/css" href="../css/login.css">
+
+    <title>Login - gpress</title>
+    <link rel="stylesheet" type="text/css" href="{{basePath}}/admin/css/login.css">
+
 </head>
 
 <body>
@@ -23,19 +24,19 @@
                     <div class="box">
                         
                         <figure class="avatar">
-                            <img src="https://via.placeholder.com/150">
+                            <img src="{{basePath}}/public/logo.png">
                         </figure>
 
                         <form>
                             <div class="field">
                                 <div class="control">
-                                    <input class="input is-large" type="email" placeholder="Your Email" autofocus="">
+                                    <input class="input is-large" type="email" placeholder="请输入账号" autofocus="">
                                 </div>
                             </div>
 
                             <div class="field">
                                 <div class="control">
-                                    <input class="input is-large" type="password" placeholder="Your Password">
+                                    <input class="input is-large" type="password" placeholder="请输入密码">
                                 </div>
                             </div>
                             <div class="field">
