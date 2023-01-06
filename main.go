@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/blevesearch/bleve/v2"
 
@@ -15,18 +18,48 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
+var themeDir = datadir + "html/"
+
+// 模板路径,正常应该从siteInfo里获取,这里用于演示
+var themePath = themeDir + "theme/default/"
+
 func main() {
 	// server.Default() creates a Hertz with recovery middleware.
 	// If you need a pure hertz, you can use server.New()
 	h := server.Default(server.WithHostPorts(":8080"))
+	funcMap := template.FuncMap{"md5": MD5}
+	h.SetFuncMap(funcMap)
 
-	// h.StaticFS("/", &app.FS{Root: datadir + "theme/default/default/*", GenerateIndexPages: true})
+	//h.LoadHTMLFiles(themePath + "index.html")
+	//h.LoadHTMLGlob(datadir + "html/theme/default/*")
+
+	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
+	tmpl := template.New("").Delims("", "").Funcs(funcMap)
+	filepath.Walk(themeDir, func(path string, info os.FileInfo, err error) error {
+		// 分隔符统一为 / 斜杠
+		path = filepath.ToSlash(path)
+		// 如果是静态资源
+		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
+			relativePath := path[len(themeDir):]
+			h.StaticFile(relativePath, path)
+		} else if strings.HasSuffix(path, ".html") { // 模板文件
+			//创建对应的模板
+			t := tmpl.New(path)
+			b, _ := os.ReadFile(path)
+			//对应模板内容
+			t.Parse(string(b))
+		}
+		return nil
+	})
+	h.SetHTMLTemplate(tmpl)
+
+	//设置默认的静态文件
+	h.Static("/public", datadir+"public")
 
 	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {
 		c.String(consts.StatusOK, "Hello hertz!")
 	})
-	h.SetFuncMap(template.FuncMap{"md5": MD5})
-	h.LoadHTMLGlob(datadir + "theme/default/default/*")
+
 	h.GET("/", IndexApi)
 	h.GET("/test", func(ctx context.Context, c *app.RequestContext) {
 		fmt.Println("1")
@@ -129,7 +162,7 @@ func main() {
 // 请求响应函数
 
 func IndexApi(ctx context.Context, c *app.RequestContext) {
-	c.HTML(http.StatusOK, "index.html", map[string]string{"name": "test"})
+	c.HTML(http.StatusOK, themePath+"index.html", map[string]string{"name": "test"})
 }
 
 // 自定义函数
