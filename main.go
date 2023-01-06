@@ -20,13 +20,14 @@ import (
 var templateDir = datadir + "template/"
 
 // 模板路径,正常应该从siteInfo里获取,这里用于演示
-var themePath = templateDir + "theme/default/"
+var themePath = "theme/default/"
 
 // hertz对象,可以在其他地方使用
 var h *server.Hertz
 
 func init() {
 	h = server.Default(server.WithHostPorts(":8080"))
+	//h.Use(gzip.Gzip(gzip.DefaultCompression))
 }
 
 func main() {
@@ -41,13 +42,14 @@ func main() {
 	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
+		//相对路径
+		relativePath := path[len(templateDir):]
 		// 如果是静态资源
 		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
-			relativePath := path[len(templateDir):]
 			h.StaticFile(relativePath, path)
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			//创建对应的模板
-			t := tmpl.New(path)
+			t := tmpl.New(relativePath)
 			b, err := os.ReadFile(path)
 			if err != nil {
 				return err
@@ -167,7 +169,19 @@ func main() {
 	})
 	// 后台管理员登录
 	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
-		c.HTML(http.StatusOK, templateDir+"admin/login.html", nil)
+		c.HTML(http.StatusOK, "admin/login.html", nil)
+	})
+	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
+		userName := c.PostForm("userName")
+		password := c.PostForm("password")
+		fmt.Printf("userName:%s,password:%s", userName, password)
+		c.JSON(http.StatusOK, "jwttoken-test")
+	})
+
+	// 后台管理员首页
+	h.GET("/admin/index", func(ctx context.Context, c *app.RequestContext) {
+
+		c.HTML(http.StatusOK, "admin/index.html", nil)
 	})
 
 	// 启动服务
