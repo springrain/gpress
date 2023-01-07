@@ -40,6 +40,9 @@ func newJWTToken(userId string, info map[string]interface{}) (string, error) {
 }
 
 func userIdByToken(tokenString string) (string, error) {
+	if tokenString == "" {
+		return "", errors.New("token不能为空")
+	}
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
@@ -49,7 +52,7 @@ func userIdByToken(tokenString string) (string, error) {
 		return []byte(jwtSecret), nil
 	})
 	if !token.Valid {
-		return "", errors.New("token is not Valid")
+		return "", errors.New("token is not valid")
 	} else if errors.Is(err, jwt.ErrTokenMalformed) {
 		return "", fmt.Errorf("that's not even a token:%w", err)
 	} else if errors.Is(err, jwt.ErrTokenExpired) || errors.Is(err, jwt.ErrTokenNotValidYet) {
