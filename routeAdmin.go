@@ -122,7 +122,7 @@ func initAdminRoute() {
 		jwttoken, _ := newJWTToken(userName, nil)
 
 		//c.HTML(http.StatusOK, "admin/index.html", nil)
-		c.SetCookie(jwttokenKey, jwttoken, timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 
 		c.Redirect(http.StatusOK, []byte("/admin/index"))
 	})
@@ -156,7 +156,7 @@ func funcMD5(in string) ([]string, error) {
 // adminHandler admin权限拦截器
 func adminHandler() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-		jwttoken := c.Cookie(jwttokenKey)
+		jwttoken := c.Cookie(config.JwttokenKey)
 		userId, err := userIdByToken(string(jwttoken))
 		if err != nil || userId == "" {
 			c.Redirect(http.StatusOK, []byte("/admin/login"))

@@ -36,14 +36,3 @@ const (
 
 	tokenUserId = "userId"
 )
-
-// 变量
-var (
-	//
-	basePath = ""
-	//默认的加密Secret
-	jwtSecret   = "gpressjwtSecret"
-	timeout     = 1800       //半个小时超时
-	jwttokenKey = "jwttoken" //jwt的key
-
-)
