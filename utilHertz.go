@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"html/template"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,5 +66,42 @@ func loadTemplate() error {
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
 func funcBasePath() string {
-	return basePath
+	return config.BasePath
+}
+
+// 加载配置文件
+func loadConfigFile() configStruct {
+	defaultErr := errors.New("config.json加载失败,使用默认配置")
+	// 打开文件
+	jsonFile, err := os.Open(datadir + "config.json")
+	if err != nil {
+		FuncLogError(defaultErr)
+		return defaultConfig
+	}
+	// 关闭文件
+	defer jsonFile.Close()
+	byteValue, _ := io.ReadAll(jsonFile)
+	configJson := configStruct{}
+	//Decode从输入流读取下一个json编码值并保存在v指向的值里
+	err = json.Unmarshal([]byte(byteValue), &configJson)
+	if err != nil {
+		FuncLogError(defaultErr)
+		return defaultConfig
+	}
+	return configJson
+}
+
+var defaultConfig = configStruct{
+	BasePath: "",
+	//默认的加密Secret
+	JwtSecret:   "gpress+jwtSecret-2023",
+	JwttokenKey: "jwttoken", //jwt的key
+	Timeout:     1800,       //半个小时超时
+}
+
+type configStruct struct {
+	BasePath    string `json:"basePath"`
+	JwtSecret   string `json:"jwtSecret"`
+	JwttokenKey string `json:"jwttokenKey"`
+	Timeout     int    `json:"timeout"`
 }

@@ -1,0 +1,6 @@
+{
+"basePath":"",
+"jwtSecret":"gpress+jwtSecret-2023",
+"jwttokenKey":"jwttoken",
+"timeout":1800
+}

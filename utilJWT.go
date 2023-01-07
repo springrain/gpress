@@ -23,7 +23,7 @@ func newJWTToken(userId string, info map[string]interface{}) (string, error) {
 			mapClaims[k] = v
 		}
 	}
-	mapClaims["exp"] = jwt.NewNumericDate(time.Now().Add(time.Duration(timeout) * time.Second))
+	mapClaims["exp"] = jwt.NewNumericDate(time.Now().Add(time.Duration(config.Timeout) * time.Second))
 	mapClaims["iat"] = jwt.NewNumericDate(time.Now())
 	mapClaims["nbf"] = jwt.NewNumericDate(time.Now())
 	mapClaims["iss"] = defaultName
@@ -34,7 +34,7 @@ func newJWTToken(userId string, info map[string]interface{}) (string, error) {
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, mapClaims)
 
-	tokenString, err := token.SignedString([]byte(jwtSecret))
+	tokenString, err := token.SignedString([]byte(config.JwtSecret))
 	return tokenString, err
 
 }
@@ -49,7 +49,7 @@ func userIdByToken(tokenString string) (string, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(jwtSecret), nil
+		return []byte(config.JwtSecret), nil
 	})
 	if !token.Valid {
 		return "", errors.New("token is not valid")

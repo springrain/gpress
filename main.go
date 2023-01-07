@@ -4,6 +4,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
+// 加载配置文件
+var config = loadConfigFile()
+
 // hertz对象,可以在其他地方使用
 var h = server.Default(server.WithHostPorts(":8080"))
 
