@@ -30,7 +30,7 @@ func loadTemplate() error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
 		//相对路径
-		relativePath := path[len(templateDir):]
+		relativePath := path[len(templateDir)-1:]
 		// 如果是静态资源
 		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
 			if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { //过滤掉压缩包
