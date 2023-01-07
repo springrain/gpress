@@ -33,6 +33,8 @@ const (
 
 	// 数据默认的创建用户
 	createUser = "system"
+
+	tokenUserId = "userId"
 )
 
 // 变量
