@@ -28,7 +28,7 @@ func newJWTToken(userId string, info map[string]interface{}) (string, error) {
 	mapClaims["nbf"] = jwt.NewNumericDate(time.Now())
 	mapClaims["iss"] = defaultName
 	mapClaims["jti"] = userId
-	mapClaims["userId"] = userId
+	mapClaims[tokenUserId] = userId
 
 	// Create a new token object, specifying signing method and the claims
 	// you would like it to contain.
@@ -64,7 +64,7 @@ func userIdByToken(tokenString string) (string, error) {
 
 	mapClaims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		userId := mapClaims["userId"].(string)
+		userId := mapClaims[tokenUserId].(string)
 		return userId, nil
 	}
 	return "", errors.New("token错误或过期")
