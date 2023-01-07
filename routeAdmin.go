@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/blevesearch/bleve/v2"
+	"golang.org/x/crypto/sha3"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol"
@@ -119,6 +120,13 @@ func initAdminRoute() {
 	})
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
 		userName := c.PostForm("userName")
+		password := c.PostForm("password")
+
+		bytehex := sha3.Sum512([]byte("admin"))
+		str := hex.EncodeToString(bytehex[:])
+		if password == str {
+			fmt.Println(password)
+		}
 		jwttoken, _ := newJWTToken(userName, nil)
 
 		//c.HTML(http.StatusOK, "admin/index.html", nil)
@@ -131,7 +139,7 @@ func initAdminRoute() {
 	admin.Use(adminHandler())
 	// 后台管理员首页
 	admin.GET("/index", func(ctx context.Context, c *app.RequestContext) {
-
+		//获取从jwttoken中解码的userId
 		fmt.Println(c.Get(tokenUserId))
 		c.HTML(http.StatusOK, "/admin/index.html", nil)
 	})
@@ -163,6 +171,7 @@ func adminHandler() app.HandlerFunc {
 			c.Abort() //终止后续调用
 			return
 		}
+		//传递从jwttoken获取的userId
 		c.Set(tokenUserId, userId)
 	}
 }
