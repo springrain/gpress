@@ -6,6 +6,7 @@ require (
 	github.com/blevesearch/bleve/v2 v2.3.6
 	github.com/cloudwego/hertz v0.4.2
 	github.com/go-ego/gse v0.80.0
+	github.com/golang-jwt/jwt/v4 v4.4.3
 
 )
 

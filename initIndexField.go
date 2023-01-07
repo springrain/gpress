@@ -14,35 +14,8 @@ import (
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
-// 数据默认的创建用户
-const createUser = "system"
-
 // 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
 var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
-
-// 索引名称
-const (
-	// 基本目录
-	datadir = "gpressdatadir/"
-	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
-	bleveDataDir = datadir + "bleve/"
-	// 索引字段的名称
-	indexFieldIndexName = bleveDataDir + "IndexField"
-	// User 用户的索引名称
-	userIndexName = bleveDataDir + "User"
-	// siteInfo  站点信息
-	indexSitenIndexName = bleveDataDir + "sitenInfo"
-	// 页面模板
-	indexPageTemplateName = bleveDataDir + "pageTemplate"
-	// 导航菜单
-	indexNavMenuName = bleveDataDir + "NavMenu"
-	// 模型
-	indexModuleName = bleveDataDir + "Module"
-	// 模型数据
-	indexModuleDefaultName = "moduleDefault"
-	// 文章内容
-	indexContentName = bleveDataDir + "Content"
-)
 
 // 逗号分词器的mapping
 var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()

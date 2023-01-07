@@ -14,7 +14,9 @@ var serializeFormToObject = function (form) {
         event.preventDefault();
         fetch(loginForm.action, {
             method: loginForm.method,
-            //body: JSON.stringify(serializeFormToObject(loginForm))
+            //body: JSON.stringify(serializeFormToObject(loginForm)),
+            credentials:"same-origin",
+            mode:"same-origin",
             body: new FormData(loginForm)
         }).then(function (response) {
                 if (response.ok) {
