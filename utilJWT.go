@@ -8,32 +8,24 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type gpressJWTClaims struct {
-	UserId string `json:"userId"`
-	jwt.RegisteredClaims
-}
-
+// newJWTToken 创建一个jwtToken
 func newJWTToken(userId string, info map[string]interface{}) (string, error) {
 	if userId == "" {
 		return "", errors.New("userId不能为空")
 	}
 	mapClaims := jwt.MapClaims{}
-	if info != nil {
-		for k, v := range info {
-			mapClaims[k] = v
-		}
+	for k, v := range info {
+		mapClaims[k] = v
 	}
 	mapClaims["exp"] = jwt.NewNumericDate(time.Now().Add(time.Duration(config.Timeout) * time.Second))
 	mapClaims["iat"] = jwt.NewNumericDate(time.Now())
 	mapClaims["nbf"] = jwt.NewNumericDate(time.Now())
 	mapClaims["iss"] = defaultName
 	mapClaims["jti"] = userId
+
 	mapClaims[tokenUserId] = userId
 
-	// Create a new token object, specifying signing method and the claims
-	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, mapClaims)
-
 	tokenString, err := token.SignedString([]byte(config.JwtSecret))
 	return tokenString, err
 
@@ -56,7 +48,6 @@ func userIdByToken(tokenString string) (string, error) {
 	} else if errors.Is(err, jwt.ErrTokenMalformed) {
 		return "", fmt.Errorf("that's not even a token:%w", err)
 	} else if errors.Is(err, jwt.ErrTokenExpired) || errors.Is(err, jwt.ErrTokenNotValidYet) {
-		// Token is either expired or not active yet
 		return "", fmt.Errorf("timing is everything:%w", err)
 	} else if err != nil {
 		return "", fmt.Errorf("couldn't handle this token:%w", err)
