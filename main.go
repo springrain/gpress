@@ -19,8 +19,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-var templateDir = datadir + "template/"
-
 // 模板路径,正常应该从siteInfo里获取,这里用于演示
 var themePath = "theme/default/"
 
@@ -178,17 +176,26 @@ func main() {
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
 		userName := c.PostForm("userName")
 		password := c.PostForm("password")
-		fmt.Printf("userName:%s,password:%s", userName, password)
+
+		jwttoken, _ := newJWTToken(userName, nil)
+
+		fmt.Printf("jwttoken:%s,password:%s", jwttoken, password)
+
 		//c.HTML(http.StatusOK, "admin/index.html", nil)
-		c.SetCookie("jwttoken", "jwttoken-test", 1800, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.SetCookie(jwttokenKey, jwttoken, timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 
 		c.Redirect(http.StatusOK, []byte("/admin/index"))
 	})
 
 	// 后台管理员首页
 	h.GET("/admin/index", func(ctx context.Context, c *app.RequestContext) {
-		jwttoken := c.Cookie("jwttoken")
-		fmt.Println(string(jwttoken))
+		jwttoken := c.Cookie(jwttokenKey)
+		userName, err := userIdByToken(string(jwttoken))
+		if err != nil {
+			c.HTML(http.StatusOK, "admin/error.html", nil)
+			return
+		}
+		fmt.Println(userName)
 		//fmt.Println(c.Request.Body())
 		c.HTML(http.StatusOK, "admin/index.html", nil)
 	})
@@ -214,5 +221,5 @@ func funcMD5(in string) ([]string, error) {
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
 func funcBasePath() string {
-	return ""
+	return basePath
 }
