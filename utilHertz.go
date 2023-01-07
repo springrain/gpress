@@ -69,7 +69,7 @@ func funcBasePath() string {
 	return config.BasePath
 }
 
-// 加载配置文件
+// 加载配置文件,先从文件加载吧,后面全部改成后台控制,改配置文件不人性化
 func loadConfigFile() configStruct {
 	defaultErr := errors.New("config.json加载失败,使用默认配置")
 	// 打开文件
