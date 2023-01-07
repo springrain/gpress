@@ -7,6 +7,7 @@ require (
 	github.com/cloudwego/hertz v0.4.2
 	github.com/go-ego/gse v0.80.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
+	golang.org/x/crypto v0.5.0
 
 )
 
@@ -56,6 +57,8 @@ require (
 	github.com/vcaesar/cedar v0.20.1 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
+	golang.org/x/sys v0.4.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
+
+replace golang.org/x/crypto => github.com/golang/crypto v0.5.0
