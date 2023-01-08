@@ -38,4 +38,6 @@ const (
 	createUser = "system"
 
 	tokenUserId = "userId"
+
+	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 )

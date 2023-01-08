@@ -1,7 +1,9 @@
 package main
 
 import (
+	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
@@ -17,6 +19,9 @@ var config = loadInstallConfig()
 var h = server.Default(server.WithHostPorts(":" + strconv.Itoa(config.Port)))
 
 func init() {
+	//设置随机种子
+	rand.Seed(time.Now().UnixNano())
+
 	//h.Use(gzip.Gzip(gzip.DefaultCompression))
 
 }
