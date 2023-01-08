@@ -120,7 +120,8 @@ func loadInstallConfig() configStruct {
 var defaultConfig = configStruct{
 	BasePath: "",
 	//默认的加密Secret
-	JwtSecret:   "gpress+jwtSecret-2023",
+	//JwtSecret:   "gpress+jwtSecret-2023",
+	JwtSecret:   randStr(32),
 	JwttokenKey: "jwttoken", //jwt的key
 	Timeout:     1800,       //半个小时超时
 	Port:        660,        // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
