@@ -128,7 +128,7 @@ func initAdminRoute() {
 		}
 		userName := c.PostForm("userName")
 		password := c.PostForm("password")
-		fmt.Printf("userName%s,password:%s", userName, password)
+		fmt.Printf("userName:%s,password:%s", userName, password)
 
 		//安装成功,更新安装状态
 		updateInstall()
