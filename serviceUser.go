@@ -22,13 +22,13 @@ func insertUser(ctx context.Context, account string, password string) error {
 func findUserId(ctx context.Context, account string, password string) (string, error) {
 	userIndex := IndexMap[userIndexName]
 
-	queryAccount := bleve.NewTermQuery(account)
-	queryAccount.SetField("account")
+	accountQuery := bleve.NewTermQuery(account)
+	accountQuery.SetField("account")
 
-	passwordAccount := bleve.NewTermQuery(password)
-	passwordAccount.SetField("password")
+	passwordQuery := bleve.NewTermQuery(password)
+	passwordQuery.SetField("password")
 	// 多个条件联查
-	query := bleve.NewConjunctionQuery(queryAccount, passwordAccount)
+	query := bleve.NewConjunctionQuery(accountQuery, passwordQuery)
 	//只查一条
 	serarchRequest := bleve.NewSearchRequestOptions(query, 1, 0, false)
 	// 只查询id
