@@ -136,14 +136,15 @@ func isInstalled() bool {
 
 // updateInstall 更新安装状态
 func updateInstall() error {
-	//将config配置写入到索引,install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
-	//写入前,先把config表清空
+	//将config配置写入到索引,写入前先把config表清空
 
 	//删除 install 文件
 	err := os.Remove(templateDir + "admin/install.html")
 	if err != nil {
 		return err
 	}
+
+	//install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
 
 	//更改安装状态
 	installed = true
