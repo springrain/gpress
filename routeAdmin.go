@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/blevesearch/bleve/v2"
-	"golang.org/x/crypto/sha3"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol"
@@ -114,19 +113,51 @@ func initAdminRoute() {
 		c.JSON(http.StatusOK, result)
 	})
 
+	// 安装
+	h.GET("/admin/install", func(ctx context.Context, c *app.RequestContext) {
+		if installed { //如果已经安装过了,跳转到登录
+			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			return
+		}
+		c.HTML(http.StatusOK, "/admin/install.html", nil)
+	})
+	h.POST("/admin/install", func(ctx context.Context, c *app.RequestContext) {
+		if installed { //如果已经安装过了,跳转到登录
+			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			return
+		}
+		userName := c.PostForm("userName")
+		password := c.PostForm("password")
+		fmt.Printf("userName%s,password:%s", userName, password)
+
+		//安装成功,更新安装状态
+		updateInstall()
+		c.Redirect(http.StatusOK, []byte("/admin/login"))
+	})
+
 	// 后台管理员登录
 	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
+		if !installed { //如果没有安装,跳转到安装
+			c.Redirect(http.StatusOK, []byte("/admin/install"))
+			return
+		}
 		c.HTML(http.StatusOK, "/admin/login.html", nil)
 	})
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
-		userName := c.PostForm("userName")
-		password := c.PostForm("password")
-
-		bytehex := sha3.Sum512([]byte("admin"))
-		str := hex.EncodeToString(bytehex[:])
-		if password == str {
-			fmt.Println(password)
+		if !installed { //如果没有安装,跳转到安装
+			c.Redirect(http.StatusOK, []byte("/admin/install"))
+			return
 		}
+		userName := c.PostForm("userName")
+
+		/*
+			password := c.PostForm("password")
+			bytehex := sha3.Sum512([]byte("admin"))
+			str := hex.EncodeToString(bytehex[:])
+			if password == str {
+				fmt.Println(password)
+			}
+		*/
 		jwttoken, _ := newJWTToken(userName, nil)
 
 		//c.HTML(http.StatusOK, "admin/index.html", nil)
