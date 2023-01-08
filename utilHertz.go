@@ -39,6 +39,7 @@ func loadTemplate() error {
 			if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { //过滤掉压缩包
 				h.StaticFile(relativePath, path)
 			}
+
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			//创建对应的模板
 			t := tmpl.New(relativePath)
@@ -59,6 +60,21 @@ func loadTemplate() error {
 		//panic(err)
 		return err
 	}
+
+	//处理静态化文件
+	filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
+		if !strings.HasSuffix(path, ".html") { //只处理html结尾的文件
+			return nil
+		}
+		// 分隔符统一为 / 斜杠
+		path = filepath.ToSlash(path)
+		//相对路径
+		relativePath := path[len(statichtmlDir)-1:]
+		//设置静态化文件
+		h.StaticFile(relativePath, path)
+		return nil
+	})
+
 	//设置模板
 	h.SetHTMLTemplate(tmpl)
 	return nil
@@ -97,7 +113,7 @@ var defaultConfig = configStruct{
 	JwtSecret:   "gpress+jwtSecret-2023",
 	JwttokenKey: "jwttoken", //jwt的key
 	Timeout:     1800,       //半个小时超时
-	Port:660,// gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
+	Port:        660,        // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
 }
 
 type configStruct struct {
@@ -105,7 +121,7 @@ type configStruct struct {
 	JwtSecret   string `json:"jwtSecret"`
 	JwttokenKey string `json:"jwttokenKey"`
 	Timeout     int    `json:"timeout"`
-	Port int `json:"port"`
+	Port        int    `json:"port"`
 }
 
 // isInstalled 是否已经安装过了
