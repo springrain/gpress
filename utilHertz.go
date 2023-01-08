@@ -70,7 +70,7 @@ func funcBasePath() string {
 }
 
 // 加载配置文件,先从文件加载吧,后面全部改成后台控制,改配置文件不人性化
-func loadConfigFile() configStruct {
+func loadConfig() configStruct {
 	defaultErr := errors.New("config.json加载失败,使用默认配置")
 	// 打开文件
 	jsonFile, err := os.Open(datadir + "config.json")
@@ -104,4 +104,20 @@ type configStruct struct {
 	JwtSecret   string `json:"jwtSecret"`
 	JwttokenKey string `json:"jwttokenKey"`
 	Timeout     int    `json:"timeout"`
+}
+
+// isInstalled 是否已经安装过了
+func isInstalled() bool {
+	_, err := os.Lstat(templateDir + "admin/install.html")
+	return os.IsNotExist(err)
+}
+
+// updateInstall 更新安装状态
+func updateInstall() error {
+	err := os.Remove(templateDir + "admin/install.html")
+	if err != nil {
+		return err
+	}
+	installed = true
+	return nil
 }
