@@ -5,9 +5,11 @@ import (
 	"errors"
 	"html/template"
 	"io"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -108,6 +110,10 @@ func loadInstallConfig() configStruct {
 		return defaultConfig
 	}
 
+	if configJson.JwtSecret == "" { //如果没有配置jwtSecret,产生随机字符串
+		configJson.JwtSecret = randStr(32)
+	}
+
 	return configJson
 }
 
@@ -149,4 +155,14 @@ func updateInstall() error {
 	//更改安装状态
 	installed = true
 	return nil
+}
+
+// randStr 生成随机字符串
+func randStr(n int) string {
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
