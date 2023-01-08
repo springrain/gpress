@@ -11,13 +11,14 @@ import (
 var installed = true //方便开发测试
 
 // 加载配置文件
-var config = loadConfig()
+var config = loadInstallConfig()
 
 // hertz对象,可以在其他地方使用
 var h = server.Default(server.WithHostPorts(":" + strconv.Itoa(config.Port)))
 
 func init() {
 	//h.Use(gzip.Gzip(gzip.DefaultCompression))
+
 }
 
 func main() {
