@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
+	"sync"
 	"testing"
 	"time"
 
@@ -231,4 +233,26 @@ func TestSearchOrder(t *testing.T) {
 	// 本次查询的总条数,用于分页
 	fmt.Println("总条数:", searchResult.Total)
 	fmt.Println(searchResult)
+}
+
+func TestUser(t *testing.T) {
+	var waitGroup sync.WaitGroup
+	start := time.Now()
+	waitGroup.Add(500)
+	for i := 0; i < 500; i++ {
+		go func(j int) {
+			defer waitGroup.Done()
+			err := insertUser(context.Background(), "test"+strconv.Itoa(j), "pwd"+strconv.Itoa(j))
+			if err != nil {
+				fmt.Println(err)
+			}
+			_, err = findUserId(context.Background(), "test"+strconv.Itoa(j), "pwd"+strconv.Itoa(j))
+			if err != nil {
+				fmt.Println(err)
+			}
+		}(i)
+	}
+
+	waitGroup.Wait()
+	fmt.Println(time.Since(start))
 }
