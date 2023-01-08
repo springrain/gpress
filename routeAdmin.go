@@ -126,6 +126,7 @@ func initAdminRoute() {
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
 			return
 		}
+		//使用后端管理界面配置,jwtSecret也有后端随机产生
 		userName := c.PostForm("userName")
 		password := c.PostForm("password")
 		fmt.Printf("userName:%s,password:%s", userName, password)
