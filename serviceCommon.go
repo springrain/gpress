@@ -115,3 +115,29 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	index.Index(indexId, newMap)
 	return nil
 }
+
+func deleteAll(ctx context.Context, tableName string) error {
+	index := IndexMap[tableName]
+	count, err := index.DocCount()
+	if err != nil {
+		return err
+	}
+	query := bleve.NewQueryStringQuery("*")
+	//只查一条
+	serarchRequest := bleve.NewSearchRequestOptions(query, int(count), 0, false)
+	// 只查询id
+	serarchRequest.Fields = []string{"id"}
+
+	result, err := index.SearchInContext(ctx, serarchRequest)
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(result.Hits); i++ {
+		err = index.Delete(result.Hits[i].ID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

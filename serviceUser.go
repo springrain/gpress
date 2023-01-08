@@ -7,6 +7,8 @@ import (
 )
 
 func insertUser(ctx context.Context, account string, password string) error {
+	//清空用户,只能有一个管理员
+	deleteAll(ctx, userIndexName)
 	userIndex := IndexMap[userIndexName]
 	// 初始化数据
 	user := make(map[string]string)
