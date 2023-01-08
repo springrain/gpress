@@ -127,10 +127,13 @@ func initAdminRoute() {
 			return
 		}
 		//使用后端管理界面配置,jwtSecret也有后端随机产生
-		userName := c.PostForm("userName")
+		account := c.PostForm("account")
 		password := c.PostForm("password")
-		fmt.Printf("userName:%s,password:%s", userName, password)
-
+		err := insertUser(ctx, account, password)
+		if err != nil {
+			c.Redirect(http.StatusOK, []byte("/admin/error"))
+			return
+		}
 		//安装成功,更新安装状态
 		updateInstall()
 		c.Redirect(http.StatusOK, []byte("/admin/login"))
@@ -149,8 +152,13 @@ func initAdminRoute() {
 			c.Redirect(http.StatusOK, []byte("/admin/install"))
 			return
 		}
-		userName := c.PostForm("userName")
-
+		account := c.PostForm("account")
+		password := c.PostForm("password")
+		userId, err := findUserId(ctx, account, password)
+		if userId == "" || err != nil { //用户不存在或者异常
+			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			return
+		}
 		/*
 			password := c.PostForm("password")
 			bytehex := sha3.Sum512([]byte("admin"))
@@ -159,7 +167,7 @@ func initAdminRoute() {
 				fmt.Println(password)
 			}
 		*/
-		jwttoken, _ := newJWTToken(userName, nil)
+		jwttoken, _ := newJWTToken(userId, nil)
 
 		//c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
