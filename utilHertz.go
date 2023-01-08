@@ -91,6 +91,8 @@ func funcBasePath() string {
 func loadInstallConfig() configStruct {
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
 	if installed { //如果已经安装,需要从索引读取配置,这里暂时返回defaultConfig
+		//jwtSecret设置固定值,方便测试
+		defaultConfig.JwtSecret = "jwtSecret+gpress"
 		return defaultConfig
 	}
 	// 打开文件
