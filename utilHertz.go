@@ -97,6 +97,7 @@ var defaultConfig = configStruct{
 	JwtSecret:   "gpress+jwtSecret-2023",
 	JwttokenKey: "jwttoken", //jwt的key
 	Timeout:     1800,       //半个小时超时
+	Port:660,// gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
 }
 
 type configStruct struct {
@@ -104,6 +105,7 @@ type configStruct struct {
 	JwtSecret   string `json:"jwtSecret"`
 	JwttokenKey string `json:"jwttokenKey"`
 	Timeout     int    `json:"timeout"`
+	Port int `json:"port"`
 }
 
 // isInstalled 是否已经安装过了
