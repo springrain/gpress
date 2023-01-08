@@ -85,11 +85,14 @@ func funcBasePath() string {
 	return config.BasePath
 }
 
-// 加载配置文件,先从文件加载吧,后面全部改成后台控制,改配置文件不人性化
-func loadConfig() configStruct {
-	defaultErr := errors.New("config.json加载失败,使用默认配置")
+// 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入索引,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
+func loadInstallConfig() configStruct {
+	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
+	if installed { //如果已经安装,需要从索引读取配置,这里暂时返回defaultConfig
+		return defaultConfig
+	}
 	// 打开文件
-	jsonFile, err := os.Open(datadir + "config.json")
+	jsonFile, err := os.Open(datadir + "install_config.json")
 	if err != nil {
 		FuncLogError(defaultErr)
 		return defaultConfig
@@ -104,6 +107,7 @@ func loadConfig() configStruct {
 		FuncLogError(defaultErr)
 		return defaultConfig
 	}
+
 	return configJson
 }
 
@@ -132,10 +136,16 @@ func isInstalled() bool {
 
 // updateInstall 更新安装状态
 func updateInstall() error {
+	//将config配置写入到索引,install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
+	//写入前,先把config表清空
+
+	//删除 install 文件
 	err := os.Remove(templateDir + "admin/install.html")
 	if err != nil {
 		return err
 	}
+
+	//更改安装状态
 	installed = true
 	return nil
 }

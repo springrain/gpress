@@ -1,0 +1,7 @@
+{
+ "basePath":"",
+ "port":660,
+ "jwtSecret":"gpress+jwtSecret-2023",
+ "jwttokenKey":"jwttoken",
+ "timeout":1800
+}
