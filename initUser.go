@@ -19,7 +19,7 @@ func initUser() (bool, error) {
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
 		IndexName:    "用户信息",
-		FieldCode:    "ID",
+		FieldCode:    "id",
 		FieldName:    "用户ID",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
@@ -35,7 +35,7 @@ func initUser() (bool, error) {
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
 		IndexName:    "用户信息",
-		FieldCode:    "Account",
+		FieldCode:    "account",
 		FieldName:    "账号",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
@@ -50,7 +50,7 @@ func initUser() (bool, error) {
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
 		IndexName:    "用户信息",
-		FieldCode:    "PassWord",
+		FieldCode:    "password",
 		FieldName:    "密码",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
@@ -65,7 +65,7 @@ func initUser() (bool, error) {
 		ID:           FuncGenerateStringID(),
 		IndexCode:    userIndexName,
 		IndexName:    "用户信息",
-		FieldCode:    "UserName",
+		FieldCode:    "userName",
 		FieldName:    "用户名称",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
@@ -86,15 +86,5 @@ func initUser() (bool, error) {
 		return false, err
 	}
 	IndexMap[userIndexName] = userIndex
-
-	// 初始化数据
-	user := make(map[string]string)
-	id := FuncGenerateStringID()
-	user["ID"] = id
-	user["Account"] = "admin"
-	user["PassWord"] = "21232f297a57a5a743894a0e4a801fc3"
-	user["UserName"] = "管理员"
-	// 初始化 admin用户
-	userIndex.Index(id, user)
 	return true, nil
 }
