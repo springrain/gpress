@@ -7,7 +7,8 @@ import (
 )
 
 // 是否已经安装过了
-var installed = isInstalled()
+// var installed = isInstalled()
+var installed = true //方便开发测试
 
 // 加载配置文件
 var config = loadConfig()
