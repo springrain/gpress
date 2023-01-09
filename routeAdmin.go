@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
 	"net/http"
 
 	"github.com/blevesearch/bleve/v2"
@@ -108,7 +107,6 @@ func initAdminRoute() {
 	})
 
 	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
-		fmt.Println("1")
 		result, _ := getNavMenu("0")
 		c.JSON(http.StatusOK, result)
 	})
@@ -180,7 +178,11 @@ func initAdminRoute() {
 	// 后台管理员首页
 	admin.GET("/index", func(ctx context.Context, c *app.RequestContext) {
 		//获取从jwttoken中解码的userId
-		fmt.Println(c.Get(tokenUserId))
+		userId, ok := c.Get(tokenUserId)
+		if !ok || userId == "" {
+			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			return
+		}
 		c.HTML(http.StatusOK, "/admin/index.html", nil)
 	})
 

@@ -98,6 +98,7 @@ func findConfig() (configStruct, error) {
 			config.Timeout, err = strconv.Atoi(strv)
 			if err != nil {
 				config.Timeout = defaultConfig.Timeout
+				return config, err
 			}
 		}
 	}
