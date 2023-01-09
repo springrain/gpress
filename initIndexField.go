@@ -1,12 +1,8 @@
 package main
 
 import (
-	"crypto/rand"
-	"fmt"
 	"io/ioutil"
-	"math/big"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
@@ -62,19 +58,20 @@ type IndexFieldStruct struct {
 	Active int
 }
 
-// 初始化调用
-func init() {
+// 初始化 bleve 索引
+func checkBleveStatus() bool {
 	// 初始化分词器
 	commaAnalyzerMapping.DocValues = false
 	commaAnalyzerMapping.Analyzer = commaAnalyzerName
 	gseAnalyzerMapping.DocValues = false
 	gseAnalyzerMapping.Analyzer = gseAnalyzerName
 
-	checkInstall()
+	checkBleveCreate()
+	return true
 }
 
-// checkInstall 检查是不是初始化安装,如果是就创建文件夹目录
-func checkInstall() (bool, error) {
+// checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
+func checkBleveCreate() (bool, error) {
 	// 索引数据目录是否存在
 	exists, errPathExists := pathExists(bleveDataDir)
 	if errPathExists != nil {
@@ -105,6 +102,8 @@ func checkInstall() (bool, error) {
 	// 初始化IndexField
 	initIndexField()
 
+	//初始化配置
+	initConfig()
 	// 初始化用户表
 	initUser()
 
@@ -141,40 +140,4 @@ func initIndexField() (bool, error) {
 	}
 	IndexMap[indexFieldIndexName] = index
 	return true, nil
-}
-
-// FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
-// FuncGenerateStringID Function to generate string ID by default. Convenient for custom extension
-var FuncGenerateStringID func() string = generateStringID
-
-// generateStringID 生成主键字符串
-// generateStringID Generate primary key string
-func generateStringID() string {
-	// 使用 crypto/rand 真随机9位数
-	randNum, randErr := rand.Int(rand.Reader, big.NewInt(1000000000))
-	if randErr != nil {
-		return ""
-	}
-	// 获取9位数,前置补0,确保9位数
-	rand9 := fmt.Sprintf("%09d", randNum)
-
-	// 获取纳秒 按照 年月日时分秒毫秒微秒纳秒 拼接为长度23位的字符串
-	pk := time.Now().Format("2006.01.02.15.04.05.000000000")
-	pk = strings.ReplaceAll(pk, ".", "")
-
-	// 23位字符串+9位随机数=32位字符串,这样的好处就是可以使用ID进行排序
-	pk = pk + rand9
-	return pk
-}
-
-// pathExists 文件或者目录是否存在
-func pathExists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	return false, err
 }
