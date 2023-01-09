@@ -12,8 +12,6 @@ import (
 // 是否已经安装过了
 var installed = isInstalled()
 
-//var installed = true //方便开发测试
-
 // 检查索引状态
 var bleveStatus = checkBleveStatus()
 
@@ -24,6 +22,9 @@ var config = loadInstallConfig()
 var h = server.Default(server.WithHostPorts(config.ServerPort))
 
 func init() {
+	if !bleveStatus { //索引状态检查失败
+		panic("索引检查失败")
+	}
 	//设置随机种子
 	rand.Seed(time.Now().UnixNano())
 
