@@ -1,12 +1,13 @@
 module gitee.com/chunanyong/gpress
 
-go 1.18
+go 1.19
 
 require (
 	github.com/blevesearch/bleve/v2 v2.3.6
 	github.com/cloudwego/hertz v0.4.2
 	github.com/go-ego/gse v0.80.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
+	github.com/yuin/goldmark v1.5.3
 
 )
 
@@ -59,5 +60,3 @@ require (
 	golang.org/x/sys v0.4.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
-
-replace golang.org/x/crypto => github.com/golang/crypto v0.5.0
