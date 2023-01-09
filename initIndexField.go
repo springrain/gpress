@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -84,7 +83,7 @@ func checkBleveCreate() (bool, error) {
 	}
 
 	if exists { // 如果已经存在目录,遍历索引,放到全局map里
-		fileInfo, _ := ioutil.ReadDir(bleveDataDir)
+		fileInfo, _ := os.ReadDir(bleveDataDir)
 		for _, dir := range fileInfo {
 			if !dir.IsDir() {
 				continue
