@@ -12,9 +12,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol"
 )
 
-// 模板路径,正常应该从siteInfo里获取,这里用于演示
-var themePath = "/theme/default/"
-
 func initAdminRoute() {
 	// 默认首页
 	h.GET("/", funcIndex)

@@ -6,6 +6,6 @@ import (
 )
 
 func TestReadMe(t *testing.T) {
-	html, _ := conver2Html("./README.md")
+	html, _ := conver2Html("./post/01-nginx-config.md")
 	fmt.Println(*html)
 }
