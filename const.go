@@ -9,7 +9,11 @@ const (
 	bleveDataDir = datadir + "bleve/"
 	// 索引字段的名称
 	indexFieldIndexName = bleveDataDir + "indexField"
-	// User 用户的索引名称
+
+	// config 配置的索引名称
+	configIndexName = bleveDataDir + "config"
+
+	// user 用户的索引名称
 	userIndexName = bleveDataDir + "user"
 	// siteInfo  站点信息
 	indexSitenIndexName = bleveDataDir + "sitenInfo"

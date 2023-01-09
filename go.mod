@@ -7,7 +7,6 @@ require (
 	github.com/cloudwego/hertz v0.4.2
 	github.com/go-ego/gse v0.80.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
-	golang.org/x/crypto v0.5.0
 
 )
 

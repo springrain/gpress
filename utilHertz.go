@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"html/template"
@@ -8,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -91,9 +93,11 @@ func funcBasePath() string {
 func loadInstallConfig() configStruct {
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
 	if installed { //如果已经安装,需要从索引读取配置,这里暂时返回defaultConfig
-		//jwtSecret设置固定值,方便测试
-		defaultConfig.JwtSecret = "jwtSecret+gpress"
-		return defaultConfig
+		config, err := findConfig()
+		if err != nil {
+			return defaultConfig
+		}
+		return config
 	}
 	// 打开文件
 	jsonFile, err := os.Open(datadir + "install_config.json")
@@ -126,7 +130,7 @@ var defaultConfig = configStruct{
 	JwtSecret:   randStr(32),
 	JwttokenKey: "jwttoken", //jwt的key
 	Timeout:     1800,       //半个小时超时
-	Port:        660,        // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
+	ServerPort:  ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
 }
 
 type configStruct struct {
@@ -134,7 +138,7 @@ type configStruct struct {
 	JwtSecret   string `json:"jwtSecret"`
 	JwttokenKey string `json:"jwttokenKey"`
 	Timeout     int    `json:"timeout"`
-	Port        int    `json:"port"`
+	ServerPort  string `json:"serverPort"`
 }
 
 // isInstalled 是否已经安装过了
@@ -144,17 +148,19 @@ func isInstalled() bool {
 }
 
 // updateInstall 更新安装状态
-func updateInstall() error {
+func updateInstall(ctx context.Context) error {
 	//将config配置写入到索引,写入前先把config表清空
+	insertConfig(ctx, config)
 
+	now := strconv.FormatInt(time.Now().UnixNano(), 10)
 	//删除 install 文件
-	err := os.Remove(templateDir + "admin/install.html")
+	err := os.Rename(templateDir+"admin/install.html", templateDir+"admin/install.html."+now)
 	if err != nil {
 		return err
 	}
 
 	//install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
-
+	err = os.Rename(datadir+"install_config.json", datadir+"install_config.json."+now)
 	//更改安装状态
 	installed = true
 	return nil
