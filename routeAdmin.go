@@ -135,7 +135,7 @@ func initAdminRoute() {
 			return
 		}
 		//安装成功,更新安装状态
-		updateInstall()
+		updateInstall(ctx)
 		c.Redirect(http.StatusOK, []byte("/admin/login"))
 	})
 

@@ -1,5 +1,5 @@
 {
- "port":660,
+ "serverPort":":660",
  "timeout":1800,
  "jwttokenKey":"jwttoken",
  "basePath":"",
