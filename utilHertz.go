@@ -107,7 +107,11 @@ func loadInstallConfig() configStruct {
 	}
 	// 关闭文件
 	defer jsonFile.Close()
-	byteValue, _ := io.ReadAll(jsonFile)
+	byteValue, err := io.ReadAll(jsonFile)
+	if err != nil {
+		FuncLogError(defaultErr)
+		return defaultConfig
+	}
 	configJson := configStruct{}
 	//Decode从输入流读取下一个json编码值并保存在v指向的值里
 	err = json.Unmarshal([]byte(byteValue), &configJson)
@@ -150,17 +154,23 @@ func isInstalled() bool {
 // updateInstall 更新安装状态
 func updateInstall(ctx context.Context) error {
 	//将config配置写入到索引,写入前先把config表清空
-	insertConfig(ctx, config)
+	err := insertConfig(ctx, config)
+	if err != nil {
+		return err
+	}
 
 	now := strconv.FormatInt(time.Now().UnixNano(), 10)
 	//删除 install 文件
-	err := os.Rename(templateDir+"admin/install.html", templateDir+"admin/install.html."+now)
+	err = os.Rename(templateDir+"admin/install.html", templateDir+"admin/install.html."+now)
 	if err != nil {
 		return err
 	}
 
 	//install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
 	err = os.Rename(datadir+"install_config.json", datadir+"install_config.json."+now)
+	if err != nil {
+		return err
+	}
 	//更改安装状态
 	installed = true
 	return nil
