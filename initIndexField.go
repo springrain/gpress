@@ -66,8 +66,12 @@ func checkBleveStatus() bool {
 	gseAnalyzerMapping.DocValues = false
 	gseAnalyzerMapping.Analyzer = gseAnalyzerName
 
-	checkBleveCreate()
-	return true
+	status, err := checkBleveCreate()
+	if err != nil {
+		FuncLogError(err)
+		return false
+	}
+	return status
 }
 
 // checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
@@ -87,7 +91,10 @@ func checkBleveCreate() (bool, error) {
 			}
 
 			// 打开所有的索引,放到map里,一个索引只能打开一次.
-			index, _ := bleve.Open(bleveDataDir + dir.Name())
+			index, err := bleve.Open(bleveDataDir + dir.Name())
+			if err != nil {
+				return false, err
+			}
 			IndexMap[bleveDataDir+dir.Name()] = index
 		}
 		return true, errPathExists
