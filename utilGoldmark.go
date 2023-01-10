@@ -45,6 +45,7 @@ func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error
 		return nil, nil, nil, err
 	}
 	var htmlBuffer bytes.Buffer
+	//生成id时支持中文
 	parserContext := parser.NewContext(parser.WithIDs(newIDs()))
 	if err := markdown.Convert(source, &htmlBuffer, parser.WithContext(parserContext)); err != nil {
 		return nil, nil, nil, err
@@ -56,30 +57,19 @@ func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error
 
 	//生成 toc  Table of Contents,文章目录
 	var tocBuffer bytes.Buffer
-	tocMD := goldmark.New(
-		goldmark.WithParserOptions(
-			parser.WithAutoHeadingID(),
-			parser.WithASTTransformers(
-				util.Prioritized(&toc.Transformer{
-					Title: "目录",
-				}, 200),
-			),
-		),
-		goldmark.WithExtensions(
-			meta.Meta,
-		),
-	)
-	mdParser := tocMD.Parser()
 
+	mdParser := markdown.Parser()
+
+	//生成id时支持中文
 	doc := mdParser.Parse(text.NewReader(source), parser.WithContext(parserContext))
-	//doc := mdParser.Parse(text.NewReader(source))
 	tocTree, err := toc.Inspect(doc, source)
 	if err != nil {
 		return metaData, nil, &html, err
 	}
 	tocNode := toc.RenderList(tocTree)
-	tocMD.Renderer().Render(&tocBuffer, source, tocNode)
+	markdown.Renderer().Render(&tocBuffer, source, tocNode)
 	tocHtml := tocBuffer.String()
+
 	return metaData, &tocHtml, &html, err
 }
 
