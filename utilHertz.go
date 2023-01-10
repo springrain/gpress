@@ -65,7 +65,7 @@ func loadTemplate() error {
 
 	//处理静态化文件
 	filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
-		if !strings.HasSuffix(path, ".html") { //只处理html结尾的文件
+		if info.IsDir() { //只处理文件
 			return nil
 		}
 		// 分隔符统一为 / 斜杠
