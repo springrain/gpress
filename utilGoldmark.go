@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"strings"
 
@@ -22,17 +21,12 @@ func init() {
 	markdown = goldmark.New(
 		goldmark.WithParserOptions(
 			parser.WithAutoHeadingID(),
-			parser.WithASTTransformers(
-				util.Prioritized(&toc.Transformer{
-					Title: "目录",
-				}, 200),
-			),
 		),
 		goldmark.WithExtensions(
 			extension.GFM,
-			extension.Footnote,
+			//extension.Footnote,
 			meta.Meta,
-			&toc.Extender{},
+			//&toc.Extender{},//不能在这里引用toc插件,手动控制
 		),
 		/*
 			goldmark.WithRendererOptions(
@@ -62,14 +56,29 @@ func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error
 
 	//生成 toc  Table of Contents,文章目录
 	var tocBuffer bytes.Buffer
-	mdParser := markdown.Parser()
+	tocMD := goldmark.New(
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+			parser.WithASTTransformers(
+				util.Prioritized(&toc.Transformer{
+					Title: "目录",
+				}, 200),
+			),
+		),
+		goldmark.WithExtensions(
+			meta.Meta,
+		),
+	)
+	mdParser := tocMD.Parser()
+
 	doc := mdParser.Parse(text.NewReader(source), parser.WithContext(parserContext))
+	//doc := mdParser.Parse(text.NewReader(source))
 	tocTree, err := toc.Inspect(doc, source)
 	if err != nil {
 		return metaData, nil, &html, err
 	}
 	tocNode := toc.RenderList(tocTree)
-	markdown.Renderer().Render(&tocBuffer, source, tocNode)
+	tocMD.Renderer().Render(&tocBuffer, source, tocNode)
 	tocHtml := tocBuffer.String()
 	return metaData, &tocHtml, &html, err
 }
@@ -100,16 +109,8 @@ func (s *gpressMarkdownIDS) Generate(value []byte, kind ast.NodeKind) []byte {
 	}
 	if _, ok := s.values[result]; !ok {
 		s.values[result] = true
-		return []byte(result)
 	}
-	for i := 1; ; i++ {
-		newResult := fmt.Sprintf("%s-%d", result, i)
-		if _, ok := s.values[newResult]; !ok {
-			s.values[newResult] = true
-			return []byte(newResult)
-		}
-
-	}
+	return []byte(result)
 }
 
 func (s *gpressMarkdownIDS) Put(value []byte) {
