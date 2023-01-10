@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	emoji "github.com/yuin/goldmark-emoji"
 	meta "github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
@@ -23,10 +24,18 @@ func init() {
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithExtensions(
-			extension.GFM,
-			//extension.Footnote,
+			extension.CJK,           //支持中日韩语言
+			extension.GFM,           //github标准
+			extension.Table,         //表格
+			extension.Strikethrough, //删除线
+			extension.Linkify,       //链接自动跳转
+			extension.TaskList,      //任务列表
+			//extension.Typographer,   //符号替换,替换之后不好用
+			//extension.Footnote,//php
 			meta.Meta,
 			//&toc.Extender{},//不能在这里引用toc插件,手动控制
+			emoji.Emoji, //emoji表情
+
 		),
 		/*
 			goldmark.WithRendererOptions(
