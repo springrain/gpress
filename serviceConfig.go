@@ -126,7 +126,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	theme["id"] = themeId
 	theme["configKey"] = "theme"
 	theme["configValue"] = config.Theme
-	err = configIndex.Index(themeId, serverPort)
+	err = configIndex.Index(themeId, theme)
 	if err != nil {
 		return err
 	}
