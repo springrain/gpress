@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"html/template"
 	"math/rand"
 	"os"
@@ -88,6 +89,10 @@ func funcBasePath() string {
 
 // isInstalled 是否已经安装过了
 func isInstalled() bool {
+	//依赖bleveStatus变量,确保bleve在isInstalled之前初始化
+	if !bleveStatus {
+		FuncLogError(errors.New("bleveStatus状态为false"))
+	}
 	_, err := os.Lstat(templateDir + "admin/install.html")
 	return os.IsNotExist(err)
 }
