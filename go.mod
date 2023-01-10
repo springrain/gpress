@@ -9,6 +9,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/yuin/goldmark v1.5.3
 	github.com/yuin/goldmark-meta v1.1.0
+	go.abhg.dev/goldmark/toc v0.3.0
 
 )
 
