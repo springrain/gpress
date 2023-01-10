@@ -4,17 +4,11 @@ go 1.18
 
 require (
 	github.com/blevesearch/bleve/v2 v2.3.6
-	github.com/clbanning/mxj/v2 v2.5.7
 	github.com/cloudwego/hertz v0.4.2
 	github.com/go-ego/gse v0.80.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
-	github.com/niklasfasching/go-org v1.6.5
-	github.com/pelletier/go-toml/v2 v2.0.6
-	github.com/spf13/afero v1.9.3
-	github.com/spf13/cast v1.5.0
-	github.com/spf13/jwalterweatherman v1.1.0
 	github.com/yuin/goldmark v1.5.3
-	gopkg.in/yaml.v2 v2.4.0
+	github.com/yuin/goldmark-meta v1.1.0
 
 )
 
@@ -50,12 +44,15 @@ require (
 	github.com/golang/geo v0.0.0-20210211234256-740aa86cb551 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
+	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+	github.com/kr/pretty v0.3.0 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/nyaruka/phonenumbers v1.0.55 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/tidwall/gjson v1.13.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
@@ -63,8 +60,9 @@ require (
 	github.com/vcaesar/cedar v0.20.1 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
-	golang.org/x/net v0.3.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect
-	golang.org/x/text v0.5.0 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
+	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
