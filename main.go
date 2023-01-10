@@ -7,13 +7,13 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
-// 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init
-
-// 是否已经安装过了
-var installed = isInstalled()
+// 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init函数!!!
 
 // 检查索引状态
 var bleveStatus = checkBleveStatus()
+
+// 是否已经安装过了
+var installed = isInstalled()
 
 // 加载配置文件
 var config = loadInstallConfig()
