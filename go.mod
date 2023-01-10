@@ -1,6 +1,6 @@
 module gitee.com/chunanyong/gpress
 
-go 1.19
+go 1.18
 
 require (
 	github.com/blevesearch/bleve/v2 v2.3.6
