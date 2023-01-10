@@ -6,7 +6,8 @@ import (
 )
 
 func TestGoldmarkMeta(t *testing.T) {
-	metaData, html, _ := conver2Html(datadir + "post/01-nginx-config.md")
+	metaData, tocHtml, html, _ := conver2Html(datadir + "post/01-nginx-config.md")
 	fmt.Println(metaData)
+	fmt.Println(*tocHtml)
 	fmt.Println(*html)
 }
