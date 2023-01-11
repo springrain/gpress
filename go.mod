@@ -1,4 +1,4 @@
-module gitee.com/chunanyong/gpress
+module gitee.com/gpress/gpress
 
 go 1.18
 
