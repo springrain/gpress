@@ -55,6 +55,7 @@ func init() {
 	)
 }
 
+// conver2Html 由markdown转成html
 func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error) {
 
 	source, err := os.ReadFile(mkfile)
@@ -90,7 +91,7 @@ func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error
 	return metaData, &tocHtml, &html, err
 }
 
-// 重写goldmark的autoHeadingID生成方式,兼容中文 --------------------------
+// 重写goldmark的autoHeadingID生成方式 --------------------------
 type gpressMarkdownIDS struct {
 	values map[string]bool
 }
