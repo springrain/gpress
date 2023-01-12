@@ -123,12 +123,14 @@ func (s *gpressMarkdownIDS) Put(value []byte) {
 
 // initHighlighting 代码高亮的配置
 func initHighlighting() goldmark.Extender {
+	//var css bytes.Buffer
 	return highlighting.NewHighlighting(
 		highlighting.WithStyle("monokai"),
 		//highlighting.WithCSSWriter(&css),
 		highlighting.WithFormatOptions(
 			chromahtml.WithClasses(true),
 			chromahtml.WithLineNumbers(true),
+			chromahtml.TabWidth(4),
 		),
 		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
 			_, ok := c.Language()
