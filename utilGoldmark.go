@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+
 	"github.com/yuin/goldmark"
 	emoji "github.com/yuin/goldmark-emoji"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
@@ -16,6 +17,9 @@ import (
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 	"go.abhg.dev/goldmark/toc"
+	//github.com/OhYee/goldmark-fenced_codeblock_extension
+	//github.com/stefanfritsch/goldmark-fences
+	//latex "github.com/soypat/goldmark-latex"
 )
 
 var markdown goldmark.Markdown
@@ -40,6 +44,7 @@ func init() {
 			initHighlighting(), //代码高亮
 
 		),
+		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
 			goldmark.WithRendererOptions(
 				renderer.WithNodeRenderers(
@@ -131,6 +136,7 @@ func initHighlighting() goldmark.Extender {
 			chromahtml.WithClasses(true),
 			chromahtml.WithLineNumbers(true),
 			chromahtml.TabWidth(4),
+			chromahtml.LineNumbersInTable(true),
 		),
 		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
 			_, ok := c.Language()
@@ -164,3 +170,24 @@ func initHighlighting() goldmark.Extender {
 	)
 
 }
+
+/*
+// initLatexRenderer 初始化latex科学符号
+func initLatexRenderer() renderer.Renderer {
+	r := renderer.NewRenderer(renderer.WithNodeRenderers(util.Prioritized(latex.NewRenderer(latex.Config{
+		NoHeadingNumbering: true,                                                                     // No heading numbers
+		Preamble:           append(latex.DefaultPreamble(), []byte("\n\\usepackage{MnSymbol}\n")...), // add star symbols to preamble.
+		DeclareUnicode: func(r rune) (raw string, isReplaced bool) {
+			switch r {
+			case '★':
+				return `$\filledstar$`, true
+			case '☆':
+				return `$\smallstar$`, true
+			}
+			return "", false
+		},
+	}), 1)))
+
+	return r
+}
+*/
