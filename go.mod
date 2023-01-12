@@ -3,18 +3,21 @@ module gitee.com/gpress/gpress
 go 1.18
 
 require (
+	github.com/alecthomas/chroma/v2 v2.2.0
 	github.com/blevesearch/bleve/v2 v2.3.6
 	github.com/cloudwego/hertz v0.4.2
 	github.com/go-ego/gse v0.80.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/yuin/goldmark v1.5.3
 	github.com/yuin/goldmark-emoji v1.0.1
+	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20220924101305-151362477c87
 	github.com/yuin/goldmark-meta v1.1.0
 	go.abhg.dev/goldmark/toc v0.3.0
 
 )
 
 require (
+	github.com/dlclark/regexp2 v1.7.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 )
