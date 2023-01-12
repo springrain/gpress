@@ -5,8 +5,10 @@ import (
 	"os"
 	"strings"
 
+	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/yuin/goldmark"
 	emoji "github.com/yuin/goldmark-emoji"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	meta "github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
@@ -34,7 +36,8 @@ func init() {
 			//extension.Footnote,//php
 			meta.Meta,
 			//&toc.Extender{},//不能在这里引用toc插件,手动控制
-			emoji.Emoji, //emoji表情
+			emoji.Emoji,        //emoji表情
+			initHighlighting(), //代码高亮
 
 		),
 		/*
@@ -117,3 +120,45 @@ func (s *gpressMarkdownIDS) Put(value []byte) {
 }
 
 //------------------------结束----------------
+
+// initHighlighting 代码高亮的配置
+func initHighlighting() goldmark.Extender {
+	return highlighting.NewHighlighting(
+		highlighting.WithStyle("monokai"),
+		//highlighting.WithCSSWriter(&css),
+		highlighting.WithFormatOptions(
+			chromahtml.WithClasses(true),
+			chromahtml.WithLineNumbers(true),
+		),
+		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
+			_, ok := c.Language()
+			if entering {
+				if !ok {
+					w.WriteString("<pre><code>")
+					return
+				}
+				w.WriteString(`<div class="highlight">`)
+			} else {
+				if !ok {
+					w.WriteString("</pre></code>")
+					return
+				}
+				w.WriteString(`</div>`)
+			}
+		}),
+		/*
+			highlighting.WithCodeBlockOptions(func(c highlighting.CodeBlockContext) []chromahtml.Option {
+				if language, ok := c.Language(); ok {
+					// Turn on line numbers for Go only.
+					if string(language) == "go" {
+						return []chromahtml.Option{
+							chromahtml.WithLineNumbers(true),
+						}
+					}
+				}
+				return nil
+			}),
+		*/
+	)
+
+}
