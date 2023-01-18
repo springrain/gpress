@@ -84,7 +84,7 @@ func loadTemplate() error {
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
 func funcBasePath() string {
-	return config.BasePath
+	return config.basePath
 }
 
 // isInstalled 是否已经安装过了
