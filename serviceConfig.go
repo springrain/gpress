@@ -50,7 +50,7 @@ func loadInstallConfig() configStruct {
 }
 
 var defaultConfig = configStruct{
-	BasePath: "",
+	basePath: "",
 	//默认的加密Secret
 	//JwtSecret:   "gpress+jwtSecret-2023",
 	JwtSecret:   randStr(32),
@@ -61,7 +61,7 @@ var defaultConfig = configStruct{
 }
 
 type configStruct struct {
-	BasePath    string `json:"basePath"`
+	basePath    string //`json:"basePath"`
 	JwtSecret   string `json:"jwtSecret"`
 	JwttokenKey string `json:"jwttokenKey"`
 	Timeout     int    `json:"timeout"`
@@ -81,7 +81,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	basePathId := FuncGenerateStringID()
 	basePath["id"] = basePathId
 	basePath["configKey"] = "basePath"
-	basePath["configValue"] = config.BasePath
+	basePath["configValue"] = config.basePath
 	err := configIndex.Index(basePathId, basePath)
 	if err != nil {
 		return err
@@ -159,7 +159,7 @@ func findConfig() (configStruct, error) {
 		configKey := v.Fields["configKey"].(string)
 		switch configKey {
 		case "basePath":
-			config.BasePath = v.Fields["configValue"].(string)
+			config.basePath = v.Fields["configValue"].(string)
 		case "jwtSecret":
 			config.JwtSecret = v.Fields["configValue"].(string)
 		case "jwttokenKey":
