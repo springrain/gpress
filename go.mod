@@ -49,12 +49,10 @@ require (
 	github.com/golang/geo v0.0.0-20210211234256-740aa86cb551 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
-	github.com/kr/pretty v0.3.0 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/nyaruka/phonenumbers v1.0.55 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
@@ -68,6 +66,5 @@ require (
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
