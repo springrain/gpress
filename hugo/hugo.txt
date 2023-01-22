@@ -4,7 +4,12 @@ https://gohugo.io/functions/
 
 1.函数引入模板修改为原生引用模板的方式,主要原因是需要重写template,让期支持上下文,比较复杂
 
-{{ partial "head.html" . }} 修改为 {{ template "theme/partial/head.html" }}
+{{ partial "head.html" . }}     修改为 {{ template "theme/partial/head.html" }}
+{{ partial "header.html" . }}   修改为 {{ template "theme/partial/header.html" }}
+{{ partial "slideout.html" . }} 修改为 {{ template "theme/partial/slideout.html" }}
+{{ partial "comments.html" . }} 修改为 {{ template "theme/partial/comments.html" }}
+{{ partial "footer.html" . }}   修改为 {{ template "theme/partial/footer.html" }}
+{{ partial "scripts.html" . }}  修改为 {{ template "theme/partial/scripts.html" }}
 
 可以批量替换
 
