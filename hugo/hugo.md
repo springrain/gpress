@@ -15,4 +15,16 @@ https://gohugo.io/functions/
 
 2.取消sass/scss的编译功能,hugo要么使用go-libsass的c++库或者操作系统安装dart-sass-embedded扩展,都比较复杂,放弃这种思路
 让模板自己编译好,和sass源码一起提交
+  下载 https://github.com/sass/dart-sass    
+  文档 https://sass-lang.com/documentation/cli/dart-sass  
+
+  ```bat
+   ### 编译 assets\sass 下所有的 sass/scss文件 到 resources\_gen\assets\scss\sass 目录下
+   dart-sass\windows\sass.bat --style=compressed --charset --no-source-map assets\sass:resources\_gen\assets\scss\sass
+
+   ### --style=compressed 压缩
+   ### --charset 使用编码
+   ### --no-source-map 不生成源码map文件
+   ### : 路径分隔符
+  ```
 
