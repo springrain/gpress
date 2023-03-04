@@ -14,7 +14,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath}
+var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL}
 
 // initTemplate 初始化模板
 func initTemplate() error {
