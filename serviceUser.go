@@ -7,7 +7,7 @@ import (
 )
 
 func insertUser(ctx context.Context, account string, password string) error {
-	//清空用户,只能有一个管理员
+	// 清空用户,只能有一个管理员
 	deleteAll(ctx, userIndexName)
 	userIndex := IndexMap[userIndexName]
 	// 初始化数据
@@ -31,7 +31,7 @@ func findUserId(ctx context.Context, account string, password string) (string, e
 	passwordQuery.SetField("password")
 	// 多个条件联查
 	query := bleve.NewConjunctionQuery(accountQuery, passwordQuery)
-	//只查一条
+	// 只查一条
 	serarchRequest := bleve.NewSearchRequestOptions(query, 1, 0, false)
 	// 只查询id
 	serarchRequest.Fields = []string{"id"}
