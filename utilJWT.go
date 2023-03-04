@@ -28,7 +28,6 @@ func newJWTToken(userId string, info map[string]interface{}) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, mapClaims)
 	tokenString, err := token.SignedString([]byte(config.JwtSecret))
 	return tokenString, err
-
 }
 
 func userIdByToken(tokenString string) (string, error) {

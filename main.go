@@ -25,21 +25,20 @@ var themePath = "/theme/" + config.Theme + "/"
 var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath("/"))
 
 func init() {
-	if !bleveStatus { //索引状态检查失败
+	if !bleveStatus { // 索引状态检查失败
 		panic("索引检查失败")
 	}
-	//设置随机种子
+	// 设置随机种子
 	rand.Seed(time.Now().UnixNano())
 
-	//h.Use(gzip.Gzip(gzip.DefaultCompression))
-
+	// h.Use(gzip.Gzip(gzip.DefaultCompression))
 }
 
 func main() {
-	//初始化模板
+	// 初始化模板
 	initTemplate()
 
-	//初始化admin路由
+	// 初始化admin路由
 	initAdminRoute()
 
 	// 启动服务

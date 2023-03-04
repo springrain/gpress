@@ -110,18 +110,18 @@ func initAdminRoute() {
 
 	// 安装
 	h.GET("/admin/install", func(ctx context.Context, c *app.RequestContext) {
-		if installed { //如果已经安装过了,跳转到登录
+		if installed { // 如果已经安装过了,跳转到登录
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
 			return
 		}
 		c.HTML(http.StatusOK, "/admin/install.html", nil)
 	})
 	h.POST("/admin/install", func(ctx context.Context, c *app.RequestContext) {
-		if installed { //如果已经安装过了,跳转到登录
+		if installed { // 如果已经安装过了,跳转到登录
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
 			return
 		}
-		//使用后端管理界面配置,jwtSecret也有后端随机产生
+		// 使用后端管理界面配置,jwtSecret也有后端随机产生
 		account := c.PostForm("account")
 		password := c.PostForm("password")
 		err := insertUser(ctx, account, password)
@@ -129,28 +129,28 @@ func initAdminRoute() {
 			c.Redirect(http.StatusOK, []byte("/admin/error"))
 			return
 		}
-		//安装成功,更新安装状态
+		// 安装成功,更新安装状态
 		updateInstall(ctx)
 		c.Redirect(http.StatusOK, []byte("/admin/login"))
 	})
 
 	// 后台管理员登录
 	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
-		if !installed { //如果没有安装,跳转到安装
+		if !installed { // 如果没有安装,跳转到安装
 			c.Redirect(http.StatusOK, []byte("/admin/install"))
 			return
 		}
 		c.HTML(http.StatusOK, "/admin/login.html", nil)
 	})
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
-		if !installed { //如果没有安装,跳转到安装
+		if !installed { // 如果没有安装,跳转到安装
 			c.Redirect(http.StatusOK, []byte("/admin/install"))
 			return
 		}
 		account := c.PostForm("account")
 		password := c.PostForm("password")
 		userId, err := findUserId(ctx, account, password)
-		if userId == "" || err != nil { //用户不存在或者异常
+		if userId == "" || err != nil { // 用户不存在或者异常
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
 			return
 		}
@@ -164,17 +164,17 @@ func initAdminRoute() {
 		*/
 		jwttoken, _ := newJWTToken(userId, nil)
 
-		//c.HTML(http.StatusOK, "admin/index.html", nil)
+		// c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 
 		c.Redirect(http.StatusOK, []byte("/admin/index"))
 	})
-	//admin路由组
+	// admin路由组
 	admin := h.Group("/admin")
 	admin.Use(adminHandler())
 	// 后台管理员首页
 	admin.GET("/index", func(ctx context.Context, c *app.RequestContext) {
-		//获取从jwttoken中解码的userId
+		// 获取从jwttoken中解码的userId
 		userId, ok := c.Get(tokenUserId)
 		if !ok || userId == "" {
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
@@ -182,7 +182,6 @@ func initAdminRoute() {
 		}
 		c.HTML(http.StatusOK, "/admin/index.html", nil)
 	})
-
 }
 
 // 请求响应函数
@@ -207,10 +206,10 @@ func adminHandler() app.HandlerFunc {
 		userId, err := userIdByToken(string(jwttoken))
 		if err != nil || userId == "" {
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
-			c.Abort() //终止后续调用
+			c.Abort() // 终止后续调用
 			return
 		}
-		//传递从jwttoken获取的userId
+		// 传递从jwttoken获取的userId
 		c.Set(tokenUserId, userId)
 	}
 }

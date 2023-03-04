@@ -17,9 +17,9 @@ import (
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 	"go.abhg.dev/goldmark/toc"
-	//github.com/OhYee/goldmark-fenced_codeblock_extension
-	//github.com/stefanfritsch/goldmark-fences
-	//latex "github.com/soypat/goldmark-latex"
+	// github.com/OhYee/goldmark-fenced_codeblock_extension
+	// github.com/stefanfritsch/goldmark-fences
+	// latex "github.com/soypat/goldmark-latex"
 )
 
 var markdown goldmark.Markdown
@@ -30,18 +30,18 @@ func init() {
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithExtensions(
-			extension.CJK,           //支持中日韩语言
-			extension.GFM,           //github标准
-			extension.Table,         //表格
-			extension.Strikethrough, //删除线
-			extension.Linkify,       //链接自动跳转
-			extension.TaskList,      //任务列表
-			//extension.Typographer,   //符号替换,替换之后不好用
-			//extension.Footnote,//php
+			extension.CJK,           // 支持中日韩语言
+			extension.GFM,           // github标准
+			extension.Table,         // 表格
+			extension.Strikethrough, // 删除线
+			extension.Linkify,       // 链接自动跳转
+			extension.TaskList,      // 任务列表
+			// extension.Typographer,   //符号替换,替换之后不好用
+			// extension.Footnote,//php
 			meta.Meta,
 			//&toc.Extender{},//不能在这里引用toc插件,手动控制
-			emoji.Emoji,        //emoji表情
-			initHighlighting(), //代码高亮
+			emoji.Emoji,        // emoji表情
+			initHighlighting(), // 代码高亮
 
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
@@ -57,28 +57,27 @@ func init() {
 
 // conver2Html 由markdown转成html
 func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error) {
-
 	source, err := os.ReadFile(mkfile)
 	if err != nil {
 		return nil, nil, nil, err
 	}
 	var htmlBuffer bytes.Buffer
-	//生成id时支持中文
+	// 生成id时支持中文
 	parserContext := parser.NewContext(parser.WithIDs(newIDs()))
 	if err := markdown.Convert(source, &htmlBuffer, parser.WithContext(parserContext)); err != nil {
 		return nil, nil, nil, err
 	}
-	//生成页面html
+	// 生成页面html
 	html := htmlBuffer.String()
-	//读取markdown文件中的元属性
+	// 读取markdown文件中的元属性
 	metaData := meta.Get(parserContext)
 
-	//生成 toc  Table of Contents,文章目录
+	// 生成 toc  Table of Contents,文章目录
 	var tocBuffer bytes.Buffer
 
 	mdParser := markdown.Parser()
 
-	//生成id时支持中文
+	// 生成id时支持中文
 	doc := mdParser.Parse(text.NewReader(source), parser.WithContext(parserContext))
 	tocTree, err := toc.Inspect(doc, source)
 	if err != nil {
@@ -129,10 +128,10 @@ func (s *gpressMarkdownIDS) Put(value []byte) {
 
 // initHighlighting 代码高亮的配置
 func initHighlighting() goldmark.Extender {
-	//var css bytes.Buffer
+	// var css bytes.Buffer
 	return highlighting.NewHighlighting(
 		highlighting.WithStyle("monokai"),
-		//highlighting.WithCSSWriter(&css),
+		// highlighting.WithCSSWriter(&css),
 		highlighting.WithFormatOptions(
 			chromahtml.WithClasses(true),
 			chromahtml.WithLineNumbers(true),
@@ -169,7 +168,6 @@ func initHighlighting() goldmark.Extender {
 			}),
 		*/
 	)
-
 }
 
 /*

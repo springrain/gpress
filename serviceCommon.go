@@ -123,7 +123,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 		return err
 	}
 	query := bleve.NewQueryStringQuery("*")
-	//只查一条
+	// 只查一条
 	serarchRequest := bleve.NewSearchRequestOptions(query, int(count), 0, false)
 	// 只查询id
 	serarchRequest.Fields = []string{"id"}
