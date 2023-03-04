@@ -4,7 +4,6 @@ import "html/template"
 
 // funcT 多语言i18n适配,例如 {{ T "nextPage" }}
 func funcT(key string) (string, error) {
-
 	return key, nil
 }
 

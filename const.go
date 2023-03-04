@@ -29,13 +29,13 @@ const (
 	indexContentName = bleveDataDir + "content"
 	//---------------------------//
 
-	//模板的路径
+	// 模板的路径
 	templateDir = datadir + "template/"
 
-	//静态化文件目录,网站生成的静态html
+	// 静态化文件目录,网站生成的静态html
 	statichtmlDir = datadir + "statichtml/"
 
-	//默认名称
+	// 默认名称
 	defaultName = "gpress"
 
 	// 数据默认的创建用户
