@@ -108,7 +108,7 @@ func checkBleveCreate() (bool, error) {
 	// 初始化IndexField
 	initIndexField()
 
-	//初始化配置
+	// 初始化配置
 	initConfig()
 	// 初始化用户表
 	initUser()
