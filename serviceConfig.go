@@ -14,7 +14,7 @@ import (
 // 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入索引,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
 func loadInstallConfig() configStruct {
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
-	if installed { //如果已经安装,需要从索引读取配置,这里暂时返回defaultConfig
+	if installed { // 如果已经安装,需要从索引读取配置,这里暂时返回defaultConfig
 		config, err := findConfig()
 		if err != nil {
 			return defaultConfig
@@ -35,14 +35,14 @@ func loadInstallConfig() configStruct {
 		return defaultConfig
 	}
 	configJson := configStruct{}
-	//Decode从输入流读取下一个json编码值并保存在v指向的值里
+	// Decode从输入流读取下一个json编码值并保存在v指向的值里
 	err = json.Unmarshal([]byte(byteValue), &configJson)
 	if err != nil {
 		FuncLogError(defaultErr)
 		return defaultConfig
 	}
 
-	if configJson.JwtSecret == "" { //如果没有配置jwtSecret,产生随机字符串
+	if configJson.JwtSecret == "" { // 如果没有配置jwtSecret,产生随机字符串
 		configJson.JwtSecret = randStr(32)
 	}
 
@@ -51,12 +51,12 @@ func loadInstallConfig() configStruct {
 
 var defaultConfig = configStruct{
 	basePath: "",
-	//默认的加密Secret
-	//JwtSecret:   "gpress+jwtSecret-2023",
+	// 默认的加密Secret
+	// JwtSecret:   "gpress+jwtSecret-2023",
 	JwtSecret:   randStr(32),
 	Theme:       "default",
-	JwttokenKey: "jwttoken", //jwt的key
-	Timeout:     1800,       //半个小时超时
+	JwttokenKey: "jwttoken", // jwt的key
+	Timeout:     1800,       // 半个小时超时
 	ServerPort:  ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
 }
 
@@ -71,12 +71,12 @@ type configStruct struct {
 
 // insertConfig 插入config
 func insertConfig(ctx context.Context, config configStruct) error {
-	//清空配置,重新创建
+	// 清空配置,重新创建
 	deleteAll(ctx, configIndexName)
 
 	configIndex := IndexMap[configIndexName]
 
-	//basePath
+	// basePath
 	basePath := make(map[string]string)
 	basePathId := FuncGenerateStringID()
 	basePath["id"] = basePathId
@@ -87,7 +87,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 		return err
 	}
 
-	//jwtSecret
+	// jwtSecret
 	jwtSecret := make(map[string]string)
 	jwtSecretId := FuncGenerateStringID()
 	jwtSecret["id"] = jwtSecretId
@@ -98,7 +98,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 		return err
 	}
 
-	//jwttokenKey
+	// jwttokenKey
 	jwttokenKey := make(map[string]string)
 	jwttokenKeyId := FuncGenerateStringID()
 	jwttokenKey["id"] = jwttokenKeyId
@@ -109,7 +109,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 		return err
 	}
 
-	//serverPort
+	// serverPort
 	serverPort := make(map[string]string)
 	serverPortId := FuncGenerateStringID()
 	serverPort["id"] = serverPortId
@@ -120,7 +120,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 		return err
 	}
 
-	//theme
+	// theme
 	theme := make(map[string]string)
 	themeId := FuncGenerateStringID()
 	theme["id"] = themeId
@@ -131,7 +131,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 		return err
 	}
 
-	//timeout
+	// timeout
 	timeout := make(map[string]interface{})
 	timeoutId := FuncGenerateStringID()
 	timeout["id"] = timeoutId
@@ -178,5 +178,4 @@ func findConfig() (configStruct, error) {
 		}
 	}
 	return config, nil
-
 }
