@@ -29,15 +29,16 @@ func funcSass(sassFile string) (string, error) {
 	sassPath := templateDir + "theme/" + config.Theme + "/assets/" + sassFile
 	pathHash := hashSha256(sassPath)
 
-	//文件夹路径
+	//生成的css路径
 	filePath := templateDir + "theme/" + config.Theme + "/css/" + pathHash + ".css"
+	//filePath = filepath.FromSlash(filePath)
 
 	//url 访问路径
 	fileUrl := themePath + "css/" + pathHash + ".css"
 
-	_, err := os.Stat(filePath)
-	if os.IsExist(err) { //如果文件已经存在了,直接返回
-		return funcRelURL(fileUrl)
+	_, err := os.Lstat(filePath)
+	if !os.IsNotExist(err) { //如果文件已经存在了,直接返回
+		return funcSafeHTML(fileUrl)
 	}
 	var cmd *exec.Cmd
 	goos := runtime.GOOS
@@ -52,12 +53,12 @@ func funcSass(sassFile string) (string, error) {
 		cmdStr := datadir + "dart-sass/" + goos + "-" + goarch + "/sass --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
 		cmd = exec.Command("bash", "-c", cmdStr) // mac or linux
 	}
-
-	//c := exec.Command("bash", "-c", cmd)  // mac or linux
 	err = cmd.Run()
 	if err != nil {
 		FuncLogError(err)
 	}
-
-	return funcSafeHTML(fileUrl)
+	fileUrl, err = funcSafeHTML(fileUrl)
+	//增加静态资源映射
+	h.StaticFile(fileUrl, filePath)
+	return fileUrl, err
 }
