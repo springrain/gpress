@@ -18,6 +18,19 @@ https://gohugo.io/functions/
   下载 https://github.com/sass/dart-sass    
   文档 https://sass-lang.com/documentation/cli/dart-sass  
 
+  把hugo的
+  ```go
+<!-- Styles -->
+{{ $style := resources.Get "sass/main.scss" | toCSS | minify | fingerprint }}
+<link href="{{ $style.RelPermalink }}" rel="stylesheet">
+  ```
+  修改为
+
+```go
+<link href="{{sass "sass/main.scss" }}" rel="stylesheet">
+```
+
+
   ```bat
    ### 编译 assets\sass 下所有的 sass/scss文件 到 resources\_gen\assets\scss\sass 目录下
    dart-sass\windows\sass.bat --style=compressed --charset --no-source-map assets\sass:resources\_gen\assets\scss\sass
