@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"html/template"
 	"math/rand"
@@ -14,7 +16,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL}
+var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL, "sass": funcSass}
 
 // initTemplate 初始化模板
 func initTemplate() error {
@@ -129,4 +131,11 @@ func randStr(n int) string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+// hashSha256 使用sha256计算hash值
+func hashSha256(str string) string {
+	hashByte := sha256.Sum256([]byte(str))
+	hashStr := hex.EncodeToString(hashByte[:])
+	return hashStr
 }
