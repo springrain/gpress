@@ -1,9 +1,6 @@
 package main
 
 import (
-	"math/rand"
-	"time"
-
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
@@ -29,14 +26,14 @@ func init() {
 		panic("索引检查失败")
 	}
 	// 设置随机种子
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 
 	// h.Use(gzip.Gzip(gzip.DefaultCompression))
 }
 
 func main() {
 	// 初始化模板
-	initTemplate()
+	_ = initTemplate()
 
 	// 初始化admin路由
 	initAdminRoute()
