@@ -15,23 +15,23 @@ var inclusive = true
 // indexName: 表名/索引名
 // isRequired: 是否可以为空
 func findIndexFieldResult(ctx context.Context, indexName string, isRequired int) (*bleve.SearchResult, error) {
-	var query *query.ConjunctionQuery
+	var queryBleve *query.ConjunctionQuery
 	index := IndexMap[indexFieldIndexName]
 	// 查询指定表
 	queryIndexCode := bleve.NewTermQuery(indexName)
 	// 查询指定字段
 	queryIndexCode.SetField("IndexCode")
 	if isRequired != 1 && isRequired != 0 {
-		query = bleve.NewConjunctionQuery(queryIndexCode)
+		queryBleve = bleve.NewConjunctionQuery(queryIndexCode)
 	} else {
-		var f float64 = float64(isRequired)
-		queryIsReqired := bleve.NewNumericRangeInclusiveQuery(&f, &f, &inclusive, &inclusive)
-		queryIsReqired.SetField("Required")
-		query = bleve.NewConjunctionQuery(queryIndexCode, queryIsReqired)
+		var f = float64(isRequired)
+		queryIsRequired := bleve.NewNumericRangeInclusiveQuery(&f, &f, &inclusive, &inclusive)
+		queryIsRequired.SetField("Required")
+		queryBleve = bleve.NewConjunctionQuery(queryIndexCode, queryIsRequired)
 	}
 
 	// query: 条件  size:大小  from :起始
-	searchRequest := bleve.NewSearchRequestOptions(query, 1000, 0, false)
+	searchRequest := bleve.NewSearchRequestOptions(queryBleve, 1000, 0, false)
 	// 查询所有字段
 	searchRequest.Fields = []string{"*"}
 
@@ -78,7 +78,14 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 		}
 
 	}
-	IndexMap[tableName].Index(id, newIndex)
+	err = IndexMap[tableName].Index(id, newIndex)
+
+	if err != nil {
+		FuncLogError(err)
+		m["code"] = "304"
+		m["msg"] = "建立索引异常"
+		return m, err
+	}
 
 	m["code"] = "200"
 	m["msg"] = "保存成功"
@@ -91,9 +98,9 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
 	// queryIndex := bleve.NewTermQuery(indexId)            //查询索引
 	// queryIndex.SetField("ID")
-	serarchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
-	serarchRequest.Fields = []string{"*"} // 查询所有字段
-	result, err := index.SearchInContext(ctx, serarchRequest)
+	searchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
+	searchRequest.Fields = []string{"*"} // 查询所有字段
+	result, err := index.SearchInContext(ctx, searchRequest)
 	if err != nil {
 		FuncLogError(err)
 		return err
@@ -112,7 +119,10 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 			newMap[k] = newV
 		}
 	}
-	index.Index(indexId, newMap)
+	err = index.Index(indexId, newMap)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -122,13 +132,13 @@ func deleteAll(ctx context.Context, tableName string) error {
 	if err != nil {
 		return err
 	}
-	query := bleve.NewQueryStringQuery("*")
+	queryBleve := bleve.NewQueryStringQuery("*")
 	// 只查一条
-	serarchRequest := bleve.NewSearchRequestOptions(query, int(count), 0, false)
+	searchRequest := bleve.NewSearchRequestOptions(queryBleve, int(count), 0, false)
 	// 只查询id
-	serarchRequest.Fields = []string{"id"}
+	searchRequest.Fields = []string{"id"}
 
-	result, err := index.SearchInContext(ctx, serarchRequest)
+	result, err := index.SearchInContext(ctx, searchRequest)
 	if err != nil {
 		return err
 	}
