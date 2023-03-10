@@ -4,12 +4,10 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"net/http"
-
 	"github.com/blevesearch/bleve/v2"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol"
+	"net/http"
 )
 
 func initAdminRoute() {
@@ -102,7 +100,7 @@ func initAdminRoute() {
 		result, _ := index.SearchInContext(context.Background(), serarch)
 		c.JSON(http.StatusOK, result)
 	})
-
+	//菜单查询
 	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
 		result, _ := getNavMenu("0")
 		c.JSON(http.StatusOK, result)

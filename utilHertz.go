@@ -65,7 +65,7 @@ func loadTemplate() error {
 	}
 
 	// 处理静态化文件
-	filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() { // 只处理文件
 			return nil
 		}
@@ -77,6 +77,10 @@ func loadTemplate() error {
 		h.StaticFile(relativePath, path)
 		return nil
 	})
+	if err != nil {
+		FuncLogError(err)
+		return err
+	}
 
 	// 设置模板
 	h.SetHTMLTemplate(tmpl)
@@ -125,7 +129,7 @@ func updateInstall(ctx context.Context) error {
 
 // randStr 生成随机字符串
 func randStr(n int) string {
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = letters[rand.Intn(len(letters))]
