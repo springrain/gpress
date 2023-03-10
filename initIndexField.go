@@ -1,12 +1,11 @@
 package main
 
 import (
-	"os"
-	"time"
-
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 	"github.com/blevesearch/bleve/v2/mapping"
+	"os"
+	"time"
 )
 
 // 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
