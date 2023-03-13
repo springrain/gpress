@@ -61,6 +61,7 @@ const (
 
 	LETTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-	GSE_ANGLYZER_NAME   = "gse"
+	GSE_ANGLYZER_NAME = "gse"
+
 	COMMA_ANALYZER_NAME = "comma"
 )

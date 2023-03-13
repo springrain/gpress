@@ -33,8 +33,8 @@ func generateStringID() string {
 	return pk
 }
 
-// pathExists 文件或者目录是否存在
-func pathExists(path string) (bool, error) {
+// PathExists 文件或者目录是否存在
+func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
 		return true, nil

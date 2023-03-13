@@ -5,11 +5,11 @@ import (
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis"
 	"github.com/blevesearch/bleve/v2/analysis/tokenizer/character"
-	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/registry"
 )
 
-var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
+// 逗号分词器的mapping
+var commaAnalyzerMapping = bleve.NewTextFieldMapping()
 
 // 注册分词器
 func init() {

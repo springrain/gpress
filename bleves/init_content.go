@@ -10,7 +10,7 @@ import (
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
-func InitContent() (bool, error) {
+func initContent() (bool, error) {
 	indexField := config.IndexMap[config.INDEX_FIELD_INDEX_NAME]
 
 	// 创建内容表的索引
@@ -36,7 +36,11 @@ func InitContent() (bool, error) {
 		Active:       3,
 	}
 	// 放入文件中
-	indexField.Index(contentId.ID, contentId)
+	err := indexField.Index(contentId.ID, contentId)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	contentModuleIndexCode := config.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
@@ -51,7 +55,11 @@ func InitContent() (bool, error) {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(contentModuleIndexCode.ID, contentModuleIndexCode)
+	err = indexField.Index(contentModuleIndexCode.ID, contentModuleIndexCode)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	contentTitle := config.IndexFieldStruct{
 		ID:        util.FuncGenerateStringID(),
 		IndexCode: config.INDEX_CONTENT_NAME,
@@ -66,7 +74,11 @@ func InitContent() (bool, error) {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(contentTitle.ID, contentTitle)
+	err = indexField.Index(contentTitle.ID, contentTitle)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	// Title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Title", gseAnalyzerMapping)
 
@@ -84,7 +96,11 @@ func InitContent() (bool, error) {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(contentKeyWords.ID, contentKeyWords)
+	err = indexField.Index(contentKeyWords.ID, contentKeyWords)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	// KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", commaAnalyzerMapping)
 
@@ -102,7 +118,11 @@ func InitContent() (bool, error) {
 		SortNo:       4,
 		Active:       3,
 	}
-	indexField.Index(contentDescription.ID, contentDescription)
+	err = indexField.Index(contentDescription.ID, contentDescription)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	// Description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Description", gseAnalyzerMapping)
 
@@ -119,7 +139,11 @@ func InitContent() (bool, error) {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(contentPageURL.ID, contentPageURL)
+	err = indexField.Index(contentPageURL.ID, contentPageURL)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	contentSubtitle := config.IndexFieldStruct{
 		ID:        util.FuncGenerateStringID(),
@@ -135,7 +159,11 @@ func InitContent() (bool, error) {
 		SortNo:       6,
 		Active:       3,
 	}
-	indexField.Index(contentSubtitle.ID, contentSubtitle)
+	err = indexField.Index(contentSubtitle.ID, contentSubtitle)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	// Subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Subtitle", gseAnalyzerMapping)
 
@@ -152,7 +180,11 @@ func InitContent() (bool, error) {
 		SortNo:       4,
 		Active:       3,
 	}
-	indexField.Index(contentNavMenuId.ID, contentNavMenuId)
+	err = indexField.Index(contentNavMenuId.ID, contentNavMenuId)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	// NavMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuId", commaAnalyzerMapping)
 
@@ -169,7 +201,11 @@ func InitContent() (bool, error) {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(contentNavMenuName.ID, contentNavMenuName)
+	err = indexField.Index(contentNavMenuName.ID, contentNavMenuName)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	// NavMenuName 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuName", gseAnalyzerMapping)
 
@@ -186,7 +222,11 @@ func InitContent() (bool, error) {
 		SortNo:       6,
 		Active:       3,
 	}
-	indexField.Index(contentTemplateID.ID, contentTemplateID)
+	err = indexField.Index(contentTemplateID.ID, contentTemplateID)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	contentContent := config.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
@@ -201,7 +241,11 @@ func InitContent() (bool, error) {
 		SortNo:       7,
 		Active:       3,
 	}
-	indexField.Index(contentContent.ID, contentContent)
+	err = indexField.Index(contentContent.ID, contentContent)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 	// Content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Content", gseAnalyzerMapping)
 
@@ -218,7 +262,11 @@ func InitContent() (bool, error) {
 		SortNo:       8,
 		Active:       3,
 	}
-	indexField.Index(contentCreateTime.ID, contentCreateTime)
+	err = indexField.Index(contentCreateTime.ID, contentCreateTime)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	moduleUpdateTime := config.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
@@ -233,7 +281,11 @@ func InitContent() (bool, error) {
 		SortNo:       9,
 		Active:       3,
 	}
-	indexField.Index(moduleUpdateTime.ID, moduleUpdateTime)
+	err = indexField.Index(moduleUpdateTime.ID, moduleUpdateTime)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	moduleCreateUser := config.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
@@ -248,7 +300,11 @@ func InitContent() (bool, error) {
 		SortNo:       10,
 		Active:       3,
 	}
-	indexField.Index(moduleCreateUser.ID, moduleCreateUser)
+	err = indexField.Index(moduleCreateUser.ID, moduleCreateUser)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	moduleSortNo := config.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
@@ -263,7 +319,11 @@ func InitContent() (bool, error) {
 		SortNo:       9,
 		Active:       3,
 	}
-	indexField.Index(moduleSortNo.ID, moduleSortNo)
+	err = indexField.Index(moduleSortNo.ID, moduleSortNo)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	moduleActive := config.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
@@ -278,7 +338,11 @@ func InitContent() (bool, error) {
 		SortNo:       10,
 		Active:       3,
 	}
-	indexField.Index(moduleActive.ID, moduleActive)
+	err = indexField.Index(moduleActive.ID, moduleActive)
+	if err != nil {
+		logger.FuncLogError(err)
+		return false, err
+	}
 
 	contentIndex, err := bleve.New(config.INDEX_CONTENT_NAME, mapping)
 	// 放到IndexMap中
