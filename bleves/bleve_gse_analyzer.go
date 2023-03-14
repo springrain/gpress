@@ -1,7 +1,7 @@
 package bleves
 
 import (
-	"gitee.com/gpress/gpress/config"
+	"gitee.com/gpress/gpress/configs"
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis"
 	"github.com/blevesearch/bleve/v2/mapping"
@@ -14,12 +14,12 @@ var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
 
 // 注册分词器
 func init() {
-	registry.RegisterTokenizer(config.GSE_ANGLYZER_NAME, gseTokenizerConstructor)
-	registry.RegisterAnalyzer(config.GSE_ANGLYZER_NAME, gseAnalyzerConstructor)
+	registry.RegisterTokenizer(configs.GSE_ANGLYZER_NAME, gseTokenizerConstructor)
+	registry.RegisterAnalyzer(configs.GSE_ANGLYZER_NAME, gseAnalyzerConstructor)
 }
 
 func gseAnalyzerConstructor(interfaceMap map[string]interface{}, cache *registry.Cache) (analysis.Analyzer, error) {
-	tokenizer, err := cache.TokenizerNamed(config.GSE_ANGLYZER_NAME)
+	tokenizer, err := cache.TokenizerNamed(configs.GSE_ANGLYZER_NAME)
 	if err != nil {
 		return nil, err
 	}
@@ -54,8 +54,8 @@ func gseTokenizerConstructor(interfaceMap map[string]interface{}, cache *registr
 	var segmenter gse.Segmenter
 	segmenter.SkipLog = true
 
-	segmenter.LoadDict(config.DATA_DIR+"dict/zh/dict.txt", config.DATA_DIR+"dict/dictionary.txt")
-	segmenter.LoadStop(config.DATA_DIR+"dict/stop_word.txt", config.DATA_DIR+"dict/stop_tokens.txt")
+	segmenter.LoadDict(configs.DATA_DIR+"dict/zh/dict.txt", configs.DATA_DIR+"dict/dictionary.txt")
+	segmenter.LoadStop(configs.DATA_DIR+"dict/stop_word.txt", configs.DATA_DIR+"dict/stop_tokens.txt")
 
 	return &gseTokenizer{&segmenter}, nil
 }

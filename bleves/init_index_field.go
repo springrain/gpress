@@ -1,7 +1,7 @@
 package bleves
 
 import (
-	"gitee.com/gpress/gpress/config"
+	"gitee.com/gpress/gpress/configs"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/util"
 	"github.com/blevesearch/bleve/v2"
@@ -18,9 +18,9 @@ import (
 func checkBleveStatus() bool {
 	// 初始化分词器
 	commaAnalyzerMapping.DocValues = false
-	commaAnalyzerMapping.Analyzer = config.COMMA_ANALYZER_NAME
+	commaAnalyzerMapping.Analyzer = configs.COMMA_ANALYZER_NAME
 	gseAnalyzerMapping.DocValues = false
-	gseAnalyzerMapping.Analyzer = config.GSE_ANGLYZER_NAME
+	gseAnalyzerMapping.Analyzer = configs.GSE_ANGLYZER_NAME
 
 	status, err := checkBleveCreate()
 	if err != nil {
@@ -33,30 +33,30 @@ func checkBleveStatus() bool {
 // checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
 func checkBleveCreate() (bool, error) {
 	// 索引数据目录是否存在
-	exists, errPathExists := util.PathExists(config.BLEVE_DATA_DIR)
+	exists, errPathExists := util.PathExists(configs.BLEVE_DATA_DIR)
 	if errPathExists != nil {
 		logger.FuncLogError(errPathExists)
 		return false, errPathExists
 	}
 
 	if exists { // 如果已经存在目录,遍历索引,放到全局map里
-		fileInfo, _ := os.ReadDir(config.BLEVE_DATA_DIR)
+		fileInfo, _ := os.ReadDir(configs.BLEVE_DATA_DIR)
 		for _, dir := range fileInfo {
 			if !dir.IsDir() {
 				continue
 			}
 
 			// 打开所有的索引,放到map里,一个索引只能打开一次.
-			index, err := bleve.Open(config.BLEVE_DATA_DIR + dir.Name())
+			index, err := bleve.Open(configs.BLEVE_DATA_DIR + dir.Name())
 			if err != nil {
 				return false, err
 			}
-			config.IndexMap[config.BLEVE_DATA_DIR+dir.Name()] = index
+			configs.IndexMap[configs.BLEVE_DATA_DIR+dir.Name()] = index
 		}
 		return true, errPathExists
 	}
 	// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
-	errMkdir := os.Mkdir(config.BLEVE_DATA_DIR, os.ModePerm)
+	errMkdir := os.Mkdir(configs.BLEVE_DATA_DIR, os.ModePerm)
 	if errMkdir != nil {
 		logger.FuncLogError(errMkdir)
 		return false, errMkdir
@@ -132,11 +132,11 @@ func initIndexField() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	index, err := bleve.New(config.INDEX_FIELD_INDEX_NAME, mapping)
+	index, err := bleve.New(configs.INDEX_FIELD_INDEX_NAME, mapping)
 	if err != nil {
 		logger.FuncLogError(err)
 		return false, err
 	}
-	config.IndexMap[config.INDEX_FIELD_INDEX_NAME] = index
+	configs.IndexMap[configs.INDEX_FIELD_INDEX_NAME] = index
 	return true, nil
 }

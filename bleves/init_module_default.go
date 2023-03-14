@@ -1,7 +1,7 @@
 package bleves
 
 import (
-	"gitee.com/gpress/gpress/config"
+	"gitee.com/gpress/gpress/configs"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/util"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
@@ -9,22 +9,22 @@ import (
 )
 
 func initModuleDefault() (bool, error) {
-	indexField := config.IndexMap[config.INDEX_FIELD_INDEX_NAME]
+	indexField := configs.IndexMap[configs.INDEX_FIELD_INDEX_NAME]
 
 	// 获取当前时间
 	now := time.Now()
 
 	// 初始化各个字段
-	moduleDefaultId := config.IndexFieldStruct{
+	moduleDefaultId := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode:    configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName:    "模型数据",
 		FieldCode:    "ID",
 		FieldName:    "模型数据ID",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       1,
 		Active:       3,
 	}
@@ -35,17 +35,17 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleDefaultTitle := config.IndexFieldStruct{
+	moduleDefaultTitle := configs.IndexFieldStruct{
 		ID:        util.FuncGenerateStringID(),
-		IndexCode: config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode: configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName: "模型数据",
 		FieldCode: "Title",
 		FieldName: "标题",
 		FieldType: 3,
 		// 文章标题使用中文分词
-		AnalyzerName: config.GSE_ANGLYZER_NAME,
+		AnalyzerName: configs.GSE_ANGLYZER_NAME,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       2,
 		Active:       3,
 	}
@@ -55,17 +55,17 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleDefaultKeyWords := config.IndexFieldStruct{
+	moduleDefaultKeyWords := configs.IndexFieldStruct{
 		ID:        util.FuncGenerateStringID(),
-		IndexCode: config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode: configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName: "模型数据",
 		FieldCode: "KeyWords",
 		FieldName: "关键字",
 		FieldType: 3,
 		// 文章关键字使用逗号分词器
-		AnalyzerName: config.GSE_ANGLYZER_NAME,
+		AnalyzerName: configs.GSE_ANGLYZER_NAME,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       3,
 		Active:       3,
 	}
@@ -75,17 +75,17 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleDefaultDescription := config.IndexFieldStruct{
+	moduleDefaultDescription := configs.IndexFieldStruct{
 		ID:        util.FuncGenerateStringID(),
-		IndexCode: config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode: configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName: "模型数据",
 		FieldCode: "Description",
 		FieldName: "站点描述",
 		FieldType: 3,
 		// 文章描述使用中文分词器
-		AnalyzerName: config.GSE_ANGLYZER_NAME,
+		AnalyzerName: configs.GSE_ANGLYZER_NAME,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       4,
 		Active:       3,
 	}
@@ -95,16 +95,16 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleDefaultPageURL := config.IndexFieldStruct{
+	moduleDefaultPageURL := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode:    configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName:    "模型数据",
 		FieldCode:    "PageURL",
 		FieldName:    "自身页面路径",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       5,
 		Active:       3,
 	}
@@ -114,17 +114,17 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleDefaultSubtitle := config.IndexFieldStruct{
+	moduleDefaultSubtitle := configs.IndexFieldStruct{
 		ID:        util.FuncGenerateStringID(),
-		IndexCode: config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode: configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName: "模型数据",
 		FieldCode: "Subtitle",
 		FieldName: "副标题",
 		FieldType: 3,
 		// 文章副标题使用中文分词器
-		AnalyzerName: config.GSE_ANGLYZER_NAME,
+		AnalyzerName: configs.GSE_ANGLYZER_NAME,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       6,
 		Active:       3,
 	}
@@ -134,17 +134,17 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleDefaultContent := config.IndexFieldStruct{
+	moduleDefaultContent := configs.IndexFieldStruct{
 		ID:        util.FuncGenerateStringID(),
-		IndexCode: config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode: configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName: "模型数据",
 		FieldCode: "Content",
 		FieldName: "文章内容",
 		FieldType: 3,
 		// 文章内容使用中文分词器
-		AnalyzerName: config.GSE_ANGLYZER_NAME,
+		AnalyzerName: configs.GSE_ANGLYZER_NAME,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       7,
 		Active:       3,
 	}
@@ -154,16 +154,16 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleDefaultCreateTime := config.IndexFieldStruct{
+	moduleDefaultCreateTime := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode:    configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName:    "模型数据",
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
 		FieldType:    2,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       8,
 		Active:       3,
 	}
@@ -173,16 +173,16 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleUpdateTime := config.IndexFieldStruct{
+	moduleUpdateTime := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode:    configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName:    "模型数据",
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
 		FieldType:    2,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       9,
 		Active:       3,
 	}
@@ -192,16 +192,16 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleCreateUser := config.IndexFieldStruct{
+	moduleCreateUser := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode:    configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName:    "模型数据",
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       10,
 		Active:       3,
 	}
@@ -211,16 +211,16 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleSortNo := config.IndexFieldStruct{
+	moduleSortNo := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode:    configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName:    "模型数据",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       9,
 		Active:       3,
 	}
@@ -230,16 +230,16 @@ func initModuleDefault() (bool, error) {
 		return false, err
 	}
 
-	moduleActive := config.IndexFieldStruct{
+	moduleActive := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_DEFAULT_NAME,
+		IndexCode:    configs.INDEX_MODULE_DEFAULT_NAME,
 		IndexName:    "模型数据",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
 		FieldType:    1,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       10,
 		Active:       3,
 	}

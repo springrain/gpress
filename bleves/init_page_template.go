@@ -1,7 +1,7 @@
 package bleves
 
 import (
-	"gitee.com/gpress/gpress/config"
+	"gitee.com/gpress/gpress/configs"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/util"
 	"github.com/blevesearch/bleve/v2"
@@ -10,22 +10,22 @@ import (
 )
 
 func initpageTemplateName() (bool, error) {
-	indexField := config.IndexMap[config.INDEX_FIELD_INDEX_NAME]
+	indexField := configs.IndexMap[configs.INDEX_FIELD_INDEX_NAME]
 
 	// 获取当前时间
 	now := time.Now()
 
 	// 初始化各个字段
-	pageId := config.IndexFieldStruct{
+	pageId := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_PAGE_TEMPLATE_NAME,
+		IndexCode:    configs.INDEX_PAGE_TEMPLATE_NAME,
 		IndexName:    "页面模板",
 		FieldCode:    "ID",
 		FieldName:    "页面模板id",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       1,
 		Active:       3,
 	}
@@ -36,16 +36,16 @@ func initpageTemplateName() (bool, error) {
 		return false, err
 	}
 
-	pageTemplateNameName := config.IndexFieldStruct{
+	pageTemplateNameName := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_PAGE_TEMPLATE_NAME,
+		IndexCode:    configs.INDEX_PAGE_TEMPLATE_NAME,
 		IndexName:    "页面模板",
 		FieldCode:    "TemplateName",
 		FieldName:    "模板名称",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       2,
 		Active:       3,
 	}
@@ -55,16 +55,16 @@ func initpageTemplateName() (bool, error) {
 		return false, err
 	}
 
-	pageTemplateNamePath := config.IndexFieldStruct{
+	pageTemplateNamePath := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_PAGE_TEMPLATE_NAME,
+		IndexCode:    configs.INDEX_PAGE_TEMPLATE_NAME,
 		IndexName:    "页面模板",
 		FieldCode:    "TemplatePath",
 		FieldName:    "模板路径",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       3,
 		Active:       3,
 	}
@@ -74,16 +74,16 @@ func initpageTemplateName() (bool, error) {
 		return false, err
 	}
 
-	pageSortNo := config.IndexFieldStruct{
+	pageSortNo := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_PAGE_TEMPLATE_NAME,
+		IndexCode:    configs.INDEX_PAGE_TEMPLATE_NAME,
 		IndexName:    "页面模板",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       4,
 		Active:       3,
 	}
@@ -93,16 +93,16 @@ func initpageTemplateName() (bool, error) {
 		return false, err
 	}
 
-	pageActive := config.IndexFieldStruct{
+	pageActive := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_PAGE_TEMPLATE_NAME,
+		IndexCode:    configs.INDEX_PAGE_TEMPLATE_NAME,
 		IndexName:    "页面模板",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
 		FieldType:    1,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       5,
 		Active:       3,
 	}
@@ -116,10 +116,10 @@ func initpageTemplateName() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	pageTemplateIndex, err := bleve.New(config.INDEX_PAGE_TEMPLATE_NAME, mapping)
+	pageTemplateIndex, err := bleve.New(configs.INDEX_PAGE_TEMPLATE_NAME, mapping)
 
 	// 放到config.IndexMap中
-	config.IndexMap[config.INDEX_PAGE_TEMPLATE_NAME] = pageTemplateIndex
+	configs.IndexMap[configs.INDEX_PAGE_TEMPLATE_NAME] = pageTemplateIndex
 
 	if err != nil {
 		logger.FuncLogError(err)

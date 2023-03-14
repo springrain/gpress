@@ -1,7 +1,7 @@
 package hugo
 
 import (
-	"gitee.com/gpress/gpress/config"
+	"gitee.com/gpress/gpress/configs"
 	"gitee.com/gpress/gpress/logger"
 	"os"
 	"os/exec"
@@ -28,11 +28,11 @@ func funcRelURL(url string) (string, error) {
 
 // funcSass 编译sass,生成css
 func funcSass(sassFile string) (string, error) {
-	sassPath := config.TEMPLATE_DIR + "theme/" + config.Theme + "/assets/" + sassFile
+	sassPath := configs.TEMPLATE_DIR + "theme/" + configs.Theme + "/assets/" + sassFile
 	pathHash := hashSha256(sassPath)
 
 	//生成的css路径
-	filePath := config.TEMPLATE_DIR + "theme/" + config.Theme + "/css/" + pathHash + ".css"
+	filePath := configs.TEMPLATE_DIR + "theme/" + configs.Theme + "/css/" + pathHash + ".css"
 	//filePath = filepath.FromSlash(filePath)
 
 	//url 访问路径
@@ -47,12 +47,12 @@ func funcSass(sassFile string) (string, error) {
 	goarch := runtime.GOARCH
 
 	if goos == "windows" {
-		cmdStr := config.DATA_DIR + "dart-sass/" + goos + "-" + goarch + "/sass.bat --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
+		cmdStr := configs.DATA_DIR + "dart-sass/" + goos + "-" + goarch + "/sass.bat --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
 		// 分隔符统一系统符号
 		cmdStr = filepath.FromSlash(cmdStr)
 		cmd = exec.Command("cmd", "/C", cmdStr) // windows
 	} else if goos == "linux" || goos == "darwin" {
-		cmdStr := config.DATA_DIR + "dart-sass/" + goos + "-" + goarch + "/sass --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
+		cmdStr := configs.DATA_DIR + "dart-sass/" + goos + "-" + goarch + "/sass --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
 		cmd = exec.Command("bash", "-c", cmdStr) // mac or linux
 	}
 	err = cmd.Run()

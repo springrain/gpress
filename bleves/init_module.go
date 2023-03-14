@@ -1,7 +1,7 @@
 package bleves
 
 import (
-	"gitee.com/gpress/gpress/config"
+	"gitee.com/gpress/gpress/configs"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/util"
 	"github.com/blevesearch/bleve/v2"
@@ -10,22 +10,22 @@ import (
 )
 
 func initModule() (bool, error) {
-	indexField := config.IndexMap[config.INDEX_FIELD_INDEX_NAME]
+	indexField := configs.IndexMap[configs.INDEX_FIELD_INDEX_NAME]
 
 	// 获取当前时间
 	now := time.Now()
 
 	// 初始化各个字段
-	moduleId := config.IndexFieldStruct{
+	moduleId := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "ID",
 		FieldName:    "模型ID",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       1,
 		Active:       3,
 	}
@@ -36,16 +36,16 @@ func initModule() (bool, error) {
 		return false, err
 	}
 
-	moduleModuleIndexCode := config.IndexFieldStruct{
+	moduleModuleIndexCode := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "ModuleIndexCode",
 		FieldName:    "模型Code",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       2,
 		Active:       3,
 	}
@@ -55,16 +55,16 @@ func initModule() (bool, error) {
 		return false, err
 	}
 
-	moduleModuleName := config.IndexFieldStruct{
+	moduleModuleName := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "ModuleName",
 		FieldName:    "模型名称",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       3,
 		Active:       3,
 	}
@@ -74,16 +74,16 @@ func initModule() (bool, error) {
 		return false, err
 	}
 
-	moduleCreateTime := config.IndexFieldStruct{
+	moduleCreateTime := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
 		FieldType:    2,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       4,
 		Active:       3,
 	}
@@ -93,16 +93,16 @@ func initModule() (bool, error) {
 		return false, err
 	}
 
-	moduleUpdateTime := config.IndexFieldStruct{
+	moduleUpdateTime := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
 		FieldType:    2,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       5,
 		Active:       3,
 	}
@@ -112,16 +112,16 @@ func initModule() (bool, error) {
 		return false, err
 	}
 
-	moduleCreateUser := config.IndexFieldStruct{
+	moduleCreateUser := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       6,
 		Active:       3,
 	}
@@ -131,16 +131,16 @@ func initModule() (bool, error) {
 		return false, err
 	}
 
-	moduleSortNo := config.IndexFieldStruct{
+	moduleSortNo := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       7,
 		Active:       3,
 	}
@@ -150,16 +150,16 @@ func initModule() (bool, error) {
 		return false, err
 	}
 
-	moduleActive := config.IndexFieldStruct{
+	moduleActive := configs.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    config.INDEX_MODULE_NAME,
+		IndexCode:    configs.INDEX_MODULE_NAME,
 		IndexName:    "模型",
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
 		FieldType:    1,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
-		CreateUser:   config.CREATE_USER,
+		CreateUser:   configs.CREATE_USER,
 		SortNo:       8,
 		Active:       3,
 	}
@@ -173,9 +173,9 @@ func initModule() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	moduleIndex, err := bleve.New(config.INDEX_MODULE_NAME, mapping)
+	moduleIndex, err := bleve.New(configs.INDEX_MODULE_NAME, mapping)
 	// 放到config.IndexMap中
-	config.IndexMap[config.INDEX_MODULE_NAME] = moduleIndex
+	configs.IndexMap[configs.INDEX_MODULE_NAME] = moduleIndex
 
 	// 初始化数据
 	module := make(map[string]interface{})
@@ -185,7 +185,7 @@ func initModule() (bool, error) {
 	module["ModuleName"] = "默认模型"
 	module["CreateTime"] = now
 	module["UpdateTime"] = now
-	module["CreateUser"] = config.CREATE_USER
+	module["CreateUser"] = configs.CREATE_USER
 	module["SortNo"] = 0
 	module["Active"] = 1
 
