@@ -13,6 +13,8 @@ import (
 	"strconv"
 )
 
+var config = loadInstallConfig()
+
 // 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入索引,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
 func loadInstallConfig() configStruct {
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")

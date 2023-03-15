@@ -14,8 +14,8 @@ import (
 // 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)
 // 这个可能是唯一的Struct......
 
-// 初始化 bleve 索引
-func checkBleveStatus() bool {
+// CheckBleveStatus 初始化 bleve 索引
+func CheckBleveStatus() bool {
 	// 初始化分词器
 	commaAnalyzerMapping.DocValues = false
 	commaAnalyzerMapping.Analyzer = configs.COMMA_ANALYZER_NAME

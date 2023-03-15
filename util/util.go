@@ -1,7 +1,9 @@
 package util
 
 import (
+	"crypto/md5"
 	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"math/big"
 	"os"
@@ -43,4 +45,14 @@ func PathExists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+// FuncMD5 测试自定义函数
+func FuncMD5(in string) ([]string, error) {
+	list := make([]string, 2)
+
+	hash := md5.Sum([]byte(in))
+	list[0] = in
+	list[1] = hex.EncodeToString(hash[:])
+	return list, nil
 }
