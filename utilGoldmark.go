@@ -148,7 +148,7 @@ func initHighlighting() goldmark.Extender {
 				w.WriteString(`<div class="highlight">`)
 			} else {
 				if !ok {
-					w.WriteString("</pre></code>")
+					w.WriteString("</code></pre>")
 					return
 				}
 				w.WriteString(`</div>`)
