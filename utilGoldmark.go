@@ -139,13 +139,17 @@ func initHighlighting() goldmark.Extender {
 			chromahtml.LineNumbersInTable(true),
 		),
 		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
-			_, ok := c.Language()
+			language, ok := c.Language()
 			if entering {
 				if !ok {
 					w.WriteString("<pre><code>")
 					return
 				}
-				w.WriteString(`<div class="highlight">`)
+				w.WriteString(`<div class="highlight"><pre class="chroma"><code class="language-`)
+				w.Write(language)
+				w.WriteString(`" data-lang="`)
+				w.Write(language)
+				w.WriteString(`">`)
 			} else {
 				if !ok {
 					w.WriteString("</code></pre>")
