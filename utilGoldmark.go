@@ -137,6 +137,8 @@ func initHighlighting() goldmark.Extender {
 			chromahtml.WithLineNumbers(true),
 			chromahtml.TabWidth(4),
 			chromahtml.LineNumbersInTable(true),
+			//chromahtml.InlineCode(true),
+			//chromahtml.LineNumbersInTable(true),
 		),
 		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
 			language, ok := c.Language()
