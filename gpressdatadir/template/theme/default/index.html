@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>index</title>
+  </head>
+  <body>
+    <h3>This is index</h3>
+    template data: {{ . }} </br>
+    MD5加密name:{{md5 .name}}  </br>
+
+    循环:
+    {{range $i, $v := (md5 .name)}}
+        {{ $i }}:{{ $v }}
+    {{end}}   
+    
+    basePath: {{basePath}}  </br>
+    safeHTML: {{safeHTML .name}}  </br>
+    relURL: {{relURL .name}}  </br>
+    T: {{T .name}}  </br>
+
+    sass:{{sass "sass/main.scss" }} <link href="{{sass "sass/main.scss" }}" rel="stylesheet">  </br>
+  </body>
+</html>

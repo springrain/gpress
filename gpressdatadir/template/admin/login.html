@@ -1,0 +1,61 @@
+{{template "/admin/header.html"}}
+    <title>Login - gpress</title>
+    <link rel="stylesheet" type="text/css" href="{{basePath}}/admin/css/login.css">
+    <script type="text/javascript" src="https://cdn.staticfile.org/js-sha3/0.8.0/sha3.min.js"></script>
+    <script type="text/javascript">
+        function encrypt() {
+            document.getElementById("password").value = sha3_512(document.getElementById("password").value)
+        }
+    </script>
+
+</head>
+
+<body>
+    <section class="hero is-success is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="column is-4 is-offset-4">
+                    <h3 class="title has-text-black">登录</h3>
+                    <hr class="login-hr">
+                    
+                    <div class="box">
+                        
+                        <figure class="avatar">
+                            <img src="{{basePath}}/public/logo.png">
+                        </figure>
+                        
+                        <form id="loginForm" action="{{basePath}}/admin/login" method="post" onsubmit="encrypt();">
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input is-large" name="account" type="text" placeholder="请输入账号" autofocus="">
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input is-large" id="password" name="password" type="password" placeholder="请输入密码">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="checkbox">
+                                 <input type="checkbox">记住我
+                                </label>
+                            </div>
+                            <button class="button is-block is-info is-large is-fullwidth">登录 <i class="fa fa-sign-in" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                    <p class="has-text-grey">
+                        <a href="../">注册</a> &nbsp;·&nbsp;
+                        <a href="../">忘记密码</a> &nbsp;·&nbsp;
+                        <a href="../">联系我们</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+package model
+
+/**
+固定结构体
+*/
+import "time"
+
+type IndexFieldStruct struct {
+	// ID 主键
+	ID string
+	// IndexCode 索引代码,类似表名 User,SiteInfo,PageTemplate,NavMenu,Module,Content
+	IndexCode string
+	// IndexCode 索引名称,类似表名中文说明
+	IndexName string
+	// BusinessID  业务ID,处理业务记录临时增加的字段,意外情况
+	BusinessID string
+	// FieldCode  字段代码
+	FieldCode string
+	// FieldName  字段中文名称
+	FieldName string
+	// FieldType  字段类型,数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)
+	FieldType int
+	// FieldFormat 数据格式,用于日期或者数字
+	FieldFormat string
+	// Required 字段是否为空. 0可以为空,1必填
+	Required int
+	// DefaultValue  默认值
+	DefaultValue string
+	// AnalyzerName  分词器名称
+	AnalyzerName string
+	// CreateTime 创建时间
+	CreateTime time.Time
+	// CreateTime 更新时间
+	UpdateTime time.Time
+	// AnalyzerName  创建人,初始化 system
+	CreateUser string
+	// SortNo 排序
+	SortNo int
+	// 是否有效 无效(0),正常显示(1),界面不显示(3)
+	Active int
+}
+
+type ConfigStruct struct {
+	basePath    string //`json:"basePath"`
+	JwtSecret   string `json:"jwtSecret"`
+	JwtTokenKey string `json:"jwtTokenKey"`
+	Timeout     int    `json:"timeout"`
+	ServerPort  string `json:"serverPort"`
+	Theme       string `json:"theme"`
+}
