@@ -1,6 +1,8 @@
 package bleves
 
 import (
+	"errors"
+	"fmt"
 	"gitee.com/gpress/gpress/constant"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/util"
@@ -8,6 +10,9 @@ import (
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 	"os"
 )
+
+var BleveStatus bool
+var Installed bool
 
 // IndexMap 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
 var IndexMap = make(map[string]bleve.Index)
@@ -33,11 +38,20 @@ func CheckBleveStatus() bool {
 	}
 	return status
 }
+func IsInstalled() bool {
+	// 依赖bleveStatus变量,确保bleve在isInstalled之前初始化
+	if !BleveStatus {
+		logger.FuncLogError(errors.New("bleveStatus状态为false"))
+	}
+	_, err := os.Lstat(constant.TEMPLATE_DIR + "admin/install.html")
+	return os.IsNotExist(err)
+}
 
 // checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
 func checkBleveCreate() (bool, error) {
 	// 索引数据目录是否存在
 	exists, errPathExists := util.PathExists(constant.BLEVE_DATA_DIR)
+	fmt.Println(errPathExists)
 	if errPathExists != nil {
 		logger.FuncLogError(errPathExists)
 		return false, errPathExists

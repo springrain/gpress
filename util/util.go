@@ -1,8 +1,8 @@
 package util
 
 import (
+	"crypto/md5"
 	"crypto/rand"
-
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -37,13 +37,7 @@ func HashSha256(str string) string {
 // PathExists 文件或者目录是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	return false, err
+	return !os.IsNotExist(err), err
 }
 
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
@@ -68,4 +62,19 @@ func generateStringID() string {
 	// 23位字符串+9位随机数=32位字符串,这样的好处就是可以使用ID进行排序
 	pk = pk + rand9
 	return pk
+}
+
+// 测试自定义函数
+func FuncMD5(in string) ([]string, error) {
+	list := make([]string, 2)
+
+	hash := md5.Sum([]byte(in))
+	list[0] = in
+	list[1] = hex.EncodeToString(hash[:])
+	return list, nil
+}
+
+// FuncT 多语言i18n适配,例如 {{ T "nextPage" }}
+func FuncT(key string) (string, error) {
+	return key, nil
 }

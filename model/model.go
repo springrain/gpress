@@ -41,7 +41,7 @@ type IndexFieldStruct struct {
 }
 
 type ConfigStruct struct {
-	basePath    string //`json:"basePath"`
+	BasePath    string //`json:"basePath"`
 	JwtSecret   string `json:"jwtSecret"`
 	JwtTokenKey string `json:"jwtTokenKey"`
 	Timeout     int    `json:"timeout"`
