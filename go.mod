@@ -1,11 +1,12 @@
 module gitee.com/gpress/gpress
 
-go 1.19
+go 1.20
 
 require (
 	github.com/alecthomas/chroma/v2 v2.5.0
 	github.com/blevesearch/bleve/v2 v2.3.6
 	github.com/cloudwego/hertz v0.6.0
+	github.com/go-ego/gse v0.80.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/yuin/goldmark v1.5.4
 	github.com/yuin/goldmark-emoji v1.0.1
@@ -57,6 +58,7 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
+	github.com/vcaesar/cedar v0.20.1 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/sys v0.4.0 // indirect

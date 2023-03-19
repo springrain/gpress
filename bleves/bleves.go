@@ -90,21 +90,21 @@ func checkBleveCreate() (bool, error) {
 	// 初始化配置
 	_, err = initConfig()
 	if err != nil {
-		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化Config失败"))
 		return false, err
 	}
 
 	// 初始化用户表
 	_, err = initUser()
 	if err != nil {
-		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化User失败"))
 		return false, err
 	}
 
 	// 初始化站点信息表
-	_, err = initSitenInfo()
+	_, err = initSiteInfo()
 	if err != nil {
-		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化siteInfo失败"))
 		return false, err
 	}
 
@@ -119,7 +119,7 @@ func checkBleveCreate() (bool, error) {
 	// 然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
 	_, err = initModuleDefault()
 	if err != nil {
-		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化Module失败"))
 		return false, err
 	}
 
@@ -129,7 +129,7 @@ func checkBleveCreate() (bool, error) {
 	// 初始化导航菜单
 	_, err = initNavMenu()
 	if err != nil {
-		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化NavMenu失败"))
 		return false, err
 	}
 

@@ -19,8 +19,11 @@ var ThemePath string
 var h *server.Hertz
 var funcMap = template.FuncMap{"md5": util.FuncMD5, "basePath": funcBasePath, "T": util.FuncT, "safeHTML": funcSafeHTML, "relURL": funcRelURL, "sass": funcSass}
 
-func RunServer(port string) {
+func InitRoute(port string) {
 	h = server.Default(server.WithHostPorts(port), server.WithBasePath("/"))
+}
+func RunServer() {
+
 	h.GET("/", funcIndex)
 	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {
 		c.String(http.StatusOK, "hello gpress!")

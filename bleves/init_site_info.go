@@ -1,6 +1,7 @@
 package bleves
 
 import (
+	"errors"
 	"gitee.com/gpress/gpress/constant"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/model"
@@ -12,7 +13,7 @@ import (
 )
 
 // 初始化站点信息
-func initSitenInfo() (bool, error) {
+func initSiteInfo() (bool, error) {
 	indexField := IndexMap[constant.INDEX_FIELD_INDEX_NAME]
 
 	// 创建用户表的索引
@@ -23,7 +24,7 @@ func initSitenInfo() (bool, error) {
 	now := time.Now()
 
 	// 初始化各个字段
-	sitenInfoId := model.IndexFieldStruct{
+	siteInfoId := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -37,13 +38,14 @@ func initSitenInfo() (bool, error) {
 		Active:       3,
 	}
 	// 放入文件中
-	err := indexField.Index(sitenInfoId.ID, sitenInfoId)
+	err := indexField.Index(siteInfoId.ID, siteInfoId)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化sitenInfoId失败"))
 		return false, err
 	}
 
-	sitenInfoTitle := model.IndexFieldStruct{
+	siteInfoTitle := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -56,9 +58,10 @@ func initSitenInfo() (bool, error) {
 		SortNo:       2,
 		Active:       3,
 	}
-	err = indexField.Index(sitenInfoTitle.ID, sitenInfoTitle)
+	err = indexField.Index(siteInfoTitle.ID, siteInfoTitle)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化sitenInfoTitle失败"))
 		return false, err
 	}
 
@@ -78,6 +81,7 @@ func initSitenInfo() (bool, error) {
 	err = indexField.Index(sitenInfoKeyWords.ID, sitenInfoKeyWords)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化sitenInfoKeyWords失败"))
 		return false, err
 	}
 
@@ -100,13 +104,14 @@ func initSitenInfo() (bool, error) {
 	err = indexField.Index(sitenInfoDescription.ID, sitenInfoDescription)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化siteInfoDescription失败"))
 		return false, err
 	}
 
 	// Description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Description", gseAnalyzerMapping)
 
-	sitenInfoTheme := model.IndexFieldStruct{
+	siteInfoTheme := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -119,13 +124,14 @@ func initSitenInfo() (bool, error) {
 		SortNo:       5,
 		Active:       3,
 	}
-	err = indexField.Index(sitenInfoTheme.ID, sitenInfoTheme)
+	err = indexField.Index(siteInfoTheme.ID, siteInfoTheme)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化siteInfoTheme失败"))
 		return false, err
 	}
 
-	sitenInfoThemePC := model.IndexFieldStruct{
+	siteInfoThemePC := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -138,13 +144,14 @@ func initSitenInfo() (bool, error) {
 		SortNo:       6,
 		Active:       3,
 	}
-	err = indexField.Index(sitenInfoThemePC.ID, sitenInfoThemePC)
+	err = indexField.Index(siteInfoThemePC.ID, siteInfoThemePC)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化sitenInfoThemePC失败"))
 		return false, err
 	}
 
-	sitenInfoThemeWAP := model.IndexFieldStruct{
+	siteInfoThemeWAP := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -157,13 +164,14 @@ func initSitenInfo() (bool, error) {
 		SortNo:       7,
 		Active:       3,
 	}
-	err = indexField.Index(sitenInfoThemeWAP.ID, sitenInfoThemeWAP)
+	err = indexField.Index(siteInfoThemeWAP.ID, siteInfoThemeWAP)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化sitenInfoThemeWAP失败"))
 		return false, err
 	}
 
-	sitenInfoThemeWEIXIN := model.IndexFieldStruct{
+	siteInfoThemeWEIXIN := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -176,13 +184,14 @@ func initSitenInfo() (bool, error) {
 		SortNo:       8,
 		Active:       3,
 	}
-	err = indexField.Index(sitenInfoThemeWEIXIN.ID, sitenInfoThemeWEIXIN)
+	err = indexField.Index(siteInfoThemeWEIXIN.ID, siteInfoThemeWEIXIN)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化sitenInfoThemeWEIXIN失败"))
 		return false, err
 	}
 
-	sitenInfoLogo := model.IndexFieldStruct{
+	siteInfoLogo := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -195,13 +204,14 @@ func initSitenInfo() (bool, error) {
 		SortNo:       9,
 		Active:       3,
 	}
-	err = indexField.Index(sitenInfoLogo.ID, sitenInfoLogo)
+	err = indexField.Index(siteInfoLogo.ID, siteInfoLogo)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化sitenInfoLogo失败"))
 		return false, err
 	}
 
-	sitenInfoFavicon := model.IndexFieldStruct{
+	siteInfoFavicon := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
 		IndexCode:    constant.INDEX_SITE_INDEX_NAME,
 		IndexName:    "站点信息",
@@ -214,20 +224,21 @@ func initSitenInfo() (bool, error) {
 		SortNo:       10,
 		Active:       3,
 	}
-	err = indexField.Index(sitenInfoFavicon.ID, sitenInfoFavicon)
+	err = indexField.Index(siteInfoFavicon.ID, siteInfoFavicon)
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化siteInfoLogo失败"))
 		return false, err
 	}
 
-	sitenIndexIndex, err := bleve.New(constant.INDEX_SITE_INDEX_NAME, mapping)
-	// 放到IndexMap中
-	IndexMap[constant.INDEX_SITE_INDEX_NAME] = sitenIndexIndex
+	siteIndexIndex, err := bleve.New(constant.INDEX_SITE_INDEX_NAME, mapping)
 
 	if err != nil {
 		logger.FuncLogError(err)
+		logger.FuncLogError(errors.New("初始化bleve.New (constant.INDEX_SITE_INDEX_NAME)失败"))
 		return false, err
 	}
-
+	// 放到IndexMap中comma
+	IndexMap[constant.INDEX_SITE_INDEX_NAME] = siteIndexIndex
 	return true, nil
 }

@@ -9,9 +9,11 @@ import (
 func main() {
 
 	//1.初始化bleve
+	bleves.InitCommaAnalyzer()
+	bleves.InitGesAnglyzer()
 	bleves.BleveStatus = bleves.CheckBleveStatus()
-
 	bleves.Installed = bleves.IsInstalled()
+
 	//2.加载配置文件
 	service.Config = service.LoadInstallConfig(bleves.Installed)
 	// 使用的主题
@@ -20,9 +22,10 @@ func main() {
 	if !bleves.BleveStatus { // 索引状态检查失败
 		panic("索引检查失败")
 	}
+	route.InitRoute(service.Config.ServerPort)
 	//初始化模版
-	route.InitTemplate()
+	_ = route.InitTemplate()
 	//启动路由
-	route.RunServer(service.Config.ServerPort)
+	route.RunServer()
 
 }
