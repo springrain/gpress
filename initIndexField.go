@@ -18,6 +18,22 @@ var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
 // 中文分词器的mapping
 var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
 
+const (
+	fieldType_数字 = iota + 1
+	fieldType_日期
+	fieldType_文本框
+	fieldType_文本域
+	fieldType_富文本
+	fieldType_下拉框
+	fieldType_单选
+	fieldType_多选
+	fieldType_上传图片
+	fieldType_上传附件
+	fieldType_轮播图
+	fieldType_音频
+	fieldType_视频
+)
+
 // IndexFieldStruct 索引和字段(索引名:IndexField)
 // 记录所有索引字段code和中文说明.
 // 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)
