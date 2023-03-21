@@ -2,7 +2,7 @@ hugo源码有个depts依赖包,几乎依赖了hugo的所有包,应该是为了�
 
 https://gohugo.io/functions/
 
-1.函数引入模板修改为原生引用模板的方式,主要原因是需要重写template,让期支持上下文,比较复杂
+1.函数引入模板修改为原生引用模板的方式,主要原因是需要重写template,支持上下文,比较复杂
 
 {{ partial "head.html" . }}     修改为 {{ template "theme/partial/head.html" }}
 {{ partial "header.html" . }}   修改为 {{ template "theme/partial/header.html" }}
@@ -13,8 +13,8 @@ https://gohugo.io/functions/
 
 可以批量替换
 
-2.取消sass/scss的编译功能,hugo要么使用go-libsass的c++库或者操作系统安装dart-sass-embedded扩展,都比较复杂,放弃这种思路
-让模板自己编译好,和sass源码一起提交
+2.取消sass/scss的编译功能,hugo要么使用go-libsass的c++库或者操作系统安装dart-sass-embedded扩展,都比较复杂
+使用dart-sass不打入二进制包,调用命令进行编译
   下载 https://github.com/sass/dart-sass    
   文档 https://sass-lang.com/documentation/cli/dart-sass  
 
