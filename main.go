@@ -33,8 +33,10 @@ func init() {
 
 func main() {
 	// 初始化模板
-	_ = initTemplate()
-
+	err := initTemplate()
+	if err != nil { // 初始化模板异常
+		panic("初始化模板异常")
+	}
 	// 初始化admin路由
 	initAdminRoute()
 
