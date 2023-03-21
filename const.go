@@ -15,8 +15,8 @@ const (
 
 	// user 用户的索引名称
 	userIndexName = bleveDataDir + "user"
-	// siteInfo  站点信息
-	indexSitenIndexName = bleveDataDir + "sitenInfo"
+	// site  站点信息
+	indexSiteIndexName = bleveDataDir + "site"
 	// 页面模板
 	indexPageTemplateName = bleveDataDir + "pageTemplate"
 	// 导航菜单

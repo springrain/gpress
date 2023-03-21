@@ -41,7 +41,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键        | 否       |    -  |
-| IndexCode   | string      | 索引代码     | 否       |  类似表名 User,SiteInfo,PageTemplate,NavMenu,Module,Content  |
+| IndexCode   | string      | 索引代码     | 否       |  类似表名 User,Site,PageTemplate,NavMenu,Module,Content  |
 | IndexName   | string      | 索引名称     | 否       |  类似表名中文说明  |
 | BusinessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
 | FieldCode   | string      | 字段代码     |否       |    -  |
@@ -66,7 +66,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | PassWord    | string      | 密码        | 否       |    -  |
 | UserName    | string      | 中文名称     | 否       |    -  |
 
-### 站点信息(SiteInfo)
+### 站点信息(Site)
 站点的信息,例如 title,logo,keywords,description等
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 

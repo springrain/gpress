@@ -1,4 +1,4 @@
 主题的目录,默认使用default
 
 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default,主题区分 PC,WAP,WEiXIN  三种平台,可以使用不同的模板,默认模板文件名保持一致,首页默认是index.html
-需要设置到 SiteInfo里
+需要设置到 Site里
