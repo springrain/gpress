@@ -17,6 +17,7 @@ import (
 )
 
 var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL, "sass": funcSass, "themePath": funcThemePath}
+var tmpl *template.Template = template.New(defaultName).Delims("", "").Funcs(funcMap)
 
 // initTemplate 初始化模板
 func initTemplate() error {
@@ -25,12 +26,12 @@ func initTemplate() error {
 	// h.LoadHTMLGlob(datadir + "html/theme/default/*")
 	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
 	err := loadTemplate(false)
+	// 设置模板
+	h.SetHTMLTemplate(tmpl)
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
 	h.Static("/public", datadir)
 	return err
 }
-
-var tmpl *template.Template = template.New("").Delims("", "").Funcs(funcMap)
 
 // loadTemplate 用于更新重复加载
 func loadTemplate(reload bool) error {
@@ -84,7 +85,7 @@ func loadTemplate(reload bool) error {
 	//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址.所以这里暂时不改变指针地址
 	*tmpl = *loadTmpl
 	// 设置模板
-	h.SetHTMLTemplate(tmpl)
+	//h.SetHTMLTemplate(tmpl)
 	return nil
 }
 
@@ -137,4 +138,23 @@ func hashSha256(str string) string {
 	hashByte := sha256.Sum256([]byte(str))
 	hashStr := hex.EncodeToString(hashByte[:])
 	return hashStr
+}
+
+// ResponseData 返回数据包装器
+type ResponseData struct {
+	// 业务状态代码 // 异常 1, 成功 0,默认成功0,业务代码见说明
+	StatusCode int `json:"statusCode"`
+	// HttpCode http的状态码
+	// HttpCode int `json:"httpCode,omitempty"`
+	// 返回数据
+	Data interface{} `json:"data,omitempty"`
+	// 返回的信息内容,配合StatusCode
+	Message string `json:"message,omitempty"`
+	// 扩展的map,用于处理返回多个值的情况
+	ExtMap map[string]interface{} `json:"extMap,omitempty"`
+	// 列表的分页对象
+	Page Page `json:"page,omitempty"`
+	// 查询条件的struct回传
+	QueryStruct interface{} `json:"queryStruct,omitempty"`
+	ERR         error       `json:"err,omitempty"` // 响应错误
 }
