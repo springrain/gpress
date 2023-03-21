@@ -94,7 +94,7 @@ func isInstalled() bool {
 	if !bleveStatus {
 		FuncLogError(errors.New("bleveStatus状态为false"))
 	}
-	return pathExists(templateDir + "admin/install.html")
+	return !pathExists(templateDir + "admin/install.html")
 }
 
 // updateInstall 更新安装状态
