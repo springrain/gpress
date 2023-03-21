@@ -75,9 +75,7 @@ func checkBleveStatus() bool {
 
 // checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
 func checkBleveCreate() (bool, error) {
-	// 索引数据目录是否存在
-	exists := pathExists(bleveDataDir)
-	if exists { // 如果已经存在目录,遍历索引,放到全局map里
+	if pathExists(bleveDataDir) { // 如果已经存在目录,遍历索引,放到全局map里
 		fileInfo, _ := os.ReadDir(bleveDataDir)
 		for _, dir := range fileInfo {
 			if !dir.IsDir() {
