@@ -8,7 +8,7 @@ import (
 )
 
 // 初始化站点信息
-func initSitenInfo() (bool, error) {
+func initSite() (bool, error) {
 	indexField := IndexMap[indexFieldIndexName]
 
 	// 创建用户表的索引
@@ -19,9 +19,9 @@ func initSitenInfo() (bool, error) {
 	now := time.Now()
 
 	// 初始化各个字段
-	sitenInfoId := IndexFieldStruct{
+	siteId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "ID",
 		FieldName:    "站点信息ID",
@@ -33,11 +33,11 @@ func initSitenInfo() (bool, error) {
 		Active:       3,
 	}
 	// 放入文件中
-	indexField.Index(sitenInfoId.ID, sitenInfoId)
+	indexField.Index(siteId.ID, siteId)
 
-	sitenInfoTitle := IndexFieldStruct{
+	siteTitle := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Title",
 		FieldName:    "标题",
@@ -48,11 +48,11 @@ func initSitenInfo() (bool, error) {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoTitle.ID, sitenInfoTitle)
+	indexField.Index(siteTitle.ID, siteTitle)
 
-	sitenInfoKeyWords := IndexFieldStruct{
+	siteKeyWords := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "KeyWords",
 		FieldName:    "关键字",
@@ -63,14 +63,14 @@ func initSitenInfo() (bool, error) {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoKeyWords.ID, sitenInfoKeyWords)
+	indexField.Index(siteKeyWords.ID, siteKeyWords)
 
 	// KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", commaAnalyzerMapping)
 
-	sitenInfoDescription := IndexFieldStruct{
+	siteDescription := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Description",
 		FieldName:    "站点描述",
@@ -81,14 +81,14 @@ func initSitenInfo() (bool, error) {
 		SortNo:       4,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoDescription.ID, sitenInfoDescription)
+	indexField.Index(siteDescription.ID, siteDescription)
 
 	// Description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	mapping.DefaultMapping.AddFieldMappingsAt("Description", gseAnalyzerMapping)
 
-	sitenInfoTheme := IndexFieldStruct{
+	siteTheme := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "theme",
 		FieldName:    "默认主题",
@@ -99,11 +99,11 @@ func initSitenInfo() (bool, error) {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoTheme.ID, sitenInfoTheme)
+	indexField.Index(siteTheme.ID, siteTheme)
 
-	sitenInfoThemePC := IndexFieldStruct{
+	siteThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
@@ -114,11 +114,11 @@ func initSitenInfo() (bool, error) {
 		SortNo:       6,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoThemePC.ID, sitenInfoThemePC)
+	indexField.Index(siteThemePC.ID, siteThemePC)
 
-	sitenInfoThemeWAP := IndexFieldStruct{
+	siteThemeWAP := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "themeWAP",
 		FieldName:    "手机主题",
@@ -129,13 +129,13 @@ func initSitenInfo() (bool, error) {
 		SortNo:       7,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoThemeWAP.ID, sitenInfoThemeWAP)
+	indexField.Index(siteThemeWAP.ID, siteThemeWAP)
 
-	sitenInfoThemeWEIXIN := IndexFieldStruct{
+	siteThemeWEIXIN := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
-		FieldCode:    "sitenInfoThemeWEIXIN",
+		FieldCode:    "siteThemeWEIXIN",
 		FieldName:    "微信主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keyword.Name,
@@ -144,11 +144,11 @@ func initSitenInfo() (bool, error) {
 		SortNo:       8,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoThemeWEIXIN.ID, sitenInfoThemeWEIXIN)
+	indexField.Index(siteThemeWEIXIN.ID, siteThemeWEIXIN)
 
-	sitenInfoLogo := IndexFieldStruct{
+	siteLogo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Logo",
 		FieldName:    "Logo",
@@ -159,11 +159,11 @@ func initSitenInfo() (bool, error) {
 		SortNo:       9,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoLogo.ID, sitenInfoLogo)
+	indexField.Index(siteLogo.ID, siteLogo)
 
-	sitenInfoFavicon := IndexFieldStruct{
+	siteFavicon := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSitenIndexName,
+		IndexCode:    indexSiteIndexName,
 		IndexName:    "站点信息",
 		FieldCode:    "Favicon",
 		FieldName:    "Favicon",
@@ -174,11 +174,11 @@ func initSitenInfo() (bool, error) {
 		SortNo:       10,
 		Active:       3,
 	}
-	indexField.Index(sitenInfoFavicon.ID, sitenInfoFavicon)
+	indexField.Index(siteFavicon.ID, siteFavicon)
 
-	sitenIndexIndex, err := bleve.New(indexSitenIndexName, mapping)
+	siteIndexIndex, err := bleve.New(indexSiteIndexName, mapping)
 	// 放到IndexMap中
-	IndexMap[indexSitenIndexName] = sitenIndexIndex
+	IndexMap[indexSiteIndexName] = siteIndexIndex
 
 	if err != nil {
 		FuncLogError(err)

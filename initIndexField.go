@@ -41,7 +41,7 @@ const (
 type IndexFieldStruct struct {
 	// ID 主键
 	ID string
-	// IndexCode 索引代码,类似表名 User,SiteInfo,PageTemplate,NavMenu,Module,Content
+	// IndexCode 索引代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
 	IndexCode string
 	// IndexCode 索引名称,类似表名中文说明
 	IndexName string
@@ -123,7 +123,7 @@ func checkBleveCreate() (bool, error) {
 	initUser()
 
 	// 初始化站点信息表
-	initSitenInfo()
+	initSite()
 
 	// 初始化文章模型的类型表
 	initModule()

@@ -74,7 +74,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	deleteAll(ctx, configIndexName)
 
 	configIndex := IndexMap[configIndexName]
-	ID := "config"
+	ID := FuncGenerateStringID()
 
 	m := make(map[string]interface{})
 	b, _ := json.Marshal(config)
