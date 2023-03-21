@@ -185,12 +185,13 @@ func initAdminRoute() {
 	admin.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
 		err := loadTemplate(true)
 		if err != nil {
-			c.Redirect(http.StatusOK, []byte("/admin/error"))
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 			return
 		}
 		//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址
 		//c.HTMLRender = render.HTMLProduction{Template: tmpl}
-		c.HTML(http.StatusOK, "/admin/index.html", nil)
+		//c.HTML(http.StatusOK, "/admin/index.html", nil)
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 	})
 }
 
