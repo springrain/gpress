@@ -2,11 +2,14 @@ package main
 
 import (
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"math/big"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/blevesearch/bleve/v2"
 )
 
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
@@ -43,4 +46,45 @@ func pathExists(path string) bool {
 		return false
 	}
 	return false
+}
+
+// result2Map 单个查询结果转map
+func result2Map(indexName string, result *bleve.SearchResult) (map[string]interface{}, error) {
+	if result == nil {
+		return nil, errors.New("结果集为空")
+	}
+	if result.Total == 0 { //没有记录
+		return nil, nil
+	}
+	if result.Total > 1 { // 大于1条记录
+		return nil, errors.New("查询出多条记录")
+	}
+	//获取到查询的对象
+	value := result.Hits[0]
+	m := make(map[string]interface{}, 0)
+	for k, v := range value.Fields {
+		m[k] = v
+	}
+	return m, nil
+
+}
+
+// result2SliceMap 多条结果转map数组
+func result2SliceMap(indexName string, result *bleve.SearchResult) ([]map[string]interface{}, error) {
+	if result == nil {
+		return nil, errors.New("结果集为空")
+	}
+	if result.Total == 0 { //没有记录
+		return nil, nil
+	}
+	ms := make([]map[string]interface{}, 0)
+	//获取到查询的对象
+	for _, value := range result.Hits {
+		m := make(map[string]interface{}, 0)
+		for k, v := range value.Fields {
+			m[k] = v
+			ms = append(ms, m)
+		}
+	}
+	return ms, nil
 }
