@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/md5"
-	"encoding/hex"
 	"net/http"
 
 	"github.com/blevesearch/bleve/v2"
@@ -187,16 +185,6 @@ func initAdminRoute() {
 // 请求响应函数
 func funcIndex(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, themePath+"index.html", map[string]string{"name": "test"})
-}
-
-// 测试自定义函数
-func funcMD5(in string) ([]string, error) {
-	list := make([]string, 2)
-
-	hash := md5.Sum([]byte(in))
-	list[0] = in
-	list[1] = hex.EncodeToString(hash[:])
-	return list, nil
 }
 
 // adminHandler admin权限拦截器
