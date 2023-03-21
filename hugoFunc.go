@@ -2,7 +2,6 @@ package main
 
 import (
 	"html/template"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -36,8 +35,7 @@ func funcSass(sassFile string) (string, error) {
 	//url 访问路径
 	fileUrl := themePath + "css/" + pathHash + ".css"
 
-	_, err := os.Lstat(filePath)
-	if !os.IsNotExist(err) { //如果文件已经存在了,直接返回
+	if pathExists(filePath) { //如果文件已经存在了,直接返回
 		return funcSafeHTML(fileUrl)
 	}
 	var cmd *exec.Cmd
@@ -53,7 +51,7 @@ func funcSass(sassFile string) (string, error) {
 		cmdStr := datadir + "dart-sass/" + goos + "-" + goarch + "/sass --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
 		cmd = exec.Command("bash", "-c", cmdStr) // mac or linux
 	}
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
 		FuncLogError(err)
 	}

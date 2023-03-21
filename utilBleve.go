@@ -34,13 +34,13 @@ func generateStringID() string {
 }
 
 // pathExists 文件或者目录是否存在
-func pathExists(path string) (bool, error) {
+func pathExists(path string) bool {
 	_, err := os.Stat(path)
 	if err == nil {
-		return true, nil
+		return true
 	}
 	if os.IsNotExist(err) {
-		return false, nil
+		return false
 	}
-	return false, err
+	return false
 }
