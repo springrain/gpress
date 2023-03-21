@@ -28,19 +28,21 @@ https://gohugo.io/functions/
 
 ```go
 <link href="{{sass "sass/main.scss" }}" rel="stylesheet">
+```
 
+主要实现代码是:  
+```go
 //路径的hash,作为css文件名
 pathHash := hashSha256("sass/main.scss")
 //生成的css路径
 filePath := templateDir + "theme/" + config.Theme + "/css/" + pathHash + ".css"
 //url 访问路径
 fileUrl := themePath + "css/" + pathHash + ".css"
-
 ```
 
 ```bat
-  ### 编译 assets\sass\main.scss 文件 到 theme\defalut\css\{{ pathHash }}.css 
-  dart-sass\windows\sass.bat --style=compressed --charset --no-source-map assets\sass\main.scss:theme\defalut\css\{{ pathHash }}.css
+  ### 编译 assets\sass\main.scss 文件 到 theme\defalut\css\{{ .pathHash }}.css 
+  dart-sass\windows\sass.bat --style=compressed --charset --no-source-map assets\sass\main.scss:theme\defalut\css\{{ .pathHash }}.css
 
   ### --style=compressed 压缩
   ### --charset 使用编码
