@@ -54,6 +54,7 @@ func funcSass(sassFile string) (string, error) {
 	err := cmd.Run()
 	if err != nil {
 		FuncLogError(err)
+		return fileUrl, err
 	}
 	fileUrl, err = funcSafeHTML(fileUrl)
 	//增加静态资源映射
