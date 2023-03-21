@@ -1,11 +1,32 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"html/template"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 )
+
+// funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
+func funcBasePath() string {
+	return config.basePath
+}
+
+func funcThemePath() string {
+	return themePath
+}
+
+// 测试自定义函数
+func funcMD5(in string) ([]string, error) {
+	list := make([]string, 2)
+
+	hash := md5.Sum([]byte(in))
+	list[0] = in
+	list[1] = hex.EncodeToString(hash[:])
+	return list, nil
+}
 
 // funcT 多语言i18n适配,例如 {{ T "nextPage" }}
 func funcT(key string) (string, error) {
@@ -18,9 +39,9 @@ func funcSafeHTML(html string) (string, error) {
 	return ss, nil
 }
 
-// funcRelURL 真实的url
+// funcRelURL 拼接url路径的
 func funcRelURL(url string) (string, error) {
-	return funcSafeHTML(url)
+	return funcSafeHTML(themePath + url)
 }
 
 // funcSass 编译sass,生成css

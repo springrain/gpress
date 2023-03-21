@@ -44,12 +44,15 @@ func loadInstallConfig() configStruct {
 	if configJson.JwtSecret == "" { // 如果没有配置jwtSecret,产生随机字符串
 		configJson.JwtSecret = randStr(32)
 	}
+	if configJson.basePath == "" {
+		configJson.basePath = "/"
+	}
 
 	return configJson
 }
 
 var defaultConfig = configStruct{
-	basePath: "",
+	basePath: "/",
 	// 默认的加密Secret
 	// JwtSecret:   "gpress+jwtSecret-2023",
 	JwtSecret:   randStr(32),
@@ -103,6 +106,10 @@ func findConfig() (configStruct, error) {
 		return config, err
 	}
 	json.Unmarshal(b, &config)
+
+	if config.basePath == "" {
+		config.basePath = "/"
+	}
 
 	return config, nil
 }
