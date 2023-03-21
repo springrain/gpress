@@ -20,7 +20,7 @@ var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": fu
 
 // initTemplate 初始化模板
 func initTemplate() error {
-	h.SetFuncMap(funcMap)
+	// h.SetFuncMap(funcMap)
 	// h.LoadHTMLFiles(themePath + "index.html")
 	// h.LoadHTMLGlob(datadir + "html/theme/default/*")
 	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
