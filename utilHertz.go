@@ -16,7 +16,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL, "sass": funcSass}
+var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL, "sass": funcSass, "themePath": funcThemePath}
 
 // initTemplate 初始化模板
 func initTemplate() error {
@@ -81,11 +81,6 @@ func loadTemplate() error {
 	// 设置模板
 	h.SetHTMLTemplate(tmpl)
 	return nil
-}
-
-// funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
-func funcBasePath() string {
-	return config.basePath
 }
 
 // isInstalled 是否已经安装过了

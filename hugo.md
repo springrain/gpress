@@ -50,3 +50,12 @@ fileUrl := themePath + "css/" + pathHash + ".css"
   ### : 路径分隔符
 ```
 
+
+hugo的 ```relURL``` 函数需要获取当前的baseURL路径,修改调用实现相对路径,例如:
+
+```go
+<link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32x32.png" | relURL }}">  
+实际返回的是 {{ themePath }}favicon-32x32.png,也可以根据模板路径自己拼接,例如:  
+<link rel="icon" type="image/png" sizes="32x32" href="{{ themePath }}images/favicon-32x32.png">
+```
+
