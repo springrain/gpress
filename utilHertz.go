@@ -94,8 +94,7 @@ func isInstalled() bool {
 	if !bleveStatus {
 		FuncLogError(errors.New("bleveStatus状态为false"))
 	}
-	_, err := os.Lstat(templateDir + "admin/install.html")
-	return os.IsNotExist(err)
+	return pathExists(templateDir + "admin/install.html")
 }
 
 // updateInstall 更新安装状态

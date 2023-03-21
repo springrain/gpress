@@ -76,12 +76,7 @@ func checkBleveStatus() bool {
 // checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
 func checkBleveCreate() (bool, error) {
 	// 索引数据目录是否存在
-	exists, errPathExists := pathExists(bleveDataDir)
-	if errPathExists != nil {
-		FuncLogError(errPathExists)
-		return false, errPathExists
-	}
-
+	exists := pathExists(bleveDataDir)
 	if exists { // 如果已经存在目录,遍历索引,放到全局map里
 		fileInfo, _ := os.ReadDir(bleveDataDir)
 		for _, dir := range fileInfo {
@@ -96,7 +91,7 @@ func checkBleveCreate() (bool, error) {
 			}
 			IndexMap[bleveDataDir+dir.Name()] = index
 		}
-		return true, errPathExists
+		return true, nil
 	}
 	// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
 	errMkdir := os.Mkdir(bleveDataDir, os.ModePerm)
