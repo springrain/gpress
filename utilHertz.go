@@ -24,28 +24,30 @@ func initTemplate() error {
 	// h.LoadHTMLFiles(themePath + "index.html")
 	// h.LoadHTMLGlob(datadir + "html/theme/default/*")
 	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
-	err := loadTemplate()
+	err := loadTemplate(false)
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
 	h.Static("/public", datadir)
 	return err
 }
 
+var tmpl *template.Template = template.New("").Delims("", "").Funcs(funcMap)
+
 // loadTemplate 用于更新重复加载
-func loadTemplate() error {
-	tmpl := template.New("").Delims("", "").Funcs(funcMap)
+func loadTemplate(reload bool) error {
+	loadTmpl := template.New("").Delims("", "").Funcs(funcMap)
 	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
 		// 相对路径
 		relativePath := path[len(templateDir)-1:]
 		// 如果是静态资源
-		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
+		if !reload && (strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/")) {
 			if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { // 过滤掉压缩包
 				h.StaticFile(relativePath, path)
 			}
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			// 创建对应的模板
-			t := tmpl.New(relativePath)
+			t := loadTmpl.New(relativePath)
 			b, err := os.ReadFile(path)
 			if err != nil {
 				return err
@@ -64,20 +66,23 @@ func loadTemplate() error {
 		return err
 	}
 
-	// 处理静态化文件
-	filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() { // 只处理文件
+	if !reload {
+		// 处理静态化文件
+		filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
+			if info.IsDir() { // 只处理文件
+				return nil
+			}
+			// 分隔符统一为 / 斜杠
+			path = filepath.ToSlash(path)
+			// 相对路径
+			relativePath := path[len(statichtmlDir)-1:]
+			// 设置静态化文件
+			h.StaticFile(relativePath, path)
 			return nil
-		}
-		// 分隔符统一为 / 斜杠
-		path = filepath.ToSlash(path)
-		// 相对路径
-		relativePath := path[len(statichtmlDir)-1:]
-		// 设置静态化文件
-		h.StaticFile(relativePath, path)
-		return nil
-	})
-
+		})
+	}
+	//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址.所以这里暂时不改变指针地址
+	*tmpl = *loadTmpl
 	// 设置模板
 	h.SetHTMLTemplate(tmpl)
 	return nil

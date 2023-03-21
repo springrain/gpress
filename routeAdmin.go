@@ -178,6 +178,18 @@ func initAdminRoute() {
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
 			return
 		}
+
+		c.HTML(http.StatusOK, "/admin/index.html", nil)
+	})
+	// 后台管理员首页
+	admin.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
+		err := loadTemplate(true)
+		if err != nil {
+			c.Redirect(http.StatusOK, []byte("/admin/error"))
+			return
+		}
+		//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址
+		//c.HTMLRender = render.HTMLProduction{Template: tmpl}
 		c.HTML(http.StatusOK, "/admin/index.html", nil)
 	})
 }
