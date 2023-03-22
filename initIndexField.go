@@ -75,6 +75,12 @@ type IndexFieldStruct struct {
 
 // 初始化 bleve 索引
 func checkBleveStatus() bool {
+
+	// 注册逗号分词器
+	initRegisterCommaAnalyzer()
+	// 注册gse中文分词器
+	initRegistergseAnalyzer()
+
 	// 初始化分词器
 	commaAnalyzerMapping.DocValues = false
 	commaAnalyzerMapping.Analyzer = commaAnalyzerName
