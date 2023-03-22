@@ -8,8 +8,8 @@ import (
 
 const commaAnalyzerName = "comma"
 
-// 注册分词器
-func init() {
+// 注册逗号分词器
+func initRegisterCommaAnalyzer() {
 	registry.RegisterTokenizer(commaAnalyzerName, commaTokenizerConstructor)
 	registry.RegisterAnalyzer(commaAnalyzerName, commaAnalyzerConstructor)
 }
