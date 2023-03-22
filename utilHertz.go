@@ -35,7 +35,7 @@ func initTemplate() error {
 
 // loadTemplate 用于更新重复加载
 func loadTemplate(reload bool) error {
-	loadTmpl := template.New("").Delims("", "").Funcs(funcMap)
+	loadTmpl := template.New(defaultName).Delims("", "").Funcs(funcMap)
 	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
@@ -153,7 +153,7 @@ type ResponseData struct {
 	// 扩展的map,用于处理返回多个值的情况
 	ExtMap map[string]interface{} `json:"extMap,omitempty"`
 	// 列表的分页对象
-	Page Page `json:"page,omitempty"`
+	Page *Page `json:"page,omitempty"`
 	// 查询条件的struct回传
 	QueryStruct interface{} `json:"queryStruct,omitempty"`
 	ERR         error       `json:"err,omitempty"` // 响应错误
