@@ -10,8 +10,8 @@ const (
 	gseAnalyzerName = "gse"
 )
 
-// 注册分词器
-func init() {
+// 注册gse中文分词器
+func initRegistergseAnalyzer() {
 	registry.RegisterTokenizer(gseAnalyzerName, gseTokenizerConstructor)
 	registry.RegisterAnalyzer(gseAnalyzerName, gseAnalyzerConstructor)
 }
