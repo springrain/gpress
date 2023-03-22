@@ -95,6 +95,7 @@ nav.navbar {
 
 .gp-docs .gp-docs-nav{
   background: #191818;
+  font-size: 1.05rem;
   overflow-y: auto;
 }
 
@@ -162,7 +163,7 @@ nav.navbar {
     --docs-outer: 3rem;
     --docs-inner: 3rem;
     display: grid;
-    grid-template-columns: 11.25rem 1fr;
+    grid-template-columns: 9.25rem 1fr;
   }
 
   .pg-docs-main {
