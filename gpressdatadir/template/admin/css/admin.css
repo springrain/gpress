@@ -85,7 +85,7 @@ nav.navbar {
   --docs-outer: 1.5rem;
   --docs-inner: 1.5rem;
   --docs-side-padding: 1rem;
-  border-top: 2px solid #f5f5f5;
+  border-top: 0px solid #f5f5f5;
   position: relative;
 }
 
@@ -96,13 +96,12 @@ nav.navbar {
 .gp-docs .gp-docs-nav{
   background: #191818;
   font-size: 1.05rem;
+  font-family: Helvetica,Arial,sans-serif;
   overflow-y: auto;
 }
 
 .gp-docs .menu-list {
   line-height: 1.75;
-
-
 }
 .gp-docs .menu-list a {
   border-radius: 0;
@@ -160,10 +159,10 @@ nav.navbar {
 /* PC端 */
 @media screen and (min-width: 769px), print {
   .gp-docs {
-    --docs-outer: 3rem;
-    --docs-inner: 3rem;
+    --docs-outer: 1rem;
+    --docs-inner: 1rem;
     display: grid;
-    grid-template-columns: 9.25rem 1fr;
+    grid-template-columns: 10rem 1fr;
   }
 
   .pg-docs-main {
@@ -176,6 +175,7 @@ nav.navbar {
 
 	.gp-docs .gp-docs-nav .menu-heading {
     color: #fff;
+    padding: 0.4em 0.68em;
     font-size: 125%;
     font-weight: 400;
     letter-spacing: .1em;
