@@ -12,8 +12,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL, "sass": funcSass, "themePath": funcThemePath}
@@ -30,6 +28,8 @@ func initTemplate() error {
 	h.SetHTMLTemplate(tmpl)
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
 	h.Static("/public", datadir)
+	// 设置静态网页目录
+	h.Static("/statichtml", datadir)
 	return err
 }
 
@@ -38,6 +38,7 @@ func loadTemplate(reload bool) error {
 	//声明新的template
 	loadTmpl := template.New(defaultName).Delims("", "").Funcs(funcMap)
 
+	staticFileMap := make(map[string]string)
 	//遍历模板文件夹
 	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
@@ -46,9 +47,26 @@ func loadTemplate(reload bool) error {
 		relativePath := path[len(templateDir)-1:]
 		// 如果是静态资源
 		if !reload && (strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/")) {
-			if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { // 过滤掉压缩包
-				h.StaticFile(relativePath, path)
+			/*
+				// 直接映射静态文件夹
+				if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { // 过滤掉压缩包
+				    h.StaticFile(relativePath, path)
+				}
+			*/
+			if strings.Contains(relativePath, "/js/") { //如果是js文件夹
+				key := relativePath[:strings.Index(relativePath, "/js/")+4]
+				value := path[:strings.Index(path, key)]
+				staticFileMap[key] = value
+			} else if strings.Contains(relativePath, "/css/") { //如果是css文件夹
+				key := relativePath[:strings.Index(relativePath, "/css/")+5]
+				value := path[:strings.Index(path, key)]
+				staticFileMap[key] = value
+			} else if strings.Contains(relativePath, "/image/") { //如果是image文件夹
+				key := relativePath[:strings.Index(relativePath, "/image/")+7]
+				value := path[:strings.Index(path, key)]
+				staticFileMap[key] = value
 			}
+
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			// 创建对应的模板
 			t := loadTmpl.New(relativePath)
@@ -77,20 +95,28 @@ func loadTemplate(reload bool) error {
 	if reload { //如果是reload,不处理静态文件
 		return nil
 	}
-	// 遍历处理静态化文件
-	filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() { // 只处理文件
-			return nil
-		}
-		// 分隔符统一为 / 斜杠
-		path = filepath.ToSlash(path)
-		// 相对路径
-		relativePath := path[len(statichtmlDir)-1:]
-		// 设置静态化文件
-		h.StaticFile(relativePath, path)
-		return nil
-	})
 
+	//增加静态文件夹
+	for k, v := range staticFileMap {
+		h.Static(k, v)
+	}
+
+	/*
+		// 直接映射 /statichtml,暂时不用每个都单独注册了
+		// 遍历处理静态化文件
+		filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
+			if info.IsDir() { // 只处理文件
+				return nil
+			}
+			// 分隔符统一为 / 斜杠
+			path = filepath.ToSlash(path)
+			// 相对路径
+			relativePath := path[len(statichtmlDir)-1:]
+			// 设置静态化文件
+			h.StaticFile(relativePath, path)
+			return nil
+		})
+	*/
 	return nil
 }
 
