@@ -35,7 +35,10 @@ func initTemplate() error {
 
 // loadTemplate 用于更新重复加载
 func loadTemplate(reload bool) error {
+	//声明新的template
 	loadTmpl := template.New(defaultName).Delims("", "").Funcs(funcMap)
+
+	//遍历模板文件夹
 	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
@@ -63,29 +66,31 @@ func loadTemplate(reload bool) error {
 	})
 	if err != nil {
 		FuncLogError(err)
-		// panic(err)
 		return err
 	}
-
-	if !reload {
-		// 处理静态化文件
-		filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
-			if info.IsDir() { // 只处理文件
-				return nil
-			}
-			// 分隔符统一为 / 斜杠
-			path = filepath.ToSlash(path)
-			// 相对路径
-			relativePath := path[len(statichtmlDir)-1:]
-			// 设置静态化文件
-			h.StaticFile(relativePath, path)
-			return nil
-		})
-	}
 	//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址.所以这里暂时不改变指针地址
+	//https://github.com/cloudwego/hertz/issues/683
 	*tmpl = *loadTmpl
+
 	// 设置模板
 	//h.SetHTMLTemplate(tmpl)
+	if reload { //如果是reload,不处理静态文件
+		return nil
+	}
+	// 遍历处理静态化文件
+	filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() { // 只处理文件
+			return nil
+		}
+		// 分隔符统一为 / 斜杠
+		path = filepath.ToSlash(path)
+		// 相对路径
+		relativePath := path[len(statichtmlDir)-1:]
+		// 设置静态化文件
+		h.StaticFile(relativePath, path)
+		return nil
+	})
+
 	return nil
 }
 
