@@ -1,12 +1,10 @@
 .gpress-menu {
   width: 10rem;
-  
   font-size: 1.05rem;
   height: 100vh;
   font-family: Helvetica,Arial,sans-serif;
   overflow-y: auto;
 }
-
 .gpress-menu .menu-list {
   line-height: 1.75;
 }
@@ -15,7 +13,6 @@
   padding: 0.5em 0.85em;
   color: #999;
 }
-
 .gpress-menu .menu-list a:hover {
   background: #333;
 }
@@ -30,51 +27,44 @@
   border-top: 1px solid #333;
 }
 .navbar-burger {
-    background-color: #333; /* 背景色为黑色 */
-    position: fixed;
-    top: 0rem; /* 与顶部的距离为1rem */
-    left: 0rem; /* 与左侧的距离为1rem */
-    font-size: 11px;
-    height: 4em;
-    padding: 1em;
-    width: 4em;
-    z-index: 100;
-  }
-  #layout{
-    position: relative;
-    
-  }
-  #layout.is-active{
-    padding-left: 160px;
-  }
-
-  #menu{
-    width: 160px;
-    margin-left: -160px;
-    background-color: #191818;
-  }
-  #menu.is-active{
-    margin-left: -0;
-  }
-
-  #menu, .menu-link {
-    left: 0;
-    position: fixed;
-    top: 0;
-  }
-  #layout, #menu, .menu-link{
-    transition: .2s ease-out;
-  }
-
-  #menuLink.is-active{
-    left: 160px;
-  }
-
-
-  #navbarMenu.active .navbar-burger {
-    left: 160px;
-  }
-  
+  background-color: #333; 
+  position: fixed;
+  top: 0rem; 
+  left: 0rem; 
+  font-size: 11px;
+  height: 4em;
+  padding: 1em;
+  width: 4em;
+  z-index: 100;
+}
+#layout{
+  position: relative;
+}
+#layout.is-active{
+  padding-left: 160px;
+}
+#menu{
+  width: 160px;
+  margin-left: -160px;
+  background-color: #191818;
+}
+#menu.is-active{
+  margin-left: -0;
+}
+#menu, .menu-link {
+  left: 0;
+  position: fixed;
+  top: 0;
+}
+#layout, #menu, .menu-link{
+  transition: .2s ease-out;
+}
+#menuLink.is-active{
+  left: 160px;
+}
+#navbarMenu.active .navbar-burger {
+  left: 160px;
+}
 .navbar-burger span{
   background-color: #fff;
   height: 0.3em;
@@ -82,23 +72,19 @@
   transition: .5s;
 }
 .navbar-burger:hover {
-  background-color: #333; /* 鼠标悬停时的背景颜色 */
+  background-color: #333; 
 }
-
-
 
 @media (min-width: 58em) {
   #layout {
-      left:0;
-      padding-left: 160px
+    left:0;
+    padding-left: 160px
   }
-
   #layout.is-active .menu-link,#menu,.menu-link {
-      left: 160px;
+    left: 160px;
   }
-
   .menu-link {
-      display: none;
-      position: fixed
+    display: none;
+    position: fixed
   }
 }
