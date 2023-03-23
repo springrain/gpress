@@ -46,7 +46,10 @@
 #menu{
   width: 160px;
   margin-left: -160px;
+  bottom: 0;
+  overflow-y: auto;
   background-color: #191818;
+  z-index: 1000;
 }
 #menu.is-active{
   margin-left: -0;
@@ -72,7 +75,7 @@
   transition: .5s;
 }
 .navbar-burger:hover {
-  background-color: #333; 
+  background-color: #000; 
 }
 
 @media (min-width: 58em) {
