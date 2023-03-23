@@ -1,232 +1,79 @@
 {{template "/admin/header.html"}}
 
 
-    <title>Admin - gpress</title>
+    <title>Admin - GPRESS</title>
     <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/admin.css">
 </head>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 获取菜单按钮和菜单项
+      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+      const $navbarMenus = Array.prototype.slice.call(document.querySelectorAll('.navbar-menu'), 0);
+  
+      // 添加点击事件
+      if ($navbarBurgers.length > 0) {
+        $navbarBurgers.forEach($el => {
+          $el.addEventListener('click', () => {
+            const target = $el.dataset.target;
+            const $target = document.getElementById(target);
+  
+            // 切换菜单的可见性
+            $el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+          });
+        });
+      }
+    });
+  </script>
 
 <body>
 
-    <!-- START NAV -->
+    <div class="columns is-gapless">
+  
+      <div class="column is-one-fifth">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
     
-    <!-- END NAV -->
-    <div id="layout" class="gp-docs gp-is-contained">
-        <aside class="menu gp-docs-nav">
-            <div>
-							<ul class="menu-list">
-								<li><a href="{{basePath}}" class="menu-heading">GPRESS</a></li>
-							</ul>
-							<ul class="menu-list">
-								<li><a>Get Started</a></li>
-								<li><a>Layouts</a></li>
-							</ul>
-							<ul class="menu-list">
-								<li><a>Base</a></li>
-								<li><a>Grids</a></li>
-								<li><a>Forms</a></li>
-								<li><a>Buttons</a></li>
-								<li><a>Tables</a></li>
-								<li><a>Menus</a></li>
-							</ul>
-							<ul class="menu-list">
-								<li><a>Tools</a></li>
-								<li><a>Customize</a></li>
-								<li><a>Extend</a></li>
-								<li><a>Releases</a></li>
-							</ul>
+          <div id="navbarMenu" class="navbar-menu">
+            <div class="gpress-menu">
+              <ul class="menu-list">
+                <li><a href="{{basePath}}" class="menu-heading">GPRESS</a></li>
+            </ul>
+            <ul class="menu-list">
+                <li><a>Get Started</a></li>
+                <li><a>Layouts</a></li>
+            </ul>
+            <ul class="menu-list">
+                <li><a>Base</a></li>
+                <li><a>Grids</a></li>
+                <li><a>Forms</a></li>
+                <li><a>Buttons</a></li>
+                <li><a>Tables</a></li>
+                <li><a>Menus</a></li>
+            </ul>
+            <ul class="menu-list">
+                <li><a>Tools</a></li>
+                <li><a>Customize</a></li>
+                <li><a>Extend</a></li>
+                <li><a>Releases</a></li>
+            </ul>
             </div>
-            
-        </aside>
-        <main class="pg-docs-main">
-            <div class="container">
-                <div class="columns">
-                    <div class="column is-12">
-											<!-- <nav class="navbar is-white">
-												<div class="container">
-														<div class="navbar-brand">
-																<a class="navbar-item brand-text" href="{{basePath}}">gpress</a>
-														</div>
-													 
-												</div>
-										</nav> -->
-
-
-                        <nav class="breadcrumb" aria-label="breadcrumbs">
-                            <ul>
-                                <li><a href="../">Bulma</a></li>
-                                <li><a href="../">Templates</a></li>
-                                <li><a href="../">Examples</a></li>
-                                <li class="is-active"><a href="#" aria-current="page">Admin</a></li>
-                            </ul>
-                        </nav>
-
-                        <div class="header">
-                            <h1>Get Started</h1>
-                            <h2>Start your next web project with Pure.</h2>
-                        </div>
-
-                        <section class="hero is-info welcome is-small">
-                            
-
-                            <div class="hero-body">
-                                <div class="container">
-                                    <h1 class="title">
-                                        Hello, Admin.
-                                    </h1>
-                                    <h2 class="subtitle">
-                                        I hope you are having a great day!
-                                    </h2>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="info-tiles">
-                            <div class="tile is-ancestor has-text-centered">
-                                <div class="tile is-parent">
-                                    <article class="tile is-child box">
-                                        <p class="title">439k</p>
-                                        <p class="subtitle">Users</p>
-                                    </article>
-                                </div>
-                                <div class="tile is-parent">
-                                    <article class="tile is-child box">
-                                        <p class="title">59k</p>
-                                        <p class="subtitle">Products</p>
-                                    </article>
-                                </div>
-                                <div class="tile is-parent">
-                                    <article class="tile is-child box">
-                                        <p class="title">3.4k</p>
-                                        <p class="subtitle">Open Orders</p>
-                                    </article>
-                                </div>
-                                <div class="tile is-parent">
-                                    <article class="tile is-child box">
-                                        <p class="title">19</p>
-                                        <p class="subtitle">Exceptions</p>
-                                    </article>
-                                </div>
-                            </div>
-                        </section>
-                        <div class="columns">
-                            <div class="column is-6">
-                                <div class="card events-card">
-                                    <header class="card-header">
-                                        <p class="card-header-title">
-                                            Events
-                                        </p>
-                                        <a href="#" class="card-header-icon" aria-label="more options">
-                          <span class="icon">
-                            <i class="fa fa-angle-down" aria-hidden="true"></i>
-                          </span>
-                        </a>
-                                    </header>
-                                    <div class="card-table">
-                                        <div class="content">
-                                            <table class="table is-fullwidth is-striped">
-                                                <tbody>
-                                                    <tr>
-                                                        <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                                        <td>Lorum ipsum dolem aire</td>
-                                                        <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                                        <td>Lorum ipsum dolem aire</td>
-                                                        <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                                        <td>Lorum ipsum dolem aire</td>
-                                                        <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                                        <td>Lorum ipsum dolem aire</td>
-                                                        <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                                        <td>Lorum ipsum dolem aire</td>
-                                                        <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                                        <td>Lorum ipsum dolem aire</td>
-                                                        <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
-                                                    </tr>
-                                   
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <footer class="card-footer">
-                                        <a href="#" class="card-footer-item">View All</a>
-                                    </footer>
-                                </div>
-                            </div>
-                            <div class="column is-6">
-                                <div class="card">
-                                    <header class="card-header">
-                                        <p class="card-header-title">
-                                            Inventory Search
-                                        </p>
-                                        <a href="#" class="card-header-icon" aria-label="more options">
-                          <span class="icon">
-                            <i class="fa fa-angle-down" aria-hidden="true"></i>
-                          </span>
-                        </a>
-                                    </header>
-                                    <div class="card-content">
-                                        <div class="content">
-                                            <div class="control has-icons-left has-icons-right">
-                                                <input class="input is-large" type="text" placeholder="">
-                                                <span class="icon is-medium is-left">
-                              <i class="fa fa-search"></i>
-                            </span>
-                                                <span class="icon is-medium is-right">
-                              <i class="fa fa-check"></i>
-                            </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <header class="card-header">
-                                        <p class="card-header-title">
-                                            User Search
-                                        </p>
-                                        <a href="#" class="card-header-icon" aria-label="more options">
-                          <span class="icon">
-                            <i class="fa fa-angle-down" aria-hidden="true"></i>
-                          </span>
-                        </a>
-                                    </header>
-                                    <div class="card-content">
-                                        <div class="content">
-                                            <div class="control has-icons-left has-icons-right">
-                                                <input class="input is-large" type="text" placeholder="">
-                                                <span class="icon is-medium is-left">
-                              <i class="fa fa-search"></i>
-                            </span>
-                                                <span class="icon is-medium is-right">
-                              <i class="fa fa-check"></i>
-                            </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+          </div>
+        </nav>
+      </div>
+    
+      <div class="column">
+        <!-- 右侧内容 -->
+      </div>
+  
     </div>
-
     
-
-
-    <script async type="text/javascript" src="{{basePath}}admin/js/bulma.js"></script>
-</body>
-
-</html>
+  
+  </body>
+  </html>
