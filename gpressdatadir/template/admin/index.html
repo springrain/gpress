@@ -6,19 +6,15 @@
 
 <body>
 
-    <div class="columns is-gapless">
-  
-      <div class="column">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-          <div class="navbar-brand">
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
-            </a>
-          </div>
-    
-          <div id="navbarMenu" class="navbar-menu">
+    <div id="layout" class=" is-gapless">
+      <a id="menuLink" role="button" class="navbar-burger burger menu-link" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+      <div id="menu">
+        <nav class="" role="navigation" aria-label="main navigation">
+          <div id="" class="">
             <div class="gpress-menu">
               <ul class="menu-list">
                 <li><a href="{{basePath}}" class="menu-heading">GPRESS</a></li>
@@ -46,8 +42,13 @@
         </nav>
       </div>
     
-      <div class="column">
+      <div id="main" >
         <!-- 右侧内容 -->
+        <h1>Documentation</h1>
+        <h2>Everything you need to create a website with Bulma</h2>
+        <div>
+          右侧内容区域
+        </div>
       </div>
 
   
@@ -58,22 +59,27 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // 获取菜单按钮和菜单项
-      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-      const $navbarMenus = Array.prototype.slice.call(document.querySelectorAll('.navbar-menu'), 0);
-  
-      // 添加点击事件
-      if ($navbarBurgers.length > 0) {
-        $navbarBurgers.forEach($el => {
-          $el.addEventListener('click', () => {
-            const target = $el.dataset.target;
-            const $target = document.getElementById(target);
-  
-            // 切换菜单的可见性
-            $el.classList.toggle('is-active');
-            $target.classList.toggle('is-active');
-          });
-        });
-      }
+      const $navbarBurgers = document.getElementById("menuLink")
+      const $layout =  document.getElementById("layout")
+      const $menu =  document.getElementById("menu")
+      const $main =  document.getElementById("main")
+      $navbarBurgers.addEventListener('click', () => {
+        // 切换菜单的可见性
+        $navbarBurgers.classList.toggle('is-active');
+        $layout.classList.toggle('is-active');
+        $menu.classList.toggle('is-active');
+        $main.classList.toggle('is-active');
+        if($main.classList.contains( 'is-active' )){
+          // console.log('window.innerWidth',window.innerWidth)
+          $layout.style.minWidth = (window.innerWidth + 160) + "px"
+          // console.log('$layout.style.minWidth',$layout.style.minWidth)
+
+        }else{
+
+          $layout.style.minWidth = (screen.width ) + "px"
+
+
+        }
+      });
     });
   </script>

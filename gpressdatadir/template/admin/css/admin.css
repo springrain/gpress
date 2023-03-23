@@ -1,6 +1,6 @@
 .gpress-menu {
   width: 10rem;
-  background: #191818;
+  
   font-size: 1.05rem;
   height: 100vh;
   font-family: Helvetica,Arial,sans-serif;
@@ -38,8 +38,38 @@
     height: 4em;
     padding: 1em;
     width: 4em;
-    z-index: 10;
+    z-index: 100;
   }
+  #layout{
+    position: relative;
+    
+  }
+  #layout.is-active{
+    padding-left: 160px;
+  }
+
+  #menu{
+    width: 160px;
+    margin-left: -160px;
+    background-color: #191818;
+  }
+  #menu.is-active{
+    margin-left: -0;
+  }
+
+  #menu, .menu-link {
+    left: 0;
+    position: fixed;
+    top: 0;
+  }
+  #layout, #menu, .menu-link{
+    transition: .2s ease-out;
+  }
+
+  #menuLink.is-active{
+    left: 160px;
+  }
+
 
   #navbarMenu.active .navbar-burger {
     left: 160px;
@@ -53,4 +83,22 @@
 }
 .navbar-burger:hover {
   background-color: #333; /* 鼠标悬停时的背景颜色 */
+}
+
+
+
+@media (min-width: 58em) {
+  #layout {
+      left:0;
+      padding-left: 160px
+  }
+
+  #layout.is-active .menu-link,#menu,.menu-link {
+      left: 160px;
+  }
+
+  .menu-link {
+      display: none;
+      position: fixed
+  }
 }
