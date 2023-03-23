@@ -46,7 +46,7 @@ func PathExists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
-	return !os.IsNotExist(err), err
+	//return !os.IsNotExist(err), err
 }
 
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展

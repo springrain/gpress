@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"gitee.com/gpress/gpress/bleves"
 	"gitee.com/gpress/gpress/constant"
+	"gitee.com/gpress/gpress/gbleve"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/model"
 	"gitee.com/gpress/gpress/util"
@@ -57,7 +57,7 @@ func LoadInstallConfig(installed bool) model.ConfigStruct {
 }
 
 func findConfig() (model.ConfigStruct, error) {
-	configIndex := bleves.IndexMap[constant.CONFIG_INDEX_NAME]
+	configIndex := gbleve.IndexMap[constant.CONFIG_INDEX_NAME]
 	query := bleve.NewQueryStringQuery("*")
 	serarchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
 	serarchRequest.Fields = []string{"*"}
@@ -96,7 +96,7 @@ func InsertConfig(ctx context.Context, config model.ConfigStruct) error {
 	// 清空配置,重新创建
 	DeleteAll(ctx, constant.CONFIG_INDEX_NAME)
 
-	configIndex := bleves.IndexMap[constant.CONFIG_INDEX_NAME]
+	configIndex := gbleve.IndexMap[constant.CONFIG_INDEX_NAME]
 
 	// basePath
 	basePath := make(map[string]string)
@@ -188,6 +188,6 @@ func UpdateInstall(ctx context.Context) error {
 		return err
 	}
 	// 更改安装状态
-	bleves.Installed = true
+	gbleve.Installed = true
 	return nil
 }

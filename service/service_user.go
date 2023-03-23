@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"gitee.com/gpress/gpress/bleves"
 	"gitee.com/gpress/gpress/constant"
+	"gitee.com/gpress/gpress/gbleve"
 	"gitee.com/gpress/gpress/util"
 	"github.com/blevesearch/bleve/v2"
 )
@@ -11,7 +11,7 @@ import (
 func InsertUser(ctx context.Context, account string, password string) error {
 	// 清空用户,只能有一个管理员
 	DeleteAll(ctx, constant.USER_INDEX_NAME)
-	userIndex := bleves.IndexMap[constant.USER_INDEX_NAME]
+	userIndex := gbleve.IndexMap[constant.USER_INDEX_NAME]
 	// 初始化数据
 	user := make(map[string]string)
 	id := util.FuncGenerateStringID()
@@ -24,7 +24,7 @@ func InsertUser(ctx context.Context, account string, password string) error {
 }
 
 func FindUserId(ctx context.Context, account string, password string) (string, error) {
-	userIndex := bleves.IndexMap[constant.USER_INDEX_NAME]
+	userIndex := gbleve.IndexMap[constant.USER_INDEX_NAME]
 
 	accountQuery := bleve.NewTermQuery(account)
 	accountQuery.SetField("account")

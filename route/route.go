@@ -2,8 +2,8 @@ package route
 
 import (
 	"context"
-	"gitee.com/gpress/gpress/bleves"
 	"gitee.com/gpress/gpress/constant"
+	"gitee.com/gpress/gpress/gbleve"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/service"
 	"gitee.com/gpress/gpress/util"
@@ -53,7 +53,7 @@ func RunServer() {
 		test["SortNo"] = "1"               // 排序
 		test["ID"] = "001"
 		// m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
-		r := bleves.IndexMap[constant.INDEX_NAV_MENU_NAME].Index("001", test)
+		r := gbleve.IndexMap[constant.INDEX_NAV_MENU_NAME].Index("001", test)
 		c.JSON(http.StatusOK, r)
 	})
 	h.GET("/update", func(ctx context.Context, c *app.RequestContext) {
@@ -100,7 +100,7 @@ func RunServer() {
 	})
 
 	h.GET("/getThis", func(ctx context.Context, c *app.RequestContext) {
-		index := bleves.IndexMap[constant.INDEX_NAV_MENU_NAME]
+		index := gbleve.IndexMap[constant.INDEX_NAV_MENU_NAME]
 		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&service.Active, &service.Active, &service.Inclusive, &service.Inclusive)
 		// 查询指定字段
 		queryIndexCode.SetField("Active")
@@ -120,14 +120,14 @@ func RunServer() {
 
 	// 安装
 	h.GET("/admin/install", func(ctx context.Context, c *app.RequestContext) {
-		if bleves.Installed { // 如果已经安装过了,跳转到登录
+		if gbleve.Installed { // 如果已经安装过了,跳转到登录
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
 			return
 		}
 		c.HTML(http.StatusOK, "/admin/install.html", nil)
 	})
 	h.POST("/admin/install", func(ctx context.Context, c *app.RequestContext) {
-		if bleves.Installed { // 如果已经安装过了,跳转到登录
+		if gbleve.Installed { // 如果已经安装过了,跳转到登录
 			c.Redirect(http.StatusOK, []byte("/admin/login"))
 			return
 		}
@@ -146,14 +146,14 @@ func RunServer() {
 
 	// 后台管理员登录
 	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
-		if !bleves.Installed { // 如果没有安装,跳转到安装
+		if !gbleve.Installed { // 如果没有安装,跳转到安装
 			c.Redirect(http.StatusOK, []byte("/admin/install"))
 			return
 		}
 		c.HTML(http.StatusOK, "/admin/login.html", nil)
 	})
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
-		if !bleves.Installed { // 如果没有安装,跳转到安装
+		if !gbleve.Installed { // 如果没有安装,跳转到安装
 			c.Redirect(http.StatusOK, []byte("/admin/install"))
 			return
 		}

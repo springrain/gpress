@@ -1,4 +1,4 @@
-package bleves
+package gbleve
 
 import (
 	"gitee.com/gpress/gpress/constant"

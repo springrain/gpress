@@ -3,14 +3,14 @@ package service
 import (
 	"context"
 	"fmt"
-	"gitee.com/gpress/gpress/bleves"
 	"gitee.com/gpress/gpress/constant"
+	"gitee.com/gpress/gpress/gbleve"
 	"gitee.com/gpress/gpress/logger"
 	"github.com/blevesearch/bleve/v2"
 )
 
 func GetNavMenu(pid string) (interface{}, error) {
-	navIndex := bleves.IndexMap[constant.INDEX_NAV_MENU_NAME]
+	navIndex := gbleve.IndexMap[constant.INDEX_NAV_MENU_NAME]
 	// PID 跟 Active 为查询字段
 	queryPID := bleve.NewTermQuery(pid)
 	queryPID.SetField("PID")

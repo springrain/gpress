@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
-	"gitee.com/gpress/gpress/bleves"
 	"gitee.com/gpress/gpress/constant"
+	"gitee.com/gpress/gpress/gbleve"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/util"
 	"github.com/blevesearch/bleve/v2"
@@ -16,7 +16,7 @@ import (
 // isRequired: 是否可以为空
 func FindIndexFieldResult(ctx context.Context, indexName string, isRequired int) (*bleve.SearchResult, error) {
 	var queryBleve *query.ConjunctionQuery
-	index := bleves.IndexMap[constant.INDEX_FIELD_INDEX_NAME]
+	index := gbleve.IndexMap[constant.INDEX_FIELD_INDEX_NAME]
 	// 查询指定表
 	queryIndexCode := bleve.NewTermQuery(indexName)
 	// 查询指定字段
@@ -78,7 +78,7 @@ func SaveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 		}
 
 	}
-	err = bleves.IndexMap[tableName].Index(id, newIndex)
+	err = gbleve.IndexMap[tableName].Index(id, newIndex)
 
 	if err != nil {
 		logger.FuncLogError(err)
@@ -94,7 +94,7 @@ func SaveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 
 func UpdateIndex(ctx context.Context, tableName string, indexId string, newMap map[string]interface{}) error {
 	// 查出原始数据
-	index := bleves.IndexMap[tableName]                  // 拿到index
+	index := gbleve.IndexMap[tableName]                  // 拿到index
 	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
 	// queryIndex := bleve.NewTermQuery(indexId)            //查询索引
 	// queryIndex.SetField("ID")
@@ -127,7 +127,7 @@ func UpdateIndex(ctx context.Context, tableName string, indexId string, newMap m
 }
 
 func DeleteAll(ctx context.Context, tableName string) error {
-	index := bleves.IndexMap[tableName]
+	index := gbleve.IndexMap[tableName]
 	count, err := index.DocCount()
 	if err != nil {
 		return err

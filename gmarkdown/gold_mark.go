@@ -1,4 +1,4 @@
-package markdowns
+package gmarkdown
 
 import (
 	"bytes"

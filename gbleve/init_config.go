@@ -1,30 +1,29 @@
-package bleves
+package gbleve
 
 import (
 	"gitee.com/gpress/gpress/constant"
 	"gitee.com/gpress/gpress/logger"
 	"gitee.com/gpress/gpress/model"
 	"gitee.com/gpress/gpress/util"
-	"time"
-
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
+	"time"
 )
 
-// initUser 初始化创建User索引
-func initUser() (bool, error) {
+// initConfig 初始化创建Config索引
+func initConfig() (bool, error) {
 	// 获取索引字段的表
 	indexField := IndexMap[constant.INDEX_FIELD_INDEX_NAME]
 	// 当前时间
 	now := time.Now()
 
 	// 用户表的 ID 字段
-	userId := model.IndexFieldStruct{
+	configId := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    constant.USER_INDEX_NAME,
-		IndexName:    "用户信息",
+		IndexCode:    constant.CONFIG_INDEX_NAME,
+		IndexName:    "配置信息",
 		FieldCode:    "id",
-		FieldName:    "用户ID",
+		FieldName:    "配置ID",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
@@ -32,18 +31,18 @@ func initUser() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	err := indexField.Index(userId.ID, userId)
+	err := indexField.Index(configId.ID, configId)
 	if err != nil {
 		logger.FuncLogError(err)
 		return false, err
 	}
-	// 用户表的 Account 字段
-	userAccount := model.IndexFieldStruct{
+	// 配置表的 configKey 字段
+	configKey := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    constant.USER_INDEX_NAME,
-		IndexName:    "用户信息",
-		FieldCode:    "account",
-		FieldName:    "账号",
+		IndexCode:    constant.CONFIG_INDEX_NAME,
+		IndexName:    "配置的configKey",
+		FieldCode:    "configKey",
+		FieldName:    "编码",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
@@ -51,18 +50,18 @@ func initUser() (bool, error) {
 		SortNo:       2,
 		Active:       1,
 	}
-	err = indexField.Index(userAccount.ID, userAccount)
+	err = indexField.Index(configKey.ID, configKey)
 	if err != nil {
 		logger.FuncLogError(err)
 		return false, err
 	}
-	// 用户表的 PassWord 字段
-	userPassWord := model.IndexFieldStruct{
+	// 用户表的 configValue 字段
+	configValue := model.IndexFieldStruct{
 		ID:           util.FuncGenerateStringID(),
-		IndexCode:    constant.USER_INDEX_NAME,
+		IndexCode:    constant.CONFIG_INDEX_NAME,
 		IndexName:    "用户信息",
-		FieldCode:    "password",
-		FieldName:    "密码",
+		FieldCode:    "configValue",
+		FieldName:    "用户名称",
 		FieldType:    3,
 		AnalyzerName: keyword.Name,
 		CreateTime:   now,
@@ -70,40 +69,21 @@ func initUser() (bool, error) {
 		SortNo:       3,
 		Active:       1,
 	}
-	err = indexField.Index(userPassWord.ID, userPassWord)
-	if err != nil {
-		logger.FuncLogError(err)
-		return false, err
-	}
-	// 用户表的 UserName 字段
-	userName := model.IndexFieldStruct{
-		ID:           util.FuncGenerateStringID(),
-		IndexCode:    constant.USER_INDEX_NAME,
-		IndexName:    "用户信息",
-		FieldCode:    "userName",
-		FieldName:    "用户名称",
-		FieldType:    3,
-		AnalyzerName: keyword.Name,
-		CreateTime:   now,
-		CreateUser:   constant.CREATE_USER,
-		SortNo:       4,
-		Active:       1,
-	}
-	err = indexField.Index(userName.ID, userName)
+	err = indexField.Index(configValue.ID, configValue)
 	if err != nil {
 		logger.FuncLogError(err)
 		return false, err
 	}
 
-	// 创建用户表的索引
+	// 创建配置表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
-	userIndex, err := bleve.New(constant.USER_INDEX_NAME, mapping)
+	configIndex, err := bleve.New(constant.CONFIG_INDEX_NAME, mapping)
 	if err != nil {
 		logger.FuncLogError(err)
 		return false, err
 	}
-	IndexMap[constant.USER_INDEX_NAME] = userIndex
+	IndexMap[constant.CONFIG_INDEX_NAME] = configIndex
 	return true, nil
 }
