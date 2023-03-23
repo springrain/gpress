@@ -14,6 +14,7 @@
 .gp-docs .gp-docs-nav{
   background: #191818;
   font-size: 1.05rem;
+  height: 100vh;
   font-family: Helvetica,Arial,sans-serif;
   overflow-y: auto;
 }
