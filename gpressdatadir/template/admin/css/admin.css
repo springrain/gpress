@@ -27,15 +27,12 @@
   border-top: 1px solid #333;
 }
 .navbar-burger {
-  background-color: #333; 
-  position: fixed;
-  top: 0rem; 
-  left: 0rem; 
+  background: rgba(0,0,0,.7);
+  display: block;
   font-size: 11px;
   height: 4em;
   padding: 1em;
   width: 4em;
-  z-index: 100;
 }
 #layout{
   position: relative;
