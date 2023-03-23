@@ -1,10 +1,62 @@
 {{template "/admin/header.html"}}
-
-
     <title>Admin - GPRESS</title>
     <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/admin.css">
 </head>
-<script>
+
+
+<body>
+
+    <div class="columns is-gapless">
+  
+      <div class="column">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
+    
+          <div id="navbarMenu" class="navbar-menu">
+            <div class="gpress-menu">
+              <ul class="menu-list">
+                <li><a href="{{basePath}}" class="menu-heading">GPRESS</a></li>
+              </ul>
+              <ul class="menu-list">
+                <li><a>Get Started</a></li>
+                <li><a>Layouts</a></li>
+              </ul>
+              <ul class="menu-list">
+                <li><a>Base</a></li>
+                <li><a>Grids</a></li>
+                <li><a>Forms</a></li>
+                <li><a>Buttons</a></li>
+                <li><a>Tables</a></li>
+                <li><a>Menus</a></li>
+              </ul>
+              <ul class="menu-list">
+                <li><a>Tools</a></li>
+                <li><a>Customize</a></li>
+                <li><a>Extend</a></li>
+                <li><a>Releases</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    
+      <div class="column">
+        <!-- 右侧内容 -->
+      </div>
+
+  
+    </div>
+    
+  </body>
+  </html>
+
+  <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 获取菜单按钮和菜单项
       const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
@@ -25,55 +77,3 @@
       }
     });
   </script>
-
-<body>
-
-    <div class="columns is-gapless">
-  
-      <div class="column is-one-fifth">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-          <div class="navbar-brand">
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
-            </a>
-          </div>
-    
-          <div id="navbarMenu" class="navbar-menu">
-            <div class="gpress-menu">
-              <ul class="menu-list">
-                <li><a href="{{basePath}}" class="menu-heading">GPRESS</a></li>
-            </ul>
-            <ul class="menu-list">
-                <li><a>Get Started</a></li>
-                <li><a>Layouts</a></li>
-            </ul>
-            <ul class="menu-list">
-                <li><a>Base</a></li>
-                <li><a>Grids</a></li>
-                <li><a>Forms</a></li>
-                <li><a>Buttons</a></li>
-                <li><a>Tables</a></li>
-                <li><a>Menus</a></li>
-            </ul>
-            <ul class="menu-list">
-                <li><a>Tools</a></li>
-                <li><a>Customize</a></li>
-                <li><a>Extend</a></li>
-                <li><a>Releases</a></li>
-            </ul>
-            </div>
-          </div>
-        </nav>
-      </div>
-    
-      <div class="column">
-        <!-- 右侧内容 -->
-      </div>
-  
-    </div>
-    
-  
-  </body>
-  </html>
