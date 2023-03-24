@@ -6,10 +6,6 @@ import (
 	"github.com/go-ego/gse"
 )
 
-const (
-	gseAnalyzerName = "gse"
-)
-
 // 注册gse中文分词器
 func initRegistergseAnalyzer() {
 	registry.RegisterTokenizer(gseAnalyzerName, gseTokenizerConstructor)
