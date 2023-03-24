@@ -78,7 +78,7 @@ func funcSass(sassFile string) (string, error) {
 		return fileUrl, err
 	}
 	fileUrl, err = funcSafeHTML(fileUrl)
-	//增加静态资源映射
-	h.StaticFile(fileUrl, filePath)
+	//增加静态资源映射,使用了static文件夹,不需要再映射了
+	//h.StaticFile(fileUrl, filePath)
 	return fileUrl, err
 }
