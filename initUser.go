@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 // initUser 初始化创建User索引
@@ -22,7 +21,7 @@ func initUser() (bool, error) {
 		FieldCode:    "id",
 		FieldName:    "用户ID",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -38,7 +37,7 @@ func initUser() (bool, error) {
 		FieldCode:    "account",
 		FieldName:    "账号",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -53,7 +52,7 @@ func initUser() (bool, error) {
 		FieldCode:    "password",
 		FieldName:    "密码",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -68,7 +67,7 @@ func initUser() (bool, error) {
 		FieldCode:    "userName",
 		FieldName:    "用户名称",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -79,7 +78,7 @@ func initUser() (bool, error) {
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	userIndex, err := bleve.New(userIndexName, mapping)
 	if err != nil {
 		FuncLogError(err)
