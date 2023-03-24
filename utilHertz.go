@@ -53,9 +53,19 @@ func loadTemplate(reload bool) error {
 				    h.StaticFile(relativePath, path)
 				}
 			*/
-			key := relativePath[:strings.LastIndex(relativePath, "/")+1]
-			value := path[:strings.Index(path, key)]
-			staticFileMap[key] = value
+			if strings.Contains(relativePath, "/js/") { //如果是js文件夹
+				key := relativePath[:strings.Index(relativePath, "/js/")+4]
+				value := path[:strings.Index(path, key)]
+				staticFileMap[key] = value
+			} else if strings.Contains(relativePath, "/css/") { //如果是css文件夹
+				key := relativePath[:strings.Index(relativePath, "/css/")+5]
+				value := path[:strings.Index(path, key)]
+				staticFileMap[key] = value
+			} else if strings.Contains(relativePath, "/image/") { //如果是image文件夹
+				key := relativePath[:strings.Index(relativePath, "/image/")+7]
+				value := path[:strings.Index(path, key)]
+				staticFileMap[key] = value
+			}
 
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
 			// 创建对应的模板
