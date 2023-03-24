@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 // 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init函数!!!
@@ -25,6 +26,9 @@ func init() {
 	if !bleveStatus { // 索引状态检查失败
 		panic("索引检查失败")
 	}
+	// 设置日志级别
+	hlog.SetLevel(hlog.LevelError)
+
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
 
