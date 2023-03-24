@@ -5,33 +5,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
-	"github.com/blevesearch/bleve/v2/mapping"
-)
-
-// 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
-var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
-
-// 逗号分词器的mapping
-var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
-
-// 中文分词器的mapping
-var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
-
-const (
-	fieldType_数字 = iota + 1
-	fieldType_日期
-	fieldType_文本框
-	fieldType_文本域
-	fieldType_富文本
-	fieldType_下拉框
-	fieldType_单选
-	fieldType_多选
-	fieldType_上传图片
-	fieldType_上传附件
-	fieldType_轮播图
-	fieldType_音频
-	fieldType_视频
 )
 
 // IndexFieldStruct 索引和字段(索引名:IndexField)
@@ -153,7 +126,7 @@ func checkBleveCreate() (bool, error) {
 func initIndexField() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	index, err := bleve.New(indexFieldIndexName, mapping)
 	if err != nil {
 		FuncLogError(err)

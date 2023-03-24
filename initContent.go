@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 func initContent() (bool, error) {
@@ -13,7 +12,7 @@ func initContent() (bool, error) {
 	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name // 这是要换成逗号分词吧
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 
 	// 获取当前时间
 	now := time.Now()
@@ -26,7 +25,7 @@ func initContent() (bool, error) {
 		FieldCode:    "ID",
 		FieldName:    "文章内容ID",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -42,7 +41,7 @@ func initContent() (bool, error) {
 		FieldCode:    "ModuleIndexCode",
 		FieldName:    "模型的Code",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -110,7 +109,7 @@ func initContent() (bool, error) {
 		FieldCode:    "PageURL",
 		FieldName:    "自身页面路径",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -177,7 +176,7 @@ func initContent() (bool, error) {
 		FieldCode:    "TemplateID",
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -209,7 +208,7 @@ func initContent() (bool, error) {
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       8,
@@ -224,7 +223,7 @@ func initContent() (bool, error) {
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -239,7 +238,7 @@ func initContent() (bool, error) {
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,
@@ -254,7 +253,7 @@ func initContent() (bool, error) {
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -269,7 +268,7 @@ func initContent() (bool, error) {
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,
