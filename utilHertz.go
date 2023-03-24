@@ -156,7 +156,7 @@ func updateInstall(ctx context.Context) error {
 
 // randStr 生成随机字符串
 func randStr(n int) string {
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = letters[rand.Intn(len(letters))]
