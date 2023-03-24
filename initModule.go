@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 func initModule() (bool, error) {
@@ -21,7 +20,7 @@ func initModule() (bool, error) {
 		FieldCode:    "ID",
 		FieldName:    "模型ID",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -37,7 +36,7 @@ func initModule() (bool, error) {
 		FieldCode:    "ModuleIndexCode",
 		FieldName:    "模型Code",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -52,7 +51,7 @@ func initModule() (bool, error) {
 		FieldCode:    "ModuleName",
 		FieldName:    "模型名称",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -67,7 +66,7 @@ func initModule() (bool, error) {
 		FieldCode:    "CreateTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -82,7 +81,7 @@ func initModule() (bool, error) {
 		FieldCode:    "UpdateTime",
 		FieldName:    "更新时间",
 		FieldType:    fieldType_日期,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -97,7 +96,7 @@ func initModule() (bool, error) {
 		FieldCode:    "CreateUser",
 		FieldName:    "创建人",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -112,7 +111,7 @@ func initModule() (bool, error) {
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -127,7 +126,7 @@ func initModule() (bool, error) {
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       8,
@@ -138,7 +137,7 @@ func initModule() (bool, error) {
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	moduleIndex, err := bleve.New(indexModuleName, mapping)
 	// 放到IndexMap中
 	IndexMap[indexModuleName] = moduleIndex

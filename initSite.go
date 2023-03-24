@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 // 初始化站点信息
@@ -14,7 +13,7 @@ func initSite() (bool, error) {
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	// 获取当前时间
 	now := time.Now()
 
@@ -26,7 +25,7 @@ func initSite() (bool, error) {
 		FieldCode:    "ID",
 		FieldName:    "站点信息ID",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -42,7 +41,7 @@ func initSite() (bool, error) {
 		FieldCode:    "Title",
 		FieldName:    "标题",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -93,7 +92,7 @@ func initSite() (bool, error) {
 		FieldCode:    "theme",
 		FieldName:    "默认主题",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -108,7 +107,7 @@ func initSite() (bool, error) {
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -123,7 +122,7 @@ func initSite() (bool, error) {
 		FieldCode:    "themeWAP",
 		FieldName:    "手机主题",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -138,7 +137,7 @@ func initSite() (bool, error) {
 		FieldCode:    "siteThemeWEIXIN",
 		FieldName:    "微信主题",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       8,
@@ -153,7 +152,7 @@ func initSite() (bool, error) {
 		FieldCode:    "Logo",
 		FieldName:    "Logo",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -168,7 +167,7 @@ func initSite() (bool, error) {
 		FieldCode:    "Favicon",
 		FieldName:    "Favicon",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,

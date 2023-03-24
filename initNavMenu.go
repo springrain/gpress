@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 // 导航菜单
@@ -22,7 +21,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "ID",
 		FieldName:    "导航菜单ID",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -39,7 +38,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "MenuName",
 		FieldName:    "菜单名称",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -55,7 +54,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "HrefURL",
 		FieldName:    "跳转路径",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -71,7 +70,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "HrefTarget",
 		FieldName:    "跳转方式",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -87,7 +86,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "PID",
 		FieldName:    "父菜单ID",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -103,7 +102,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -119,7 +118,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "ModuleIndexCode",
 		FieldName:    "Module的索引名称",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -151,7 +150,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "TemplateID",
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -167,7 +166,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "ChildTemplateID",
 		FieldName:    "子页面模板Id",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,
@@ -183,7 +182,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       11,
@@ -199,7 +198,7 @@ func initNavMenu() (bool, error) {
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       12,
@@ -211,7 +210,7 @@ func initNavMenu() (bool, error) {
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	navMenuIndex, err := bleve.New(indexNavMenuName, mapping)
 
 	// 放到IndexMap中

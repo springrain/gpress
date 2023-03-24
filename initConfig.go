@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 // initConfig 初始化创建Config索引
@@ -22,7 +21,7 @@ func initConfig() (bool, error) {
 		FieldCode:    "id",
 		FieldName:    "配置ID",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -38,7 +37,7 @@ func initConfig() (bool, error) {
 		FieldCode:    "basePath",
 		FieldName:    "基础路径",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -54,7 +53,7 @@ func initConfig() (bool, error) {
 		FieldCode:    "jwtSecret",
 		FieldName:    "jwt加密字符串",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -70,7 +69,7 @@ func initConfig() (bool, error) {
 		FieldCode:    "jwttokenKey",
 		FieldName:    "jwt的key",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -86,7 +85,7 @@ func initConfig() (bool, error) {
 		FieldCode:    "serverPort",
 		FieldName:    "服务器ip:端口",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -102,7 +101,7 @@ func initConfig() (bool, error) {
 		FieldCode:    "theme",
 		FieldName:    "主题",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -118,7 +117,7 @@ func initConfig() (bool, error) {
 		FieldCode:    "timeout",
 		FieldName:    "超时时间",
 		FieldType:    fieldType_数字,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       8,
@@ -129,7 +128,7 @@ func initConfig() (bool, error) {
 	// 创建配置表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	configIndex, err := bleve.New(configIndexName, mapping)
 	if err != nil {
 		FuncLogError(err)

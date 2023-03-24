@@ -12,7 +12,37 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
+	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/search/query"
+)
+
+// 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
+var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
+
+// 逗号分词器的mapping
+var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
+
+// 中文分词器的mapping
+var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
+
+// 避免引入错误的包
+const keywordAnalyzerName = keyword.Name
+
+const (
+	fieldType_数字 = iota + 1
+	fieldType_日期
+	fieldType_文本框
+	fieldType_文本域
+	fieldType_富文本
+	fieldType_下拉框
+	fieldType_单选
+	fieldType_多选
+	fieldType_上传图片
+	fieldType_上传附件
+	fieldType_轮播图
+	fieldType_音频
+	fieldType_视频
 )
 
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
