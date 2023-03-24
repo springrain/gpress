@@ -37,7 +37,7 @@ func TestCreate(t *testing.T) {
 	// addressMapping.SkipFreqNorm = true
 	addressMapping.DocValues = false
 	// 不分词,只保存,需要使用keyword分词器,注意是 github.com/blevesearch/bleve/v2/analysis/analyzer/keyword, token下也有一个keyword,别引错了!!!!!
-	// addressMapping.Analyzer = keyword.Name
+	// addressMapping.Analyzer keywordName
 	// gse中文分词器
 	// addressMapping.Analyzer = gseAnalyzerName
 	// 逗号(,)分词器

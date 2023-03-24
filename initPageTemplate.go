@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 )
 
 func initpageTemplateName() (bool, error) {
@@ -21,7 +20,7 @@ func initpageTemplateName() (bool, error) {
 		FieldCode:    "ID",
 		FieldName:    "页面模板id",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -37,7 +36,7 @@ func initpageTemplateName() (bool, error) {
 		FieldCode:    "TemplateName",
 		FieldName:    "模板名称",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -52,7 +51,7 @@ func initpageTemplateName() (bool, error) {
 		FieldCode:    "TemplatePath",
 		FieldName:    "模板路径",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -67,7 +66,7 @@ func initpageTemplateName() (bool, error) {
 		FieldCode:    "SortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -82,7 +81,7 @@ func initpageTemplateName() (bool, error) {
 		FieldCode:    "Active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
-		AnalyzerName: keyword.Name,
+		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -93,7 +92,7 @@ func initpageTemplateName() (bool, error) {
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keyword.Name
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	pageTemplateIndex, err := bleve.New(indexPageTemplateName, mapping)
 
 	// 放到IndexMap中
