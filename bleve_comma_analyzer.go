@@ -6,8 +6,6 @@ import (
 	"github.com/blevesearch/bleve/v2/registry"
 )
 
-const commaAnalyzerName = "comma"
-
 // 注册逗号分词器
 func initRegisterCommaAnalyzer() {
 	registry.RegisterTokenizer(commaAnalyzerName, commaTokenizerConstructor)
