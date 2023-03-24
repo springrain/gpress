@@ -189,6 +189,7 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 	}
 	responseData.StatusCode = 200
 	responseData.Message = "保存成功"
+	responseData.Data = id
 	return responseData, err
 }
 
@@ -208,7 +209,7 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	// 如果没有查出来数据 证明数据错误
 	if len(result.Hits) <= 0 {
 		FuncLogError(err)
-		return fmt.Errorf("此数据不存在 ,请检查数据")
+		return errors.New("此数据不存在 ,请检查数据")
 	}
 	oldMap := result.Hits[0].Fields
 
