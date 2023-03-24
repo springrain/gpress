@@ -158,7 +158,7 @@ func findIndexFieldStruct(ctx context.Context, indexName string, Required int) (
 
 // 保存新索引
 func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableName string) (ResponseData, error) {
-	SearchResult, err := findIndexFieldResult(ctx, tableName, 1)
+	searchResult, err := findIndexFieldResult(ctx, tableName, 1)
 
 	responseData := ResponseData{StatusCode: 1}
 	if err != nil {
@@ -169,7 +169,7 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 	}
 	id := FuncGenerateStringID()
 	newIndex["ID"] = id
-	result := SearchResult.Hits
+	result := searchResult.Hits
 
 	for _, v := range result {
 		tmp := v.Fields["FieldCode"].(string) // 转为字符串
