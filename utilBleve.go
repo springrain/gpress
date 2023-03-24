@@ -97,7 +97,7 @@ var inclusive = true
 
 // findIndexFieldResult 获取表中符合条件字段
 // indexName: 表名/索引名
-// Required: 是否可以为空
+// Required: 字段是否可以为空,0查询所有字段,1查询必填字段
 func findIndexFieldResult(ctx context.Context, indexName string, Required int) (*bleve.SearchResult, error) {
 	var queryBleve *query.ConjunctionQuery
 	index := IndexMap[indexFieldIndexName]
@@ -105,7 +105,7 @@ func findIndexFieldResult(ctx context.Context, indexName string, Required int) (
 	queryIndexCode := bleve.NewTermQuery(indexName)
 	// 查询指定字段
 	queryIndexCode.SetField("IndexCode")
-	if Required != 1 && Required != 0 {
+	if Required == 0 { //可以为空
 		queryBleve = bleve.NewConjunctionQuery(queryIndexCode)
 	} else {
 		var f = float64(Required)
@@ -129,9 +129,8 @@ func findIndexFieldResult(ctx context.Context, indexName string, Required int) (
 
 // findIndexFieldStruct 获取表中符合条件字段,返回Struct对象
 // indexName: 表名/索引名
-// Required: 是否可以为空
-func findIndexFieldStruct(ctx context.Context, indexName string, Required int) ([]IndexFieldStruct, error) {
-	searchResult, err := findIndexFieldResult(ctx, indexName, Required)
+func findIndexFieldStruct(ctx context.Context, indexName string) ([]IndexFieldStruct, error) {
+	searchResult, err := findIndexFieldResult(ctx, indexName, 0)
 	if err != nil {
 		FuncLogError(err)
 		return nil, err
