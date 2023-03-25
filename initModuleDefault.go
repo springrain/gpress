@@ -204,7 +204,7 @@ func initModuleDefault() (bool, error) {
 	indexInfo.Index(indexModuleDefaultName, IndexInfoStruct{
 		ID:         indexModuleDefaultName,
 		Name:       "默认模型",
-		Code:       "module_default",
+		Code:       indexModuleDefaultName,
 		IndexType:  "module",
 		CreateTime: now,
 		UpdateTime: now,
