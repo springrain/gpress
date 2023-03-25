@@ -111,7 +111,7 @@ var inclusive = true
 // Required: 字段是否可以为空,0查询所有字段,1查询必填字段
 func findIndexFieldResult(ctx context.Context, indexName string, Required int) (*bleve.SearchResult, error) {
 	var queryBleve *query.ConjunctionQuery
-	index := IndexMap[indexFieldIndexName]
+	index := IndexMap[indexFieldName]
 	// 查询指定表
 	queryIndexCode := bleve.NewTermQuery(indexName)
 	// 查询指定字段
@@ -131,8 +131,8 @@ func findIndexFieldResult(ctx context.Context, indexName string, Required int) (
 	searchRequest.Fields = []string{"*"}
 
 	// 按照 SortNo 正序排列.
-	// 先将按"SortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
-	searchRequest.SortBy([]string{"SortNo", "-_score", "_id"})
+	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
+	searchRequest.SortBy([]string{"sortNo", "-_score", "_id"})
 
 	searchResult, err := index.SearchInContext(ctx, searchRequest)
 	return searchResult, err
@@ -178,7 +178,7 @@ func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableNam
 		return responseData, err
 	}
 	id := FuncGenerateStringID()
-	newIndex["ID"] = id
+	newIndex["id"] = id
 	result := searchResult.Hits
 
 	for _, v := range result {
@@ -209,7 +209,7 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	index := IndexMap[tableName]                         // 拿到index
 	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
 	// queryIndex := bleve.NewTermQuery(indexId)            //查询索引
-	// queryIndex.SetField("ID")
+	// queryIndex.SetField("id")
 	searchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
 	searchRequest.Fields = []string{"*"} // 查询所有字段
 	result, err := index.SearchInContext(ctx, searchRequest)
