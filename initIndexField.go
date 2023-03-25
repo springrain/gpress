@@ -7,7 +7,7 @@ import (
 	"github.com/blevesearch/bleve/v2"
 )
 
-// IndexFieldStruct 索引和字段(索引名:IndexField)
+// IndexFieldStruct 索引和字段(索引名:indexField)
 // 记录所有索引字段code和中文说明.
 // 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)
 // 这个可能是唯一的Struct......
@@ -16,8 +16,6 @@ type IndexFieldStruct struct {
 	ID string
 	// IndexCode 索引代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
 	IndexCode string
-	// IndexCode 索引名称,类似表名中文说明
-	IndexName string
 	// BusinessID  业务ID,处理业务记录临时增加的字段,意外情况
 	BusinessID string
 	// FieldCode  字段代码
@@ -36,9 +34,9 @@ type IndexFieldStruct struct {
 	AnalyzerName string
 	// CreateTime 创建时间
 	CreateTime time.Time
-	// CreateTime 更新时间
+	// UpdateTime 更新时间
 	UpdateTime time.Time
-	// AnalyzerName  创建人,初始化 system
+	// CreateUser  创建人,初始化 system
 	CreateUser string
 	// SortNo 排序
 	SortNo int
@@ -92,7 +90,8 @@ func checkBleveCreate() (bool, error) {
 		FuncLogError(errMkdir)
 		return false, errMkdir
 	}
-
+	// 初始化IndexInfo
+	initIndexInfo()
 	// 初始化IndexField
 	initIndexField()
 
@@ -104,11 +103,7 @@ func checkBleveCreate() (bool, error) {
 	// 初始化站点信息表
 	initSite()
 
-	// 初始化文章模型的类型表
-	initModule()
-	// 初始化文章默认模型的记录,往Module表里插入记录,不创建Index
-	// 在IndexField表里设置IndexCode='Module',记录所有的Module.
-	// 然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
+	// 初始化文章默认模型的记录,indexInfo indexType="module". 只是记录,并不创建index,全部保存到context里,用于全局检索
 	initModuleDefault()
 
 	// 初始化文章内容
@@ -127,11 +122,11 @@ func initIndexField() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	index, err := bleve.New(indexFieldIndexName, mapping)
+	index, err := bleve.New(indexFieldName, mapping)
 	if err != nil {
 		FuncLogError(err)
 		return false, err
 	}
-	IndexMap[indexFieldIndexName] = index
+	IndexMap[indexFieldName] = index
 	return true, nil
 }

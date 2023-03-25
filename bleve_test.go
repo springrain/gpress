@@ -82,11 +82,11 @@ func TestSave(t *testing.T) {
 	}
 
 	user3 := make(map[string]interface{})
-	user3["Id"] = "userId 3"
+	user3["id"] = "userId 3"
 	user3["Name"] = "测试中文名称 3"
 	user3["Address"] = "完,美"
 	user3["Age"] = 36
-	user3["CreateTime"] = time.Now()
+	user3["createTime"] = time.Now()
 
 	index, _ := bleve.Open(indexName)
 	index.Index(user.Id, user)
@@ -169,7 +169,7 @@ func TestSearchDate(t *testing.T) {
 	end := time.Now()
 	querynum := bleve.NewDateRangeQuery(start, end)
 	// 指定查询的字段
-	querynum.SetField("CreateTime")
+	querynum.SetField("createTime")
 
 	// searchRequest := bleve.NewSearchRequest(querynum)
 	searchRequest := bleve.NewSearchRequestOptions(querynum, size, from, false)
@@ -211,9 +211,9 @@ func TestSearchWhere(t *testing.T) {
 }
 
 func TestSearchOrder(t *testing.T) {
-	index := IndexMap[indexFieldIndexName]
+	index := IndexMap[indexFieldName]
 	// 查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleve.NewTermQuery(userIndexName)
+	query := bleve.NewTermQuery(indexUserName)
 	// query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	// 指定查询的字段
 	query.SetField("IndexCode")
@@ -221,14 +221,14 @@ func TestSearchOrder(t *testing.T) {
 	searchRequest := bleve.NewSearchRequestOptions(query, size, from, false)
 
 	// 按照 SortNo 正序排列.
-	// 先将按"SortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
-	searchRequest.SortBy([]string{"SortNo", "-_score", "_id"})
+	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
+	searchRequest.SortBy([]string{"sortNo", "-_score", "_id"})
 	// 按照 SortNo 降序排列.
 	// searchRequest.SortBy([]string{"-SortNo", "-_score", "_id"})
 
 	// searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 	// 查询所有的字段
-	searchRequest.Fields = []string{"SortNo"}
+	searchRequest.Fields = []string{"sortNo"}
 	searchResult, _ := index.SearchInContext(ctx, searchRequest)
 	// 本次查询的总条数,用于分页
 	fmt.Println("总条数:", searchResult.Total)
