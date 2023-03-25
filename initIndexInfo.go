@@ -9,23 +9,23 @@ import (
 // IndexInfoStruct 记录所有的表信息(索引名:indexInfo)
 type IndexInfoStruct struct {
 	// ID 主键 值为 IndexName,也就是表名
-	ID string
+	ID string `json:"id"`
 	// Name 索引名称,类似表名中文说明
-	Name string
+	Name string `json:"name,omitempty"`
 	// Code 索引代码
-	Code string
+	Code string `json:"code,omitempty"`
 	// IndexType index/module 索引和模型,两种类型
-	IndexType string
+	IndexType string `json:"indexType,omitempty"`
 	// CreateTime 创建时间
-	CreateTime time.Time
+	CreateTime time.Time `json:"createTime,omitempty"`
 	// UpdateTime 更新时间
-	UpdateTime time.Time
+	UpdateTime time.Time `json:"updateTime,omitempty"`
 	// CreateUser  创建人,初始化 system
-	CreateUser string
+	CreateUser string `json:"createUser,omitempty"`
 	// SortNo 排序
-	SortNo int
+	SortNo int `json:"sortNo,omitempty"`
 	// 是否有效 无效(0),正常显示(1),界面不显示(3)
-	Active int
+	Active int `json:"active,omitempty"`
 }
 
 // initIndexInfo 初始化创建indexInfo索引
