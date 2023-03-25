@@ -1,0 +1,69 @@
+{{template "/admin/header.html"}}
+  <title>indexInfo - GPRESS</title>
+{{template "/admin/bodystart.html"}}
+
+<section class="section">
+  <div class="container">
+    <!-- 搜索表单 -->
+    <form class="field is-horizontal" action="#" method="POST">
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" placeholder="Search...">
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-link" type="submit">Search</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- 列表 -->
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>列1</th>
+          <th>列2</th>
+          <th>列3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>行1列1</td>
+          <td>行1列2</td>
+          <td>行1列3</td>
+        </tr>
+        <tr>
+          <td>行2列1</td>
+          <td>行2列2</td>
+          <td>行2列3</td>
+        </tr>
+        <tr>
+          <td>行3列1</td>
+          <td>行3列2</td>
+          <td>行3列3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 分页条 -->
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      <ul class="pagination-list">
+        <li><a class="pagination-link is-current" aria-label="Goto page 1">1</a></li>
+        <li><a class="pagination-link" aria-label="Goto page 2">2</a></li>
+        <li><a class="pagination-link" aria-label="Goto page 3">3</a></li>
+        <li><a class="pagination-link" aria-label="Goto page 4">4</a></li>
+        <li><a class="pagination-link" aria-label="Goto page 5">5</a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+
+
+
+
+        
+{{template "/admin/bodyend.html"}}
+     
