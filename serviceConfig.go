@@ -74,9 +74,9 @@ type configStruct struct {
 // insertConfig 插入config
 func insertConfig(ctx context.Context, config configStruct) error {
 	// 清空配置,重新创建
-	deleteAll(ctx, configIndexName)
+	deleteAll(ctx, indexConfigName)
 
-	configIndex := IndexMap[configIndexName]
+	configIndex := IndexMap[indexConfigName]
 	ID := FuncGenerateStringID()
 
 	m := make(map[string]interface{})
@@ -88,7 +88,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 }
 
 func findConfig() (configStruct, error) {
-	configIndex := IndexMap[configIndexName]
+	configIndex := IndexMap[indexConfigName]
 	query := bleve.NewQueryStringQuery("*")
 	serarchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
 	serarchRequest.Fields = []string{"*"}
@@ -97,7 +97,7 @@ func findConfig() (configStruct, error) {
 	if err != nil {
 		return config, err
 	}
-	m, err := result2Map(configIndexName, result)
+	m, err := result2Map(indexConfigName, result)
 	if err != nil {
 		return config, err
 	}

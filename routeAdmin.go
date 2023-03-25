@@ -35,23 +35,23 @@ func initAdminRoute() {
 		test["HrefTarget"] = "跳转方式"
 		test["PID"] = "0" // 顶级菜单目录
 		test["ComCode"] = "使用逗号分割,字符串,测试"
-		test["Active"] = 1    // 是否有效
+		test["active"] = 1    // 是否有效
 		test["themePC"] = "1" // 是否pc主题
 		test["ModuleIndexCode"] = "Module的索引名称"
 		test["TemplateID"] = "010101"      // 模板Id
 		test["ChildTemplateID"] = "010201" // 子页面模板Id
-		test["SortNo"] = "1"               // 排序
-		test["ID"] = "001"
+		test["sortNo"] = "1"               // 排序
+		test["id"] = "001"
 		// m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
 		r := IndexMap[indexNavMenuName].Index("001", test)
 		c.JSON(http.StatusOK, r)
 	})
 	h.GET("/update", func(ctx context.Context, c *app.RequestContext) {
 		test := make(map[string]interface{})
-		test["ID"] = "001"
+		test["id"] = "001"
 
 		test["ChildTemplateID"] = "010202" // 子页面模板Id
-		test["SortNo"] = "1"               // 排序
+		test["sortNo"] = "1"               // 排序
 		// r := IndexMap[indexNavMenuName].Index("001", test)
 		x := updateIndex(ctx, indexNavMenuName, "001", test)
 		// m, _ := saveNexIndex(test, indexNavMenuName)
@@ -67,7 +67,7 @@ func initAdminRoute() {
 		test["TemplateID"] = "模板Id"
 		test["ModuleIndexCode"] = "ModuleIndexCode"
 		test["ChildTemplateID"] = "子页面模板Id"
-		test["Active"] = 1
+		test["active"] = 1
 		test["themePC"] = "PC主题"
 		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
 		c.JSON(http.StatusOK, m)
@@ -82,7 +82,7 @@ func initAdminRoute() {
 		test["TemplateID"] = "模板Id"
 		test["ModuleIndexCode"] = "ModuleIndexCode"
 		test["ChildTemplateID"] = "子页面模板Id"
-		test["Active"] = 1
+		test["active"] = 1
 		test["themePC"] = "PC主题"
 		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
 		c.JSON(http.StatusOK, m)
@@ -91,7 +91,7 @@ func initAdminRoute() {
 		index := IndexMap[indexNavMenuName]
 		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
 		// 查询指定字段
-		queryIndexCode.SetField("Active")
+		queryIndexCode.SetField("active")
 		// query := bleve.NewQueryStringQuery("")
 		serarch := bleve.NewSearchRequestOptions(queryIndexCode, 1000, 0, false)
 		// 查询所有字段

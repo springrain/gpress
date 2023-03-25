@@ -7,16 +7,18 @@ const (
 	datadir = "gpressdatadir/"
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
 	bleveDataDir = datadir + "bleve/"
+	// 索引表信息的名称
+	indexInfoName = bleveDataDir + "indexInfo"
 	// 索引字段的名称
-	indexFieldIndexName = bleveDataDir + "indexField"
+	indexFieldName = bleveDataDir + "indexField"
 
 	// config 配置的索引名称
-	configIndexName = bleveDataDir + "config"
+	indexConfigName = bleveDataDir + "config"
 
 	// user 用户的索引名称
-	userIndexName = bleveDataDir + "user"
+	indexUserName = bleveDataDir + "user"
 	// site  站点信息
-	indexSiteIndexName = bleveDataDir + "site"
+	indexSiteName = bleveDataDir + "site"
 	// 页面模板
 	indexPageTemplateName = bleveDataDir + "pageTemplate"
 	// 导航菜单

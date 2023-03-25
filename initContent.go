@@ -7,7 +7,7 @@ import (
 )
 
 func initContent() (bool, error) {
-	indexField := IndexMap[indexFieldIndexName]
+	indexField := IndexMap[indexFieldName]
 
 	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
@@ -21,8 +21,7 @@ func initContent() (bool, error) {
 	contentId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "ID",
+		FieldCode:    "id",
 		FieldName:    "文章内容ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -34,11 +33,10 @@ func initContent() (bool, error) {
 	// 放入文件中
 	indexField.Index(contentId.ID, contentId)
 
-	contentModuleIndexCode := IndexFieldStruct{
+	contentModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "ModuleIndexCode",
+		FieldCode:    "moduleID",
 		FieldName:    "模型的Code",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -47,12 +45,11 @@ func initContent() (bool, error) {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(contentModuleIndexCode.ID, contentModuleIndexCode)
+	indexField.Index(contentModuleID.ID, contentModuleID)
 	contentTitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexContentName,
-		IndexName: "文章内容",
-		FieldCode: "Title",
+		FieldCode: "title",
 		FieldName: "标题",
 		FieldType: fieldType_文本框,
 		// 文章标题使用中文分词
@@ -63,14 +60,13 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentTitle.ID, contentTitle)
-	// Title 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("Title", gseAnalyzerMapping)
+	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
-	contentKeyWords := IndexFieldStruct{
+	contentKeyword := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexContentName,
-		IndexName: "文章内容",
-		FieldCode: "KeyWords",
+		FieldCode: "keyword",
 		FieldName: "关键字",
 		FieldType: fieldType_文本框,
 		// 文章关键字使用逗号分词器
@@ -80,15 +76,14 @@ func initContent() (bool, error) {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(contentKeyWords.ID, contentKeyWords)
-	// KeyWords 字段使用 逗号分词器的mapping commaAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("KeyWords", commaAnalyzerMapping)
+	indexField.Index(contentKeyword.ID, contentKeyword)
+	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
 	contentDescription := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexContentName,
-		IndexName: "文章内容",
-		FieldCode: "Description",
+		FieldCode: "description",
 		FieldName: "站点描述",
 		FieldType: fieldType_文本框,
 		// 文章描述使用中文分词器
@@ -99,14 +94,13 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentDescription.ID, contentDescription)
-	// Description 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("Description", gseAnalyzerMapping)
+	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
 	contentPageURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "PageURL",
+		FieldCode:    "pageURL",
 		FieldName:    "自身页面路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -120,8 +114,7 @@ func initContent() (bool, error) {
 	contentSubtitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexContentName,
-		IndexName: "文章内容",
-		FieldCode: "Subtitle",
+		FieldCode: "subtitle",
 		FieldName: "副标题",
 		FieldType: fieldType_文本框,
 		// 文章副标题使用中文分词器
@@ -132,15 +125,14 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentSubtitle.ID, contentSubtitle)
-	// Subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("Subtitle", gseAnalyzerMapping)
+	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
 	contentNavMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "NavMenuId",
-		FieldName:    "导航ID,逗号(,)隔开",
+		FieldCode:    "navMenuId",
+		FieldName:    "导航ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
 		CreateTime:   now,
@@ -149,15 +141,14 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentNavMenuId.ID, contentNavMenuId)
-	// NavMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuId", commaAnalyzerMapping)
+	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
+	// mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
 
-	contentNavMenuName := IndexFieldStruct{
+	contentNavMenuNames := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "NavMenuName",
-		FieldName:    "导航名称",
+		FieldCode:    "navMenuNames",
+		FieldName:    "导航名称,逗号(,)隔开",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
 		CreateTime:   now,
@@ -165,15 +156,14 @@ func initContent() (bool, error) {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(contentNavMenuName.ID, contentNavMenuName)
-	// NavMenuName 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("NavMenuName", gseAnalyzerMapping)
+	indexField.Index(contentNavMenuNames.ID, contentNavMenuNames)
+	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
 
 	contentTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "TemplateID",
+		FieldCode:    "templateID",
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -187,8 +177,7 @@ func initContent() (bool, error) {
 	contentContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "Content",
+		FieldCode:    "content",
 		FieldName:    "文章内容",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
@@ -198,14 +187,13 @@ func initContent() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(contentContent.ID, contentContent)
-	// Content 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("Content", gseAnalyzerMapping)
+	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
+	mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
 	contentCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "CreateTime",
+		FieldCode:    "createTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: keywordAnalyzerName,
@@ -219,8 +207,7 @@ func initContent() (bool, error) {
 	moduleUpdateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "UpdateTime",
+		FieldCode:    "updateTime",
 		FieldName:    "更新时间",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -234,8 +221,7 @@ func initContent() (bool, error) {
 	moduleCreateUser := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "CreateUser",
+		FieldCode:    "createUser",
 		FieldName:    "创建人",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -249,8 +235,7 @@ func initContent() (bool, error) {
 	moduleSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "SortNo",
+		FieldCode:    "sortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -264,8 +249,7 @@ func initContent() (bool, error) {
 	moduleActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		IndexName:    "文章内容",
-		FieldCode:    "Active",
+		FieldCode:    "active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: keywordAnalyzerName,
@@ -284,5 +268,19 @@ func initContent() (bool, error) {
 		FuncLogError(err)
 		return false, err
 	}
+
+	//保存表信息
+	indexInfo := IndexMap[indexInfoName]
+	indexInfo.Index(indexContentName, IndexInfoStruct{
+		ID:         indexContentName,
+		Name:       "文章内容",
+		Code:       "content",
+		IndexType:  "index",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     5,
+		Active:     1,
+	})
 	return true, nil
 }
