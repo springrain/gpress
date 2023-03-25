@@ -131,7 +131,7 @@ func initContent() (bool, error) {
 	contentNavMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		FieldCode:    "navMenuId",
+		FieldCode:    "navMenuID",
 		FieldName:    "导航ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,

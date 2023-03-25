@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
@@ -10,111 +9,37 @@ import (
 // IndexFieldStruct 索引和字段(索引名:indexField)
 // 记录所有索引字段code和中文说明.
 // 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)
-// 这个可能是唯一的Struct......
 type IndexFieldStruct struct {
 	// ID 主键
-	ID string
+	ID string `json:"id"`
 	// IndexCode 索引代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
-	IndexCode string
+	IndexCode string `json:"indexCode,omitempty"`
 	// BusinessID  业务ID,处理业务记录临时增加的字段,意外情况
-	BusinessID string
+	BusinessID string `json:"businessID,omitempty"`
 	// FieldCode  字段代码
-	FieldCode string
+	FieldCode string `json:"fFieldCode,omitempty"`
 	// FieldName  字段中文名称
-	FieldName string
+	FieldName string `json:"fieldName,omitempty"`
 	// FieldType  字段类型,数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)
-	FieldType int
+	FieldType int `json:"fieldType,omitempty"`
 	// FieldFormat 数据格式,用于日期或者数字
-	FieldFormat string
+	FieldFormat string `json:"fieldFormat,omitempty"`
 	// Required 字段是否为空. 0可以为空,1必填
-	Required int
+	Required int `json:"required,omitempty"`
 	// DefaultValue  默认值
-	DefaultValue string
+	DefaultValue string `json:"defaultValue,omitempty"`
 	// AnalyzerName  分词器名称
-	AnalyzerName string
+	AnalyzerName string `json:"analyzerName,omitempty"`
 	// CreateTime 创建时间
-	CreateTime time.Time
+	CreateTime time.Time `json:"createTime,omitempty"`
 	// UpdateTime 更新时间
-	UpdateTime time.Time
+	UpdateTime time.Time `json:"updateTime,omitempty"`
 	// CreateUser  创建人,初始化 system
-	CreateUser string
+	CreateUser string `json:"createUser,omitempty"`
 	// SortNo 排序
-	SortNo int
+	SortNo int `json:"sortNo,omitempty"`
 	// 是否有效 无效(0),正常显示(1),界面不显示(3)
-	Active int
-}
-
-// 初始化 bleve 索引
-func checkBleveStatus() bool {
-
-	// 注册逗号分词器
-	initRegisterCommaAnalyzer()
-	// 注册gse中文分词器
-	initRegistergseAnalyzer()
-
-	// 初始化分词器
-	commaAnalyzerMapping.DocValues = false
-	commaAnalyzerMapping.Analyzer = commaAnalyzerName
-	gseAnalyzerMapping.DocValues = false
-	gseAnalyzerMapping.Analyzer = gseAnalyzerName
-
-	status, err := checkBleveCreate()
-	if err != nil {
-		FuncLogError(err)
-		return false
-	}
-	return status
-}
-
-// checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
-func checkBleveCreate() (bool, error) {
-	if pathExists(bleveDataDir) { // 如果已经存在目录,遍历索引,放到全局map里
-		fileInfo, _ := os.ReadDir(bleveDataDir)
-		for _, dir := range fileInfo {
-			if !dir.IsDir() {
-				continue
-			}
-
-			// 打开所有的索引,放到map里,一个索引只能打开一次.
-			index, err := bleve.Open(bleveDataDir + dir.Name())
-			if err != nil {
-				return false, err
-			}
-			IndexMap[bleveDataDir+dir.Name()] = index
-		}
-		return true, nil
-	}
-	// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
-	errMkdir := os.Mkdir(bleveDataDir, os.ModePerm)
-	if errMkdir != nil {
-		FuncLogError(errMkdir)
-		return false, errMkdir
-	}
-	// 初始化IndexInfo
-	initIndexInfo()
-	// 初始化IndexField
-	initIndexField()
-
-	// 初始化配置
-	initConfig()
-	// 初始化用户表
-	initUser()
-
-	// 初始化站点信息表
-	initSite()
-
-	// 初始化文章默认模型的记录,indexInfo indexType="module". 只是记录,并不创建index,全部保存到context里,用于全局检索
-	initModuleDefault()
-
-	// 初始化文章内容
-	initContent()
-
-	// 初始化导航菜单
-	initNavMenu()
-
-	// 初始化页面模板
-	initpageTemplateName()
-	return true, nil
+	Active int `json:"active,omitempty"`
 }
 
 // initIndexField 初始化创建IndexField索引

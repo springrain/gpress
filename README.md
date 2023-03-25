@@ -25,23 +25,32 @@
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 值使用逗号(,)隔开,使用 commaAnalyzerName 分词器,实现类似sql in 的效果.  
 
-在IndexField表里设置IndexCode='Module',记录所有的Module.  
-然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
+在IndexInfo表里设置indexType='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索    
 
 
 ID默认使用时间戳(23位)+随机数(9位),全局唯一      
+### 索引信息(索引名:indexInfo)
 
+| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
+| ----------- | ----------- | ----------- | ------- | ----------- |
+| id          | string      | 主键         | 否      |    -  |
+| code        | string      | 索引Code     | 否      |    -  |
+| name        | string      | 索引名称     | 否      |    -  |
+| indexType   | string      | 索引类型     | 否      |  index:索引.  module:模型  |
+| createTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
+| ipdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| createUser  | string      | 创建人       | -       |  初始化 system  |
+| sortNo      | int         | 排序         | -       |  正序  |
+| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 索引和字段(索引名:IndexField)
+### 索引字段(索引名:indexField)
 记录所有索引字段code和中文说明.  
 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)  
-这个可能是唯一的Struct......
-
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键        | 否       |    -  |
-| IndexCode   | string      | 索引代码     | 否       |  类似表名 User,Site,PageTemplate,NavMenu,Module,Content  |
+| IndexCode   | string      | 索引代码     | 否       |  类似表名 user,site,pageTemplate,navMenu,module,content  |
 | IndexName   | string      | 索引名称     | 否       |  类似表名中文说明  |
 | BusinessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
 | FieldCode   | string      | 字段代码     |否       |    -  |
@@ -56,117 +65,98 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | SortNo      | int         | 排序         | -       |  正序  |
 | Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 用户(索引名:User)
+### 用户(索引名:user)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
-| ID          | string      | 主键        | 否       |    -  |
-| Account     | string      | 登录名称     | 否       |  默认admin  |
-| PassWord    | string      | 密码        | 否       |    -  |
-| UserName    | string      | 中文名称     | 否       |    -  |
+| id          | string      | 主键        | 否       |    -  |
+| account     | string      | 登录名称     | 否       |  默认admin  |
+| passWord    | string      | 密码        | 否       |    -  |
+| userName    | string      | 中文名称     | 否       |    -  |
 
-### 站点信息(Site)
+### 站点信息(site)
 站点的信息,例如 title,logo,keywords,description等
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
-| ID          | string      | 主键         | 否      |    -  |
-| Title       | string      | 站点名称     | 否      |     -  |
-| KeyWords    | string      | 关键字       | 否      |     -  |
-| Description | string      | 站点描述     | 否      |     -  |
+| id          | string      | 主键         | 否      |    -  |
+| title       | string      | 站点名称     | 否      |     -  |
+| keyword     | string      | 关键字       | 否      |     -  |
+| description | string      | 站点描述     | 否      |     -  |
 | theme       | string      | 默认主题        | 否      | 默认使用default  |
 | themePC     | string      | PC主题      | 否      | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
 | themeWAP    | string      | 手机主题     | 否      | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
 | themeWEIXIN | string      | 微信主题     | 否      | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
-| Logo        | string      | logo        | 否      |     -  |
-| Favicon     | string      | Favicon     | 否      |     -  |
+| logo        | string      | logo        | 否      |     -  |
+| favicon     | string      | Favicon     | 否      |     -  |
 
 
-### 页面模板(索引名:PageTemplate)
+### 页面模板(索引名:pageTemplate)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
-| ID          | string      | 主键        | 否       |    -  |
-| TemplateName| string      | 模板名称     | 否       |    -  |
-| TemplatePath| string      | 模板路径     | 否       |    -  |
-| SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| id          | string      | 主键        | 否       |    -  |
+| templateName| string      | 模板名称     | 否       |    -  |
+| templatePath| string      | 模板路径     | 否       |    -  |
+| sortNo      | int         | 排序        | -       |  正序  |
+| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 导航菜单(索引名:NavMenu)
+### 导航菜单(索引名:navMenu)
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
-| ID          | string      | 主键        | 否       |    -  |
-| MenuName    | string      | 菜单名称     | 否       |    -  |
-| MenuName    | string      | 菜单名称     | 否       |    -  |
-| HrefURL     | string      | 跳转路径     | 否       |    -  |
-| HrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
-| PID         | string      | 父菜单ID     | 否       | 父菜单ID  |
-| ModuleIndexCode| string | Module的索引名称 | 否    |  导航菜单下的文章默认使用的模型字段 |
-| ComCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
-| TemplateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
-| ChildTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
-| SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| id          | string      | 主键        | 否       |    -  |
+| menuName    | string      | 菜单名称     | 否       |    -  |
+| menuName    | string      | 菜单名称     | 否       |    -  |
+| hrefURL     | string      | 跳转路径     | 否       |    -  |
+| hrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
+| pid         | string      | 父菜单ID     | 否       | 父菜单ID  |
+| moduleID    | string      | module索引ID | 否       |  导航菜单下的文章默认使用的模型字段 |
+| comCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
+| templateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
+| childTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| sortNo      | int         | 排序        | -       |  正序  |
+| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-
-### 模型(索引名:Module)
-~~文章模型,只是用来声明字段,具体信息会有Content索引全部继承~~  
-暂时不使用了,这里只做参考.  
-在IndexField表里设置IndexCode='Module',记录所有的Module.  
-然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
+### 模型数据(索引名:module_default)
+在IndexInfo表里设置indexType='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索   
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
-| ID          | string      | 主键         | 否      |    -  |
-| ModuleIndexCode | string  | 模型Code     | 否      |    -  |
-| ModuleName  | string      | 模型名称     | 否      |    -  |
-| CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
-| UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
-| CreateUser  | string      | 创建人       | -       |  初始化 system  |
-| SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
-
-### 模型数据(索引名:Module_default)
-在IndexField表里设置IndexCode='Module',记录所有的Module.  
-然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
-
-| codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
-| ----------- | ----------- | ----------- | ------- | ----------- |
-| ID          | string      | 主键         | 否      |    -  |
-| Title       | string      | 文章标题     | 是      |     -  |
-| KeyWords    | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
-| Description | string      | 站点描述     | 否      |     -  |
-| PageURL     | string      | 自身页面路径 | 否       |    -  |
-| Subtitle    | string      | 副标题       | 是      |     -  |
-| Content     | string      | 文章内容     | 是      |       |
-| CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
-| UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
-| CreateUser  | string      | 创建人       | -       |  初始化 system  |
-| SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| id          | string      | 主键         | 否      |    -  |
+| title       | string      | 文章标题     | 是      |     -  |
+| keyword     | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
+| description | string      | 站点描述     | 否      |     -  |
+| pageURL     | string      | 自身页面路径 | 否       |    -  |
+| subtitle    | string      | 副标题       | 是      |     -  |
+| content     | string      | 文章内容     | 是      |       |
+| createTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
+| updateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| createUser  | string      | 创建人       | -       |  初始化 system  |
+| sortNo      | int         | 排序        | -       |  正序  |
+| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 
 ### 文章内容(索引名:Content)
-文章内容表,默认使用 Module_default 的模型字段
+文章内容表,默认使用 module_default 的模型字段
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
-| ID          | string      | 主键         | 否      |    -  |
-| ModuleIndexCode| string   | 模型的Code   | 否      |  文章使用的模型字段 |
-| Title       | string      | 文章标题     | 是      |     -  |
-| KeyWords    | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
-| Description | string      | 站点描述     | 否      |     -  |
-| PageURL     | string      | 自身页面路径 | 否       |    -  |
-| Subtitle    | string      | 副标题       | 是      |     -  |
-| NavMenuId   | string      | 导航ID,逗号(,)隔开| 是  | 使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
-| NavMenuName | string      | 导航名称     | 是      | -  |
-| TemplateID  | string      | 模板Id       | 否      | 模板  |
-| Content     | string      | 文章内容     | 是      |       |
-| CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
-| UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
-| CreateUser  | string      | 创建人       | -       |  初始化 system  |
-| SortNo      | int         | 排序        | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| id          | string      | 主键         | 否      |    -  |
+| moduleID    | string      | 模型ID       | 否      |  文章使用的模型字段 |
+| title       | string      | 文章标题     | 是      |     -  |
+| keyword     | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
+| description | string      | 站点描述     | 否      |     -  |
+| pageURL     | string      | 自身页面路径 | 否       |    -  |
+| subtitle    | string      | 副标题       | 是      |     -  |
+| navMenuID   | string      | 导航ID       | 否      | -    |
+| navMenuNames| string      | 导航名称,逗号(,)隔开     | 是      | 使用 gseAnalyzerMapping 分词器.  |
+| templateID  | string      | 模板Id       | 否      | 模板  |
+| content     | string      | 文章内容     | 是      |       |
+| createTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
+| updateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| createUser  | string      | 创建人       | -       |  初始化 system  |
+| sortNo      | int         | 排序        | -       |  正序  |
+| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
