@@ -18,4 +18,29 @@ document.addEventListener('DOMContentLoaded', () => {
       $layout.style.minWidth = (screen.width) + "px";
     }
   });
+
+  // 增加form提交
+  const form = document.querySelector("#gpress-form");
+   
+  // 如果form存在,拦截提交方法
+  if (!!form) {
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const jsonObject = {};
+        for (const [key, value] of formData.entries()) {
+          jsonObject[key] = value;
+        }
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: JSON.stringify(jsonObject),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        console.log(await response.json());
+      });
+
+    }
+
 });
