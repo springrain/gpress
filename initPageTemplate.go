@@ -7,7 +7,7 @@ import (
 )
 
 func initpageTemplateName() (bool, error) {
-	indexField := IndexMap[indexFieldIndexName]
+	indexField := IndexMap[indexFieldName]
 
 	// 获取当前时间
 	now := time.Now()
@@ -16,8 +16,7 @@ func initpageTemplateName() (bool, error) {
 	pageId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexPageTemplateName,
-		IndexName:    "页面模板",
-		FieldCode:    "ID",
+		FieldCode:    "id",
 		FieldName:    "页面模板id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -32,8 +31,7 @@ func initpageTemplateName() (bool, error) {
 	pageTemplateNameName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexPageTemplateName,
-		IndexName:    "页面模板",
-		FieldCode:    "TemplateName",
+		FieldCode:    "templateName",
 		FieldName:    "模板名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -47,8 +45,7 @@ func initpageTemplateName() (bool, error) {
 	pageTemplateNamePath := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexPageTemplateName,
-		IndexName:    "页面模板",
-		FieldCode:    "TemplatePath",
+		FieldCode:    "templatePath",
 		FieldName:    "模板路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -62,8 +59,7 @@ func initpageTemplateName() (bool, error) {
 	pageSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexPageTemplateName,
-		IndexName:    "页面模板",
-		FieldCode:    "SortNo",
+		FieldCode:    "sortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -77,8 +73,7 @@ func initpageTemplateName() (bool, error) {
 	pageActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexPageTemplateName,
-		IndexName:    "页面模板",
-		FieldCode:    "Active",
+		FieldCode:    "active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: keywordAnalyzerName,
@@ -102,6 +97,18 @@ func initpageTemplateName() (bool, error) {
 		FuncLogError(err)
 		return false, err
 	}
-
+	//保存表信息
+	indexInfo := IndexMap[indexInfoName]
+	indexInfo.Index(indexPageTemplateName, IndexInfoStruct{
+		ID:         indexPageTemplateName,
+		Name:       "页面模板",
+		IndexType:  "index",
+		Code:       "pageTemplate",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     7,
+		Active:     1,
+	})
 	return true, nil
 }

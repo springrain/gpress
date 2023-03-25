@@ -16,7 +16,7 @@ func getNavMenu(pid string) (interface{}, error) {
 	queryPID := bleve.NewTermQuery(pid)
 	queryPID.SetField("PID")
 	queryActive := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
-	queryActive.SetField("Active")
+	queryActive.SetField("active")
 	query := bleve.NewConjunctionQuery(queryPID, queryActive)
 	serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
 	serarch.Fields = []string{"*"}
@@ -27,7 +27,7 @@ func getNavMenu(pid string) (interface{}, error) {
 	}
 	data := make([]map[string]interface{}, len(result.Hits))
 	for i, v := range result.Hits {
-		id := fmt.Sprintf("%v", v.Fields["ID"]) // 强转为string
+		id := fmt.Sprintf("%v", v.Fields["id"]) // 强转为string
 
 		if id != "" && id != "nil" {
 			value, _ := getNavMenu(id)

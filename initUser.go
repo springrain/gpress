@@ -9,15 +9,14 @@ import (
 // initUser 初始化创建User索引
 func initUser() (bool, error) {
 	// 获取索引字段的表
-	indexField := IndexMap[indexFieldIndexName]
+	indexField := IndexMap[indexFieldName]
 	// 当前时间
 	now := time.Now()
 
 	// 用户表的 ID 字段
 	userId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    userIndexName,
-		IndexName:    "用户信息",
+		IndexCode:    indexUserName,
 		FieldCode:    "id",
 		FieldName:    "用户ID",
 		FieldType:    fieldType_文本框,
@@ -32,8 +31,7 @@ func initUser() (bool, error) {
 	// 用户表的 Account 字段
 	userAccount := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    userIndexName,
-		IndexName:    "用户信息",
+		IndexCode:    indexUserName,
 		FieldCode:    "account",
 		FieldName:    "账号",
 		FieldType:    fieldType_文本框,
@@ -47,8 +45,7 @@ func initUser() (bool, error) {
 	// 用户表的 PassWord 字段
 	userPassWord := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    userIndexName,
-		IndexName:    "用户信息",
+		IndexCode:    indexUserName,
 		FieldCode:    "password",
 		FieldName:    "密码",
 		FieldType:    fieldType_文本框,
@@ -62,8 +59,7 @@ func initUser() (bool, error) {
 	// 用户表的 UserName 字段
 	userName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    userIndexName,
-		IndexName:    "用户信息",
+		IndexCode:    indexUserName,
 		FieldCode:    "userName",
 		FieldName:    "用户名称",
 		FieldType:    fieldType_文本框,
@@ -79,11 +75,26 @@ func initUser() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	userIndex, err := bleve.New(userIndexName, mapping)
+	userIndex, err := bleve.New(indexUserName, mapping)
 	if err != nil {
 		FuncLogError(err)
 		return false, err
 	}
-	IndexMap[userIndexName] = userIndex
+	IndexMap[indexUserName] = userIndex
+
+	//保存表信息
+	indexInfo := IndexMap[indexInfoName]
+	indexInfo.Index(indexUserName, IndexInfoStruct{
+		ID:         indexUserName,
+		Name:       "用户信息",
+		IndexType:  "index",
+		Code:       "user",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     2,
+		Active:     1,
+	})
+
 	return true, nil
 }

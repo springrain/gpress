@@ -8,7 +8,7 @@ import (
 
 // 导航菜单
 func initNavMenu() (bool, error) {
-	indexField := IndexMap[indexFieldIndexName]
+	indexField := IndexMap[indexFieldName]
 
 	// 获取当前时间
 	now := time.Now()
@@ -17,8 +17,7 @@ func initNavMenu() (bool, error) {
 	navMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "ID",
+		FieldCode:    "id",
 		FieldName:    "导航菜单ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -34,8 +33,7 @@ func initNavMenu() (bool, error) {
 	navMenuMenuName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "MenuName",
+		FieldCode:    "menuName",
 		FieldName:    "菜单名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -50,8 +48,7 @@ func initNavMenu() (bool, error) {
 	navMenuHrefURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "HrefURL",
+		FieldCode:    "hrefURL",
 		FieldName:    "跳转路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -66,8 +63,7 @@ func initNavMenu() (bool, error) {
 	navMenuHrefTarget := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "HrefTarget",
+		FieldCode:    "hrefTarget",
 		FieldName:    "跳转方式",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -82,8 +78,7 @@ func initNavMenu() (bool, error) {
 	navMenuPID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "PID",
+		FieldCode:    "pid",
 		FieldName:    "父菜单ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -98,7 +93,6 @@ func initNavMenu() (bool, error) {
 	navMenuThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
 		FieldType:    fieldType_文本框,
@@ -111,12 +105,11 @@ func initNavMenu() (bool, error) {
 	}
 	indexField.Index(navMenuThemePC.ID, navMenuThemePC)
 
-	navMenuModuleIndexCode := IndexFieldStruct{
+	navMenuModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "ModuleIndexCode",
-		FieldName:    "Module的索引名称",
+		FieldCode:    "moduleID",
+		FieldName:    "模型ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
 		CreateTime:   now,
@@ -125,13 +118,12 @@ func initNavMenu() (bool, error) {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuModuleIndexCode.ID, navMenuModuleIndexCode)
+	indexField.Index(navMenuModuleID.ID, navMenuModuleID)
 
 	navMenuComCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "ComCode",
+		FieldCode:    "comCode",
 		FieldName:    "逗号隔开的全路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
@@ -146,8 +138,7 @@ func initNavMenu() (bool, error) {
 	navMenuTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "TemplateID",
+		FieldCode:    "templateID",
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -162,8 +153,7 @@ func initNavMenu() (bool, error) {
 	navMenuChildTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "ChildTemplateID",
+		FieldCode:    "childTemplateID",
 		FieldName:    "子页面模板Id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -178,8 +168,7 @@ func initNavMenu() (bool, error) {
 	navMenuSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "SortNo",
+		FieldCode:    "sortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -194,8 +183,7 @@ func initNavMenu() (bool, error) {
 	navMenuActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexNavMenuName,
-		IndexName:    "导航菜单",
-		FieldCode:    "Active",
+		FieldCode:    "active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: keywordAnalyzerName,
@@ -220,6 +208,18 @@ func initNavMenu() (bool, error) {
 		FuncLogError(err)
 		return false, err
 	}
-
+	//保存表信息
+	indexInfo := IndexMap[indexInfoName]
+	indexInfo.Index(indexNavMenuName, IndexInfoStruct{
+		ID:         indexNavMenuName,
+		Name:       "导航菜单",
+		Code:       "navMenu",
+		IndexType:  "index",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     6,
+		Active:     1,
+	})
 	return true, nil
 }

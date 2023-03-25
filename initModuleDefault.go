@@ -4,9 +4,13 @@ import (
 	"time"
 )
 
+// 默认模型 indexInfo indexType="module". 只是记录,并不创建index,全部保存到context里,用于全局检索
 func initModuleDefault() (bool, error) {
-	indexField := IndexMap[indexFieldIndexName]
-
+	indexField := IndexMap[indexFieldName]
+	// 创建内容表的索引
+	//mapping := bleve.NewIndexMapping()
+	// 指定默认的分词器
+	//mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	// 获取当前时间
 	now := time.Now()
 
@@ -14,8 +18,7 @@ func initModuleDefault() (bool, error) {
 	moduleDefaultId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "ID",
+		FieldCode:    "id",
 		FieldName:    "模型数据ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -30,8 +33,7 @@ func initModuleDefault() (bool, error) {
 	moduleDefaultTitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexModuleDefaultName,
-		IndexName: "模型数据",
-		FieldCode: "Title",
+		FieldCode: "title",
 		FieldName: "标题",
 		FieldType: fieldType_文本框,
 		// 文章标题使用中文分词
@@ -42,12 +44,13 @@ func initModuleDefault() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(moduleDefaultTitle.ID, moduleDefaultTitle)
+	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
+	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
-	moduleDefaultKeyWords := IndexFieldStruct{
+	moduleDefaultKeyword := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexModuleDefaultName,
-		IndexName: "模型数据",
-		FieldCode: "KeyWords",
+		FieldCode: "keyword",
 		FieldName: "关键字",
 		FieldType: fieldType_文本框,
 		// 文章关键字使用逗号分词器
@@ -57,13 +60,14 @@ func initModuleDefault() (bool, error) {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(moduleDefaultKeyWords.ID, moduleDefaultKeyWords)
+	indexField.Index(moduleDefaultKeyword.ID, moduleDefaultKeyword)
+	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
+	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
 	moduleDefaultDescription := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexModuleDefaultName,
-		IndexName: "模型数据",
-		FieldCode: "Description",
+		FieldCode: "description",
 		FieldName: "站点描述",
 		FieldType: fieldType_文本框,
 		// 文章描述使用中文分词器
@@ -74,12 +78,13 @@ func initModuleDefault() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(moduleDefaultDescription.ID, moduleDefaultDescription)
+	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
+	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
 	moduleDefaultPageURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "PageURL",
+		FieldCode:    "pageURL",
 		FieldName:    "自身页面路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -93,8 +98,7 @@ func initModuleDefault() (bool, error) {
 	moduleDefaultSubtitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexModuleDefaultName,
-		IndexName: "模型数据",
-		FieldCode: "Subtitle",
+		FieldCode: "subtitle",
 		FieldName: "副标题",
 		FieldType: fieldType_文本框,
 		// 文章副标题使用中文分词器
@@ -105,12 +109,13 @@ func initModuleDefault() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(moduleDefaultSubtitle.ID, moduleDefaultSubtitle)
+	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
+	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
 	moduleDefaultContent := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexModuleDefaultName,
-		IndexName: "模型数据",
-		FieldCode: "Content",
+		FieldCode: "content",
 		FieldName: "文章内容",
 		FieldType: fieldType_文本框,
 		// 文章内容使用中文分词器
@@ -121,12 +126,13 @@ func initModuleDefault() (bool, error) {
 		Active:       3,
 	}
 	indexField.Index(moduleDefaultContent.ID, moduleDefaultContent)
+	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
+	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
 	moduleDefaultCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "CreateTime",
+		FieldCode:    "createTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: keywordAnalyzerName,
@@ -140,8 +146,7 @@ func initModuleDefault() (bool, error) {
 	moduleUpdateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "UpdateTime",
+		FieldCode:    "updateTime",
 		FieldName:    "更新时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: keywordAnalyzerName,
@@ -155,8 +160,7 @@ func initModuleDefault() (bool, error) {
 	moduleCreateUser := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "CreateUser",
+		FieldCode:    "createUser",
 		FieldName:    "创建人",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -170,8 +174,7 @@ func initModuleDefault() (bool, error) {
 	moduleSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "SortNo",
+		FieldCode:    "sortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -185,8 +188,7 @@ func initModuleDefault() (bool, error) {
 	moduleActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexModuleDefaultName,
-		IndexName:    "模型数据",
-		FieldCode:    "Active",
+		FieldCode:    "active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: keywordAnalyzerName,
@@ -197,23 +199,19 @@ func initModuleDefault() (bool, error) {
 	}
 	indexField.Index(moduleActive.ID, moduleActive)
 
-	/*
-		//在IndexField表里设置IndexCode='Module',记录所有的Module.
-		//然后在IndexField中插入每个module的字段,每个module实例的ModuleCode都是不同的,使用Module_+后缀的方式命名,只是记录,并不创建index
-
-		//创建用户表的索引
-		mapping := bleve.NewIndexMapping()
-		//指定默认的分词器
-		mapping.DefaultMapping.DefaultAnalyzer keywordName
-		moduleDefaultIndex, err := bleve.New(moduleDefaultName, mapping)
-		//放到IndexMap中
-		IndexMap[moduleName] = moduleDefaultIndex
-
-		if err != nil {
-			FuncLogError(err)
-			return false, err
-		}
-	*/
+	//保存表信息
+	indexInfo := IndexMap[indexInfoName]
+	indexInfo.Index(indexModuleDefaultName, IndexInfoStruct{
+		ID:         indexModuleDefaultName,
+		Name:       "默认模型",
+		Code:       "moduleDefault",
+		IndexType:  "module",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     4,
+		Active:     1,
+	})
 
 	return true, nil
 }
