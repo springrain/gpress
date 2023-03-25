@@ -23,10 +23,9 @@ const (
 	indexPageTemplateName = bleveDataDir + "pageTemplate"
 	// 导航菜单
 	indexNavMenuName = bleveDataDir + "navMenu"
-	// 模型
-	indexModuleName = bleveDataDir + "module"
+
 	// 模型数据
-	indexModuleDefaultName = "moduleDefault"
+	indexModuleDefaultName = "module_default"
 	// 文章内容
 	indexContentName = bleveDataDir + "content"
 	//---------------------------//
