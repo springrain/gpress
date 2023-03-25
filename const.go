@@ -24,7 +24,7 @@ const (
 	// 导航菜单
 	indexNavMenuName = bleveDataDir + "navMenu"
 
-	// 模型数据
+	// 默认模型
 	indexModuleDefaultName = "module_default"
 	// 文章内容
 	indexContentName = bleveDataDir + "content"
