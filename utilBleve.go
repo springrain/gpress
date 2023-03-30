@@ -8,10 +8,12 @@ import (
 	"fmt"
 	"math/big"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/cloudwego/hertz/pkg/app"
 
 	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/search/query"
@@ -337,4 +339,38 @@ func deleteAll(ctx context.Context, tableName string) error {
 		}
 	}
 	return nil
+}
+
+func findIndex(ctx context.Context, c *app.RequestContext, searchIndex bleve.Index) ResponseData {
+	//获取页码
+	pageNoStr := c.DefaultQuery("pageNo", "1")
+	pageNo, _ := strconv.Atoi(pageNoStr)
+	if pageNo == 0 {
+		pageNo = 1
+	}
+	c.QueryArgs()
+	q := c.DefaultQuery("q", "*")
+	queryKey := bleve.NewQueryStringQuery(q)
+
+	page := NewPage()
+	page.PageNo = pageNo
+	// searchRequest := bleve.NewSearchRequest(queryKey)
+	searchRequest := bleve.NewSearchRequestOptions(queryKey, pageNo*page.PageSize, (pageNo-1)*page.PageSize, false)
+	// 指定返回的字段
+	searchRequest.Fields = []string{"*"}
+
+	searchResult, err := searchIndex.SearchInContext(ctx, searchRequest)
+	if err != nil {
+		return ResponseData{StatusCode: 0, ERR: err}
+	}
+	total, err := strconv.Atoi(strconv.FormatUint(searchResult.Total, 10))
+	if err != nil {
+		return ResponseData{StatusCode: 0, ERR: err}
+	}
+	page.setTotalCount(total)
+	data, err := result2SliceMap(searchIndex.Name(), searchResult)
+	if err != nil {
+		return ResponseData{StatusCode: 0, ERR: err}
+	}
+	return ResponseData{StatusCode: 1, Data: data, Page: page}
 }
