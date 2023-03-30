@@ -71,6 +71,9 @@ func initUser() (bool, error) {
 	}
 	indexField.Index(userName.ID, userName)
 
+	// 添加公共字段
+	// indexCommonField(indexField, indexUserName, 4, now)
+
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器

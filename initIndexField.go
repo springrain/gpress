@@ -55,3 +55,81 @@ func initIndexField() (bool, error) {
 	IndexMap[indexFieldName] = index
 	return true, nil
 }
+
+// indexCommonField 插入公共字段
+func indexCommonField(indexField bleve.Index, indexName string, sortNo int, now time.Time) {
+	sortNo++
+	commonCreateTime := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexName,
+		FieldCode:    "createTime",
+		FieldName:    "创建时间",
+		FieldType:    fieldType_日期,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+	}
+	indexField.Index(commonCreateTime.ID, commonCreateTime)
+
+	sortNo++
+	commonUpdateTime := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexName,
+		FieldCode:    "updateTime",
+		FieldName:    "更新时间",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       9,
+		Active:       3,
+	}
+	indexField.Index(commonUpdateTime.ID, commonUpdateTime)
+
+	sortNo++
+	commonCreateUser := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexName,
+		FieldCode:    "createUser",
+		FieldName:    "创建人",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       10,
+		Active:       3,
+	}
+	indexField.Index(commonCreateUser.ID, commonCreateUser)
+
+	sortNo++
+	commonSortNo := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexName,
+		FieldCode:    "sortNo",
+		FieldName:    "排序",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       9,
+		Active:       3,
+	}
+	indexField.Index(commonSortNo.ID, commonSortNo)
+
+	sortNo++
+	commonActive := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexName,
+		FieldCode:    "active",
+		FieldName:    "是否有效",
+		FieldType:    fieldType_数字,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       10,
+		Active:       3,
+	}
+	indexField.Index(commonActive.ID, commonActive)
+}

@@ -108,10 +108,12 @@ func checkBleveCreate() (bool, error) {
 		FuncLogError(errMkdir)
 		return false, errMkdir
 	}
-	// 初始化IndexInfo
-	initIndexInfo()
+
 	// 初始化IndexField
 	initIndexField()
+
+	// 初始化IndexInfo
+	initIndexInfo()
 
 	// 初始化配置
 	initConfig()

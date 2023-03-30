@@ -30,10 +30,76 @@ type IndexInfoStruct struct {
 
 // initIndexInfo 初始化创建indexInfo索引
 func initIndexInfo() (bool, error) {
-	// 创建配置表的索引
+	indexField := IndexMap[indexFieldName]
+	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
+
+	// 获取当前时间
+	now := time.Now()
+
+	// 初始化各个字段
+	// 主键 值为 IndexName,也就是表名
+	infoId := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexInfoName,
+		FieldCode:    "id",
+		FieldName:    "索引表ID",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       1,
+		Active:       3,
+	}
+	indexField.Index(infoId.ID, infoId)
+	// 索引名称,类似表名中文说明
+	infoName := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexInfoName,
+		FieldCode:    "name",
+		FieldName:    "索引表名称",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       2,
+		Active:       3,
+	}
+	indexField.Index(infoName.ID, infoName)
+	//索引代码
+	infoCode := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexInfoName,
+		FieldCode:    "code",
+		FieldName:    "索引表英文名",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       3,
+		Active:       3,
+	}
+	indexField.Index(infoCode.ID, infoCode)
+	// IndexType index/module 索引和模型,两种类型
+	infoType := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexInfoName,
+		FieldCode:    "indexType",
+		FieldName:    "索引表ID",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       4,
+		Active:       3,
+	}
+	indexField.Index(infoType.ID, infoType)
+
+	// 添加公共字段
+	indexCommonField(indexField, indexInfoName, 4, now)
+
 	indexInfo, err := bleve.New(indexInfoName, mapping)
 	if err != nil {
 		FuncLogError(err)

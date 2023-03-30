@@ -2,108 +2,42 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
-
-	"github.com/blevesearch/bleve/v2"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol"
+	"github.com/cloudwego/hertz/pkg/route"
 )
 
-func initAdminRoute() {
+// admin路由组,使用变量声明,优先级高于init函数
+var admin = initAdminGroup()
+
+func initAdminGroup() *route.RouterGroup {
+	// 初始化模板
+	err := initTemplate()
+	if err != nil { // 初始化模板异常
+		panic("初始化模板异常")
+	}
+	admin := h.Group("/admin")
+	admin.Use(permissionHandler())
+	return admin
+}
+
+// 初始化函数
+func init() {
+
 	// 默认首页
 	h.GET("/", funcIndex)
-
-	h.GET("/hello", func(ctx context.Context, c *app.RequestContext) {
-		c.String(http.StatusOK, "hello gpress!")
-	})
-
-	h.GET("/test", func(ctx context.Context, c *app.RequestContext) {
-		r, err := findIndexFieldResult(ctx, indexNavMenuName, 1)
-		if err != nil {
-			FuncLogError(err)
-			panic(err)
-		}
-		c.JSON(http.StatusOK, r)
-	})
-
-	// 测试新增数据
-	h.GET("/add", func(ctx context.Context, c *app.RequestContext) {
-		test := make(map[string]interface{}) // 新建map
-		test["MenuName"] = "一级菜单名称"
-		test["HrefURL"] = "localhost:8080"
-		test["HrefTarget"] = "跳转方式"
-		test["PID"] = "0" // 顶级菜单目录
-		test["ComCode"] = "使用逗号分割,字符串,测试"
-		test["active"] = 1    // 是否有效
-		test["themePC"] = "1" // 是否pc主题
-		test["ModuleIndexCode"] = "Module的索引名称"
-		test["TemplateID"] = "010101"      // 模板Id
-		test["ChildTemplateID"] = "010201" // 子页面模板Id
-		test["sortNo"] = "1"               // 排序
-		test["id"] = "001"
-		// m, _ := saveNewIndex(c.Request.Context(), test, indexNavMenuName)
-		r := IndexMap[indexNavMenuName].Index("001", test)
-		c.JSON(http.StatusOK, r)
-	})
-	h.GET("/update", func(ctx context.Context, c *app.RequestContext) {
-		test := make(map[string]interface{})
-		test["id"] = "001"
-
-		test["ChildTemplateID"] = "010202" // 子页面模板Id
-		test["sortNo"] = "1"               // 排序
-		// r := IndexMap[indexNavMenuName].Index("001", test)
-		x := updateIndex(ctx, indexNavMenuName, "001", test)
-		// m, _ := saveNexIndex(test, indexNavMenuName)
-		c.JSON(http.StatusOK, x)
-	})
-	h.GET("/add2", func(ctx context.Context, c *app.RequestContext) {
-		test := make(map[string]interface{})
-		test["MenuName"] = "一级菜单"
-		test["HrefURL"] = "localhost:8080"
-		test["HrefTarget"] = "跳转方式"
-		test["PID"] = "0"
-		test["ComCode"] = "阿斯弗,sfs"
-		test["TemplateID"] = "模板Id"
-		test["ModuleIndexCode"] = "ModuleIndexCode"
-		test["ChildTemplateID"] = "子页面模板Id"
-		test["active"] = 1
-		test["themePC"] = "PC主题"
-		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
-		c.JSON(http.StatusOK, m)
-	})
-	h.GET("/add3", func(ctx context.Context, c *app.RequestContext) {
-		test := make(map[string]interface{})
-		test["MenuName"] = "我是个子集"
-		test["HrefURL"] = "localhost:8080"
-		test["HrefTarget"] = "跳转方式"
-		test["PID"] = "7216c38e-78fb-4ad9-95bf-294582faa685"
-		test["ComCode"] = "阿斯弗,sfs"
-		test["TemplateID"] = "模板Id"
-		test["ModuleIndexCode"] = "ModuleIndexCode"
-		test["ChildTemplateID"] = "子页面模板Id"
-		test["active"] = 1
-		test["themePC"] = "PC主题"
-		m, _ := saveNewIndex(ctx, test, indexNavMenuName)
-		c.JSON(http.StatusOK, m)
-	})
-	h.GET("/getThis", func(ctx context.Context, c *app.RequestContext) {
-		index := IndexMap[indexNavMenuName]
-		queryIndexCode := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
-		// 查询指定字段
-		queryIndexCode.SetField("active")
-		// query := bleve.NewQueryStringQuery("")
-		serarch := bleve.NewSearchRequestOptions(queryIndexCode, 1000, 0, false)
-		// 查询所有字段
-		serarch.Fields = []string{"*"}
-
-		result, _ := index.SearchInContext(context.Background(), serarch)
-		c.JSON(http.StatusOK, result)
-	})
 
 	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
 		result, _ := getNavMenu("0")
 		c.JSON(http.StatusOK, result)
+	})
+
+	// 异常页面
+	h.GET("/admin/error", func(ctx context.Context, c *app.RequestContext) {
+		c.HTML(http.StatusOK, "/admin/error.html", nil)
 	})
 
 	// 安装
@@ -167,9 +101,7 @@ func initAdminRoute() {
 
 		c.Redirect(http.StatusOK, []byte("/admin/index"))
 	})
-	// admin路由组
-	admin := h.Group("/admin")
-	admin.Use(adminHandler())
+
 	// 后台管理员首页
 	admin.GET("/index", func(ctx context.Context, c *app.RequestContext) {
 		// 获取从jwttoken中解码的userId
@@ -193,6 +125,24 @@ func initAdminRoute() {
 		//c.HTML(http.StatusOK, "/admin/index.html", nil)
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 	})
+
+	// 索引信息列表
+	admin.GET("/:indexName/list", func(ctx context.Context, c *app.RequestContext) {
+		//索引名称
+		indexName := bleveDataDir + c.Param("indexName")
+		_, ok := IndexMap[indexName]
+		if !ok { //索引不存在
+			c.Redirect(http.StatusOK, []byte("/admin/error"))
+			c.Abort() // 终止后续调用
+			return
+		}
+		//获取页码
+		pageNo := c.DefaultQuery("pageNo", "1")
+
+		fmt.Println(pageNo)
+		c.HTML(http.StatusOK, "/admin/index.html", nil)
+	})
+
 }
 
 // 请求响应函数
@@ -200,8 +150,8 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, themePath+"index.html", map[string]string{"name": "test"})
 }
 
-// adminHandler admin权限拦截器
-func adminHandler() app.HandlerFunc {
+// permissionHandler 权限拦截器
+func permissionHandler() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		jwttoken := c.Cookie(config.JwttokenKey)
 		userId, err := userIdByToken(string(jwttoken))
