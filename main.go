@@ -36,13 +36,8 @@ func init() {
 }
 
 func main() {
-	// 初始化模板
-	err := initTemplate()
-	if err != nil { // 初始化模板异常
-		panic("初始化模板异常")
-	}
-	// 初始化admin路由
-	initAdminRoute()
+	// 初始化admin路由,使用init实现
+	//initAdminRoute()
 
 	// 启动服务
 	h.Spin()

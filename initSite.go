@@ -167,6 +167,9 @@ func initSite() (bool, error) {
 	}
 	indexField.Index(siteFavicon.ID, siteFavicon)
 
+	// 添加公共字段
+	indexCommonField(indexField, indexSiteName, 10, now)
+
 	siteIndexIndex, err := bleve.New(indexSiteName, mapping)
 	// 放到IndexMap中
 	IndexMap[indexSiteName] = siteIndexIndex
