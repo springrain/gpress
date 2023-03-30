@@ -165,35 +165,8 @@ func initNavMenu() (bool, error) {
 	}
 	indexField.Index(navMenuChildTemplateID.ID, navMenuChildTemplateID)
 
-	navMenuSortNo := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexNavMenuName,
-		FieldCode:    "sortNo",
-		FieldName:    "排序",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       11,
-		Active:       3,
-		Required:     0,
-	}
-	indexField.Index(navMenuSortNo.ID, navMenuSortNo)
-
-	navMenuActive := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexNavMenuName,
-		FieldCode:    "active",
-		FieldName:    "是否有效",
-		FieldType:    fieldType_数字,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       12,
-		Active:       3,
-		Required:     0,
-	}
-	indexField.Index(navMenuActive.ID, navMenuActive)
+	// 添加公共字段
+	indexCommonField(indexField, indexNavMenuName, 10, now)
 
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()

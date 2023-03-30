@@ -129,75 +129,8 @@ func initModuleDefault() (bool, error) {
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
-	moduleDefaultCreateTime := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexModuleDefaultName,
-		FieldCode:    "createTime",
-		FieldName:    "创建时间",
-		FieldType:    fieldType_日期,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       8,
-		Active:       3,
-	}
-	indexField.Index(moduleDefaultCreateTime.ID, moduleDefaultCreateTime)
-
-	moduleUpdateTime := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexModuleDefaultName,
-		FieldCode:    "updateTime",
-		FieldName:    "更新时间",
-		FieldType:    fieldType_日期,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       9,
-		Active:       3,
-	}
-	indexField.Index(moduleUpdateTime.ID, moduleUpdateTime)
-
-	moduleCreateUser := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexModuleDefaultName,
-		FieldCode:    "createUser",
-		FieldName:    "创建人",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       10,
-		Active:       3,
-	}
-	indexField.Index(moduleCreateUser.ID, moduleCreateUser)
-
-	moduleSortNo := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexModuleDefaultName,
-		FieldCode:    "sortNo",
-		FieldName:    "排序",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       9,
-		Active:       3,
-	}
-	indexField.Index(moduleSortNo.ID, moduleSortNo)
-
-	moduleActive := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexModuleDefaultName,
-		FieldCode:    "active",
-		FieldName:    "是否有效",
-		FieldType:    fieldType_数字,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       10,
-		Active:       3,
-	}
-	indexField.Index(moduleActive.ID, moduleActive)
+	// 添加公共字段
+	indexCommonField(indexField, indexModuleDefaultName, 7, now)
 
 	//保存表信息
 	indexInfo := IndexMap[indexInfoName]

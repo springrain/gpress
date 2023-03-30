@@ -5,7 +5,7 @@ package main
 type Page struct {
 	// 当前页码,从1开始
 	// Current page number, starting from 1
-	PageNo int
+	pageNo int
 
 	// 每页多少条,默认20条
 	// How many items per page, 20 items by default
@@ -40,7 +40,7 @@ type Page struct {
 // NewPage Create Page object
 func NewPage() *Page {
 	page := Page{}
-	page.PageNo = 1
+	page.pageNo = 1
 	page.PageSize = 20
 	return &page
 }
@@ -50,12 +50,12 @@ func NewPage() *Page {
 func (page *Page) setTotalCount(total int) {
 	page.TotalCount = total
 	page.PageCount = (page.TotalCount + page.PageSize - 1) / page.PageSize
-	if page.PageNo >= page.PageCount {
+	if page.pageNo >= page.PageCount {
 		page.LastPage = true
 	} else {
 		page.HasNext = true
 	}
-	if page.PageNo > 1 {
+	if page.pageNo > 1 {
 		page.HasPrev = true
 	} else {
 		page.FirstPage = true

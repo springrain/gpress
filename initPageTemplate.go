@@ -56,33 +56,8 @@ func initpageTemplateName() (bool, error) {
 	}
 	indexField.Index(pageTemplateNamePath.ID, pageTemplateNamePath)
 
-	pageSortNo := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexPageTemplateName,
-		FieldCode:    "sortNo",
-		FieldName:    "排序",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       4,
-		Active:       3,
-	}
-	indexField.Index(pageSortNo.ID, pageSortNo)
-
-	pageActive := IndexFieldStruct{
-		ID:           FuncGenerateStringID(),
-		IndexCode:    indexPageTemplateName,
-		FieldCode:    "active",
-		FieldName:    "是否有效",
-		FieldType:    fieldType_数字,
-		AnalyzerName: keywordAnalyzerName,
-		CreateTime:   now,
-		CreateUser:   createUser,
-		SortNo:       5,
-		Active:       3,
-	}
-	indexField.Index(pageActive.ID, pageActive)
+	// 添加公共字段
+	indexCommonField(indexField, indexInfoName, 3, now)
 
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
