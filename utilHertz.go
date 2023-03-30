@@ -173,7 +173,7 @@ func hashSha256(str string) string {
 
 // ResponseData 返回数据包装器
 type ResponseData struct {
-	// 业务状态代码 // 异常 1, 成功 0,默认成功0,业务代码见说明
+	// 业务状态代码 // 异常 0, 成功 1,默认失败0,业务代码见说明
 	StatusCode int `json:"statusCode"`
 	// HttpCode http的状态码
 	// HttpCode int `json:"httpCode,omitempty"`
