@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/alecthomas/chroma/v2 v2.7.0
 	github.com/blevesearch/bleve/v2 v2.3.7
-	github.com/cloudwego/hertz v0.6.0
+	github.com/cloudwego/hertz v0.6.1
 	github.com/go-ego/gse v0.80.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/yuin/goldmark v1.5.4
