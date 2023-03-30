@@ -9,8 +9,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/route"
 )
 
-// admin路由组,使用变量声明,优先级高于init函数
-var admin = initAdminGroup()
+// adminGroup路由组,使用变量声明,优先级高于init函数
+var adminGroup = initAdminGroup()
 
 func initAdminGroup() *route.RouterGroup {
 	// 初始化模板
@@ -102,7 +102,7 @@ func init() {
 	})
 
 	// 后台管理员首页
-	admin.GET("/index", func(ctx context.Context, c *app.RequestContext) {
+	adminGroup.GET("/index", func(ctx context.Context, c *app.RequestContext) {
 		// 获取从jwttoken中解码的userId
 		userId, ok := c.Get(tokenUserId)
 		if !ok || userId == "" {
@@ -113,7 +113,7 @@ func init() {
 		c.HTML(http.StatusOK, "/admin/index.html", nil)
 	})
 	// 后台管理员首页
-	admin.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
+	adminGroup.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
 		err := loadTemplate(true)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
@@ -126,8 +126,8 @@ func init() {
 	})
 
 	// 通用列表
-	admin.GET("/:indexName/list", funcList)
-	admin.POST("/:indexName/list", funcList)
+	adminGroup.GET("/:indexName/list", funcList)
+	adminGroup.POST("/:indexName/list", funcList)
 
 }
 
