@@ -341,14 +341,17 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return nil
 }
 
-func findIndex(ctx context.Context, c *app.RequestContext, searchIndex bleve.Index) ResponseData {
+func findIndex(ctx context.Context, c *app.RequestContext, indexName string) ResponseData {
+	searchIndex, _ := IndexMap[indexName]
 	//获取页码
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	pageNo, _ := strconv.Atoi(pageNoStr)
 	if pageNo == 0 {
 		pageNo = 1
 	}
-	c.QueryArgs()
+
+	// 处理参数
+
 	q := c.DefaultQuery("q", "*")
 	queryKey := bleve.NewQueryStringQuery(q)
 
