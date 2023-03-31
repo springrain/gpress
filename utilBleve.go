@@ -168,20 +168,20 @@ var inclusive = true
 
 // findIndexFieldResult 获取表中符合条件字段
 // indexName: 表名/索引名
-// Required: 字段是否可以为空,0查询所有字段,1查询必填字段
-func findIndexFieldResult(ctx context.Context, indexName string, Required int) (*bleve.SearchResult, error) {
-	var queryBleve *query.ConjunctionQuery
+// required: 字段是否可以为空,0查询所有字段,1查询必填字段
+func findIndexFieldResult(ctx context.Context, indexName string, required int) (*bleve.SearchResult, error) {
+	var queryBleve query.Query
 	index := IndexMap[indexFieldName]
 	// 查询指定表
 	queryIndexCode := bleve.NewTermQuery(indexName)
-	// 查询指定字段
-	queryIndexCode.SetField("IndexCode")
-	if Required == 0 { //可以为空
-		queryBleve = bleve.NewConjunctionQuery(queryIndexCode)
+	// 查询指定字段,和json字段保持一致
+	queryIndexCode.SetField("indexCode")
+	if required == 0 { //可以为空
+		queryBleve = queryIndexCode
 	} else {
-		var f = float64(Required)
+		var f = float64(required)
 		queryIsRequired := bleve.NewNumericRangeInclusiveQuery(&f, &f, &inclusive, &inclusive)
-		queryIsRequired.SetField("Required")
+		queryIsRequired.SetField("required") // 查询指定字段,和json字段保持一致
 		queryBleve = bleve.NewConjunctionQuery(queryIndexCode, queryIsRequired)
 	}
 
