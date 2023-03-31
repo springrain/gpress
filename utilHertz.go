@@ -186,6 +186,7 @@ type ResponseData struct {
 	// 列表的分页对象
 	Page *Page `json:"page,omitempty"`
 	// 查询条件的struct回传
-	QueryStruct interface{} `json:"queryStruct,omitempty"`
-	ERR         error       `json:"err,omitempty"` // 响应错误
+	QueryStruct interface{}        `json:"queryStruct,omitempty"`
+	ERR         error              `json:"err,omitempty"`        // 响应错误
+	IndexField  []IndexFieldStruct `json:"indexField,omitempty"` // 响应错误
 }
