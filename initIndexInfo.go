@@ -30,6 +30,15 @@ type IndexInfoStruct struct {
 
 // initIndexInfo 初始化创建indexInfo索引
 func initIndexInfo() (bool, error) {
+
+	ok, err := openBleveIndex(indexInfoName)
+	if err != nil {
+		return false, err
+	}
+	if ok {
+		return true, nil
+	}
+
 	indexField := IndexMap[indexFieldName]
 	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
