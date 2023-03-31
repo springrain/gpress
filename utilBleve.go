@@ -324,7 +324,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return nil
 }
 
-func findIndex(ctx context.Context, c *app.RequestContext, indexName string) (ResponseData, error) {
+func findIndexList(ctx context.Context, c *app.RequestContext, indexName string) (ResponseData, error) {
 	searchIndex, ok := IndexMap[indexName]
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
@@ -386,4 +386,31 @@ func findIndex(ctx context.Context, c *app.RequestContext, indexName string) (Re
 		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
 	return ResponseData{StatusCode: 1, Data: data, IndexField: indexField, Page: page}, err
+}
+
+func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, id string) (ResponseData, error) {
+	searchIndex, ok := IndexMap[indexName]
+	if !ok { //索引不存在
+		err := errors.New("索引不存在")
+		return ResponseData{StatusCode: 0, ERR: err}, err
+	}
+	idQuery := bleve.NewTermQuery(id)
+	// 指定查询的字段
+	idQuery.SetField("id")
+	searchRequest := bleve.NewSearchRequest(idQuery)
+	// 指定返回的字段
+	searchRequest.Fields = []string{"*"}
+	searchResult, err := searchIndex.SearchInContext(ctx, searchRequest)
+	if err != nil {
+		return ResponseData{StatusCode: 0, ERR: err}, err
+	}
+	data, err := result2Map(indexName, searchResult)
+	if err != nil {
+		return ResponseData{StatusCode: 0, ERR: err}, err
+	}
+	indexField, err := findIndexFieldStruct(ctx, indexName)
+	if err != nil {
+		return ResponseData{StatusCode: 0, ERR: err}, err
+	}
+	return ResponseData{StatusCode: 1, Data: data, IndexField: indexField}, err
 }

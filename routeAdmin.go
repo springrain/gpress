@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -128,9 +129,17 @@ func init() {
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 	})
 
-	// 通用列表,先都使用get方法
+	// 通用list列表,先都使用get方法
 	adminGroup.GET("/:urlPathIndexName/list", funcList)
 	//adminGroup.POST("/:urlPathIndexName/list", funcList)
+
+	// 通用查看
+	adminGroup.GET("/:urlPathIndexName/look", funcLook)
+
+	//跳转到查看页面
+	adminGroup.GET("/:urlPathIndexName/update", funcUpdatePre)
+	//ajax POST提交JSON信息,返回方法JSON
+	adminGroup.POST("/:urlPathIndexName/update", funcLook)
 
 }
 
@@ -143,7 +152,7 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 func funcList(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
 	indexName := bleveDataDir + urlPathIndexName
-	reponseData, err := findIndex(ctx, c, indexName)
+	reponseData, err := findIndexList(ctx, c, indexName)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, []byte("/admin/error"))
 		c.Abort() // 终止后续调用
@@ -156,10 +165,73 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	if t == nil { //不存在自定义模板,使用通用模板
 		listFile = "/admin/list.html"
 	}
-	queryString := c.Request.QueryString()
-	reponseData.QueryString = string(queryString)
+	//queryString := c.Request.QueryString()
+	//reponseData.QueryString = string(queryString)
 	reponseData.UrlPathIndexName = urlPathIndexName
 	c.HTML(http.StatusOK, listFile, reponseData)
+}
+
+// funcLook 通用查看,根据id查看
+func funcLook(ctx context.Context, c *app.RequestContext) {
+	id := c.Query("id")
+	if id == "" {
+		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	urlPathIndexName := c.Param("urlPathIndexName")
+	indexName := bleveDataDir + urlPathIndexName
+	reponseData, err := findIndexOne(ctx, c, indexName, id)
+	if err != nil { //索引不存在
+		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	//优先使用自定义模板文件
+	lookFile := "/admin/" + urlPathIndexName + "Look.html"
+	t := tmpl.Lookup(lookFile)
+	if t == nil { //不存在自定义模板,使用通用模板
+		lookFile = "/admin/look.html"
+	}
+	reponseData.UrlPathIndexName = urlPathIndexName
+	c.HTML(http.StatusOK, lookFile, reponseData)
+}
+
+// funcLook 通用查看,根据id查看
+func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
+	id := c.Query("id")
+	if id == "" {
+		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	urlPathIndexName := c.Param("urlPathIndexName")
+	indexName := bleveDataDir + urlPathIndexName
+	reponseData, err := findIndexOne(ctx, c, indexName, id)
+	if err != nil { //索引不存在
+		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	//优先使用自定义模板文件
+	updateFile := "/admin/" + urlPathIndexName + "Update.html"
+	t := tmpl.Lookup(updateFile)
+	if t == nil { //不存在自定义模板,使用通用模板
+		updateFile = "/admin/update.html"
+	}
+	reponseData.UrlPathIndexName = urlPathIndexName
+	c.HTML(http.StatusOK, updateFile, reponseData)
+}
+
+func funcUpdate(ctx context.Context, c *app.RequestContext) {
+	id := c.Query("id")
+	if id == "" { //没有id,认为是新增
+
+	}
+	urlPathIndexName := c.Param("urlPathIndexName")
+	indexName := bleveDataDir + urlPathIndexName
+	fmt.Println(indexName)
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 }
 
 // permissionHandler 权限拦截器
