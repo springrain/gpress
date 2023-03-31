@@ -165,7 +165,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//优先使用自定义模板文件
-	listFile := "/admin/" + urlPathIndexName + "List.html"
+	listFile := "/admin/" + urlPathIndexName + "/list.html"
 	t := tmpl.Lookup(listFile)
 	if t == nil { //不存在自定义模板,使用通用模板
 		listFile = "/admin/list.html"
@@ -178,61 +178,21 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 
 // funcLook 通用查看,根据id查看
 func funcLook(ctx context.Context, c *app.RequestContext) {
-	id := c.Query("id")
-	if id == "" {
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
-		c.Abort() // 终止后续调用
-		return
-	}
-	urlPathIndexName := c.Param("urlPathIndexName")
-	indexName := bleveDataDir + urlPathIndexName
-	reponseData, err := findIndexOne(ctx, c, indexName, id)
-	if err != nil { //索引不存在
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
-		c.Abort() // 终止后续调用
-		return
-	}
-	//优先使用自定义模板文件
-	lookFile := "/admin/" + urlPathIndexName + "Look.html"
-	t := tmpl.Lookup(lookFile)
-	if t == nil { //不存在自定义模板,使用通用模板
-		lookFile = "/admin/look.html"
-	}
-	reponseData.UrlPathIndexName = urlPathIndexName
-	c.HTML(http.StatusOK, lookFile, reponseData)
+	funcIndexById(ctx, c, "look.html")
 }
 
 // funcUpdatePre 修改页面
 func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
-	id := c.Query("id")
-	if id == "" {
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
-		c.Abort() // 终止后续调用
-		return
-	}
-	urlPathIndexName := c.Param("urlPathIndexName")
-	indexName := bleveDataDir + urlPathIndexName
-	reponseData, err := findIndexOne(ctx, c, indexName, id)
-	if err != nil { //索引不存在
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
-		c.Abort() // 终止后续调用
-		return
-	}
-	//优先使用自定义模板文件
-	updateFile := "/admin/" + urlPathIndexName + "Update.html"
-	t := tmpl.Lookup(updateFile)
-	if t == nil { //不存在自定义模板,使用通用模板
-		updateFile = "/admin/update.html"
-	}
-	reponseData.UrlPathIndexName = urlPathIndexName
-	c.HTML(http.StatusOK, updateFile, reponseData)
+	funcIndexById(ctx, c, "update.html")
 }
 
 // 修改内容
 func funcUpdate(ctx context.Context, c *app.RequestContext) {
 	id := c.Query("id")
 	if id == "" { //没有id,认为是新增
-
+		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Abort() // 终止后续调用
+		return
 	}
 	urlPathIndexName := c.Param("urlPathIndexName")
 	indexName := bleveDataDir + urlPathIndexName
@@ -244,7 +204,7 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
 	//优先使用自定义模板文件
-	updateFile := "/admin/" + urlPathIndexName + "Save.html"
+	updateFile := "/admin/" + urlPathIndexName + "/save.html"
 	t := tmpl.Lookup(updateFile)
 	if t == nil { //不存在自定义模板,使用通用模板
 		updateFile = "/admin/save.html"
@@ -273,4 +233,30 @@ func permissionHandler() app.HandlerFunc {
 		// 传递从jwttoken获取的userId
 		c.Set(tokenUserId, userId)
 	}
+}
+
+// funcIndexById 根据Id查询索引信息
+func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) {
+	id := c.Query("id")
+	if id == "" {
+		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	urlPathIndexName := c.Param("urlPathIndexName")
+	indexName := bleveDataDir + urlPathIndexName
+	reponseData, err := findIndexOne(ctx, c, indexName, id)
+	if err != nil { //索引不存在
+		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	//优先使用自定义模板文件
+	lookFile := "/admin/" + urlPathIndexName + "/" + htmlfile
+	t := tmpl.Lookup(lookFile)
+	if t == nil { //不存在自定义模板,使用通用模板
+		lookFile = "/admin/" + htmlfile
+	}
+	reponseData.UrlPathIndexName = urlPathIndexName
+	c.HTML(http.StatusOK, lookFile, reponseData)
 }
