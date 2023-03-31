@@ -44,6 +44,13 @@ type IndexFieldStruct struct {
 
 // initIndexField 初始化创建IndexField索引
 func initIndexField() (bool, error) {
+	ok, err := openBleveIndex(indexFieldName)
+	if err != nil {
+		return false, err
+	}
+	if ok {
+		return true, nil
+	}
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName

@@ -78,64 +78,47 @@ func checkBleveStatus() bool {
 	gseAnalyzerMapping.DocValues = false
 	gseAnalyzerMapping.Analyzer = gseAnalyzerName
 
-	status, err := checkBleveCreate()
+	if !pathExists(bleveDataDir) { //目录如果不存在
+		// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
+		err := os.Mkdir(bleveDataDir, os.ModePerm)
+		if err != nil {
+			FuncLogError(err)
+			return false
+		}
+	}
+
+	//这三张表是系统表,使用变量初始化,优先级高于init,其他表使用 init函数初始化
+
+	// 初始化indexField
+	ok, err := initIndexField()
 	if err != nil {
-		FuncLogError(err)
 		return false
 	}
-	return status
+	// 初始化indexInfo
+	ok, err = initIndexInfo()
+	if err != nil {
+		return false
+	}
+	// 初始化 config
+	ok, err = initConfig()
+	if err != nil {
+		return false
+	}
+	return ok
 }
 
-// checkBleveCreate 检查是不是初始化安装,如果是就创建文件夹目录
-func checkBleveCreate() (bool, error) {
-	if pathExists(bleveDataDir) { // 如果已经存在目录,遍历索引,放到全局map里
-		fileInfo, _ := os.ReadDir(bleveDataDir)
-		for _, dir := range fileInfo {
-			if !dir.IsDir() {
-				continue
-			}
-
-			// 打开所有的索引,放到map里,一个索引只能打开一次.
-			index, err := bleve.Open(bleveDataDir + dir.Name())
-			if err != nil {
-				return false, err
-			}
-			IndexMap[bleveDataDir+dir.Name()] = index
-		}
-		return true, nil
+// openBleveIndex 打开索引目录
+func openBleveIndex(indexName string) (bool, error) {
+	if !pathExists(indexName) { //如果索文件不存在
+		return false, nil
 	}
-	// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
-	errMkdir := os.Mkdir(bleveDataDir, os.ModePerm)
-	if errMkdir != nil {
-		FuncLogError(errMkdir)
-		return false, errMkdir
+	// 打开所有的索引,放到map里,一个索引只能打开一次.
+	index, err := bleve.Open(indexName)
+	if err != nil {
+		FuncLogError(err)
+		return false, err
 	}
-
-	// 初始化IndexField
-	initIndexField()
-
-	// 初始化IndexInfo
-	initIndexInfo()
-
-	// 初始化配置
-	initConfig()
-	// 初始化用户表
-	initUser()
-
-	// 初始化站点信息表
-	initSite()
-
-	// 初始化文章默认模型的记录,indexInfo indexType="module". 只是记录,并不创建index,全部保存到context里,用于全局检索
-	initModuleDefault()
-
-	// 初始化文章内容
-	initContent()
-
-	// 初始化导航菜单
-	initNavMenu()
-
-	// 初始化页面模板
-	initpageTemplateName()
+	IndexMap[indexName] = index
 	return true, nil
 }
 
