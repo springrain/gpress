@@ -7,7 +7,11 @@ import (
 )
 
 // 导航菜单
-func initNavMenu() (bool, error) {
+func init() {
+	ok, err := openBleveIndex(indexNavMenuName)
+	if err != nil || ok {
+		return
+	}
 	indexField := IndexMap[indexFieldName]
 
 	// 获取当前时间
@@ -179,7 +183,7 @@ func initNavMenu() (bool, error) {
 
 	if err != nil {
 		FuncLogError(err)
-		return false, err
+		return
 	}
 	//保存表信息
 	indexInfo := IndexMap[indexInfoName]
@@ -194,5 +198,4 @@ func initNavMenu() (bool, error) {
 		SortNo:     6,
 		Active:     1,
 	})
-	return true, nil
 }

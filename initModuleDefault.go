@@ -5,7 +5,7 @@ import (
 )
 
 // 默认模型 indexInfo indexType="module". 只是记录,并不创建index,全部保存到context里,用于全局检索
-func initModuleDefault() (bool, error) {
+func init() {
 	indexField := IndexMap[indexFieldName]
 	// 创建内容表的索引
 	//mapping := bleve.NewIndexMapping()
@@ -145,6 +145,4 @@ func initModuleDefault() (bool, error) {
 		SortNo:     4,
 		Active:     1,
 	})
-
-	return true, nil
 }

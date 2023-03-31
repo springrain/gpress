@@ -7,7 +7,11 @@ import (
 )
 
 // 初始化站点信息
-func initSite() (bool, error) {
+func init() {
+	ok, err := openBleveIndex(indexSiteName)
+	if err != nil || ok {
+		return
+	}
 	indexField := IndexMap[indexFieldName]
 
 	// 创建用户表的索引
@@ -176,7 +180,7 @@ func initSite() (bool, error) {
 
 	if err != nil {
 		FuncLogError(err)
-		return false, err
+		return
 	}
 	//保存表信息
 	indexInfo := IndexMap[indexInfoName]
@@ -191,5 +195,4 @@ func initSite() (bool, error) {
 		SortNo:     3,
 		Active:     1,
 	})
-	return true, nil
 }

@@ -7,7 +7,11 @@ import (
 )
 
 // initUser 初始化创建User索引
-func initUser() (bool, error) {
+func init() {
+	ok, err := openBleveIndex(indexUserName)
+	if err != nil || ok {
+		return
+	}
 	// 获取索引字段的表
 	indexField := IndexMap[indexFieldName]
 	// 当前时间
@@ -81,7 +85,7 @@ func initUser() (bool, error) {
 	userIndex, err := bleve.New(indexUserName, mapping)
 	if err != nil {
 		FuncLogError(err)
-		return false, err
+		return
 	}
 	IndexMap[indexUserName] = userIndex
 
@@ -98,6 +102,4 @@ func initUser() (bool, error) {
 		SortNo:     2,
 		Active:     1,
 	})
-
-	return true, nil
 }
