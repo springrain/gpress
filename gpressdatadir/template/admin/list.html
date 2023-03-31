@@ -5,11 +5,11 @@
 <section class="section">
   <div class="container">
     <!-- 搜索表单 -->
-    <form class="field is-horizontal" action="#" method="POST">
+    <form class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathIndexName}}/list" method="GET">
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" placeholder="Search...">
+            <input class="input" type="text" name="q" placeholder="Search...">
           </div>
         </div>
         <div class="field">
@@ -22,30 +22,30 @@
 
     <!-- 列表 -->
     <table class="table is-fullwidth">
+
+     
       <thead>
         <tr>
-          <th>列1</th>
-          <th>列2</th>
-          <th>列3</th>
+          <!-- 循环表头 -->
+          {{ range .IndexField }}
+          <th>{{.FieldName}}</th>
+          {{end }}
         </tr>
       </thead>
       <tbody>
+        <!-- 循环所有的数据 -->
+        {{ range $i,$v := .Data }}
         <tr>
-          <td>行1列1</td>
-          <td>行1列2</td>
-          <td>行1列3</td>
+          <!-- 循环表头,需要和表格的表头对应 -->
+          {{ range $.IndexField }}
+          <!-- 获取每一列的值 -->
+          <td> {{ index $v .FieldCode }}</td>
+          {{end }}
         </tr>
-        <tr>
-          <td>行2列1</td>
-          <td>行2列2</td>
-          <td>行2列3</td>
-        </tr>
-        <tr>
-          <td>行3列1</td>
-          <td>行3列2</td>
-          <td>行3列3</td>
-        </tr>
+        {{end }}
+       
       </tbody>
+
     </table>
 
     <!-- 分页条 -->
@@ -54,16 +54,16 @@
       <a class="pagination-next">下一页</a>
       <ul class="pagination-list">
         <li>
-          <a class="pagination-link" aria-label="总条数">共 100 条</a>
+          <a class="pagination-link" aria-label="总条数">共 {{ .Page.TotalCount }} 条</a>
         </li>
         <li>
-          <a class="pagination-link" aria-label="总页数">共 10 页</a>
+          <a class="pagination-link" aria-label="总页数">共 {{ .Page.PageCount }} 页</a>
         </li>
         <li>
           <span class="pagination-ellipsis">&hellip;</span>
         </li>
         <li>
-          <a class="pagination-link is-current" aria-label="当前页" aria-current="page">{{ .Page.PageNo }}-1</a>
+          <a class="pagination-link is-current" aria-label="当前页" aria-current="page">{{ .Page.PageNo }}</a>
         </li>
         <li>
           <a class="pagination-link" aria-label="跳转到第2页">2</a>
