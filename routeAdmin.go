@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol"
 	"github.com/cloudwego/hertz/pkg/route"
 )
@@ -13,6 +14,8 @@ import (
 var adminGroup = initAdminGroup()
 
 func initAdminGroup() *route.RouterGroup {
+	// 设置日志级别
+	hlog.SetLevel(hlog.LevelInfo)
 	// 初始化模板
 	err := initTemplate()
 	if err != nil { // 初始化模板异常
@@ -125,9 +128,9 @@ func init() {
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 	})
 
-	// 通用列表
-	adminGroup.GET("/:indexName/list", funcList)
-	adminGroup.POST("/:indexName/list", funcList)
+	// 通用列表,先都使用get方法
+	adminGroup.GET("/:urlPathIndexName/list", funcList)
+	//adminGroup.POST("/:urlPathIndexName/list", funcList)
 
 }
 
@@ -138,8 +141,8 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
-	nameParam := c.Param("indexName")
-	indexName := bleveDataDir + nameParam
+	urlPathIndexName := c.Param("urlPathIndexName")
+	indexName := bleveDataDir + urlPathIndexName
 	reponseData, err := findIndex(ctx, c, indexName)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, []byte("/admin/error"))
@@ -148,12 +151,14 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//优先使用自定义模板文件
-	listFile := "/admin/" + nameParam + "List.html"
+	listFile := "/admin/" + urlPathIndexName + "List.html"
 	t := tmpl.Lookup(listFile)
 	if t == nil { //不存在自定义模板,使用通用模板
 		listFile = "/admin/list.html"
 	}
-
+	queryString := c.Request.QueryString()
+	reponseData.QueryString = string(queryString)
+	reponseData.UrlPathIndexName = urlPathIndexName
 	c.HTML(http.StatusOK, listFile, reponseData)
 }
 
