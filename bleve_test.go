@@ -216,7 +216,7 @@ func TestSearchOrder(t *testing.T) {
 	query := bleve.NewTermQuery(indexUserName)
 	// query := bleve.NewTermQuery("zhongguo  zhengzhou")
 	// 指定查询的字段
-	query.SetField("IndexCode")
+	query.SetField("indexCode")
 	// searchRequest := bleve.NewSearchRequest(query)
 	searchRequest := bleve.NewSearchRequestOptions(query, size, from, false)
 

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  /*
   // 增加form提交
   const form = document.querySelector("#gpress-form");
    
@@ -42,5 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
     }
+    */
 
 });
