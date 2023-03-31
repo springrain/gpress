@@ -8,6 +8,14 @@ import (
 
 // initConfig 初始化创建Config索引
 func initConfig() (bool, error) {
+
+	ok, err := openBleveIndex(indexConfigName)
+	if err != nil {
+		return false, err
+	}
+	if ok {
+		return true, nil
+	}
 	// 获取索引字段的表
 	indexField := IndexMap[indexFieldName]
 	// 当前时间

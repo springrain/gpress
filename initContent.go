@@ -6,7 +6,11 @@ import (
 	"github.com/blevesearch/bleve/v2"
 )
 
-func initContent() (bool, error) {
+func init() {
+	ok, err := openBleveIndex(indexContentName)
+	if err != nil || ok {
+		return
+	}
 	indexField := IndexMap[indexFieldName]
 
 	// 创建内容表的索引
@@ -199,7 +203,7 @@ func initContent() (bool, error) {
 
 	if err != nil {
 		FuncLogError(err)
-		return false, err
+		return
 	}
 
 	//保存表信息
@@ -215,5 +219,4 @@ func initContent() (bool, error) {
 		SortNo:     5,
 		Active:     1,
 	})
-	return true, nil
 }

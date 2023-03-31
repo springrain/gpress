@@ -6,7 +6,11 @@ import (
 	"github.com/blevesearch/bleve/v2"
 )
 
-func initpageTemplateName() (bool, error) {
+func init() {
+	ok, err := openBleveIndex(indexPageTemplateName)
+	if err != nil || ok {
+		return
+	}
 	indexField := IndexMap[indexFieldName]
 
 	// 获取当前时间
@@ -70,7 +74,7 @@ func initpageTemplateName() (bool, error) {
 
 	if err != nil {
 		FuncLogError(err)
-		return false, err
+		return
 	}
 	//保存表信息
 	indexInfo := IndexMap[indexInfoName]
@@ -85,5 +89,4 @@ func initpageTemplateName() (bool, error) {
 		SortNo:     7,
 		Active:     1,
 	})
-	return true, nil
 }
