@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -146,6 +146,9 @@ func init() {
 	//ajax POST提交JSON信息,返回方法JSON
 	adminGroup.POST("/:urlPathIndexName/save", funcSave)
 
+	//ajax POST提交JSON信息,返回方法JSON
+	adminGroup.POST("/:urlPathIndexName/delete", funcDelete)
+
 }
 
 // funcIndex 模板首页
@@ -190,13 +193,40 @@ func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
 func funcUpdate(ctx context.Context, c *app.RequestContext) {
 	id := c.Query("id")
 	if id == "" { //没有id,认为是新增
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
 		c.Abort() // 终止后续调用
 		return
 	}
 	urlPathIndexName := c.Param("urlPathIndexName")
 	indexName := bleveDataDir + urlPathIndexName
-	fmt.Println(indexName)
+	_, ok := IndexMap[indexName]
+	if !ok { //索引不存在
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
+		c.Abort() // 终止后续调用
+		return
+	}
+	jsonBody, err := c.Body()
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "获取body内容错误"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	newMap := make(map[string]interface{}, 0)
+	err = json.Unmarshal(jsonBody, &newMap)
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	err = updateIndex(ctx, indexName, id, newMap)
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
 	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 }
 
@@ -216,8 +246,53 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
 	indexName := bleveDataDir + urlPathIndexName
-	fmt.Println(indexName)
-	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
+	_, ok := IndexMap[indexName]
+	if !ok { //索引不存在
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
+		c.Abort() // 终止后续调用
+		return
+	}
+	jsonBody, err := c.Body()
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "获取body内容错误"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	newMap := make(map[string]interface{}, 0)
+	err = json.Unmarshal(jsonBody, &newMap)
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	responseData, err := saveNewIndex(ctx, indexName, newMap)
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	c.JSON(http.StatusOK, responseData)
+}
+
+// 修改内容
+func funcDelete(ctx context.Context, c *app.RequestContext) {
+	id := c.Query("id")
+	if id == "" { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
+		c.Abort() // 终止后续调用
+		return
+	}
+	urlPathIndexName := c.Param("urlPathIndexName")
+	indexName := bleveDataDir + urlPathIndexName
+	err := deleteById(ctx, indexName, id)
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+	}
 }
 
 // permissionHandler 权限拦截器

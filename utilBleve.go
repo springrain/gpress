@@ -227,7 +227,7 @@ func findIndexFieldStruct(ctx context.Context, indexName string) ([]IndexFieldSt
 }
 
 // 保存新索引
-func saveNewIndex(ctx context.Context, newIndex map[string]interface{}, tableName string) (ResponseData, error) {
+func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]interface{}) (ResponseData, error) {
 	searchResult, err := findIndexFieldResult(ctx, tableName, 1)
 
 	responseData := ResponseData{StatusCode: 1}
@@ -297,7 +297,14 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	}
 	return nil
 }
-
+func deleteById(ctx context.Context, tableName string, id string) error {
+	index, ok := IndexMap[tableName]
+	if !ok {
+		return errors.New("数据不存在")
+	}
+	err := index.Delete(id)
+	return err
+}
 func deleteAll(ctx context.Context, tableName string) error {
 	index := IndexMap[tableName]
 	count, err := index.DocCount()
