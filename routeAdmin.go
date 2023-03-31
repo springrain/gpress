@@ -139,21 +139,20 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
 	nameParam := c.Param("indexName")
-	//索引名称
 	indexName := bleveDataDir + nameParam
-	_, ok := IndexMap[indexName]
-	if !ok { //索引不存在
+	reponseData, err := findIndex(ctx, c, indexName)
+	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, []byte("/admin/error"))
 		c.Abort() // 终止后续调用
 		return
 	}
+
 	//优先使用自定义模板文件
 	listFile := "/admin/" + nameParam + "List.html"
 	t := tmpl.Lookup(listFile)
 	if t == nil { //不存在自定义模板,使用通用模板
 		listFile = "/admin/list.html"
 	}
-	reponseData := findIndex(ctx, c, indexName)
 
 	c.HTML(http.StatusOK, listFile, reponseData)
 }

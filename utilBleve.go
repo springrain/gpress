@@ -324,39 +324,63 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return nil
 }
 
-func findIndex(ctx context.Context, c *app.RequestContext, indexName string) ResponseData {
-	searchIndex, _ := IndexMap[indexName]
+func findIndex(ctx context.Context, c *app.RequestContext, indexName string) (ResponseData, error) {
+	searchIndex, ok := IndexMap[indexName]
+	if !ok { //索引不存在
+		err := errors.New("索引不存在")
+		return ResponseData{StatusCode: 0, ERR: err}, err
+	}
 	//获取页码
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	pageNo, _ := strconv.Atoi(pageNoStr)
 	if pageNo == 0 {
 		pageNo = 1
 	}
-
-	// 处理参数
-
+	mapParams := make(map[string]interface{}, 0)
+	//获取所有的参数
+	c.Bind(&mapParams)
+	//删除掉固定的两个
+	delete(mapParams, "pageNo")
+	delete(mapParams, "q")
+	// 查询
+	var searchQuery query.Query
 	q := c.DefaultQuery("q", "*")
 	queryKey := bleve.NewQueryStringQuery(q)
-
+	if len(mapParams) < 1 { //没有其他参数了
+		searchQuery = queryKey
+	} else { //还有其他参数,认为是数据库字段,进行检索
+		qs := make([]query.Query, 0)
+		qs = append(qs, queryKey)
+		for k, _ := range mapParams {
+			value := c.Query(k)
+			term := bleve.NewTermQuery(value)
+			term.SetField(k)
+			qs = append(qs, term)
+		}
+		searchQuery = bleve.NewConjunctionQuery(qs...)
+	}
 	page := NewPage()
 	page.PageNo = pageNo
-	// searchRequest := bleve.NewSearchRequest(queryKey)
-	searchRequest := bleve.NewSearchRequestOptions(queryKey, pageNo*page.PageSize, (pageNo-1)*page.PageSize, false)
+	searchRequest := bleve.NewSearchRequestOptions(searchQuery, pageNo*page.PageSize, (pageNo-1)*page.PageSize, false)
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
 
 	searchResult, err := searchIndex.SearchInContext(ctx, searchRequest)
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}
+		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
 	total, err := strconv.Atoi(strconv.FormatUint(searchResult.Total, 10))
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}
+		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
 	page.setTotalCount(total)
 	data, err := result2SliceMap(searchIndex.Name(), searchResult)
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}
+		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
-	return ResponseData{StatusCode: 1, Data: data, Page: page}
+	indexField, err := findIndexFieldStruct(ctx, indexName)
+	if err != nil {
+		return ResponseData{StatusCode: 0, ERR: err}, err
+	}
+	return ResponseData{StatusCode: 1, Data: data, IndexField: indexField, Page: page}, err
 }
