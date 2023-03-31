@@ -136,10 +136,15 @@ func init() {
 	// 通用查看
 	adminGroup.GET("/:urlPathIndexName/look", funcLook)
 
-	//跳转到查看页面
+	//跳转到修改页面
 	adminGroup.GET("/:urlPathIndexName/update", funcUpdatePre)
 	//ajax POST提交JSON信息,返回方法JSON
-	adminGroup.POST("/:urlPathIndexName/update", funcLook)
+	adminGroup.POST("/:urlPathIndexName/update", funcUpdate)
+
+	//跳转到保存页面
+	adminGroup.GET("/:urlPathIndexName/save", funcSavePre)
+	//ajax POST提交JSON信息,返回方法JSON
+	adminGroup.POST("/:urlPathIndexName/save", funcSave)
 
 }
 
@@ -197,7 +202,7 @@ func funcLook(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, lookFile, reponseData)
 }
 
-// funcLook 通用查看,根据id查看
+// funcUpdatePre 修改页面
 func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
 	id := c.Query("id")
 	if id == "" {
@@ -223,11 +228,32 @@ func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, updateFile, reponseData)
 }
 
+// 修改内容
 func funcUpdate(ctx context.Context, c *app.RequestContext) {
 	id := c.Query("id")
 	if id == "" { //没有id,认为是新增
 
 	}
+	urlPathIndexName := c.Param("urlPathIndexName")
+	indexName := bleveDataDir + urlPathIndexName
+	fmt.Println(indexName)
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
+}
+
+// funcSavePre 保存页面
+func funcSavePre(ctx context.Context, c *app.RequestContext) {
+	urlPathIndexName := c.Param("urlPathIndexName")
+	//优先使用自定义模板文件
+	updateFile := "/admin/" + urlPathIndexName + "Save.html"
+	t := tmpl.Lookup(updateFile)
+	if t == nil { //不存在自定义模板,使用通用模板
+		updateFile = "/admin/save.html"
+	}
+	c.HTML(http.StatusOK, updateFile, nil)
+}
+
+// 保存内容
+func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
 	indexName := bleveDataDir + urlPathIndexName
 	fmt.Println(indexName)
