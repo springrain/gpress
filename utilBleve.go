@@ -345,6 +345,9 @@ func findIndex(ctx context.Context, c *app.RequestContext, indexName string) (Re
 	// 查询
 	var searchQuery query.Query
 	q := c.DefaultQuery("q", "*")
+	if q == "" {
+		q = "*"
+	}
 	queryKey := bleve.NewQueryStringQuery(q)
 	if len(mapParams) < 1 { //没有其他参数了
 		searchQuery = queryKey
