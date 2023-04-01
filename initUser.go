@@ -12,11 +12,13 @@ func init() {
 	if err != nil || ok {
 		return
 	}
-	// 获取索引字段的表
-	indexField := IndexMap[indexFieldName]
 	// 当前时间
 	now := time.Now()
 
+	// 创建用户表的索引
+	mapping := bleve.NewIndexMapping()
+	// 指定默认的分词器
+	mapping.DefaultAnalyzer = keywordAnalyzerName
 	// 用户表的 ID 字段
 	userId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -30,7 +32,7 @@ func init() {
 		SortNo:       1,
 		Active:       3,
 	}
-	indexField.Index(userId.ID, userId)
+	addIndexField(mapping, userId)
 
 	// 用户表的 Account 字段
 	userAccount := IndexFieldStruct{
@@ -45,7 +47,7 @@ func init() {
 		SortNo:       2,
 		Active:       1,
 	}
-	indexField.Index(userAccount.ID, userAccount)
+	addIndexField(mapping, userAccount)
 	// 用户表的 PassWord 字段
 	userPassWord := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -59,7 +61,7 @@ func init() {
 		SortNo:       3,
 		Active:       1,
 	}
-	indexField.Index(userPassWord.ID, userPassWord)
+	addIndexField(mapping, userPassWord)
 	// 用户表的 UserName 字段
 	userName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -73,16 +75,12 @@ func init() {
 		SortNo:       4,
 		Active:       1,
 	}
-	indexField.Index(userName.ID, userName)
+	addIndexField(mapping, userName)
 
 	// 添加公共字段
 	// indexCommonField(indexField, indexUserName, 4, now)
 
-	// 创建用户表的索引
-	mapping := bleve.NewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	userIndex, err := bleve.New(indexUserName, mapping)
 	if err != nil {
 		FuncLogError(err)
