@@ -33,18 +33,18 @@ func TestKeyword(t *testing.T) {
 		Name string
 	}{
 		Id:   "userId",
-		Name: "testkeyword",
+		Name: "中文",
 	}
 	index.Index(user.Id, user)
 
-	termQuery := bleve.NewTermQuery("userId")
-	termQuery.SetField("Id")
+	termQuery := bleveNewTermQuery(user.Name)
+	termQuery.SetField("Name")
 	termRequest := bleve.NewSearchRequest(termQuery)
 	termRequest.Fields = []string{"*"}
 	termResult, _ := index.Search(termRequest)
 	fmt.Println("termQuery total:", termResult.Total)
 
-	stringQuery := bleve.NewQueryStringQuery(`"userid"`)
+	stringQuery := bleve.NewQueryStringQuery(`"userId"`)
 	stringRequest := bleve.NewSearchRequest(stringQuery)
 	stringRequest.Fields = []string{"*"}
 	stringResult, _ := index.Search(stringRequest)
@@ -164,8 +164,8 @@ func TestSearchKey(t *testing.T) {
 func TestSearchJingQue(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	// 查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleve.NewTermQuery("完")
-	// query := bleve.NewTermQuery("zhongguo  zhengzhou")
+	query := bleveNewTermQuery("完")
+	// query := bleveNewTermQuery("zhongguo  zhengzhou")
 	// 指定查询的字段
 	query.SetField("Address")
 	// searchRequest := bleve.NewSearchRequest(query)
@@ -250,8 +250,8 @@ func TestSearchWhere(t *testing.T) {
 func TestSearchOrder(t *testing.T) {
 	index := IndexMap[indexFieldName]
 	// 查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleve.NewTermQuery(indexUserName)
-	// query := bleve.NewTermQuery("zhongguo  zhengzhou")
+	query := bleveNewTermQuery(indexUserName)
+	// query := bleveNewTermQuery("zhongguo  zhengzhou")
 	// 指定查询的字段
 	query.SetField("indexCode")
 	// searchRequest := bleve.NewSearchRequest(query)

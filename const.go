@@ -56,8 +56,9 @@ const (
 
 	// keyword 分词器名称,避免引入错误的包,指定分词器名称,存在问题NewQueryStringQuery时不能正确匹配查询
 	//使用keywordMapping代替, mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	// "github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 	//keywordAnalyzerName = keyword.Name
-	keywordAnalyzerName = "keywordlow"
+	keywordAnalyzerName = "keywordlower"
 )
 
 var keywordMapping = bleve.NewKeywordFieldMapping()
