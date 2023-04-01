@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/mapping"
 )
 
 // IndexFieldStruct 索引和字段(索引名:indexField)
@@ -53,8 +54,11 @@ func initIndexField() (bool, error) {
 	}
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	mapping.DefaultAnalyzer = keywordAnalyzerName
+
+	//字段名方便搜索
+	mapping.DefaultMapping.AddFieldMappingsAt("fieldName", gseAnalyzerMapping)
+
 	index, err := bleve.New(indexFieldName, mapping)
 	if err != nil {
 		FuncLogError(err)
@@ -65,7 +69,7 @@ func initIndexField() (bool, error) {
 }
 
 // indexCommonField 插入公共字段
-func indexCommonField(indexField bleve.Index, indexName string, sortNo int, now time.Time) {
+func indexCommonField(mapping *mapping.IndexMappingImpl, indexName string, sortNo int, now time.Time) {
 	sortNo++
 	commonCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -79,7 +83,7 @@ func indexCommonField(indexField bleve.Index, indexName string, sortNo int, now 
 		SortNo:       sortNo,
 		Active:       3,
 	}
-	indexField.Index(commonCreateTime.ID, commonCreateTime)
+	addIndexField(mapping, commonCreateTime)
 
 	sortNo++
 	commonUpdateTime := IndexFieldStruct{
@@ -94,7 +98,7 @@ func indexCommonField(indexField bleve.Index, indexName string, sortNo int, now 
 		SortNo:       9,
 		Active:       3,
 	}
-	indexField.Index(commonUpdateTime.ID, commonUpdateTime)
+	addIndexField(mapping, commonUpdateTime)
 
 	sortNo++
 	commonCreateUser := IndexFieldStruct{
@@ -109,7 +113,7 @@ func indexCommonField(indexField bleve.Index, indexName string, sortNo int, now 
 		SortNo:       10,
 		Active:       3,
 	}
-	indexField.Index(commonCreateUser.ID, commonCreateUser)
+	addIndexField(mapping, commonCreateUser)
 
 	sortNo++
 	commonSortNo := IndexFieldStruct{
@@ -124,7 +128,7 @@ func indexCommonField(indexField bleve.Index, indexName string, sortNo int, now 
 		SortNo:       9,
 		Active:       3,
 	}
-	indexField.Index(commonSortNo.ID, commonSortNo)
+	addIndexField(mapping, commonSortNo)
 
 	sortNo++
 	commonActive := IndexFieldStruct{
@@ -139,5 +143,25 @@ func indexCommonField(indexField bleve.Index, indexName string, sortNo int, now 
 		SortNo:       10,
 		Active:       3,
 	}
-	indexField.Index(commonActive.ID, commonActive)
+	addIndexField(mapping, commonActive)
+}
+
+func addIndexField(mapping *mapping.IndexMappingImpl, indexFiledStruct IndexFieldStruct) {
+	// 获取索引字段的表
+	indexField := IndexMap[indexFieldName]
+	indexField.Index(indexFiledStruct.ID, indexFiledStruct)
+	if mapping == nil {
+		return
+	}
+
+	var analyzerMapping *mapping.FieldMapping
+	switch indexFiledStruct.AnalyzerName {
+	case commaAnalyzerName:
+		analyzerMapping = commaAnalyzerMapping
+	case keywordAnalyzerName:
+		analyzerMapping = keywordAnalyzerMapping
+	default:
+		analyzerMapping = gseAnalyzerMapping
+	}
+	mapping.DefaultMapping.AddFieldMappingsAt(indexFiledStruct.FieldCode, analyzerMapping)
 }

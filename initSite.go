@@ -12,13 +12,12 @@ func init() {
 	if err != nil || ok {
 		return
 	}
-	indexField := IndexMap[indexFieldName]
 
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	mapping.DefaultAnalyzer = gseAnalyzerName
+	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	// 获取当前时间
 	now := time.Now()
 
@@ -36,7 +35,7 @@ func init() {
 		Active:       3,
 	}
 	// 放入文件中
-	indexField.Index(siteId.ID, siteId)
+	addIndexField(mapping, siteId)
 
 	siteTitle := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -50,9 +49,9 @@ func init() {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(siteTitle.ID, siteTitle)
+	addIndexField(mapping, siteTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
 	siteKeyword := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -66,10 +65,10 @@ func init() {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(siteKeyword.ID, siteKeyword)
+	addIndexField(mapping, siteKeyword)
 
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
 	siteDescription := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -83,10 +82,10 @@ func init() {
 		SortNo:       4,
 		Active:       3,
 	}
-	indexField.Index(siteDescription.ID, siteDescription)
+	addIndexField(mapping, siteDescription)
 
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
 	siteTheme := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -100,7 +99,7 @@ func init() {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(siteTheme.ID, siteTheme)
+	addIndexField(mapping, siteTheme)
 
 	siteThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -114,7 +113,7 @@ func init() {
 		SortNo:       6,
 		Active:       3,
 	}
-	indexField.Index(siteThemePC.ID, siteThemePC)
+	addIndexField(mapping, siteThemePC)
 
 	siteThemeWAP := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -128,7 +127,7 @@ func init() {
 		SortNo:       7,
 		Active:       3,
 	}
-	indexField.Index(siteThemeWAP.ID, siteThemeWAP)
+	addIndexField(mapping, siteThemeWAP)
 
 	siteThemeWEIXIN := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -142,7 +141,7 @@ func init() {
 		SortNo:       8,
 		Active:       3,
 	}
-	indexField.Index(siteThemeWEIXIN.ID, siteThemeWEIXIN)
+	addIndexField(mapping, siteThemeWEIXIN)
 
 	siteLogo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -156,7 +155,7 @@ func init() {
 		SortNo:       9,
 		Active:       3,
 	}
-	indexField.Index(siteLogo.ID, siteLogo)
+	addIndexField(mapping, siteLogo)
 
 	siteFavicon := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -170,10 +169,10 @@ func init() {
 		SortNo:       10,
 		Active:       3,
 	}
-	indexField.Index(siteFavicon.ID, siteFavicon)
+	addIndexField(mapping, siteFavicon)
 
 	// 添加公共字段
-	indexCommonField(indexField, indexSiteName, 10, now)
+	indexCommonField(mapping, indexSiteName, 10, now)
 
 	siteIndexIndex, err := bleve.New(indexSiteName, mapping)
 	// 放到IndexMap中

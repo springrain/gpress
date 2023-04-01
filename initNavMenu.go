@@ -12,11 +12,13 @@ func init() {
 	if err != nil || ok {
 		return
 	}
-	indexField := IndexMap[indexFieldName]
 
 	// 获取当前时间
 	now := time.Now()
-
+	// 创建用户表的索引
+	mapping := bleve.NewIndexMapping()
+	// 指定默认的分词器
+	mapping.DefaultAnalyzer = gseAnalyzerName
 	// 初始化各个字段
 	navMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -32,7 +34,7 @@ func init() {
 		Required:     1,
 	}
 	// 放入文件中
-	indexField.Index(navMenuId.ID, navMenuId)
+	addIndexField(mapping, navMenuId)
 
 	navMenuMenuName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -47,7 +49,7 @@ func init() {
 		Active:       3,
 		Required:     1,
 	}
-	indexField.Index(navMenuMenuName.ID, navMenuMenuName)
+	addIndexField(mapping, navMenuMenuName)
 
 	navMenuHrefURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -62,7 +64,7 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuHrefURL.ID, navMenuHrefURL)
+	addIndexField(mapping, navMenuHrefURL)
 
 	navMenuHrefTarget := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -77,7 +79,7 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuHrefTarget.ID, navMenuHrefTarget)
+	addIndexField(mapping, navMenuHrefTarget)
 
 	navMenuPID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -92,7 +94,7 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuPID.ID, navMenuPID)
+	addIndexField(mapping, navMenuPID)
 
 	navMenuThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -107,7 +109,7 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuThemePC.ID, navMenuThemePC)
+	addIndexField(mapping, navMenuThemePC)
 
 	navMenuModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -122,7 +124,7 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuModuleID.ID, navMenuModuleID)
+	addIndexField(mapping, navMenuModuleID)
 
 	navMenuComCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -137,7 +139,7 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuComCode.ID, navMenuComCode)
+	addIndexField(mapping, navMenuComCode)
 
 	navMenuTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -152,7 +154,7 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuTemplateID.ID, navMenuTemplateID)
+	addIndexField(mapping, navMenuTemplateID)
 
 	navMenuChildTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -167,16 +169,12 @@ func init() {
 		Active:       3,
 		Required:     0,
 	}
-	indexField.Index(navMenuChildTemplateID.ID, navMenuChildTemplateID)
+	addIndexField(mapping, navMenuChildTemplateID)
 
 	// 添加公共字段
-	indexCommonField(indexField, indexNavMenuName, 10, now)
+	indexCommonField(mapping, indexNavMenuName, 10, now)
 
-	// 创建用户表的索引
-	mapping := bleve.NewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	navMenuIndex, err := bleve.New(indexNavMenuName, mapping)
 
 	// 放到IndexMap中
