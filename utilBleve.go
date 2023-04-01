@@ -93,17 +93,17 @@ func checkBleveStatus() bool {
 	//这三张表是系统表,使用变量初始化,优先级高于init,其他表使用 init函数初始化
 
 	// 初始化indexField
-	ok, err := initIndexField()
+	_, err := initIndexField()
 	if err != nil {
 		return false
 	}
 	// 初始化indexInfo
-	ok, err = initIndexInfo()
+	_, err = initIndexInfo()
 	if err != nil {
 		return false
 	}
 	// 初始化 config
-	ok, err = initConfig()
+	ok, err := initConfig()
 	if err != nil {
 		return false
 	}
@@ -387,7 +387,7 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	} else { //还有其他参数,认为是数据库字段,进行检索
 		qs := make([]query.Query, 0)
 		qs = append(qs, queryKey)
-		for k, _ := range mapParams {
+		for k := range mapParams {
 			value := c.Query(k)
 			term := bleveNewTermQuery(value)
 			term.SetField(k)
