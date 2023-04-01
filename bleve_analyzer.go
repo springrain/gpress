@@ -16,7 +16,7 @@ func initRegisterAnalyzer() {
 	registry.RegisterAnalyzer(commaAnalyzerName, commaAnalyzerConstructor)
 	registry.RegisterTokenizer(gseAnalyzerName, gseTokenizerConstructor)
 	registry.RegisterAnalyzer(gseAnalyzerName, gseAnalyzerConstructor)
-	registry.RegisterAnalyzer(keywordAnalyzerName, keywordlowAnalyzerConstructor)
+	registry.RegisterAnalyzer(keywordAnalyzerName, keywordlowerAnalyzerConstructor)
 }
 
 func commaTokenizerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Tokenizer, error) {
@@ -89,7 +89,7 @@ func gseTokenizerConstructor(config map[string]interface{}, cache *registry.Cach
 	return &gseTokenizer{&segmenter}, nil
 }
 
-func keywordlowAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Analyzer, error) {
+func keywordlowerAnalyzerConstructor(config map[string]interface{}, cache *registry.Cache) (analysis.Analyzer, error) {
 	keywordTokenizer, err := cache.TokenizerNamed(single.Name)
 	if err != nil {
 		return nil, err
