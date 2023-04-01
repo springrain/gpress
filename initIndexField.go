@@ -146,15 +146,15 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexName string, sortN
 	addIndexField(mapping, commonActive)
 }
 
-func addIndexField(mapping *mapping.IndexMappingImpl, indexFiledStruct IndexFieldStruct) {
+func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct IndexFieldStruct) {
 	// 获取索引字段的表
 	indexField := IndexMap[indexFieldName]
 	indexField.Index(indexFiledStruct.ID, indexFiledStruct)
-	if mapping == nil {
+	if bleveMapping == nil {
 		return
 	}
-
 	var analyzerMapping *mapping.FieldMapping
+
 	switch indexFiledStruct.AnalyzerName {
 	case commaAnalyzerName:
 		analyzerMapping = commaAnalyzerMapping
@@ -163,5 +163,5 @@ func addIndexField(mapping *mapping.IndexMappingImpl, indexFiledStruct IndexFiel
 	default:
 		analyzerMapping = gseAnalyzerMapping
 	}
-	mapping.DefaultMapping.AddFieldMappingsAt(indexFiledStruct.FieldCode, analyzerMapping)
+	bleveMapping.DefaultMapping.AddFieldMappingsAt(indexFiledStruct.FieldCode, analyzerMapping)
 }

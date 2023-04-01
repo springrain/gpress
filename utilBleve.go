@@ -359,21 +359,23 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	if q == "" || q == "*" {
 		queryKey = bleve.NewQueryStringQuery("*")
 	} else {
+		//gse分词之后,内容就被拆解用于索引了,也就是无法通过完整的字符串精确匹配了,或者新增一个字段,用keyword分词器
+
 		//不对q分词搜索,精确匹配
 		//termQuery := bleve.NewTermQuery(q)
 		//matchAllQuery := bleve.NewMatchAllQuery()
 		//queryBoolean1 := bleve.NewBooleanQuery()
 		//queryBoolean1.AddMust(termQuery, matchAllQuery)
 		//不对q分词搜索,精确匹配,NewQueryStringQuery 默认是 unicode tokenizer,暂时没有找到合理的方法
-		queryBoolean1 := bleve.NewQueryStringQuery("\"" + q + "\"")
-		queryBoolean1.SetBoost(100)
+		//queryBoolean1 := bleve.NewQueryStringQuery("\"" + q + "\"")
+		//queryBoolean1.SetBoost(100)
 
 		//对q分词搜索
 		queryBoolean2 := bleve.NewQueryStringQuery(q)
 
-		queryBoolean := bleve.NewBooleanQuery()
-		queryBoolean.AddShould(queryBoolean1, queryBoolean2)
-		queryKey = queryBoolean
+		//queryBoolean := bleve.NewBooleanQuery()
+		//queryBoolean.AddShould(queryBoolean1, queryBoolean2)
+		queryKey = queryBoolean2
 	}
 
 	if len(mapParams) < 1 { //没有其他参数了
