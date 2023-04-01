@@ -42,7 +42,7 @@ func initIndexInfo() (bool, error) {
 	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultAnalyzer = keywordAnalyzerName
+	mapping.DefaultAnalyzer = gseAnalyzerName
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 
 	// 获取当前时间

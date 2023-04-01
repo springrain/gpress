@@ -18,7 +18,7 @@ type IndexFieldStruct struct {
 	// BusinessID  业务ID,处理业务记录临时增加的字段,意外情况
 	BusinessID string `json:"businessID,omitempty"`
 	// FieldCode  字段代码
-	FieldCode string `json:"fFieldCode,omitempty"`
+	FieldCode string `json:"fieldCode,omitempty"`
 	// FieldName  字段中文名称
 	FieldName string `json:"fieldName,omitempty"`
 	// FieldType  字段类型,数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)
@@ -53,11 +53,26 @@ func initIndexField() (bool, error) {
 		return true, nil
 	}
 	mapping := bleve.NewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultAnalyzer = keywordAnalyzerName
+	// 指定默认的分词器,为了检索字段名可以分词,默认分词器为gse,其他字段都要手动指定为keyword
+	mapping.DefaultAnalyzer = gseAnalyzerName
 
+	mapping.DefaultMapping.AddFieldMappingsAt("id", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("indexCode", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("businessID", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("fieldCode", keywordAnalyzerMapping)
 	//字段名方便搜索
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldName", gseAnalyzerMapping)
+
+	mapping.DefaultMapping.AddFieldMappingsAt("fieldType", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("fieldFormat", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("required", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("defaultValue", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("analyzerName", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("createTime", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("updateTime", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("createUser", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("active", keywordAnalyzerMapping)
 
 	index, err := bleve.New(indexFieldName, mapping)
 	if err != nil {

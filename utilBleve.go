@@ -359,7 +359,8 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	if q == "" || q == "*" {
 		queryKey = bleve.NewQueryStringQuery("*")
 	} else {
-		//gse分词之后,内容就被拆解用于索引了,也就是无法通过完整的字符串精确匹配了,或者新增一个字段,用keyword分词器
+		//gse分词之后,内容就被拆解用于索引了,也就是无法通过完整的字符串精确匹配了,所以需要把索引的默认分词器设置为gse,这样搜索词也被分词了
+		// NewQueryStringQuery 在搜索所有字段时,使用的是索引的 mapping.DefaultAnalyzer 分词器,使用keyword的就需要明确声明了
 
 		//不对q分词搜索,精确匹配
 		//termQuery := bleve.NewTermQuery(q)
