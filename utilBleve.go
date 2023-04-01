@@ -371,7 +371,11 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	}
 	page := NewPage()
 	page.PageNo = pageNo
-	searchRequest := bleve.NewSearchRequestOptions(searchQuery, pageNo*page.PageSize, (pageNo-1)*page.PageSize, false)
+	from := (pageNo - 1) * page.PageSize
+	if from < 0 {
+		from = 0
+	}
+	searchRequest := bleve.NewSearchRequestOptions(searchQuery, page.PageSize, from, false)
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
 
