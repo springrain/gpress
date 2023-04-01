@@ -171,12 +171,12 @@ func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct Inde
 	var analyzerMapping *mapping.FieldMapping
 
 	switch indexFiledStruct.AnalyzerName {
+	case gseAnalyzerName:
+		analyzerMapping = gseAnalyzerMapping
 	case commaAnalyzerName:
 		analyzerMapping = commaAnalyzerMapping
-	case keywordAnalyzerName:
-		analyzerMapping = keywordAnalyzerMapping
 	default:
-		analyzerMapping = gseAnalyzerMapping
+		analyzerMapping = keywordAnalyzerMapping
 	}
 	bleveMapping.DefaultMapping.AddFieldMappingsAt(indexFiledStruct.FieldCode, analyzerMapping)
 }
