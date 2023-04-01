@@ -44,12 +44,13 @@ func TestKeyword(t *testing.T) {
 	termResult, _ := index.Search(termRequest)
 	fmt.Println("termQuery total:", termResult.Total)
 
-	stringQuery := bleve.NewQueryStringQuery(`"userId"`)
+	stringQuery := bleve.NewQueryStringQuery(`"userid"`)
 	stringRequest := bleve.NewSearchRequest(stringQuery)
 	stringRequest.Fields = []string{"*"}
 	stringResult, _ := index.Search(stringRequest)
 	// total is zero, why?
 	fmt.Println("stringQuery total:", stringResult.Total)
+	fmt.Println("stringResult:", stringResult)
 
 }
 
