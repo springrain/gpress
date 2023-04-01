@@ -21,6 +21,38 @@ var (
 
 var ctx context.Context = context.Background()
 
+func TestKeyword(t *testing.T) {
+	indexName := "testkeyword"
+	os.RemoveAll(indexName)
+	mapping := bleve.NewIndexMapping()
+
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
+	index, _ := bleve.New(indexName, mapping)
+	user := struct {
+		Id   string
+		Name string
+	}{
+		Id:   "userId",
+		Name: "testkeyword",
+	}
+	index.Index(user.Id, user)
+
+	termQuery := bleve.NewTermQuery("userId")
+	termQuery.SetField("Id")
+	termRequest := bleve.NewSearchRequest(termQuery)
+	termRequest.Fields = []string{"*"}
+	termResult, _ := index.Search(termRequest)
+	fmt.Println("termQuery total:", termResult.Total)
+
+	stringQuery := bleve.NewQueryStringQuery(`"userId"`)
+	stringRequest := bleve.NewSearchRequest(stringQuery)
+	stringRequest.Fields = []string{"*"}
+	stringResult, _ := index.Search(stringRequest)
+	// total is zero, why?
+	fmt.Println("stringQuery total:", stringResult.Total)
+
+}
+
 // 创建索引
 func TestCreate(t *testing.T) {
 	os.RemoveAll(indexName)
