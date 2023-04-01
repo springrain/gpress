@@ -351,11 +351,20 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	delete(mapParams, "q")
 	// 查询
 	var searchQuery query.Query
-	q := c.DefaultQuery("q", "*")
-	if q == "" {
-		q = "*"
+	var queryKey query.Query
+	q := c.Query("q")
+	if q == "" || q == "*" {
+		queryKey = bleve.NewQueryStringQuery("*")
+	} else {
+		//对q分词搜索
+		queryBoolean1 := bleve.NewQueryStringQuery(q)
+		//不对q分词搜索,精确匹配
+		queryBoolean2 := bleve.NewQueryStringQuery("\"" + q + "\"")
+		queryBoolean := bleve.NewBooleanQuery()
+		queryBoolean.AddShould(queryBoolean1, queryBoolean2)
+		queryKey = queryBoolean
 	}
-	queryKey := bleve.NewQueryStringQuery(q)
+
 	if len(mapParams) < 1 { //没有其他参数了
 		searchQuery = queryKey
 	} else { //还有其他参数,认为是数据库字段,进行检索
