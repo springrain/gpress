@@ -67,10 +67,8 @@ func pathExists(path string) bool {
 // 初始化 bleve 索引
 func checkBleveStatus() bool {
 
-	// 注册逗号分词器
-	initRegisterCommaAnalyzer()
-	// 注册gse中文分词器
-	initRegistergseAnalyzer()
+	// 注册bleve分词器,包括逗号,中文,小写keyword
+	initRegisterAnalyzer()
 
 	// 初始化分词器
 	commaAnalyzerMapping.DocValues = false
