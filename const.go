@@ -1,6 +1,9 @@
 package main
 
-import "github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
+import (
+	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
+)
 
 const (
 	// 基本目录
@@ -46,15 +49,18 @@ const (
 
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-	// keyword 分词器名称,避免引入错误的包
-	keywordAnalyzerName = keyword.Name
-
 	// 逗号分词器名称
 	commaAnalyzerName = "comma"
 
 	// gse分词器名称
 	gseAnalyzerName = "gse"
+
+	// keyword 分词器名称,避免引入错误的包,指定分词器名称,存在问题NewQueryStringQuery时不能正确匹配查询
+	//使用keywordMapping代替, mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	keywordAnalyzerName = keyword.Name
 )
+
+var keywordMapping = bleve.NewKeywordFieldMapping()
 
 const (
 	fieldType_数字 = iota + 1
