@@ -21,6 +21,8 @@ func init() {
 		FieldName:    "模型数据ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "默认模型",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -37,6 +39,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章标题使用中文分词
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "默认模型",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -54,6 +58,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章关键字使用逗号分词器
 		AnalyzerName: commaAnalyzerName,
+		IndexName:    "默认模型",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -71,6 +77,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章描述使用中文分词器
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "默认模型",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -87,6 +95,8 @@ func init() {
 		FieldName:    "自身页面路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "默认模型",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -102,6 +112,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章副标题使用中文分词器
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "默认模型",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -119,6 +131,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章内容使用中文分词器
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "默认模型",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -129,7 +143,7 @@ func init() {
 	////mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
 	// 添加公共字段
-	indexCommonField(nil, indexModuleDefaultName, 7, now)
+	indexCommonField(nil, indexModuleDefaultName, "默认模型", 7, now)
 
 	//保存表信息
 	indexInfo := IndexMap[indexInfoName]
