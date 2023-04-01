@@ -65,7 +65,7 @@ func init() {
 
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
-	// 指定默认的分词器,存在问题:NewQueryStringQuery时不能正确匹配查询
+	// 指定默认的分词器
 	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
 	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	pageTemplateIndex, err := bleve.New(indexPageTemplateName, mapping)

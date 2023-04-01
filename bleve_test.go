@@ -44,7 +44,7 @@ func TestKeyword(t *testing.T) {
 	termResult, _ := index.Search(termRequest)
 	fmt.Println("termQuery total:", termResult.Total)
 
-	stringQuery := bleve.NewQueryStringQuery(`"userId"`)
+	stringQuery := bleve.NewQueryStringQuery(`"中文"`)
 	stringRequest := bleve.NewSearchRequest(stringQuery)
 	stringRequest.Fields = []string{"*"}
 	stringResult, _ := index.Search(stringRequest)
@@ -63,9 +63,9 @@ func TestCreate(t *testing.T) {
 	// userMapping.AddFieldMappingsAt("Address", bleve.NewBooleanFieldMapping())
 	// mapping.DefaultMapping = userMapping
 
-	// 指定默认的分词器,存在问题:NewQueryStringQuery时不能正确匹配查询
-	//mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	// 指定默认的分词器
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
+	//mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 
 	// Address的mapping映射,此字段不使用分词,只保存,用于term的绝对精确查询,类似 sql的 where = 条件查询
 	addressMapping := bleve.NewTextFieldMapping()
