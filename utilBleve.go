@@ -354,10 +354,17 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	if q == "" || q == "*" {
 		queryKey = bleve.NewQueryStringQuery("*")
 	} else {
-		//对q分词搜索
-		queryBoolean1 := bleve.NewQueryStringQuery(q)
 		//不对q分词搜索,精确匹配
-		queryBoolean2 := bleve.NewQueryStringQuery("\"" + q + "\"")
+		termQuery := bleve.NewTermQuery(q)
+		matchAllQuery := bleve.NewMatchAllQuery()
+		queryBoolean1 := bleve.NewBooleanQuery()
+		queryBoolean1.AddMust(termQuery, matchAllQuery)
+		//不对q分词搜索,精确匹配,NewQueryStringQuery 默认是 unicode tokenizer,暂时没有找到合理的方法
+		//queryBoolean3 := bleve.NewQueryStringQuery("\"" + q + "\"")
+
+		//对q分词搜索
+		queryBoolean2 := bleve.NewQueryStringQuery(q)
+
 		queryBoolean := bleve.NewBooleanQuery()
 		queryBoolean.AddShould(queryBoolean1, queryBoolean2)
 		queryKey = queryBoolean
