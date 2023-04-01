@@ -1,9 +1,5 @@
 package main
 
-import (
-	"github.com/blevesearch/bleve/v2"
-)
-
 const (
 	// 基本目录
 	datadir = "gpressdatadir/"
@@ -54,14 +50,14 @@ const (
 	// gse分词器名称
 	gseAnalyzerName = "gse"
 
-	// keyword 分词器名称,避免引入错误的包,指定分词器名称,存在问题NewQueryStringQuery时不能正确匹配查询
+	// keyword 分词器名称,避免引入错误的包
 	//使用keywordMapping代替, mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	// "github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 	//keywordAnalyzerName = keyword.Name
 	keywordAnalyzerName = "keywordlower"
 )
 
-var keywordMapping = bleve.NewKeywordFieldMapping()
+//var keywordMapping = bleve.NewKeywordFieldMapping()
 
 const (
 	fieldType_数字 = iota + 1
