@@ -130,8 +130,8 @@ func initConfig() (bool, error) {
 	mapping := bleve.NewIndexMapping()
 
 	// 指定默认的分词器,存在问题:NewQueryStringQuery时不能正确匹配查询
-	//mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
+	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 
 	configIndex, err := bleve.New(indexConfigName, mapping)
 	if err != nil {
