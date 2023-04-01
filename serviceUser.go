@@ -24,10 +24,10 @@ func insertUser(ctx context.Context, account string, password string) error {
 func findUserId(ctx context.Context, account string, password string) (string, error) {
 	userIndex := IndexMap[indexUserName]
 
-	accountQuery := bleve.NewTermQuery(account)
+	accountQuery := bleveNewTermQuery(account)
 	accountQuery.SetField("account")
 
-	passwordQuery := bleve.NewTermQuery(password)
+	passwordQuery := bleveNewTermQuery(password)
 	passwordQuery.SetField("password")
 	// 多个条件联查
 	query := bleve.NewConjunctionQuery(accountQuery, passwordQuery)
