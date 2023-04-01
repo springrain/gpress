@@ -13,7 +13,7 @@ var active float64 = 1
 func getNavMenu(pid string) (interface{}, error) {
 	navIndex := IndexMap[indexNavMenuName]
 	// PID 跟 Active 为查询字段
-	queryPID := bleve.NewTermQuery(pid)
+	queryPID := bleveNewTermQuery(pid)
 	queryPID.SetField("PID")
 	queryActive := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
 	queryActive.SetField("active")
