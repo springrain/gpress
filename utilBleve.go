@@ -171,7 +171,7 @@ func findIndexFieldResult(ctx context.Context, indexName string, required int) (
 	var queryBleve query.Query
 	index := IndexMap[indexFieldName]
 	// 查询指定表
-	queryIndexCode := bleve.NewTermQuery(indexName)
+	queryIndexCode := bleveNewTermQuery(indexName)
 	// 查询指定字段,和json字段保持一致
 	queryIndexCode.SetField("indexCode")
 	if required == 0 { //可以为空
@@ -266,7 +266,7 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	// 查出原始数据
 	index := IndexMap[tableName]                         // 拿到index
 	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
-	// queryIndex := bleve.NewTermQuery(indexId)            //查询索引
+	// queryIndex := bleveNewTermQuery(indexId)            //查询索引
 	// queryIndex.SetField("id")
 	searchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
 	searchRequest.Fields = []string{"*"} // 查询所有字段
@@ -370,7 +370,7 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 		qs = append(qs, queryKey)
 		for k, _ := range mapParams {
 			value := c.Query(k)
-			term := bleve.NewTermQuery(value)
+			term := bleveNewTermQuery(value)
 			term.SetField(k)
 			qs = append(qs, term)
 		}
@@ -412,7 +412,7 @@ func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, 
 		err := errors.New("索引不存在")
 		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
-	idQuery := bleve.NewTermQuery(id)
+	idQuery := bleveNewTermQuery(id)
 	// 指定查询的字段
 	idQuery.SetField("id")
 	searchRequest := bleve.NewSearchRequest(idQuery)
@@ -431,4 +431,10 @@ func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, 
 		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
 	return ResponseData{StatusCode: 1, Data: data, IndexField: indexField}, err
+}
+
+func bleveNewTermQuery(term string) *query.TermQuery {
+	term = strings.ToLower(strings.TrimSpace(term))
+	return bleve.NewTermQuery(term)
+
 }

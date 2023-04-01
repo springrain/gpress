@@ -97,13 +97,14 @@ func keywordlowAnalyzerConstructor(config map[string]interface{}, cache *registr
 	// 定义去除前后空格的 CharFilter
 	//trimCharFilter := regexpcharfilter.New("\\A\\s+|\\s+\\z", []byte{})
 	rv := analysis.DefaultAnalyzer{
+
 		CharFilters: []analysis.CharFilter{
 			html.New(),
 		},
+
 		Tokenizer: keywordTokenizer,
 		TokenFilters: []analysis.TokenFilter{
 			lowercase.NewLowerCaseFilter(),
-			//trimCharFilter, // 去除前后空格
 		},
 	}
 	return &rv, nil
