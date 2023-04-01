@@ -15,12 +15,16 @@ type IndexFieldStruct struct {
 	ID string `json:"id"`
 	// IndexCode 索引代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
 	IndexCode string `json:"indexCode,omitempty"`
+	// IndexName 索引表中文名
+	IndexName string `json:"indexName,omitempty"`
 	// BusinessID  业务ID,处理业务记录临时增加的字段,意外情况
 	BusinessID string `json:"businessID,omitempty"`
 	// FieldCode  字段代码
 	FieldCode string `json:"fieldCode,omitempty"`
 	// FieldName  字段中文名称
 	FieldName string `json:"fieldName,omitempty"`
+	// FieldComment 字段说明
+	FieldComment string `json:"fieldComment,omitempty"`
 	// FieldType  字段类型,数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)
 	FieldType int `json:"fieldType,omitempty"`
 	// FieldFormat 数据格式,用于日期或者数字
@@ -58,11 +62,11 @@ func initIndexField() (bool, error) {
 
 	mapping.DefaultMapping.AddFieldMappingsAt("id", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("indexCode", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("indexName", gseAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("businessID", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldCode", keywordAnalyzerMapping)
-	//字段名方便搜索
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldName", gseAnalyzerMapping)
-
+	mapping.DefaultMapping.AddFieldMappingsAt("fieldComment", gseAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldType", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldFormat", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("required", keywordAnalyzerMapping)
@@ -80,19 +84,329 @@ func initIndexField() (bool, error) {
 		return false, err
 	}
 	IndexMap[indexFieldName] = index
+
+	sortNo := 1
+	now := time.Now()
+	id := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "id",
+		FieldName:    "字段ID",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(id.ID, id)
+	sortNo++
+
+	indexCode := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "indexCode",
+		FieldName:    "表名",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(indexCode.ID, indexCode)
+	sortNo++
+
+	indexName := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "indexName",
+		FieldName:    "表名",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(indexName.ID, indexName)
+	sortNo++
+
+	businessID := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "businessID",
+		FieldName:    "业务ID",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(businessID.ID, businessID)
+	sortNo++
+
+	fieldCode := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "fieldCode",
+		FieldName:    "字段",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(fieldCode.ID, fieldCode)
+	sortNo++
+
+	fieldName := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "fieldName",
+		FieldName:    "字段名",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(fieldName.ID, fieldName)
+	sortNo++
+
+	fieldComment := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "fieldComment",
+		FieldName:    "字段备注",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(fieldComment.ID, fieldComment)
+	sortNo++
+
+	fieldType := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "fieldType",
+		FieldName:    "字段类型",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(fieldType.ID, fieldType)
+	sortNo++
+
+	fieldFormat := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "fieldFormat",
+		FieldName:    "数据格式",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(fieldFormat.ID, fieldFormat)
+	sortNo++
+
+	required := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "required",
+		FieldName:    "是否必填",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(required.ID, required)
+	sortNo++
+
+	defaultValue := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "defaultValue",
+		FieldName:    "默认值",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(defaultValue.ID, defaultValue)
+	sortNo++
+
+	analyzerName := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "analyzerName",
+		FieldName:    "分词器",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(analyzerName.ID, analyzerName)
+	sortNo++
+
+	createTime := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "createTime",
+		FieldName:    "创建时间",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(createTime.ID, createTime)
+	sortNo++
+
+	updateTime := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "updateTime",
+		FieldName:    "更新时间",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(updateTime.ID, updateTime)
+	sortNo++
+
+	createUserField := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "createUser",
+		FieldName:    "创建人",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(createUserField.ID, createUserField)
+	sortNo++
+
+	sortNoField := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "sortNo",
+		FieldName:    "排序",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(sortNoField.ID, sortNoField)
+	sortNo++
+
+	active := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexFieldName,
+		FieldCode:    "active",
+		FieldName:    "是否有效",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表字段",
+		FieldComment: "",
+		CreateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Active:       3,
+		Required:     1,
+	}
+	index.Index(active.ID, active)
+
 	return true, nil
 }
 
 // indexCommonField 插入公共字段
-func indexCommonField(mapping *mapping.IndexMappingImpl, indexName string, sortNo int, now time.Time) {
+func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, indexName string, sortNo int, now time.Time) {
 	sortNo++
 	commonCreateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexName,
+		IndexCode:    indexCode,
 		FieldCode:    "createTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    indexName,
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
@@ -103,11 +417,13 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexName string, sortN
 	sortNo++
 	commonUpdateTime := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexName,
+		IndexCode:    indexCode,
 		FieldCode:    "updateTime",
 		FieldName:    "更新时间",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    indexName,
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -118,11 +434,13 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexName string, sortN
 	sortNo++
 	commonCreateUser := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexName,
+		IndexCode:    indexCode,
 		FieldCode:    "createUser",
 		FieldName:    "创建人",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    indexName,
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,
@@ -133,11 +451,13 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexName string, sortN
 	sortNo++
 	commonSortNo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexName,
+		IndexCode:    indexCode,
 		FieldCode:    "sortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    indexName,
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -148,11 +468,13 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexName string, sortN
 	sortNo++
 	commonActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexName,
+		IndexCode:    indexCode,
 		FieldCode:    "active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    indexName,
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,

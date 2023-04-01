@@ -27,6 +27,8 @@ func init() {
 		FieldName:    "页面模板id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "页面模板",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -42,6 +44,8 @@ func init() {
 		FieldName:    "模板名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "页面模板",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -56,6 +60,8 @@ func init() {
 		FieldName:    "模板路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "页面模板",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -64,7 +70,7 @@ func init() {
 	addIndexField(mapping, pageTemplateNamePath)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexInfoName, 3, now)
+	indexCommonField(mapping, indexInfoName, "页面模板", 3, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	pageTemplateIndex, err := bleve.New(indexPageTemplateName, mapping)

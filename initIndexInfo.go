@@ -57,6 +57,8 @@ func initIndexInfo() (bool, error) {
 		FieldName:    "索引表ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -71,6 +73,8 @@ func initIndexInfo() (bool, error) {
 		FieldName:    "索引表名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "表信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -85,6 +89,8 @@ func initIndexInfo() (bool, error) {
 		FieldName:    "索引表英文名",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -99,6 +105,8 @@ func initIndexInfo() (bool, error) {
 		FieldName:    "索引表ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "表信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -107,7 +115,7 @@ func initIndexInfo() (bool, error) {
 	addIndexField(mapping, infoType)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexInfoName, 4, now)
+	indexCommonField(mapping, indexInfoName, "表信息", 4, now)
 
 	indexInfo, err := bleve.New(indexInfoName, mapping)
 	if err != nil {
@@ -115,5 +123,17 @@ func initIndexInfo() (bool, error) {
 		return false, err
 	}
 	IndexMap[indexInfoName] = indexInfo
+	//
+	indexInfo.Index(indexFieldName, IndexInfoStruct{
+		ID:         indexFieldName,
+		Name:       "表字段",
+		Code:       "indexField",
+		IndexType:  "index",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     5,
+		Active:     1,
+	})
 	return true, nil
 }

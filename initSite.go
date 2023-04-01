@@ -29,6 +29,8 @@ func init() {
 		FieldName:    "站点信息ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -44,6 +46,8 @@ func init() {
 		FieldName:    "标题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -60,6 +64,8 @@ func init() {
 		FieldName:    "关键字",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -77,6 +83,8 @@ func init() {
 		FieldName:    "站点描述",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -94,6 +102,8 @@ func init() {
 		FieldName:    "默认主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -108,6 +118,8 @@ func init() {
 		FieldName:    "PC主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -122,6 +134,8 @@ func init() {
 		FieldName:    "手机主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -136,6 +150,8 @@ func init() {
 		FieldName:    "微信主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       8,
@@ -150,6 +166,8 @@ func init() {
 		FieldName:    "Logo",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -164,6 +182,8 @@ func init() {
 		FieldName:    "Favicon",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,
@@ -172,7 +192,7 @@ func init() {
 	addIndexField(mapping, siteFavicon)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexSiteName, 10, now)
+	indexCommonField(mapping, indexSiteName, "站点信息", 10, now)
 
 	siteIndexIndex, err := bleve.New(indexSiteName, mapping)
 	// 放到IndexMap中

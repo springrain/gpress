@@ -28,6 +28,8 @@ func init() {
 		FieldName:    "文章内容ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -43,6 +45,8 @@ func init() {
 		FieldName:    "模型的Code",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -58,6 +62,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章标题使用中文分词
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -75,6 +81,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章关键字使用逗号分词器
 		AnalyzerName: commaAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -92,6 +100,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章描述使用中文分词器
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -108,6 +118,8 @@ func init() {
 		FieldName:    "自身页面路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -123,6 +135,8 @@ func init() {
 		FieldType: fieldType_文本框,
 		// 文章副标题使用中文分词器
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -139,6 +153,8 @@ func init() {
 		FieldName:    "导航ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -155,6 +171,8 @@ func init() {
 		FieldName:    "导航名称,逗号(,)隔开",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -171,6 +189,8 @@ func init() {
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -185,6 +205,8 @@ func init() {
 		FieldName:    "文章内容",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -195,7 +217,7 @@ func init() {
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexContentName, 7, now)
+	indexCommonField(mapping, indexContentName, "文章内容", 7, now)
 
 	contentIndex, err := bleve.New(indexContentName, mapping)
 	// 放到IndexMap中

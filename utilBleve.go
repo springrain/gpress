@@ -367,7 +367,7 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 		//matchAllQuery := bleve.NewMatchAllQuery()
 		//queryBoolean1 := bleve.NewBooleanQuery()
 		//queryBoolean1.AddMust(termQuery, matchAllQuery)
-		//不对q分词搜索,精确匹配,NewQueryStringQuery 默认是 unicode tokenizer,暂时没有找到合理的方法
+		//不对q分词搜索,精确匹配,NewQueryStringQuery
 		//queryBoolean1 := bleve.NewQueryStringQuery("\"" + q + "\"")
 		//queryBoolean1.SetBoost(100)
 
