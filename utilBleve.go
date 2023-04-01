@@ -371,11 +371,14 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 		//queryBoolean1.SetBoost(100)
 
 		//对q分词搜索
-		queryBoolean2 := bleve.NewQueryStringQuery(q)
+		//queryBoolean2 := bleve.NewQueryStringQuery(q)
 
 		//queryBoolean := bleve.NewBooleanQuery()
 		//queryBoolean.AddShould(queryBoolean1, queryBoolean2)
-		queryKey = queryBoolean2
+		//queryKey = queryBoolean
+
+		queryKey = bleve.NewQueryStringQuery(q)
+
 	}
 
 	if len(mapParams) < 1 { //没有其他参数了
