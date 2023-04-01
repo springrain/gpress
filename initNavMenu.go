@@ -27,6 +27,8 @@ func init() {
 		FieldName:    "导航菜单ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       1,
@@ -43,6 +45,8 @@ func init() {
 		FieldName:    "菜单名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       2,
@@ -58,6 +62,8 @@ func init() {
 		FieldName:    "跳转路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       3,
@@ -73,6 +79,8 @@ func init() {
 		FieldName:    "跳转方式",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       4,
@@ -88,6 +96,8 @@ func init() {
 		FieldName:    "父菜单ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       5,
@@ -103,6 +113,8 @@ func init() {
 		FieldName:    "PC主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       6,
@@ -118,6 +130,8 @@ func init() {
 		FieldName:    "模型ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       7,
@@ -133,6 +147,8 @@ func init() {
 		FieldName:    "逗号隔开的全路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       8,
@@ -148,6 +164,8 @@ func init() {
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       9,
@@ -163,6 +181,8 @@ func init() {
 		FieldName:    "子页面模板Id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "导航菜单",
+		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       10,
@@ -172,7 +192,7 @@ func init() {
 	addIndexField(mapping, navMenuChildTemplateID)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexNavMenuName, 10, now)
+	indexCommonField(mapping, indexNavMenuName, "导航菜单", 10, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	navMenuIndex, err := bleve.New(indexNavMenuName, mapping)
