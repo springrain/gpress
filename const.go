@@ -51,7 +51,7 @@ const (
 	gseAnalyzerName = "gse"
 
 	// keyword 分词器名称,避免引入错误的包
-	//使用keywordMapping代替, mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	//使用keywordMapping代替, //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	// "github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 	//keywordAnalyzerName = keyword.Name
 	keywordAnalyzerName = "keywordlower"

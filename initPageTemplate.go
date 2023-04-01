@@ -11,11 +11,14 @@ func init() {
 	if err != nil || ok {
 		return
 	}
-	indexField := IndexMap[indexFieldName]
 
 	// 获取当前时间
 	now := time.Now()
 
+	// 创建用户表的索引
+	mapping := bleve.NewIndexMapping()
+	// 指定默认的分词器
+	mapping.DefaultAnalyzer = gseAnalyzerName
 	// 初始化各个字段
 	pageId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -30,7 +33,7 @@ func init() {
 		Active:       3,
 	}
 	// 放入文件中
-	indexField.Index(pageId.ID, pageId)
+	addIndexField(mapping, pageId)
 
 	pageTemplateNameName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -44,7 +47,7 @@ func init() {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(pageTemplateNameName.ID, pageTemplateNameName)
+	addIndexField(mapping, pageTemplateNameName)
 
 	pageTemplateNamePath := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -58,16 +61,12 @@ func init() {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(pageTemplateNamePath.ID, pageTemplateNamePath)
+	addIndexField(mapping, pageTemplateNamePath)
 
 	// 添加公共字段
-	indexCommonField(indexField, indexInfoName, 3, now)
+	indexCommonField(mapping, indexInfoName, 3, now)
 
-	// 创建用户表的索引
-	mapping := bleve.NewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	pageTemplateIndex, err := bleve.New(indexPageTemplateName, mapping)
 
 	// 放到IndexMap中

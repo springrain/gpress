@@ -26,14 +26,15 @@ func TestKeyword(t *testing.T) {
 	os.RemoveAll(indexName)
 	mapping := bleve.NewIndexMapping()
 
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
+	mapping.DefaultAnalyzer = gseAnalyzerName
+	mapping.DefaultAnalyzer = keywordAnalyzerName
 	index, _ := bleve.New(indexName, mapping)
 	user := struct {
 		Id   string
 		Name string
 	}{
 		Id:   "userId",
-		Name: "中文",
+		Name: "我爱学中文",
 	}
 	index.Index(user.Id, user)
 
@@ -44,7 +45,8 @@ func TestKeyword(t *testing.T) {
 	termResult, _ := index.Search(termRequest)
 	fmt.Println("termQuery total:", termResult.Total)
 
-	stringQuery := bleve.NewQueryStringQuery(`"中文"`)
+	stringQuery := bleve.NewQueryStringQuery(`"我爱学中文"`)
+	stringQuery.SetBoost(100)
 	stringRequest := bleve.NewSearchRequest(stringQuery)
 	stringRequest.Fields = []string{"*"}
 	stringResult, _ := index.Search(stringRequest)
@@ -64,8 +66,8 @@ func TestCreate(t *testing.T) {
 	// mapping.DefaultMapping = userMapping
 
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	//mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	mapping.DefaultAnalyzer = keywordAnalyzerName
+	////mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 
 	// Address的mapping映射,此字段不使用分词,只保存,用于term的绝对精确查询,类似 sql的 where = 条件查询
 	addressMapping := bleve.NewTextFieldMapping()
@@ -81,7 +83,7 @@ func TestCreate(t *testing.T) {
 	addressMapping.Analyzer = commaAnalyzerName
 
 	// 设置字段映射
-	mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
 	_, err := bleve.New(indexName, mapping)
 	fmt.Println(err)
 }
@@ -145,14 +147,11 @@ func TestSearchID(t *testing.T) {
 // 根据关键字查询
 func TestSearchKey(t *testing.T) {
 	index, _ := bleve.Open(indexName)
-	queryKey := bleve.NewQueryStringQuery(`"测试中文名称 3"`)
-
+	queryKey := bleve.NewQueryStringQuery("keyword:中国")
 	// searchRequest := bleve.NewSearchRequest(queryKey)
 	searchRequest := bleve.NewSearchRequestOptions(queryKey, size, from, false)
-
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
-
 	// 查询结果
 	searchResult, _ := index.SearchInContext(ctx, searchRequest)
 	// 本次查询的总条数,用于分页
@@ -164,7 +163,7 @@ func TestSearchKey(t *testing.T) {
 func TestSearchJingQue(t *testing.T) {
 	index, _ := bleve.Open(indexName)
 	// 查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
-	query := bleveNewTermQuery("完")
+	query := bleveNewTermQuery("中国")
 	// query := bleveNewTermQuery("zhongguo  zhengzhou")
 	// 指定查询的字段
 	query.SetField("Address")

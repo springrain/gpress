@@ -28,6 +28,9 @@ var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
 // 中文分词器的mapping
 var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
 
+// keyword分词器
+var keywordAnalyzerMapping *mapping.FieldMapping = bleve.NewKeywordFieldMapping()
+
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
 // FuncGenerateStringID Function to generate string ID by default. Convenient for custom extension
 var FuncGenerateStringID func() string = generateStringID
@@ -75,6 +78,8 @@ func checkBleveStatus() bool {
 	commaAnalyzerMapping.Analyzer = commaAnalyzerName
 	gseAnalyzerMapping.DocValues = false
 	gseAnalyzerMapping.Analyzer = gseAnalyzerName
+	keywordAnalyzerMapping.DocValues = false
+	keywordAnalyzerMapping.Analyzer = keywordAnalyzerName
 
 	if !pathExists(bleveDataDir) { //目录如果不存在
 		// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
@@ -350,17 +355,18 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	// 查询
 	var searchQuery query.Query
 	var queryKey query.Query
-	q := c.Query("q")
+	q := strings.TrimSpace(c.Query("q"))
 	if q == "" || q == "*" {
 		queryKey = bleve.NewQueryStringQuery("*")
 	} else {
 		//不对q分词搜索,精确匹配
-		termQuery := bleve.NewTermQuery(q)
-		matchAllQuery := bleve.NewMatchAllQuery()
-		queryBoolean1 := bleve.NewBooleanQuery()
-		queryBoolean1.AddMust(termQuery, matchAllQuery)
+		//termQuery := bleve.NewTermQuery(q)
+		//matchAllQuery := bleve.NewMatchAllQuery()
+		//queryBoolean1 := bleve.NewBooleanQuery()
+		//queryBoolean1.AddMust(termQuery, matchAllQuery)
 		//不对q分词搜索,精确匹配,NewQueryStringQuery 默认是 unicode tokenizer,暂时没有找到合理的方法
-		//queryBoolean3 := bleve.NewQueryStringQuery("\"" + q + "\"")
+		queryBoolean1 := bleve.NewQueryStringQuery("\"" + q + "\"")
+		queryBoolean1.SetBoost(100)
 
 		//对q分词搜索
 		queryBoolean2 := bleve.NewQueryStringQuery(q)

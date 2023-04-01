@@ -11,13 +11,11 @@ func init() {
 	if err != nil || ok {
 		return
 	}
-	indexField := IndexMap[indexFieldName]
-
 	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	mapping.DefaultAnalyzer = gseAnalyzerName
+	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 
 	// 获取当前时间
 	now := time.Now()
@@ -36,7 +34,7 @@ func init() {
 		Active:       3,
 	}
 	// 放入文件中
-	indexField.Index(contentId.ID, contentId)
+	addIndexField(mapping, contentId)
 
 	contentModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -50,7 +48,8 @@ func init() {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(contentModuleID.ID, contentModuleID)
+	addIndexField(mapping, contentModuleID)
+
 	contentTitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
 		IndexCode: indexContentName,
@@ -64,9 +63,9 @@ func init() {
 		SortNo:       2,
 		Active:       3,
 	}
-	indexField.Index(contentTitle.ID, contentTitle)
+	addIndexField(mapping, contentTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
 	contentKeyword := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -81,9 +80,9 @@ func init() {
 		SortNo:       3,
 		Active:       3,
 	}
-	indexField.Index(contentKeyword.ID, contentKeyword)
+	addIndexField(mapping, contentKeyword)
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
 	contentDescription := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -98,9 +97,9 @@ func init() {
 		SortNo:       4,
 		Active:       3,
 	}
-	indexField.Index(contentDescription.ID, contentDescription)
+	addIndexField(mapping, contentDescription)
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
 	contentPageURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -114,7 +113,7 @@ func init() {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(contentPageURL.ID, contentPageURL)
+	addIndexField(mapping, contentPageURL)
 
 	contentSubtitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -129,9 +128,9 @@ func init() {
 		SortNo:       6,
 		Active:       3,
 	}
-	indexField.Index(contentSubtitle.ID, contentSubtitle)
+	addIndexField(mapping, contentSubtitle)
 	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
 	contentNavMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -145,9 +144,9 @@ func init() {
 		SortNo:       4,
 		Active:       3,
 	}
-	indexField.Index(contentNavMenuId.ID, contentNavMenuId)
+	addIndexField(mapping, contentNavMenuId)
 	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
-	// mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
+	// //mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
 
 	contentNavMenuNames := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -161,9 +160,9 @@ func init() {
 		SortNo:       5,
 		Active:       3,
 	}
-	indexField.Index(contentNavMenuNames.ID, contentNavMenuNames)
+	addIndexField(mapping, contentNavMenuNames)
 	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
 
 	contentTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -177,7 +176,7 @@ func init() {
 		SortNo:       6,
 		Active:       3,
 	}
-	indexField.Index(contentTemplateID.ID, contentTemplateID)
+	addIndexField(mapping, contentTemplateID)
 
 	contentContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -191,12 +190,12 @@ func init() {
 		SortNo:       7,
 		Active:       3,
 	}
-	indexField.Index(contentContent.ID, contentContent)
+	addIndexField(mapping, contentContent)
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
-	mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
+	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
 	// 添加公共字段
-	indexCommonField(indexField, indexContentName, 7, now)
+	indexCommonField(mapping, indexContentName, 7, now)
 
 	contentIndex, err := bleve.New(indexContentName, mapping)
 	// 放到IndexMap中
