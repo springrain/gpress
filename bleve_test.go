@@ -12,7 +12,7 @@ import (
 	"github.com/blevesearch/bleve/v2"
 )
 
-var indexName string = "testIndex"
+var indexName string = bleveDataDir + "testIndex"
 
 var (
 	size int = 10
@@ -29,6 +29,10 @@ func TestCreate(t *testing.T) {
 	// userMapping := bleve.NewDocumentMapping()
 	// userMapping.AddFieldMappingsAt("Address", bleve.NewBooleanFieldMapping())
 	// mapping.DefaultMapping = userMapping
+
+	// 指定默认的分词器,存在问题:NewQueryStringQuery时不能正确匹配查询
+	//mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
+	mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 
 	// Address的mapping映射,此字段不使用分词,只保存,用于term的绝对精确查询,类似 sql的 where = 条件查询
 	addressMapping := bleve.NewTextFieldMapping()
@@ -108,7 +112,7 @@ func TestSearchID(t *testing.T) {
 // 根据关键字查询
 func TestSearchKey(t *testing.T) {
 	index, _ := bleve.Open(indexName)
-	queryKey := bleve.NewQueryStringQuery("中文2")
+	queryKey := bleve.NewQueryStringQuery(`"测试中文名称 3"`)
 
 	// searchRequest := bleve.NewSearchRequest(queryKey)
 	searchRequest := bleve.NewSearchRequestOptions(queryKey, size, from, false)
