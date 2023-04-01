@@ -17,9 +17,15 @@ func initConfig() (bool, error) {
 		return true, nil
 	}
 	// 获取索引字段的表
-	indexField := IndexMap[indexFieldName]
+	//indexField := IndexMap[indexFieldName]
 	// 当前时间
 	now := time.Now()
+	// 创建配置表的索引
+	mapping := bleve.NewIndexMapping()
+
+	// 指定默认的分词器
+	mapping.DefaultAnalyzer = keywordAnalyzerName
+	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 
 	// ID 字段
 	configId := IndexFieldStruct{
@@ -34,7 +40,7 @@ func initConfig() (bool, error) {
 		SortNo:       1,
 		Active:       3,
 	}
-	indexField.Index(configId.ID, configId)
+	addIndexField(mapping, configId)
 
 	// 配置 basePath 字段
 	basePath := IndexFieldStruct{
@@ -49,7 +55,7 @@ func initConfig() (bool, error) {
 		SortNo:       2,
 		Active:       1,
 	}
-	indexField.Index(basePath.ID, basePath)
+	addIndexField(mapping, basePath)
 
 	// 配置 jwtSecret 字段
 	jwtSecret := IndexFieldStruct{
@@ -64,7 +70,7 @@ func initConfig() (bool, error) {
 		SortNo:       4,
 		Active:       1,
 	}
-	indexField.Index(jwtSecret.ID, jwtSecret)
+	addIndexField(mapping, jwtSecret)
 
 	// 配置 jwtSecret 字段
 	jwttokenKey := IndexFieldStruct{
@@ -79,7 +85,7 @@ func initConfig() (bool, error) {
 		SortNo:       5,
 		Active:       1,
 	}
-	indexField.Index(jwttokenKey.ID, jwttokenKey)
+	addIndexField(mapping, jwttokenKey)
 
 	// 配置 serverPort 字段
 	serverPort := IndexFieldStruct{
@@ -94,7 +100,7 @@ func initConfig() (bool, error) {
 		SortNo:       6,
 		Active:       1,
 	}
-	indexField.Index(serverPort.ID, serverPort)
+	addIndexField(mapping, serverPort)
 
 	// 配置 theme 字段
 	theme := IndexFieldStruct{
@@ -109,7 +115,7 @@ func initConfig() (bool, error) {
 		SortNo:       7,
 		Active:       1,
 	}
-	indexField.Index(theme.ID, theme)
+	addIndexField(mapping, theme)
 
 	// 配置 timeout 字段
 	timeout := IndexFieldStruct{
@@ -124,14 +130,7 @@ func initConfig() (bool, error) {
 		SortNo:       8,
 		Active:       1,
 	}
-	indexField.Index(timeout.ID, timeout)
-
-	// 创建配置表的索引
-	mapping := bleve.NewIndexMapping()
-
-	// 指定默认的分词器
-	mapping.DefaultMapping.DefaultAnalyzer = keywordAnalyzerName
-	// mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	addIndexField(mapping, timeout)
 
 	configIndex, err := bleve.New(indexConfigName, mapping)
 	if err != nil {
