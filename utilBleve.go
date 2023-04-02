@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
@@ -20,7 +21,9 @@ import (
 )
 
 // 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
-var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
+//var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
+
+var IndexMap sync.Map
 
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
 // FuncGenerateStringID Function to generate string ID by default. Convenient for custom extension
@@ -436,7 +439,7 @@ func bleveNew(indexName string, mapping mapping.IndexMapping) (bleve.Index, erro
 		FuncLogError(err)
 		return nil, err
 	}
-	IndexMap[indexName] = index
+	IndexMap.Store(indexName, index)
 	return index, err
 }
 
@@ -445,9 +448,9 @@ func openBleveIndex(indexName string) (bleve.Index, bool, error) {
 	if !pathExists(bleveDataDir + indexName) { //如果索文件不存在
 		return nil, false, nil
 	}
-	index, ok := IndexMap[indexName]
+	index, ok := IndexMap.Load(indexName)
 	if ok { //已经打开过
-		return index, true, nil
+		return index.(bleve.Index), true, nil
 	}
 	// 打开所有的索引,放到map里,一个索引只能打开一次.
 	index, err := bleve.Open(bleveDataDir + indexName)
@@ -455,8 +458,8 @@ func openBleveIndex(indexName string) (bleve.Index, bool, error) {
 		FuncLogError(err)
 		return nil, false, err
 	}
-	IndexMap[indexName] = index
-	return index, true, nil
+	IndexMap.Store(indexName, index)
+	return index.(bleve.Index), true, nil
 }
 func bleveNewTermQuery(term string) *query.TermQuery {
 	term = strings.ToLower(strings.TrimSpace(term))
