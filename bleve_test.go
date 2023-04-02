@@ -12,7 +12,7 @@ import (
 	"github.com/blevesearch/bleve/v2"
 )
 
-var indexName string = bleveDataDir + "testIndex"
+var indexName string = "testIndex"
 
 var (
 	size int = 10
@@ -23,12 +23,12 @@ var ctx context.Context = context.Background()
 
 func TestKeyword(t *testing.T) {
 	indexName := "testkeyword"
-	os.RemoveAll(indexName)
+	os.RemoveAll(bleveDataDir + indexName)
 	mapping := bleve.NewIndexMapping()
 
 	mapping.DefaultAnalyzer = gseAnalyzerName
 	mapping.DefaultAnalyzer = keywordAnalyzerName
-	index, _ := bleve.New(indexName, mapping)
+	index, _ := bleveNew(indexName, mapping)
 	user := struct {
 		Id   string
 		Name string
@@ -84,7 +84,7 @@ func TestCreate(t *testing.T) {
 
 	// 设置字段映射
 	//mapping.DefaultMapping.AddFieldMappingsAt("Address", addressMapping)
-	_, err := bleve.New(indexName, mapping)
+	_, err := bleveNew(indexName, mapping)
 	fmt.Println(err)
 }
 
@@ -247,7 +247,7 @@ func TestSearchWhere(t *testing.T) {
 }
 
 func TestSearchOrder(t *testing.T) {
-	index := IndexMap[indexFieldName]
+	index, _, _ := openBleveIndex(indexFieldName)
 	// 查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
 	query := bleveNewTermQuery(indexUserName)
 	// query := bleveNewTermQuery("zhongguo  zhengzhou")

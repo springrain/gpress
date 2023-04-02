@@ -6,26 +6,26 @@ const (
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
 	bleveDataDir = datadir + "bleve/"
 	// 索引表信息的名称
-	indexInfoName = bleveDataDir + "indexInfo"
+	indexInfoName = "indexInfo"
 	// 索引字段的名称
-	indexFieldName = bleveDataDir + "indexField"
+	indexFieldName = "indexField"
 
 	// config 配置的索引名称
-	indexConfigName = bleveDataDir + "config"
+	indexConfigName = "config"
 
 	// user 用户的索引名称
-	indexUserName = bleveDataDir + "user"
+	indexUserName = "user"
 	// site  站点信息
-	indexSiteName = bleveDataDir + "site"
+	indexSiteName = "site"
 	// 页面模板
-	indexPageTemplateName = bleveDataDir + "pageTemplate"
+	indexPageTemplateName = "pageTemplate"
 	// 导航菜单
-	indexNavMenuName = bleveDataDir + "navMenu"
+	indexNavMenuName = "navMenu"
 
 	// 默认模型
 	indexModuleDefaultName = "module_default"
 	// 文章内容
-	indexContentName = bleveDataDir + "content"
+	indexContentName = "content"
 	//---------------------------//
 
 	// 模板的路径

@@ -9,7 +9,7 @@ import (
 // initConfig 初始化创建Config索引
 func initConfig() (bool, error) {
 
-	ok, err := openBleveIndex(indexConfigName)
+	_, ok, err := openBleveIndex(indexConfigName)
 	if err != nil {
 		return false, err
 	}
@@ -17,7 +17,7 @@ func initConfig() (bool, error) {
 		return true, nil
 	}
 	// 获取索引字段的表
-	//indexField := IndexMap[indexFieldName]
+	//indexField ,_:= openBleveIndex(indexFieldName]
 	// 当前时间
 	now := time.Now()
 	// 创建配置表的索引
@@ -146,15 +146,13 @@ func initConfig() (bool, error) {
 	}
 	addIndexField(mapping, timeout)
 
-	configIndex, err := bleve.New(indexConfigName, mapping)
+	_, err = bleveNew(indexConfigName, mapping)
 	if err != nil {
-		FuncLogError(err)
 		return false, err
 	}
-	IndexMap[indexConfigName] = configIndex
 
 	//保存表信息
-	indexInfo := IndexMap[indexInfoName]
+	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexConfigName, IndexInfoStruct{
 		ID:         indexConfigName,
 		Name:       "配置信息",

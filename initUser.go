@@ -8,7 +8,7 @@ import (
 
 // initUser 初始化创建User索引
 func init() {
-	ok, err := openBleveIndex(indexUserName)
+	_, ok, err := openBleveIndex(indexUserName)
 	if err != nil || ok {
 		return
 	}
@@ -89,15 +89,14 @@ func init() {
 	// indexCommonField(indexField, indexUserName, 4, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	userIndex, err := bleve.New(indexUserName, mapping)
+	_, err = bleveNew(indexUserName, mapping)
 	if err != nil {
-		FuncLogError(err)
+
 		return
 	}
-	IndexMap[indexUserName] = userIndex
 
 	//保存表信息
-	indexInfo := IndexMap[indexInfoName]
+	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexUserName, IndexInfoStruct{
 		ID:         indexUserName,
 		Name:       "用户信息",

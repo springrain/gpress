@@ -8,7 +8,7 @@ import (
 
 // 初始化站点信息
 func init() {
-	ok, err := openBleveIndex(indexSiteName)
+	_, ok, err := openBleveIndex(indexSiteName)
 	if err != nil || ok {
 		return
 	}
@@ -194,16 +194,14 @@ func init() {
 	// 添加公共字段
 	indexCommonField(mapping, indexSiteName, "站点信息", 10, now)
 
-	siteIndexIndex, err := bleve.New(indexSiteName, mapping)
-	// 放到IndexMap中
-	IndexMap[indexSiteName] = siteIndexIndex
+	_, err = bleveNew(indexSiteName, mapping)
 
 	if err != nil {
-		FuncLogError(err)
+
 		return
 	}
 	//保存表信息
-	indexInfo := IndexMap[indexInfoName]
+	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexSiteName, IndexInfoStruct{
 		ID:         indexSiteName,
 		Name:       "站点信息",
