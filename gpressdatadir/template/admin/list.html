@@ -2,10 +2,12 @@
   <title>indexInfo - GPRESS</title>
 {{template "/admin/bodystart.html"}}
 
+{{ $indexFiled := indexFiled .urlPathIndexName }}
+
 <section class="section">
   <div class="container">
     <!-- 搜索表单 -->
-    <form class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathIndexName}}/list" method="GET">
+    <form class="field is-horizontal" action="{{basePath}}admin/{{.urlPathIndexName}}/list" method="GET">
       <div class="field-body">
         <div class="field">
           <div class="control">
@@ -27,17 +29,17 @@
       <thead>
         <tr>
           <!-- 循环表头 -->
-          {{ range .IndexField }}
+          {{ range $indexFiled }}
           <th>{{.FieldName}}</th>
           {{end }}
         </tr>
       </thead>
       <tbody>
         <!-- 循环所有的数据 -->
-        {{ range $i,$v := .Data }}
+        {{ range $i,$v := .data }}
         <tr>
           <!-- 循环表头,需要和表格的表头对应 -->
-          {{ range $.IndexField }}
+          {{ range $indexFiled }}
           <!-- 获取每一列的值 -->
           <td> {{ index $v .FieldCode }}</td>
           {{end }}
@@ -54,16 +56,16 @@
       <a class="pagination-next">下一页</a>
       <ul class="pagination-list">
         <li>
-          <a class="pagination-link" aria-label="总条数">共 {{ .Page.TotalCount }} 条</a>
+          <a class="pagination-link" aria-label="总条数">共 {{ .page.TotalCount }} 条</a>
         </li>
         <li>
-          <a class="pagination-link" aria-label="总页数">共 {{ .Page.PageCount }} 页</a>
+          <a class="pagination-link" aria-label="总页数">共 {{ .page.PageCount }} 页</a>
         </li>
         <li>
           <span class="pagination-ellipsis">&hellip;</span>
         </li>
         <li>
-          <a class="pagination-link is-current" aria-label="当前页" aria-current="page">{{ .Page.PageNo }}</a>
+          <a class="pagination-link is-current" aria-label="当前页" aria-current="page">{{ .page.PageNo }}</a>
         </li>
         <li>
           <a class="pagination-link" aria-label="跳转到第2页">2</a>
