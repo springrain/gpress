@@ -169,9 +169,9 @@ func findIndexFieldResult(ctx context.Context, indexName string, required int) (
 	// 查询所有字段
 	searchRequest.Fields = []string{"*"}
 
-	// 按照 SortNo 正序排列.
-	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
-	searchRequest.SortBy([]string{"sortNo", "-_score", "_id"})
+	// 按照 SortNo 升序排列.
+	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则将按文档ID(_id)降序排序.
+	searchRequest.SortBy([]string{"sortNo", "-_id"})
 	//searchRequest.SortBy([]string{"sortNo"})
 
 	searchResult, err := index.SearchInContext(ctx, searchRequest)
@@ -253,6 +253,7 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	// queryIndex.SetField("id")
 	searchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
 	searchRequest.Fields = []string{"*"} // 查询所有字段
+
 	result, err := index.SearchInContext(ctx, searchRequest)
 	if err != nil {
 		FuncLogError(err)
@@ -383,6 +384,9 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
 
+	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
+	searchRequest.SortBy([]string{"sortNo", "-_score", "-_id"})
+
 	searchResult, err := searchIndex.SearchInContext(ctx, searchRequest)
 	if err != nil {
 		return ResponseData{StatusCode: 0, ERR: err}, err
@@ -412,6 +416,8 @@ func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, 
 	searchRequest := bleve.NewSearchRequest(idQuery)
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
+	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
+	searchRequest.SortBy([]string{"sortNo", "-_score", "-_id"})
 	searchResult, err := searchIndex.SearchInContext(ctx, searchRequest)
 	if err != nil {
 		return ResponseData{StatusCode: 0, ERR: err}, err
