@@ -8,7 +8,7 @@ import (
 
 // 导航菜单
 func init() {
-	ok, err := openBleveIndex(indexNavMenuName)
+	_, ok, err := openBleveIndex(indexNavMenuName)
 	if err != nil || ok {
 		return
 	}
@@ -195,17 +195,13 @@ func init() {
 	indexCommonField(mapping, indexNavMenuName, "导航菜单", 10, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	navMenuIndex, err := bleve.New(indexNavMenuName, mapping)
-
-	// 放到IndexMap中
-	IndexMap[indexNavMenuName] = navMenuIndex
+	_, err = bleveNew(indexNavMenuName, mapping)
 
 	if err != nil {
-		FuncLogError(err)
 		return
 	}
 	//保存表信息
-	indexInfo := IndexMap[indexInfoName]
+	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexNavMenuName, IndexInfoStruct{
 		ID:         indexNavMenuName,
 		Name:       "导航菜单",

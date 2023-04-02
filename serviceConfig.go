@@ -76,7 +76,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	// 清空配置,重新创建
 	deleteAll(ctx, indexConfigName)
 
-	configIndex := IndexMap[indexConfigName]
+	configIndex, _, _ := openBleveIndex(indexConfigName)
 	ID := FuncGenerateStringID()
 
 	m := make(map[string]interface{})
@@ -88,7 +88,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 }
 
 func findConfig() (configStruct, error) {
-	configIndex := IndexMap[indexConfigName]
+	configIndex, _, _ := openBleveIndex(indexConfigName)
 	query := bleve.NewQueryStringQuery("*")
 	serarchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
 	serarchRequest.Fields = []string{"*"}

@@ -159,8 +159,8 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
-	indexName := bleveDataDir + urlPathIndexName
-	reponseData, err := findIndexList(ctx, c, indexName)
+	//indexName := bleveDataDir + urlPathIndexName
+	reponseData, err := findIndexList(ctx, c, urlPathIndexName)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, []byte("/admin/error"))
 		c.Abort() // 终止后续调用
@@ -198,8 +198,8 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	urlPathIndexName := c.Param("urlPathIndexName")
-	indexName := bleveDataDir + urlPathIndexName
-	_, ok := IndexMap[indexName]
+	//indexName := bleveDataDir + urlPathIndexName
+	_, ok, _ := openBleveIndex(urlPathIndexName)
 	if !ok { //索引不存在
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
@@ -220,7 +220,7 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	err = updateIndex(ctx, indexName, id, newMap)
+	err = updateIndex(ctx, urlPathIndexName, id, newMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
 		c.Abort() // 终止后续调用
@@ -245,8 +245,8 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 // 保存内容
 func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
-	indexName := bleveDataDir + urlPathIndexName
-	_, ok := IndexMap[indexName]
+	//indexName := bleveDataDir + urlPathIndexName
+	_, ok, _ := openBleveIndex(urlPathIndexName)
 	if !ok { //索引不存在
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
@@ -267,7 +267,7 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	responseData, err := saveNewIndex(ctx, indexName, newMap)
+	responseData, err := saveNewIndex(ctx, urlPathIndexName, newMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
 		c.Abort() // 终止后续调用
@@ -286,8 +286,8 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	urlPathIndexName := c.Param("urlPathIndexName")
-	indexName := bleveDataDir + urlPathIndexName
-	err := deleteById(ctx, indexName, id)
+	//indexName := bleveDataDir + urlPathIndexName
+	err := deleteById(ctx, urlPathIndexName, id)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
 		c.Abort() // 终止后续调用
@@ -319,8 +319,8 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 		return
 	}
 	urlPathIndexName := c.Param("urlPathIndexName")
-	indexName := bleveDataDir + urlPathIndexName
-	reponseData, err := findIndexOne(ctx, c, indexName, id)
+	//indexName := bleveDataDir + urlPathIndexName
+	reponseData, err := findIndexOne(ctx, c, urlPathIndexName, id)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, []byte("/admin/error"))
 		c.Abort() // 终止后续调用

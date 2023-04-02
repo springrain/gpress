@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	ok, err := openBleveIndex(indexContentName)
+	_, ok, err := openBleveIndex(indexContentName)
 	if err != nil || ok {
 		return
 	}
@@ -219,17 +219,13 @@ func init() {
 	// 添加公共字段
 	indexCommonField(mapping, indexContentName, "文章内容", 7, now)
 
-	contentIndex, err := bleve.New(indexContentName, mapping)
-	// 放到IndexMap中
-	IndexMap[indexContentName] = contentIndex
-
+	_, err = bleveNew(indexContentName, mapping)
 	if err != nil {
-		FuncLogError(err)
 		return
 	}
 
 	//保存表信息
-	indexInfo := IndexMap[indexInfoName]
+	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexContentName, IndexInfoStruct{
 		ID:         indexContentName,
 		Name:       "文章内容",
