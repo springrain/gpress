@@ -55,6 +55,9 @@ const (
 	// "github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
 	//keywordAnalyzerName = keyword.Name
 	keywordAnalyzerName = "keywordlower"
+
+	datetimeAnalyzerName = "datetime"
+	numericAnalyzerName  = "numeric"
 )
 
 //var keywordMapping = bleve.NewKeywordFieldMapping()

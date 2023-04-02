@@ -1,14 +1,31 @@
 package main
 
 import (
+	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis"
 	"github.com/blevesearch/bleve/v2/analysis/char/html"
 	"github.com/blevesearch/bleve/v2/analysis/token/lowercase"
 	"github.com/blevesearch/bleve/v2/analysis/tokenizer/character"
 	"github.com/blevesearch/bleve/v2/analysis/tokenizer/single"
+	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/registry"
 	"github.com/go-ego/gse"
 )
+
+// 逗号分词器的mapping
+var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
+
+// 中文分词器的mapping
+var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
+
+// keyword分词器
+var keywordAnalyzerMapping *mapping.FieldMapping = bleve.NewKeywordFieldMapping()
+
+// 日期分词器
+var datetimeAnalyzerMapping *mapping.FieldMapping = bleve.NewDateTimeFieldMapping()
+
+// 数字分词器
+var numericAnalyzerMapping *mapping.FieldMapping = bleve.NewNumericFieldMapping()
 
 // 注册逗号分词器
 func initRegisterAnalyzer() {

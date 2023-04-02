@@ -67,16 +67,16 @@ func initIndexField() (bool, error) {
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldCode", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldName", gseAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldComment", gseAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("fieldType", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("fieldType", numericAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("fieldFormat", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("required", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("required", numericAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("defaultValue", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("analyzerName", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("createTime", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("updateTime", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("createTime", datetimeAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("updateTime", datetimeAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("createUser", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("active", keywordAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", numericAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("active", numericAnalyzerMapping)
 
 	index, err := bleveNew(indexFieldName, mapping)
 	if err != nil {
@@ -216,8 +216,8 @@ func initIndexField() (bool, error) {
 		IndexCode:    indexFieldName,
 		FieldCode:    "fieldType",
 		FieldName:    "字段类型",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_数字,
+		AnalyzerName: numericAnalyzerName,
 		IndexName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
@@ -252,8 +252,8 @@ func initIndexField() (bool, error) {
 		IndexCode:    indexFieldName,
 		FieldCode:    "required",
 		FieldName:    "是否必填",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_数字,
+		AnalyzerName: numericAnalyzerName,
 		IndexName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
@@ -306,8 +306,8 @@ func initIndexField() (bool, error) {
 		IndexCode:    indexFieldName,
 		FieldCode:    "createTime",
 		FieldName:    "创建时间",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_日期,
+		AnalyzerName: datetimeAnalyzerName,
 		IndexName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
@@ -324,8 +324,8 @@ func initIndexField() (bool, error) {
 		IndexCode:    indexFieldName,
 		FieldCode:    "updateTime",
 		FieldName:    "更新时间",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_日期,
+		AnalyzerName: datetimeAnalyzerName,
 		IndexName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
@@ -360,8 +360,8 @@ func initIndexField() (bool, error) {
 		IndexCode:    indexFieldName,
 		FieldCode:    "sortNo",
 		FieldName:    "排序",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_数字,
+		AnalyzerName: numericAnalyzerName,
 		IndexName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
@@ -378,8 +378,8 @@ func initIndexField() (bool, error) {
 		IndexCode:    indexFieldName,
 		FieldCode:    "active",
 		FieldName:    "是否有效",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_数字,
+		AnalyzerName: numericAnalyzerName,
 		IndexName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
@@ -402,7 +402,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		FieldCode:    "createTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
-		AnalyzerName: keywordAnalyzerName,
+		AnalyzerName: datetimeAnalyzerName,
 		IndexName:    indexName,
 		FieldComment: "",
 		CreateTime:   now,
@@ -418,8 +418,8 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		IndexCode:    indexCode,
 		FieldCode:    "updateTime",
 		FieldName:    "更新时间",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_日期,
+		AnalyzerName: datetimeAnalyzerName,
 		IndexName:    indexName,
 		FieldComment: "",
 		CreateTime:   now,
@@ -452,8 +452,8 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		IndexCode:    indexCode,
 		FieldCode:    "sortNo",
 		FieldName:    "排序",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		FieldType:    fieldType_数字,
+		AnalyzerName: numericAnalyzerName,
 		IndexName:    indexName,
 		FieldComment: "",
 		CreateTime:   now,
@@ -470,7 +470,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		FieldCode:    "active",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
-		AnalyzerName: keywordAnalyzerName,
+		AnalyzerName: numericAnalyzerName,
 		IndexName:    indexName,
 		FieldComment: "",
 		CreateTime:   now,
@@ -495,6 +495,10 @@ func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct Inde
 		analyzerMapping = gseAnalyzerMapping
 	case commaAnalyzerName:
 		analyzerMapping = commaAnalyzerMapping
+	case datetimeAnalyzerName:
+		analyzerMapping = datetimeAnalyzerMapping
+	case numericAnalyzerName:
+		analyzerMapping = numericAnalyzerMapping
 	default:
 		analyzerMapping = keywordAnalyzerMapping
 	}
