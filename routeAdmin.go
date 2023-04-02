@@ -159,8 +159,9 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
+
 	//indexName := bleveDataDir + urlPathIndexName
-	reponseData, err := findIndexList(ctx, c, urlPathIndexName)
+	responseData, err := findIndexList(ctx, c, urlPathIndexName)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, []byte("/admin/error"))
 		c.Abort() // 终止后续调用
@@ -174,9 +175,9 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 		listFile = "/admin/list.html"
 	}
 	//queryString := c.Request.QueryString()
-	//reponseData.QueryString = string(queryString)
-	reponseData.UrlPathIndexName = urlPathIndexName
-	c.HTML(http.StatusOK, listFile, reponseData)
+	//responseData.QueryString = string(queryString)
+	responseData.UrlPathIndexName = urlPathIndexName
+	c.HTML(http.StatusOK, listFile, responseResult(responseData))
 }
 
 // funcLook 通用查看,根据id查看
@@ -239,7 +240,7 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	if t == nil { //不存在自定义模板,使用通用模板
 		updateFile = "/admin/save.html"
 	}
-	c.HTML(http.StatusOK, updateFile, nil)
+	c.HTML(http.StatusOK, updateFile, responseResult(ResponseData{UrlPathIndexName: urlPathIndexName}))
 }
 
 // 保存内容
@@ -274,7 +275,7 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	c.JSON(http.StatusOK, responseData)
+	c.JSON(http.StatusOK, responseResult(responseData))
 }
 
 // 修改内容
@@ -320,7 +321,7 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	}
 	urlPathIndexName := c.Param("urlPathIndexName")
 	//indexName := bleveDataDir + urlPathIndexName
-	reponseData, err := findIndexOne(ctx, c, urlPathIndexName, id)
+	responseData, err := findIndexOne(ctx, c, urlPathIndexName, id)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, []byte("/admin/error"))
 		c.Abort() // 终止后续调用
@@ -332,6 +333,6 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	if t == nil { //不存在自定义模板,使用通用模板
 		lookFile = "/admin/" + htmlfile
 	}
-	reponseData.UrlPathIndexName = urlPathIndexName
-	c.HTML(http.StatusOK, lookFile, reponseData)
+	responseData.UrlPathIndexName = urlPathIndexName
+	c.HTML(http.StatusOK, lookFile, responseResult(responseData))
 }
