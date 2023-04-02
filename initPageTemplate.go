@@ -70,7 +70,7 @@ func init() {
 	addIndexField(mapping, pageTemplateNamePath)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexInfoName, "页面模板", 3, now)
+	indexCommonField(mapping, indexPageTemplateName, "页面模板", 3, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	_, err = bleveNew(indexPageTemplateName, mapping)
