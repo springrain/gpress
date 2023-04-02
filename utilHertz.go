@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"html/template"
 	"math/rand"
@@ -198,11 +197,13 @@ type ResponseData struct {
 
 func responseResult(responseData ResponseData) map[string]interface{} {
 	result := make(map[string]interface{}, 0)
+	result["statusCode"] = responseData.StatusCode
+	result["data"] = responseData.Data
+	result["message"] = responseData.Message
+	result["extMap"] = responseData.ExtMap
+	result["page"] = responseData.Page
+	result["queryString"] = responseData.QueryString
 	result["urlPathIndexName"] = responseData.UrlPathIndexName
-	jsonByte, err := json.Marshal(responseData)
-	if err != nil {
-		return result
-	}
-	json.Unmarshal(jsonByte, &result)
+	result["err"] = responseData.ERR
 	return result
 }
