@@ -172,6 +172,7 @@ func findIndexFieldResult(ctx context.Context, indexName string, required int) (
 	// 按照 SortNo 正序排列.
 	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)升序排序.
 	searchRequest.SortBy([]string{"sortNo", "-_score", "_id"})
+	//searchRequest.SortBy([]string{"sortNo"})
 
 	searchResult, err := index.SearchInContext(ctx, searchRequest)
 	return searchResult, err
@@ -221,7 +222,7 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 	result := searchResult.Hits
 
 	for _, v := range result {
-		tmp := v.Fields["FieldCode"].(string) // 转为字符串
+		tmp := v.Fields["fieldCode"].(string) // 转为字符串
 		_, ok := newIndex[tmp]
 		if !ok {
 			responseData.StatusCode = 401
