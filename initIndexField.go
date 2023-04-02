@@ -49,7 +49,7 @@ type IndexFieldStruct struct {
 
 // initIndexField 初始化创建IndexField索引
 func initIndexField() (bool, error) {
-	ok, err := openBleveIndex(indexFieldName)
+	_, ok, err := openBleveIndex(indexFieldName)
 	if err != nil {
 		return false, err
 	}
@@ -78,12 +78,10 @@ func initIndexField() (bool, error) {
 	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("active", keywordAnalyzerMapping)
 
-	index, err := bleve.New(indexFieldName, mapping)
+	index, err := bleveNew(indexFieldName, mapping)
 	if err != nil {
-		FuncLogError(err)
 		return false, err
 	}
-	IndexMap[indexFieldName] = index
 
 	sortNo := 1
 	now := time.Now()
@@ -485,7 +483,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 
 func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct IndexFieldStruct) {
 	// 获取索引字段的表
-	indexField := IndexMap[indexFieldName]
+	indexField, _, _ := openBleveIndex(indexFieldName)
 	indexField.Index(indexFiledStruct.ID, indexFiledStruct)
 	if bleveMapping == nil {
 		return

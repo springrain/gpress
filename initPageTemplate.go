@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	ok, err := openBleveIndex(indexPageTemplateName)
+	_, ok, err := openBleveIndex(indexPageTemplateName)
 	if err != nil || ok {
 		return
 	}
@@ -73,17 +73,13 @@ func init() {
 	indexCommonField(mapping, indexInfoName, "页面模板", 3, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	pageTemplateIndex, err := bleve.New(indexPageTemplateName, mapping)
-
-	// 放到IndexMap中
-	IndexMap[indexPageTemplateName] = pageTemplateIndex
+	_, err = bleveNew(indexPageTemplateName, mapping)
 
 	if err != nil {
-		FuncLogError(err)
 		return
 	}
 	//保存表信息
-	indexInfo := IndexMap[indexInfoName]
+	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexPageTemplateName, IndexInfoStruct{
 		ID:         indexPageTemplateName,
 		Name:       "页面模板",

@@ -110,21 +110,6 @@ func checkBleveStatus() bool {
 	return ok
 }
 
-// openBleveIndex 打开索引目录
-func openBleveIndex(indexName string) (bool, error) {
-	if !pathExists(indexName) { //如果索文件不存在
-		return false, nil
-	}
-	// 打开所有的索引,放到map里,一个索引只能打开一次.
-	index, err := bleve.Open(indexName)
-	if err != nil {
-		FuncLogError(err)
-		return false, err
-	}
-	IndexMap[indexName] = index
-	return true, nil
-}
-
 // result2Map 单个查询结果转map
 func result2Map(indexName string, result *bleve.SearchResult) (map[string]interface{}, error) {
 	if result == nil {
@@ -174,7 +159,7 @@ var inclusive = true
 // required: 字段是否可以为空,0查询所有字段,1查询必填字段
 func findIndexFieldResult(ctx context.Context, indexName string, required int) (*bleve.SearchResult, error) {
 	var queryBleve query.Query
-	index := IndexMap[indexFieldName]
+	index, _, _ := openBleveIndex(indexFieldName)
 	// 查询指定表
 	queryIndexCode := bleveNewTermQuery(indexName)
 	// 查询指定字段,和json字段保持一致
@@ -253,7 +238,8 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 			return responseData, err
 		}
 	}
-	err = IndexMap[tableName].Index(id, newIndex)
+	index, _, _ := openBleveIndex(tableName)
+	err = index.Index(id, newIndex)
 
 	if err != nil {
 		FuncLogError(err)
@@ -269,7 +255,7 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 
 func updateIndex(ctx context.Context, tableName string, indexId string, newMap map[string]interface{}) error {
 	// 查出原始数据
-	index := IndexMap[tableName]                         // 拿到index
+	index, _, _ := openBleveIndex(tableName)             // 拿到index
 	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
 	// queryIndex := bleveNewTermQuery(indexId)            //查询索引
 	// queryIndex.SetField("id")
@@ -301,7 +287,7 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 	return nil
 }
 func deleteById(ctx context.Context, tableName string, id string) error {
-	index, ok := IndexMap[tableName]
+	index, ok, _ := openBleveIndex(tableName)
 	if !ok {
 		return errors.New("数据不存在")
 	}
@@ -309,7 +295,7 @@ func deleteById(ctx context.Context, tableName string, id string) error {
 	return err
 }
 func deleteAll(ctx context.Context, tableName string) error {
-	index := IndexMap[tableName]
+	index, _, _ := openBleveIndex(tableName)
 	count, err := index.DocCount()
 	if err != nil {
 		return err
@@ -335,7 +321,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 }
 
 func findIndexList(ctx context.Context, c *app.RequestContext, indexName string) (ResponseData, error) {
-	searchIndex, ok := IndexMap[indexName]
+	searchIndex, ok, _ := openBleveIndex(indexName)
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
 		return ResponseData{StatusCode: 0, ERR: err}, err
@@ -426,7 +412,7 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 }
 
 func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, id string) (ResponseData, error) {
-	searchIndex, ok := IndexMap[indexName]
+	searchIndex, ok, _ := openBleveIndex(indexName)
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
 		return ResponseData{StatusCode: 0, ERR: err}, err
@@ -452,8 +438,35 @@ func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, 
 	return ResponseData{StatusCode: 1, Data: data, IndexField: indexField}, err
 }
 
+func bleveNew(indexName string, mapping mapping.IndexMapping) (bleve.Index, error) {
+	index, err := bleve.New(bleveDataDir+indexName, mapping)
+	if err != nil {
+		FuncLogError(err)
+		return nil, err
+	}
+	IndexMap[indexName] = index
+	return index, err
+}
+
+// openBleveIndex 打开索引目录
+func openBleveIndex(indexName string) (bleve.Index, bool, error) {
+	if !pathExists(bleveDataDir + indexName) { //如果索文件不存在
+		return nil, false, nil
+	}
+	index, ok := IndexMap[indexName]
+	if ok { //已经打开过
+		return index, true, nil
+	}
+	// 打开所有的索引,放到map里,一个索引只能打开一次.
+	index, err := bleve.Open(bleveDataDir + indexName)
+	if err != nil {
+		FuncLogError(err)
+		return nil, false, err
+	}
+	IndexMap[indexName] = index
+	return index, true, nil
+}
 func bleveNewTermQuery(term string) *query.TermQuery {
 	term = strings.ToLower(strings.TrimSpace(term))
 	return bleve.NewTermQuery(term)
-
 }
