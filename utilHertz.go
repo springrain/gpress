@@ -38,49 +38,14 @@ func loadTemplate(reload bool) error {
 	loadTmpl := template.New(defaultName).Delims("", "").Funcs(funcMap)
 
 	staticFileMap := make(map[string]string)
-	//遍历模板文件夹
-	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
-		// 分隔符统一为 / 斜杠
-		path = filepath.ToSlash(path)
-		// 相对路径
-		relativePath := path[len(templateDir)-1:]
-		// 如果是静态资源
-		if !reload && (strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/")) {
-			/*
-				// 直接映射静态文件夹
-				if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { // 过滤掉压缩包
-				    h.StaticFile(relativePath, path)
-				}
-			*/
-			if strings.Contains(relativePath, "/js/") { //如果是js文件夹
-				key := relativePath[:strings.Index(relativePath, "/js/")+4]
-				value := path[:strings.Index(path, key)]
-				staticFileMap[key] = value
-			} else if strings.Contains(relativePath, "/css/") { //如果是css文件夹
-				key := relativePath[:strings.Index(relativePath, "/css/")+5]
-				value := path[:strings.Index(path, key)]
-				staticFileMap[key] = value
-			} else if strings.Contains(relativePath, "/image/") { //如果是image文件夹
-				key := relativePath[:strings.Index(relativePath, "/image/")+7]
-				value := path[:strings.Index(path, key)]
-				staticFileMap[key] = value
-			}
-
-		} else if strings.HasSuffix(path, ".html") { // 模板文件
-			// 创建对应的模板
-			t := loadTmpl.New(relativePath)
-			b, err := os.ReadFile(path)
-			if err != nil {
-				return err
-			}
-			// 对应模板内容
-			_, err = t.Parse(string(b))
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	})
+	//遍历后台admin模板
+	err := walkTemplateDir(loadTmpl, reload, templateDir+"admin/", &staticFileMap)
+	if err != nil {
+		FuncLogError(err)
+		return err
+	}
+	//遍历用户配置的主题模板
+	err = walkTemplateDir(loadTmpl, reload, templateDir+"theme/"+config.Theme+"/", &staticFileMap)
 	if err != nil {
 		FuncLogError(err)
 		return err
@@ -117,6 +82,53 @@ func loadTemplate(reload bool) error {
 		})
 	*/
 	return nil
+}
+
+func walkTemplateDir(loadTmpl *template.Template, reload bool, walkDir string, staticFileMap *map[string]string) error {
+	//遍历模板文件夹
+	err := filepath.Walk(walkDir, func(path string, info os.FileInfo, err error) error {
+		// 分隔符统一为 / 斜杠
+		path = filepath.ToSlash(path)
+		// 相对路径
+		relativePath := path[len(templateDir)-1:]
+		// 如果是静态资源
+		if !reload && (strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/")) {
+			/*
+				// 直接映射静态文件夹
+				if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { // 过滤掉压缩包
+				    h.StaticFile(relativePath, path)
+				}
+			*/
+			if strings.Contains(relativePath, "/js/") { //如果是js文件夹
+				key := relativePath[:strings.Index(relativePath, "/js/")+4]
+				value := path[:strings.Index(path, key)]
+				(*staticFileMap)[key] = value
+			} else if strings.Contains(relativePath, "/css/") { //如果是css文件夹
+				key := relativePath[:strings.Index(relativePath, "/css/")+5]
+				value := path[:strings.Index(path, key)]
+				(*staticFileMap)[key] = value
+			} else if strings.Contains(relativePath, "/image/") { //如果是image文件夹
+				key := relativePath[:strings.Index(relativePath, "/image/")+7]
+				value := path[:strings.Index(path, key)]
+				(*staticFileMap)[key] = value
+			}
+
+		} else if strings.HasSuffix(path, ".html") { // 模板文件
+			// 创建对应的模板
+			t := loadTmpl.New(relativePath)
+			b, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			// 对应模板内容
+			_, err = t.Parse(string(b))
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	return err
 }
 
 // isInstalled 是否已经安装过了
