@@ -14,7 +14,15 @@ import (
 	"time"
 )
 
-var funcMap = template.FuncMap{"md5": funcMD5, "basePath": funcBasePath, "T": funcT, "safeHTML": funcSafeHTML, "relURL": funcRelURL, "sass": funcSass, "themePath": funcThemePath}
+var funcMap = template.FuncMap{
+	"md5":       funcMD5,
+	"basePath":  funcBasePath,
+	"T":         funcT,
+	"safeHTML":  funcSafeHTML,
+	"relURL":    funcRelURL,
+	"sass":      funcSass,
+	"themePath": funcThemePath,
+}
 var tmpl *template.Template = template.New(defaultName).Delims("", "").Funcs(funcMap)
 
 // initTemplate 初始化模板

@@ -146,7 +146,7 @@ func init() {
 	indexCommonField(nil, indexModuleDefaultName, "默认模型", 7, now)
 
 	//保存表信息
-	indexInfo := IndexMap[indexInfoName]
+	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexModuleDefaultName, IndexInfoStruct{
 		ID:         indexModuleDefaultName,
 		Name:       "默认模型",

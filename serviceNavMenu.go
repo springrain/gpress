@@ -11,7 +11,7 @@ import (
 var active float64 = 1
 
 func getNavMenu(pid string) (interface{}, error) {
-	navIndex := IndexMap[indexNavMenuName]
+	navIndex, _, _ := openBleveIndex(indexNavMenuName)
 	// PID 跟 Active 为查询字段
 	queryPID := bleveNewTermQuery(pid)
 	queryPID.SetField("PID")
