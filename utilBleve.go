@@ -404,11 +404,8 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	if err != nil {
 		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
-	indexField, err := findIndexFieldStruct(ctx, indexName)
-	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}, err
-	}
-	return ResponseData{StatusCode: 1, Data: data, IndexField: indexField, Page: page}, err
+
+	return ResponseData{StatusCode: 1, Data: data, Page: page}, err
 }
 
 func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, id string) (ResponseData, error) {
@@ -431,11 +428,8 @@ func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, 
 	if err != nil {
 		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
-	indexField, err := findIndexFieldStruct(ctx, indexName)
-	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}, err
-	}
-	return ResponseData{StatusCode: 1, Data: data, IndexField: indexField}, err
+
+	return ResponseData{StatusCode: 1, Data: data}, err
 }
 
 func bleveNew(indexName string, mapping mapping.IndexMapping) (bleve.Index, error) {

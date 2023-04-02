@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"html/template"
@@ -8,6 +9,17 @@ import (
 	"path/filepath"
 	"runtime"
 )
+
+var funcMap = template.FuncMap{
+	"md5":        funcMD5,
+	"basePath":   funcBasePath,
+	"T":          funcT,
+	"safeHTML":   funcSafeHTML,
+	"relURL":     funcRelURL,
+	"sass":       funcSass,
+	"themePath":  funcThemePath,
+	"indexFiled": funcIndexFiled,
+}
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
 func funcBasePath() string {
@@ -81,4 +93,11 @@ func funcSass(sassFile string) (string, error) {
 	//增加静态资源映射,使用了static文件夹,不需要再映射了
 	//h.StaticFile(fileUrl, filePath)
 	return fileUrl, err
+}
+
+// funcIndexFiled 根据indexName查找字段
+func funcIndexFiled(indexName string) ([]IndexFieldStruct, error) {
+	ctx := context.Background()
+	indexField, err := findIndexFieldStruct(ctx, indexName)
+	return indexField, err
 }
