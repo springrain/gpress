@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"html/template"
 	"math/rand"
@@ -14,15 +15,6 @@ import (
 	"time"
 )
 
-var funcMap = template.FuncMap{
-	"md5":       funcMD5,
-	"basePath":  funcBasePath,
-	"T":         funcT,
-	"safeHTML":  funcSafeHTML,
-	"relURL":    funcRelURL,
-	"sass":      funcSass,
-	"themePath": funcThemePath,
-}
 var tmpl *template.Template = template.New(defaultName).Delims("", "").Funcs(funcMap)
 
 // initTemplate 初始化模板
@@ -199,7 +191,18 @@ type ResponseData struct {
 	// 索引名称
 	UrlPathIndexName string `json:"urlPathIndexName,omitempty"`
 	// 索引字段信息
-	IndexField []IndexFieldStruct `json:"indexField,omitempty"`
+	// IndexField []IndexFieldStruct `json:"indexField,omitempty"`
 	// 响应错误
 	ERR error `json:"err,omitempty"`
+}
+
+func responseResult(responseData ResponseData) map[string]interface{} {
+	result := make(map[string]interface{}, 0)
+	result["urlPathIndexName"] = responseData.UrlPathIndexName
+	jsonByte, err := json.Marshal(responseData)
+	if err != nil {
+		return result
+	}
+	json.Unmarshal(jsonByte, &result)
+	return result
 }
