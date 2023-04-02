@@ -22,15 +22,6 @@ import (
 // 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
 var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
 
-// 逗号分词器的mapping
-var commaAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
-
-// 中文分词器的mapping
-var gseAnalyzerMapping *mapping.FieldMapping = bleve.NewTextFieldMapping()
-
-// keyword分词器
-var keywordAnalyzerMapping *mapping.FieldMapping = bleve.NewKeywordFieldMapping()
-
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
 // FuncGenerateStringID Function to generate string ID by default. Convenient for custom extension
 var FuncGenerateStringID func() string = generateStringID
