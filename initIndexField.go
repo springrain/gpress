@@ -458,7 +458,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       9,
+		SortNo:       11,
 		Active:       3,
 	}
 	addIndexField(mapping, commonSortNo)
@@ -475,7 +475,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		FieldComment: "",
 		CreateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       10,
+		SortNo:       12,
 		Active:       3,
 	}
 	addIndexField(mapping, commonActive)
