@@ -513,8 +513,8 @@ func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct Inde
 	var analyzerMapping *mapping.FieldMapping
 
 	switch indexFiledStruct.AnalyzerName {
-	case gseAnalyzerName:
-		analyzerMapping = gseAnalyzerMapping
+	case keywordAnalyzerName:
+		analyzerMapping = keywordAnalyzerMapping
 	case commaAnalyzerName:
 		analyzerMapping = commaAnalyzerMapping
 	case datetimeAnalyzerName:
@@ -522,7 +522,7 @@ func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct Inde
 	case numericAnalyzerName:
 		analyzerMapping = numericAnalyzerMapping
 	default:
-		analyzerMapping = keywordAnalyzerMapping
+		analyzerMapping = gseAnalyzerMapping
 	}
 	bleveMapping.DefaultMapping.AddFieldMappingsAt(indexFiledStruct.FieldCode, analyzerMapping)
 }
