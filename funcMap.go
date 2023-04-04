@@ -18,6 +18,7 @@ var funcMap = template.FuncMap{
 	"relURL":   funcRelURL,
 	//"sass":       funcSass,
 	"themePath":  funcThemePath,
+	"themeFile":  funcThemeFile,
 	"indexFiled": funcIndexFiled,
 }
 
@@ -28,6 +29,10 @@ func funcBasePath() string {
 
 func funcThemePath() string {
 	return themePath
+}
+
+func funcThemeFile(file string) string {
+	return "/theme/" + config.Theme + "/" + file
 }
 
 // 测试自定义函数
