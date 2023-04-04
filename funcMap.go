@@ -11,12 +11,12 @@ import (
 )
 
 var funcMap = template.FuncMap{
-	"md5":        funcMD5,
-	"basePath":   funcBasePath,
-	"T":          funcT,
-	"safeHTML":   funcSafeHTML,
-	"relURL":     funcRelURL,
-	"sass":       funcSass,
+	"md5":      funcMD5,
+	"basePath": funcBasePath,
+	"T":        funcT,
+	"safeHTML": funcSafeHTML,
+	"relURL":   funcRelURL,
+	//"sass":       funcSass,
 	"themePath":  funcThemePath,
 	"indexFiled": funcIndexFiled,
 }
