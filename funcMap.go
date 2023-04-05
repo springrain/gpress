@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/md5"
-	"encoding/hex"
 	"html/template"
 	"os/exec"
 	"path/filepath"
@@ -11,15 +9,17 @@ import (
 )
 
 var funcMap = template.FuncMap{
-	"md5":      funcMD5,
-	"basePath": funcBasePath,
-	"T":        funcT,
-	"safeHTML": funcSafeHTML,
-	"relURL":   funcRelURL,
-	//"sass":       funcSass,
-	"themePath":  funcThemePath,
-	"themeFile":  funcThemeFile,
+
+	"basePath":   funcBasePath,
+	"T":          funcT,
+	"safeHTML":   funcSafeHTML,
+	"relURL":     funcRelURL,
 	"indexFiled": funcIndexFiled,
+	//"md5":      funcMD5,
+	//"sass":       funcSass,
+	//"themePath":  funcThemePath,
+	//"themeFile":  funcThemeFile,
+
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -27,6 +27,7 @@ func funcBasePath() string {
 	return config.BasePath
 }
 
+/*
 func funcThemePath() string {
 	return themePath
 }
@@ -44,7 +45,7 @@ func funcMD5(in string) ([]string, error) {
 	list[1] = hex.EncodeToString(hash[:])
 	return list, nil
 }
-
+*/
 // funcT 多语言i18n适配,例如 {{ T "nextPage" }}
 func funcT(key string) (string, error) {
 	return key, nil
