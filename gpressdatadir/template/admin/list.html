@@ -5,7 +5,7 @@
 {{ $indexFiled := indexFiled .urlPathIndexName }}
 
 <section class="section">
-  <div class="container">
+  <div class="container" id = "showHtml">
     <!-- 搜索表单 -->
     <form class="field is-horizontal" action="{{basePath}}admin/{{.urlPathIndexName}}/list" method="GET">
       <div class="field-body">
@@ -32,6 +32,7 @@
           {{ range $indexFiled }}
           <th>{{.FieldName}}</th>
           {{end }}
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -43,6 +44,7 @@
           <!-- 获取每一列的值 -->
           <td> {{ index $v .FieldCode }}</td>
           {{end }}
+          <td> <input type="button" onclick="lookThis(id)" id="{{$v.id}}" value="查看"></td>
         </tr>
         {{end }}
        
@@ -84,6 +86,7 @@
         <input class="input is-small" type="text" placeholder="页码">
         <button class="button is-small">跳转</button>
       </div>
+      <input type="text" value="{{.urlPathIndexName}}"  id="urlName" style="display:none">
     </nav>
     
 
@@ -93,7 +96,23 @@
   </div>
 </section>
 
+<script>
+  function lookThis(belveId){
+    var tmp=document.getElementById("urlName").value;
+    var urlName= tmp+"/look"
+    console.log(urlName)
+    $.ajax ({
+      type:'Get',
+      async:false,
+      url:'http://localhost:660/admin/'+urlName,
+      data:{id: belveId},
+      success:function(res){
+        $("#showHtml").html(res);
+      }
+    })
+  }
 
+</script>
 
 
         
