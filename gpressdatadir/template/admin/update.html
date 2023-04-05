@@ -16,7 +16,7 @@
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
+                  <input class="input" type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
                 </div>
               </div>
             </div>
@@ -39,16 +39,17 @@
 </section>
 
     <script>
-      const form = document.querySelector("#gpress-form");
+      const form = document.getElementById("gpress-form");
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        console.log(formData);
+
         const jsonObject = {};
         for (const [key, value] of formData.entries()) {
           jsonObject[key] = value;
         }
+        console.log('jsonObject',jsonObject);
 
         const response = await fetch(form.action, {
           method: form.method,
