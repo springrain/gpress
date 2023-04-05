@@ -24,7 +24,7 @@ var funcMap = template.FuncMap{
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
 func funcBasePath() string {
-	return config.basePath
+	return config.BasePath
 }
 
 func funcThemePath() string {

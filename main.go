@@ -16,10 +16,10 @@ var installed = isInstalled()
 var config = loadInstallConfig()
 
 // 使用的主题
-var themePath = config.basePath + "theme/" + config.Theme + "/"
+var themePath = "/theme/" + config.Theme + "/"
 
 // hertz对象,可以在其他地方使用
-var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.basePath))
+var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.BasePath))
 
 func init() {
 	if !bleveStatus { // 索引状态检查失败

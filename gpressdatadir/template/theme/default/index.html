@@ -1,7 +1,8 @@
 
 
-{{ $bodystart := themeFile "bodystart.html" }}
-{{template "/theme/default/bodystart.html" }}
+
+{{ $bodystart := "/theme/default/bodystart.html" }}
+{{template "bodystart.html" }}
 
 
 <section id="posts" class="posts">
@@ -227,4 +228,4 @@
         
 
   {{ $bodyend:=themeFile "bodyend.html" }}
-  {{template "/theme/default/bodyend.html" }}
+  {{template "bodyend.html" }}
