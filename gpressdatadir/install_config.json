@@ -3,5 +3,6 @@
  "timeout":1800,
  "jwttokenKey":"jwttoken",
  "theme":"default",
- "jwtSecret":""
+ "jwtSecret":"",
+ "basePath":"/"
 }
