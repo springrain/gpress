@@ -1,58 +1,37 @@
 {{template "admin/header.html"}}
   <title>indexInfo - GPRESS</title>
 {{template "admin/bodystart.html"}}
-
+{{ $indexFiled := indexFiled .urlPathIndexName }}
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-9-desktop is-9-tablet">
         <form id="gpress-form" action="/" method="POST">
+          {{ $data := .data }}
+          {{ range $indexFiled }}
           <div class="field is-horizontal">
             <div class="field-label">
-              <label class="label">Name</label>
+              <label class="label">{{.FieldName}}</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" placeholder="Your Name" name="name" required>
+                  <input class="input" type="text"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}"  readonly="readonly"  >
                 </div>
               </div>
             </div>
           </div>
-          <div class="field is-horizontal">
-            <div class="field-label">
-              <label class="label">Email</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input class="input" type="email" placeholder="Your Email" name="email" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label">
-              <label class="label">Message</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <textarea class="textarea" placeholder="Your Message" name="message"></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
+          {{end}}
 
         <div class="field is-grouped is-grouped-centered">
           <div class="control">
-            <button type="submit" class="button is-primary">Submit</button>
+            <button type="button" class="button is-primary" onclick="EditThis()" >Edit</button>
           </div>
           <div class="control">
             <button type="reset" class="button is-info is-light">Clear</button>
           </div>
         </div>
-
+          <input type="text" value="{{.urlPathIndexName}}"  id="urlName" style="display:none">
         </form>
       </div>
     </div>
@@ -60,24 +39,23 @@
 </section>
 
     <script>
-      const form = document.querySelector("#gpress-form");
-
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const jsonObject = {};
-        for (const [key, value] of formData.entries()) {
-          jsonObject[key] = value;
-        }
-        const response = await fetch(form.action, {
-          method: form.method,
-          body: JSON.stringify(jsonObject),
-          headers: {
-            "Content-Type": "application/json"
+      function EditThis(){
+        var idValue =  $("#id").val();
+        var tmp=document.getElementById("urlName").value;
+        var urlName= tmp+"/update"
+        console.log(urlName)
+        $.ajax ({
+          type:'Get',
+          async:false,
+          url:'http://localhost:660/admin/'+urlName,
+          data:{id: idValue},
+          success:function(res){
+            $("#showHtml").html(res);
           }
-        });
-        console.log(await response.json());
-      });
+        })
+
+      }
+
     </script>
 
 
