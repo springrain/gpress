@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"html/template"
+
+	"github.com/blevesearch/bleve/v2"
 )
 
 var funcMap = template.FuncMap{
@@ -12,6 +14,7 @@ var funcMap = template.FuncMap{
 	"safeHTML":   funcSafeHTML,
 	"relURL":     funcRelURL,
 	"indexFiled": funcIndexFiled,
+	"site":       funcSite,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
@@ -30,13 +33,13 @@ func funcT(key string) (string, error) {
 }
 
 // funcSafeHTML 转义html字符串
-func funcSafeHTML(html string) (string, error) {
-	ss := template.HTMLEscapeString(html)
+func funcSafeHTML(html string) (template.HTML, error) {
+	ss := template.HTML(html)
 	return ss, nil
 }
 
 // funcRelURL 拼接url路径的
-func funcRelURL(url string) (string, error) {
+func funcRelURL(url string) (template.HTML, error) {
 	return funcSafeHTML(themePath + url)
 }
 
@@ -45,6 +48,23 @@ func funcIndexFiled(indexName string) ([]IndexFieldStruct, error) {
 	ctx := context.Background()
 	indexField, err := findIndexFieldStruct(ctx, indexName)
 	return indexField, err
+}
+
+// 站点信息
+func funcSite() (map[string]interface{}, error) {
+	idQuery := bleveNewTermQuery("gpress")
+	// 指定查询的字段
+	idQuery.SetField("id")
+	searchRequest := bleve.NewSearchRequest(idQuery)
+	// 指定返回的字段
+	searchRequest.Fields = []string{"*"}
+	searchIndex, _, _ := openBleveIndex(indexSiteName)
+	searchResult, err := searchIndex.Search(searchRequest)
+	if err != nil {
+		return make(map[string]interface{}, 0), err
+	}
+	data, err := result2Map(indexSiteName, searchResult)
+	return data, err
 }
 
 /*

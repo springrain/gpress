@@ -59,6 +59,40 @@ func init() {
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
+	siteName := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexSiteName,
+		FieldCode:    "name",
+		FieldName:    "名称",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       2,
+		Active:       3,
+	}
+	addIndexField(mapping, siteName)
+
+	domain := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexSiteName,
+		FieldCode:    "domain",
+		FieldName:    "域名",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       2,
+		Active:       3,
+	}
+	addIndexField(mapping, domain)
+
 	siteKeyword := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexSiteName,
@@ -204,12 +238,34 @@ func init() {
 	// 添加公共字段
 	indexCommonField(mapping, indexSiteName, "站点信息", 10, now)
 
-	_, err = bleveNew(indexSiteName, mapping)
-
+	index, err := bleveNew(indexSiteName, mapping)
 	if err != nil {
-
 		return
 	}
+	siteMap := make(map[string]interface{}, 0)
+	siteMap["id"] = "gpress"
+	siteMap["title"] = "gpress"
+	siteMap["name"] = "gpress"
+	siteMap["domain"] = "127.0.0.1"
+	siteMap["keyword"] = "gpress"
+	siteMap["description"] = "gpress"
+	siteMap["theme"] = "default"
+	siteMap["themePC"] = "default"
+	siteMap["themeWAP"] = "default"
+	siteMap["siteThemeWEIXIN"] = "default"
+	siteMap["logo"] = ""
+	siteMap["favicon"] = "favicon"
+	siteMap["footer"] = `<div class="copyright">
+
+	<span class="copyright-year">
+	&copy; 
+	2008 - 
+	2023
+	<span class="author">jiagou.com 版权所有 <a href='https://beian.miit.gov.cn' target='_blank'>豫ICP备2020026846号-1</a>   <a href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41010302002680'  target='_blank'><img src='/gongan.png'>豫公网安备41010302002680号</a></span>
+	</span>
+	</div>`
+
+	index.Index("gpress", siteMap)
 	//保存表信息
 	indexInfo, _, _ := openBleveIndex(indexInfoName)
 	indexInfo.Index(indexSiteName, IndexInfoStruct{
@@ -223,4 +279,5 @@ func init() {
 		SortNo:     3,
 		Active:     1,
 	})
+
 }
