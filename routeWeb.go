@@ -17,5 +17,6 @@ func init() {
 
 // funcIndex 模板首页
 func funcIndex(ctx context.Context, c *app.RequestContext) {
-	c.HTML(http.StatusOK, "index.html", map[string]string{"name": "test"})
+	data := make(map[string]interface{}, 0)
+	c.HTML(http.StatusOK, "index.html", data)
 }
