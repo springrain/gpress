@@ -6,7 +6,7 @@
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-9-desktop is-9-tablet">
-        <form id="gpress-form" action="{{basePath}}admin/{{.urlPathIndexName}}/save" method="POST">
+        <form id="gpress-form" action="{{basePath}}admin/{{.urlPathIndexName}}/update" method="POST">
           {{ $data := .data }}
           {{ range $indexFiled }}
           <div class="field is-horizontal">
@@ -25,7 +25,7 @@
 
         <div class="field is-grouped is-grouped-centered">
           <div class="control">
-            <button type="submit" class="button is-primary">Submit</button>
+            <button type="submit" class="button is-primary">Submitsss</button>
           </div>
           <div class="control">
             <button type="reset" class="button is-info is-light">Clear</button>
@@ -44,7 +44,7 @@
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-
+        console.log(formData);
         const jsonObject = {};
         for (const [key, value] of formData.entries()) {
           jsonObject[key] = value;
