@@ -21,23 +21,23 @@
 <meta name="keyword" content="{{ $site.keyword }}" />
 
 
-<link rel="apple-touch-icon" sizes="180x180" href="{{basePath}}apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="{{basePath}}favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="{{basePath}}favicon-16x16.png">
-<link rel="manifest" href="{{basePath}}manifest.json">
-<link rel="mask-icon" href="{{basePath}}safari-pinned-tab.svg" color="#5bbad5">
+<link rel="apple-touch-icon" sizes="180x180" href="{{basePath}}{{ $site.favicon }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{basePath}}{{ $site.favicon }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{basePath}}{{ $site.favicon }}">
+<link rel="manifest" href="{{basePath}}js/manifest.json">
+<link rel="mask-icon" href="{{basePath}}{{ $site.favicon }}" color="#5bbad5">
 
 <link href="{{basePath}}css/even.css" rel="stylesheet">
-<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" >
 
 
 <!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+  <script src="https://cdn.staticfile.org/classlist/1.2.20180112/classList.min.js"></script>
 <![endif]-->
 
 <!--[if lt IE 9]>
-  <script src="https://fastly.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://fastly.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+  <script src="https://cdn.staticfile.org/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
 
 </head>

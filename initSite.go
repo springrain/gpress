@@ -253,15 +253,15 @@ func init() {
 	siteMap["themePC"] = "default"
 	siteMap["themeWAP"] = "default"
 	siteMap["siteThemeWEIXIN"] = "default"
-	siteMap["logo"] = ""
-	siteMap["favicon"] = "favicon"
+	siteMap["logo"] = "public/logo.png"
+	siteMap["favicon"] = "public/favicon.png"
 	siteMap["footer"] = `<div class="copyright">
 
 	<span class="copyright-year">
 	&copy; 
 	2008 - 
 	2023
-	<span class="author">jiagou.com 版权所有 <a href='https://beian.miit.gov.cn' target='_blank'>豫ICP备2020026846号-1</a>   <a href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41010302002680'  target='_blank'><img src='/gongan.png'>豫公网安备41010302002680号</a></span>
+	<span class="author">jiagou.com 版权所有 <a href='https://beian.miit.gov.cn' target='_blank'>豫ICP备2020026846号-1</a>   <a href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41010302002680'  target='_blank'><img src='/public/gongan.png'>豫公网安备41010302002680号</a></span>
 	</span>
 	</div>`
 
