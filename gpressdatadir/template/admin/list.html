@@ -86,7 +86,7 @@
         <input class="input is-small" type="text" placeholder="页码">
         <button class="button is-small">跳转</button>
       </div>
-      <input type="text" value="{{.urlPathIndexName}}"  id="urlName" style="display:none">
+      <input type="text" value="{{basePath}}admin/{{.urlPathIndexName}}"  id="urlName" style="display:none">
     </nav>
     
 
@@ -98,13 +98,12 @@
 
 <script>
   function lookThis(belveId){
-    var tmp=document.getElementById("urlName").value;
-    var urlName= tmp+"/look"
+    var urlName=document.getElementById("urlName").value+"/look";
     console.log(urlName)
     $.ajax ({
       type:'Get',
       async:false,
-      url:'http://localhost:660/admin/'+urlName,
+      url: urlName,
       data:{id: belveId},
       success:function(res){
         $("#showHtml").html(res);
