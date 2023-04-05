@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 var tmpl *template.Template = template.New(defaultName).Delims("", "").Funcs(funcMap)
@@ -26,9 +28,9 @@ func initTemplate() error {
 	// 设置模板
 	h.SetHTMLTemplate(tmpl)
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
-	h.Static("/public", datadir)
+	hStatic("/public", datadir)
 	// 设置静态网页目录
-	h.Static("/statichtml", datadir)
+	hStatic("/statichtml", datadir)
 	return err
 }
 
@@ -39,13 +41,13 @@ func loadTemplate(reload bool) error {
 
 	staticFileMap := make(map[string]string)
 	//遍历后台admin模板
-	err := walkTemplateDir(loadTmpl, reload, templateDir+"admin/", &staticFileMap)
+	err := walkTemplateDir(loadTmpl, reload, templateDir+"admin/", templateDir, &staticFileMap)
 	if err != nil {
 		FuncLogError(err)
 		return err
 	}
 	//遍历用户配置的主题模板
-	err = walkTemplateDir(loadTmpl, reload, templateDir+"theme/"+config.Theme+"/", &staticFileMap)
+	err = walkTemplateDir(loadTmpl, reload, templateDir+"theme/"+config.Theme+"/", templateDir+"theme/"+config.Theme+"/", &staticFileMap)
 	if err != nil {
 		FuncLogError(err)
 		return err
@@ -62,7 +64,12 @@ func loadTemplate(reload bool) error {
 
 	//增加静态文件夹
 	for k, v := range staticFileMap {
-		h.Static(k, v)
+		//staticFS2 := http.Dir(v)
+
+		hStatic(k, v)
+
+		//h.Handle("GET", k+"/*filepath", http.FileServer(staticFS2))
+
 	}
 
 	/*
@@ -84,15 +91,16 @@ func loadTemplate(reload bool) error {
 	return nil
 }
 
-func walkTemplateDir(loadTmpl *template.Template, reload bool, walkDir string, staticFileMap *map[string]string) error {
+func walkTemplateDir(loadTmpl *template.Template, reload bool, walkDir string, baseDir string, staticFileMap *map[string]string) error {
 	//遍历模板文件夹
 	err := filepath.Walk(walkDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
 		// 相对路径
-		relativePath := path[len(templateDir)-1:]
+
 		// 如果是静态资源
 		if !reload && (strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/")) {
+			relativePath := path[len(baseDir)-1:]
 			/*
 				// 直接映射静态文件夹
 				if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { // 过滤掉压缩包
@@ -114,6 +122,7 @@ func walkTemplateDir(loadTmpl *template.Template, reload bool, walkDir string, s
 			}
 
 		} else if strings.HasSuffix(path, ".html") { // 模板文件
+			relativePath := path[len(baseDir):]
 			// 创建对应的模板
 			t := loadTmpl.New(relativePath)
 			b, err := os.ReadFile(path)
@@ -218,4 +227,28 @@ func responseResult(responseData ResponseData) map[string]interface{} {
 	result["urlPathIndexName"] = responseData.UrlPathIndexName
 	result["err"] = responseData.ERR
 	return result
+}
+
+func hStatic(relativePath, root string) {
+	basePath := funcBasePath()
+	filePath := ""
+	if basePath == "/" || basePath == "" { //默认值
+		filePath = root + relativePath
+	} else if strings.HasPrefix(relativePath, basePath) { //去掉前缀
+		filePath = root + relativePath[len(basePath):]
+	} else {
+		filePath = root + relativePath
+	}
+	h.StaticFS(relativePath, &app.FS{
+		Root: filePath,
+		PathRewrite: func(c *app.RequestContext) []byte {
+			path := "/" + c.Param("filepath")
+			return []byte(path)
+		},
+	},
+	)
+}
+
+func cRedirecURI(uri string) []byte {
+	return []byte(config.BasePath + uri)
 }

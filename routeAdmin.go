@@ -30,9 +30,6 @@ func initAdminGroup() *route.RouterGroup {
 // 初始化函数
 func init() {
 
-	// 默认首页
-	h.GET("/", funcIndex)
-
 	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
 		result, _ := getNavMenu("0")
 		c.JSON(http.StatusOK, result)
@@ -40,20 +37,20 @@ func init() {
 
 	// 异常页面
 	h.GET("/admin/error", func(ctx context.Context, c *app.RequestContext) {
-		c.HTML(http.StatusOK, "/admin/error.html", nil)
+		c.HTML(http.StatusOK, "admin/error.html", nil)
 	})
 
 	// 安装
 	h.GET("/admin/install", func(ctx context.Context, c *app.RequestContext) {
 		if installed { // 如果已经安装过了,跳转到登录
-			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
 			return
 		}
-		c.HTML(http.StatusOK, "/admin/install.html", nil)
+		c.HTML(http.StatusOK, "admin/install.html", nil)
 	})
 	h.POST("/admin/install", func(ctx context.Context, c *app.RequestContext) {
 		if installed { // 如果已经安装过了,跳转到登录
-			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
 			return
 		}
 		// 使用后端管理界面配置,jwtSecret也有后端随机产生
@@ -61,32 +58,32 @@ func init() {
 		password := c.PostForm("password")
 		err := insertUser(ctx, account, password)
 		if err != nil {
-			c.Redirect(http.StatusOK, []byte("/admin/error"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 			return
 		}
 		// 安装成功,更新安装状态
 		updateInstall(ctx)
-		c.Redirect(http.StatusOK, []byte("/admin/login"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
 	})
 
 	// 后台管理员登录
 	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
 		if !installed { // 如果没有安装,跳转到安装
-			c.Redirect(http.StatusOK, []byte("/admin/install"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
 			return
 		}
-		c.HTML(http.StatusOK, "/admin/login.html", nil)
+		c.HTML(http.StatusOK, "admin/login.html", nil)
 	})
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
 		if !installed { // 如果没有安装,跳转到安装
-			c.Redirect(http.StatusOK, []byte("/admin/install"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
 			return
 		}
 		account := c.PostForm("account")
 		password := c.PostForm("password")
 		userId, err := findUserId(ctx, account, password)
 		if userId == "" || err != nil { // 用户不存在或者异常
-			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
 			return
 		}
 		/*
@@ -102,7 +99,7 @@ func init() {
 		// c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 
-		c.Redirect(http.StatusOK, []byte("/admin/index"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
 	})
 
 	// 后台管理员首页
@@ -110,11 +107,11 @@ func init() {
 		// 获取从jwttoken中解码的userId
 		userId, ok := c.Get(tokenUserId)
 		if !ok || userId == "" {
-			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
 			return
 		}
 
-		c.HTML(http.StatusOK, "/admin/index.html", nil)
+		c.HTML(http.StatusOK, "admin/index.html", nil)
 	})
 	// 后台管理员首页
 	adminGroup.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
@@ -125,7 +122,7 @@ func init() {
 		}
 		//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址
 		//c.HTMLRender = render.HTMLProduction{Template: tmpl}
-		//c.HTML(http.StatusOK, "/admin/index.html", nil)
+		//c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 	})
 
@@ -151,11 +148,6 @@ func init() {
 
 }
 
-// funcIndex 模板首页
-func funcIndex(ctx context.Context, c *app.RequestContext) {
-	c.HTML(http.StatusOK, themePath+"index.html", map[string]string{"name": "test"})
-}
-
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
@@ -163,16 +155,16 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	//indexName := bleveDataDir + urlPathIndexName
 	responseData, err := findIndexList(ctx, c, urlPathIndexName)
 	if err != nil { //索引不存在
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
 		return
 	}
 
 	//优先使用自定义模板文件
-	listFile := "/admin/" + urlPathIndexName + "/list.html"
+	listFile := "admin/" + urlPathIndexName + "/list.html"
 	t := tmpl.Lookup(listFile)
 	if t == nil { //不存在自定义模板,使用通用模板
-		listFile = "/admin/list.html"
+		listFile = "admin/list.html"
 	}
 	//queryString := c.Request.QueryString()
 	//responseData.QueryString = string(queryString)
@@ -235,10 +227,10 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
 	//优先使用自定义模板文件
-	updateFile := "/admin/" + urlPathIndexName + "/save.html"
+	updateFile := "admin/" + urlPathIndexName + "/save.html"
 	t := tmpl.Lookup(updateFile)
 	if t == nil { //不存在自定义模板,使用通用模板
-		updateFile = "/admin/save.html"
+		updateFile = "admin/save.html"
 	}
 	c.HTML(http.StatusOK, updateFile, responseResult(ResponseData{UrlPathIndexName: urlPathIndexName}))
 }
@@ -302,7 +294,7 @@ func permissionHandler() app.HandlerFunc {
 		jwttoken := c.Cookie(config.JwttokenKey)
 		userId, err := userIdByToken(string(jwttoken))
 		if err != nil || userId == "" {
-			c.Redirect(http.StatusOK, []byte("/admin/login"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
 			c.Abort() // 终止后续调用
 			return
 		}
@@ -315,7 +307,7 @@ func permissionHandler() app.HandlerFunc {
 func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) {
 	id := c.Query("id")
 	if id == "" {
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -323,15 +315,15 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	//indexName := bleveDataDir + urlPathIndexName
 	responseData, err := findIndexOne(ctx, c, urlPathIndexName, id)
 	if err != nil { //索引不存在
-		c.Redirect(http.StatusOK, []byte("/admin/error"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
 		return
 	}
 	//优先使用自定义模板文件
-	lookFile := "/admin/" + urlPathIndexName + "/" + htmlfile
+	lookFile := "admin/" + urlPathIndexName + "/" + htmlfile
 	t := tmpl.Lookup(lookFile)
 	if t == nil { //不存在自定义模板,使用通用模板
-		lookFile = "/admin/" + htmlfile
+		lookFile = "admin/" + htmlfile
 	}
 	responseData.UrlPathIndexName = urlPathIndexName
 	c.HTML(http.StatusOK, lookFile, responseResult(responseData))
