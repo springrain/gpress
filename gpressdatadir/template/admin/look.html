@@ -31,7 +31,7 @@
             <button type="reset" class="button is-info is-light">Clear</button>
           </div>
         </div>
-          <input type="text" value="{{.urlPathIndexName}}"  id="urlName" style="display:none">
+          <input type="text" value="{{basePath}}admin/{{.urlPathIndexName}}"  id="urlName" style="display:none">
         </form>
       </div>
     </div>
@@ -41,13 +41,12 @@
     <script>
       function EditThis(){
         var idValue =  $("#id").val();
-        var tmp=document.getElementById("urlName").value;
-        var urlName= tmp+"/update"
+        var urlName=document.getElementById("urlName").value+"/update";
         console.log(urlName)
         $.ajax ({
           type:'Get',
           async:false,
-          url:'http://localhost:660/admin/'+urlName,
+          url: urlName,
           data:{id: idValue},
           success:function(res){
             $("#showHtml").html(res);
