@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"html/template"
-	"os/exec"
-	"path/filepath"
-	"runtime"
 )
 
 var funcMap = template.FuncMap{
@@ -27,6 +24,29 @@ func funcBasePath() string {
 	return config.BasePath
 }
 
+// funcT 多语言i18n适配,例如 {{ T "nextPage" }}
+func funcT(key string) (string, error) {
+	return key, nil
+}
+
+// funcSafeHTML 转义html字符串
+func funcSafeHTML(html string) (string, error) {
+	ss := template.HTMLEscapeString(html)
+	return ss, nil
+}
+
+// funcRelURL 拼接url路径的
+func funcRelURL(url string) (string, error) {
+	return funcSafeHTML(themePath + url)
+}
+
+// funcIndexFiled 根据indexName查找字段
+func funcIndexFiled(indexName string) ([]IndexFieldStruct, error) {
+	ctx := context.Background()
+	indexField, err := findIndexFieldStruct(ctx, indexName)
+	return indexField, err
+}
+
 /*
 func funcThemePath() string {
 	return themePath
@@ -44,22 +64,6 @@ func funcMD5(in string) ([]string, error) {
 	list[0] = in
 	list[1] = hex.EncodeToString(hash[:])
 	return list, nil
-}
-*/
-// funcT 多语言i18n适配,例如 {{ T "nextPage" }}
-func funcT(key string) (string, error) {
-	return key, nil
-}
-
-// funcSafeHTML 转义html字符串
-func funcSafeHTML(html string) (string, error) {
-	ss := template.HTMLEscapeString(html)
-	return ss, nil
-}
-
-// funcRelURL 拼接url路径的
-func funcRelURL(url string) (string, error) {
-	return funcSafeHTML(themePath + url)
 }
 
 // funcSass 编译sass,生成css
@@ -100,10 +104,4 @@ func funcSass(sassFile string) (string, error) {
 	//h.StaticFile(fileUrl, filePath)
 	return fileUrl, err
 }
-
-// funcIndexFiled 根据indexName查找字段
-func funcIndexFiled(indexName string) ([]IndexFieldStruct, error) {
-	ctx := context.Background()
-	indexField, err := findIndexFieldStruct(ctx, indexName)
-	return indexField, err
-}
+*/
