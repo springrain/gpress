@@ -153,6 +153,9 @@ func initConfig() (bool, error) {
 	}
 	addIndexField(mapping, timeout)
 
+	// 添加公共字段
+	indexCommonField(mapping, indexConfigName, "配置信息", 9, now)
+
 	_, err = bleveNew(indexConfigName, mapping)
 	if err != nil {
 		return false, err
