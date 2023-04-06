@@ -47,9 +47,13 @@
 
         const jsonObject = {};
         for (const [key, value] of formData.entries()) {
-          jsonObject[key] = value;
+          if (key == "sortNo" ||key == "active"||key == "fieldType"||key == "required"){
+            jsonObject[key] = parseInt(value);
+          }else{
+            jsonObject[key] =  value;
+          }
+          //jsonObject[key] = value;
         }
-        
         const response = await fetch(form.action, {
           method: form.method,
           body: JSON.stringify(jsonObject),
@@ -57,7 +61,13 @@
             "Content-Type": "application/json",
           }
         });
-        console.log(await response.json());
+
+        let res= await response.json();
+        if (res.statusCode== 1){
+          alert("修改成功");
+          window.location.href = '{{basePath}}admin/{{.urlPathIndexName}}/list';
+        }
+        //console.log();
       });
 
     </script>

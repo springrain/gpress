@@ -25,40 +25,17 @@
 
         <div class="field is-grouped is-grouped-centered">
           <div class="control">
-            <button type="button" class="button is-primary" onclick="EditThis()" >Edit</button>
+            <a href="{{basePath}}admin/{{.urlPathIndexName}}/update?id={{$data.id}}"  class="button is-info is-light">edit</a>
           </div>
           <div class="control">
             <button type="reset" class="button is-info is-light">Clear</button>
           </div>
         </div>
-          <input type="text" value="{{basePath}}admin/{{.urlPathIndexName}}"  id="urlName" style="display:none">
         </form>
       </div>
     </div>
   </div>
 </section>
-
-    <script>
-      function EditThis(){
-        var idValue =  $("#id").val();
-        var urlName=document.getElementById("urlName").value+"/update";
-        console.log(urlName)
-        $.ajax ({
-          type:'Get',
-          async:false,
-          url: urlName,
-          data:{id: idValue},
-          success:function(res){
-            $("#showHtml").html(res);
-          }
-        })
-
-      }
-
-    </script>
-
-
-
 
         
 {{template "admin/bodyend.html"}}
