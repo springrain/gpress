@@ -32,11 +32,11 @@ func findUserId(ctx context.Context, account string, password string) (string, e
 	// 多个条件联查
 	query := bleve.NewConjunctionQuery(accountQuery, passwordQuery)
 	// 只查一条
-	serarchRequest := bleve.NewSearchRequestOptions(query, 1, 0, false)
+	searchRequest := bleve.NewSearchRequestOptions(query, 1, 0, false)
 	// 只查询id
-	serarchRequest.Fields = []string{"id"}
+	searchRequest.Fields = []string{"id"}
 
-	result, err := userIndex.SearchInContext(ctx, serarchRequest)
+	result, err := userIndex.SearchInContext(ctx, searchRequest)
 	if err != nil {
 		return "", err
 	}

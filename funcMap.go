@@ -15,6 +15,7 @@ var funcMap = template.FuncMap{
 	"relURL":     funcRelURL,
 	"indexFiled": funcIndexFiled,
 	"site":       funcSite,
+	"navMenu":    funcNavMenu,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
@@ -64,6 +65,21 @@ func funcSite() (map[string]interface{}, error) {
 		return make(map[string]interface{}, 0), err
 	}
 	data, err := result2Map(indexSiteName, searchResult)
+	return data, err
+}
+
+// 菜单信息
+func funcNavMenu() ([]map[string]interface{}, error) {
+	searchIndex, _, _ := openBleveIndex(indexNavMenuName)
+	query := bleve.NewQueryStringQuery("*")
+	searchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
+	// 指定返回的字段
+	searchRequest.Fields = []string{"*"}
+	searchResult, err := searchIndex.Search(searchRequest)
+	if err != nil {
+		return make([]map[string]interface{}, 0), err
+	}
+	data, err := result2SliceMap(indexNavMenuName, searchResult)
 	return data, err
 }
 
