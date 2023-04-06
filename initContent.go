@@ -208,6 +208,23 @@ func init() {
 	}
 	addIndexField(mapping, contentTemplateID)
 
+	summaryContent := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexContentName,
+		FieldCode:    "summary",
+		FieldName:    "文章摘要",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       7,
+		Active:       3,
+	}
+	addIndexField(mapping, summaryContent)
+
 	contentContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
