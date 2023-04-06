@@ -90,10 +90,10 @@ func insertConfig(ctx context.Context, config configStruct) error {
 func findConfig() (configStruct, error) {
 	configIndex, _, _ := openBleveIndex(indexConfigName)
 	query := bleve.NewQueryStringQuery("*")
-	serarchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
-	serarchRequest.Fields = []string{"*"}
+	searchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
+	searchRequest.Fields = []string{"*"}
 	config := defaultConfig
-	result, err := configIndex.SearchInContext(context.Background(), serarchRequest)
+	result, err := configIndex.SearchInContext(context.Background(), searchRequest)
 	if err != nil {
 		return config, err
 	}
