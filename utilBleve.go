@@ -316,28 +316,24 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return nil
 }
 
-func findIndexList(ctx context.Context, c *app.RequestContext, indexName string) (ResponseData, error) {
+func funcIndexList(indexName string, fields string, q string, pageNo int, params ...string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
+
+	errMap := map[string]interface{}{"statusCode": 0, "urlPathIndexName": indexName}
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
-		return ResponseData{StatusCode: 0, ERR: err}, err
+		errMap["err"] = err
+		return errMap, err
 	}
-	//获取页码
-	pageNoStr := c.DefaultQuery("pageNo", "1")
-	pageNo, _ := strconv.Atoi(pageNoStr)
+
 	if pageNo == 0 {
 		pageNo = 1
 	}
-	mapParams := make(map[string]interface{}, 0)
-	//获取所有的参数
-	c.Bind(&mapParams)
-	//删除掉固定的两个
-	delete(mapParams, "pageNo")
-	delete(mapParams, "q")
+
 	// 查询
 	var searchQuery query.Query
 	var queryKey query.Query
-	q := strings.TrimSpace(c.Query("q"))
+
 	if q == "" || q == "*" {
 		queryKey = bleve.NewQueryStringQuery("*")
 	} else {
@@ -364,15 +360,21 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 
 	}
 
-	if len(mapParams) < 1 { //没有其他参数了
+	if len(params) < 1 { //没有其他参数了
 		searchQuery = queryKey
 	} else { //还有其他参数,认为是数据库字段,进行检索
 		qs := make([]query.Query, 0)
 		qs = append(qs, queryKey)
-		for k := range mapParams {
-			value := c.Query(k)
-			term := bleveNewTermQuery(value)
-			term.SetField(k)
+		for _, param := range params {
+			if param == "" {
+				continue
+			}
+			p := strings.Split(param, "=")
+			if len(p) != 2 {
+				continue
+			}
+			term := bleveNewTermQuery(p[1])
+			term.SetField(p[0])
 			qs = append(qs, term)
 		}
 		searchQuery = bleve.NewConjunctionQuery(qs...)
@@ -385,26 +387,33 @@ func findIndexList(ctx context.Context, c *app.RequestContext, indexName string)
 	}
 	searchRequest := bleve.NewSearchRequestOptions(searchQuery, page.PageSize, from, false)
 	// 指定返回的字段
-	searchRequest.Fields = []string{"*"}
+	if fields == "" || fields == "*" {
+		searchRequest.Fields = []string{"*"}
+	} else {
+		searchRequest.Fields = strings.Split(fields, ",")
+	}
 
 	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
 	searchRequest.SortBy([]string{"sortNo", "-_score", "-_id"})
 
-	searchResult, err := searchIndex.SearchInContext(ctx, searchRequest)
+	searchResult, err := searchIndex.Search(searchRequest)
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}, err
+		errMap["err"] = err
+		return errMap, err
 	}
 	total, err := strconv.Atoi(strconv.FormatUint(searchResult.Total, 10))
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}, err
+		errMap["err"] = err
+		return errMap, err
 	}
 	page.setTotalCount(total)
 	data, err := result2SliceMap(searchIndex.Name(), searchResult)
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}, err
+		errMap["err"] = err
+		return errMap, err
 	}
-
-	return ResponseData{StatusCode: 1, Data: data, Page: page}, err
+	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page, "urlPathIndexName": indexName}
+	return resultMap, err
 }
 
 func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, id string) (ResponseData, error) {
@@ -429,7 +438,7 @@ func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, 
 	if err != nil {
 		return ResponseData{StatusCode: 0, ERR: err}, err
 	}
-
+	data["urlPathIndexName"] = indexName
 	return ResponseData{StatusCode: 1, Data: data}, err
 }
 
