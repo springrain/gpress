@@ -3,9 +3,9 @@
 {{template "admin/bodystart.html"}}
 
 {{ $indexFiled := indexFiled .urlPathIndexName }}
-
+{{$path := .urlPathIndexName}}
 <section class="section">
-  <div class="container" id = "showHtml">
+  <div class="container" >
     <!-- 搜索表单 -->
     <form class="field is-horizontal" action="{{basePath}}admin/{{.urlPathIndexName}}/list" method="GET">
       <div class="field-body">
@@ -17,6 +17,11 @@
         <div class="field">
           <div class="control">
             <button class="button is-link" type="submit">Search</button>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <a href="{{basePath}}admin/{{.urlPathIndexName}}/save" class="button is-link" type="submit">新增</a>
           </div>
         </div>
       </div>
@@ -44,7 +49,8 @@
           <!-- 获取每一列的值 -->
           <td> {{ index $v .FieldCode }}</td>
           {{end }}
-          <td> <input type="button" onclick="lookThis(id)" id="{{$v.id}}" value="查看"></td>
+          <td> <a href="{{basePath}}admin/{{$path}}/look?id={{$v.id}}" >查看</a></td>
+          <td> <input type="button" onclick="deleteFunc(this.id)" id="{{$v.id}}"  value="删除"></input></td>
         </tr>
         {{end }}
        
@@ -86,7 +92,6 @@
         <input class="input is-small" type="text" placeholder="页码">
         <button class="button is-small">跳转</button>
       </div>
-      <input type="text" value="{{basePath}}admin/{{.urlPathIndexName}}"  id="urlName" style="display:none">
     </nav>
     
 
@@ -95,25 +100,23 @@
 
   </div>
 </section>
-
 <script>
-  function lookThis(belveId){
-    var urlName=document.getElementById("urlName").value+"/look";
-    console.log(urlName)
+  function deleteFunc(id){
+    debugger;
     $.ajax ({
-      type:'Get',
-      async:false,
-      url: urlName,
-      data:{id: belveId},
+      type:'Post',
+      url:'{{basePath}}admin/{{$path}}/delete',
+      data:{id: id},
       success:function(res){
-        $("#showHtml").html(res);
+         if (res.statusCode == 1){
+           alert("删除成功");
+           location.reload()
+         }
       }
     })
   }
 
 </script>
-
-
         
 {{template "admin/bodyend.html"}}
      
