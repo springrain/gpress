@@ -208,7 +208,58 @@ func init() {
 	}
 	addIndexField(mapping, contentTemplateID)
 
-	summaryContent := IndexFieldStruct{
+	contentAuthor := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexContentName,
+		FieldCode:    "author",
+		FieldName:    "作者",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       6,
+		Active:       3,
+	}
+	addIndexField(mapping, contentAuthor)
+
+	contentTag := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexContentName,
+		FieldCode:    "tag",
+		FieldName:    "标签",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: commaAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       6,
+		Active:       3,
+	}
+	addIndexField(mapping, contentTag)
+
+	contentToc := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexContentName,
+		FieldCode:    "toc",
+		FieldName:    "文章目录",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       6,
+		Active:       3,
+	}
+	addIndexField(mapping, contentToc)
+
+	contentSummary := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
 		FieldCode:    "summary",
@@ -223,7 +274,7 @@ func init() {
 		SortNo:       7,
 		Active:       3,
 	}
-	addIndexField(mapping, summaryContent)
+	addIndexField(mapping, contentSummary)
 
 	contentContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
