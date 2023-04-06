@@ -16,6 +16,7 @@ var funcMap = template.FuncMap{
 	"indexFiled": funcIndexFiled,
 	"site":       funcSite,
 	"navMenu":    funcNavMenu,
+	"indexList":  funcIndexList,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
