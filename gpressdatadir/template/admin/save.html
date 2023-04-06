@@ -2,6 +2,9 @@
   <title>indexInfo - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $indexFiled := indexFiled .urlPathIndexName }}
+{{$analyzer := analyzer}}
+{{$fieldType := fieldType}}
+
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
@@ -9,6 +12,7 @@
         <form id="gpress-form" action="{{basePath}}admin/{{.urlPathIndexName}}/save" method="POST">
           {{ $data := .data }}
           {{ range $indexFiled }}
+
           <div class="field is-horizontal">
             <div class="field-label">
               <label class="label">{{.FieldName}}</label>
@@ -16,11 +20,29 @@
             <div class="field-body">
               <div class="field">
                 <div class="control">
+
+                  {{if eq .FieldCode "fieldType"}}
+                  <select  name="{{.FieldCode}}" class="input" >
+                    <option value="0">请选择</option>
+                    {{ range $key,$value := $analyzer }}
+                      <option value={{$key}}>{{$value}}</option>
+                    {{end}}
+                  </select>
+                  {{else if eq .FieldCode "analyzerName"}}
+                  <select name="{{.FieldCode}}" class="input" >
+                    <option value="0">请选择</option>
+                    {{ range $key,$value := $fieldType }}
+                      <option value={{$key}}>{{$value}} </option>
+                    {{end}}
+                  </select>
+                  {{else if ne .FieldCode "id"}}
                   <input class="input" type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}">
+                  {{end}}
                 </div>
               </div>
             </div>
           </div>
+
           {{end}}
 
         <div class="field is-grouped is-grouped-centered">
@@ -31,7 +53,6 @@
             <button type="reset" class="button is-info is-light">Clear</button>
           </div>
         </div>
-
         </form>
       </div>
     </div>
