@@ -288,7 +288,8 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 
 // 修改内容
 func funcDelete(ctx context.Context, c *app.RequestContext) {
-	id := c.Query("id")
+	id := c.PostForm("id")
+	//id := c.Query("id")
 	if id == "" { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
 		c.Abort() // 终止后续调用
@@ -302,6 +303,7 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 	}
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
 }
 
 // permissionHandler 权限拦截器
