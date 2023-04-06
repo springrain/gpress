@@ -315,7 +315,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return nil
 }
 
-func funcIndexList(indexName string, fields string, q string, pageNo int, params ...string) (map[string]interface{}, error) {
+func funcIndexList(indexName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
 
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathIndexName": indexName}
@@ -325,7 +325,7 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, params
 		return errMap, err
 	}
 
-	if pageNo == 0 {
+	if pageNo <= 0 {
 		pageNo = 1
 	}
 
@@ -357,6 +357,10 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, params
 
 		queryKey = bleve.NewQueryStringQuery(q)
 
+	}
+	params := make([]string, 0)
+	if queryString != "" {
+		params = strings.Split(queryString, "&")
 	}
 
 	if len(params) < 1 { //没有其他参数了
