@@ -235,8 +235,25 @@ func init() {
 	}
 	addIndexField(mapping, siteFavicon)
 
+	siteFooter := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexSiteName,
+		FieldCode:    "footer",
+		FieldName:    "底部信息",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		IndexName:    "站点信息",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       11,
+		Active:       3,
+	}
+	addIndexField(mapping, siteFooter)
+
 	// 添加公共字段
-	indexCommonField(mapping, indexSiteName, "站点信息", 10, now)
+	indexCommonField(mapping, indexSiteName, "站点信息", 11, now)
 
 	index, err := bleveNew(indexSiteName, mapping)
 	if err != nil {
