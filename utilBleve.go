@@ -233,6 +233,13 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 		}
 	}
 	index, _, _ := openBleveIndex(tableName)
+	sortNo := newIndex["sortNo"].(int)
+	if sortNo == 0 {
+		count, _ := index.DocCount()
+		sortNo, _ = strconv.Atoi(strconv.FormatUint(count, 10))
+		newIndex["sortNo"] = sortNo
+	}
+
 	err = index.Index(id, newIndex)
 
 	if err != nil {
@@ -397,7 +404,7 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, queryS
 	}
 
 	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
-	searchRequest.SortBy([]string{"sortNo", "-_score", "-_id"})
+	searchRequest.SortBy([]string{"-sortNo", "-_score", "-_id"})
 
 	searchResult, err := searchIndex.Search(searchRequest)
 	if err != nil {

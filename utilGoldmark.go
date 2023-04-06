@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -132,47 +134,38 @@ func initHighlighting() goldmark.Extender {
 	return highlighting.NewHighlighting(
 		highlighting.WithStyle("monokai"),
 		// highlighting.WithCSSWriter(&css),
-		highlighting.WithFormatOptions(
-			chromahtml.WithClasses(true),
-			chromahtml.WithLineNumbers(true),
-			chromahtml.TabWidth(4),
-			chromahtml.LineNumbersInTable(true),
-			//chromahtml.InlineCode(true),
-			//chromahtml.LineNumbersInTable(true),
-		),
+		/*
+			highlighting.WithFormatOptions(
+				chromahtml.WithClasses(true),
+				chromahtml.WithLineNumbers(true),
+				chromahtml.TabWidth(4),
+				chromahtml.LineNumbersInTable(true),
+				//chromahtml.InlineCode(true),
+				//chromahtml.LineNumbersInTable(true),
+			),
+		*/
 		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
-			language, ok := c.Language()
 			if entering {
-				if !ok {
-					w.WriteString("<pre><code>")
-					return
-				}
-				w.WriteString(`<div class="highlight"><pre class="chroma"><code class="language-`)
-				w.Write(language)
-				w.WriteString(`" data-lang="`)
-				w.Write(language)
-				w.WriteString(`">`)
+				w.WriteString(`<div class="highlight">`)
 			} else {
-				if !ok {
-					w.WriteString("</code></pre>")
-					return
-				}
 				w.WriteString(`</div>`)
 			}
 		}),
-		/*
-			highlighting.WithCodeBlockOptions(func(c highlighting.CodeBlockContext) []chromahtml.Option {
-				if language, ok := c.Language(); ok {
-					// Turn on line numbers for Go only.
-					if string(language) == "go" {
-						return []chromahtml.Option{
-							chromahtml.WithLineNumbers(true),
-						}
-					}
-				}
+
+		highlighting.WithCodeBlockOptions(func(c highlighting.CodeBlockContext) []chromahtml.Option {
+			language, ok := c.Language()
+			if !ok {
 				return nil
-			}),
-		*/
+			}
+			wrapper := &preWrapper{language: string(language)}
+			return []chromahtml.Option{
+				chromahtml.WithClasses(true),
+				chromahtml.WithLineNumbers(true),
+				chromahtml.TabWidth(4),
+				chromahtml.LineNumbersInTable(true),
+				chromahtml.WithPreWrapper(wrapper),
+			}
+		}),
 	)
 }
 
@@ -196,3 +189,34 @@ func initLatexRenderer() renderer.Renderer {
 	return r
 }
 */
+
+type preWrapper struct {
+	language string
+}
+
+func (p *preWrapper) Start(code bool, styleAttr string) string {
+	var language string
+	if code {
+		language = p.language
+	}
+	w := &strings.Builder{}
+	WritePreStart(w, language, styleAttr)
+	//p.low = p.writeCounter.counter + w.Len()
+	return w.String()
+}
+func WritePreStart(w io.Writer, language, styleAttr string) {
+	fmt.Fprintf(w, `<pre tabindex="0"%s>`, styleAttr)
+	fmt.Fprint(w, "<code")
+	if language != "" {
+		fmt.Fprint(w, ` class="language-`+language+`"`)
+		fmt.Fprint(w, ` data-lang="`+language+`"`)
+	}
+	fmt.Fprint(w, ">")
+}
+
+const preEnd = "</code></pre>"
+
+func (p *preWrapper) End(code bool) string {
+	//p.high = p.writeCounter.counter
+	return preEnd
+}

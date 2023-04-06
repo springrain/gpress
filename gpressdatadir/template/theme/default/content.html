@@ -1,5 +1,10 @@
 <!-- 查询 content -->
-{{ $content:=indexOne "content" .urlPathParam }}
+{{ $content := indexOne "content" .urlPathParam }}
+
+{{ $prev := add $content.sortNo -1 }}
+{{ $next := add $content.sortNo 1 }}
+{{ $prevContent := indexOne "content" .urlPathParam (printf "sortNo=%d" $prev) }}
+{{ $nextContent := indexOne "content" .urlPathParam (printf "sortNo=%d" $next) }}
 
 {{template "bodystart.html"  }}
 
@@ -18,47 +23,63 @@
     </div>
   </header>
 
+  <div class="post-toc" id="post-toc">
+<h2 class="post-toc-title">文章目录</h2>
+<div class="post-toc-content always-active">
+<nav id="TableOfContents">
+
+  {{  safeHTML $content.toc }}
+
+
+</nav>
+</div>
+</div>
+  <div class="post-content">
+
+
+    {{ safeHTML $content.content }}
 
 
 
-{{ safeHTML $content.content }}
-
-
-
-
+</div>
 <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">springrain</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-      {{ $content.updateTime }} 
-        
-    </span>
-  </p>
-  
-  
+<p class="copyright-item">
+  <span class="item-title">文章作者</span>
+  <span class="item-content"> {{ $content.author }}</span>
+</p>
+<p class="copyright-item">
+  <span class="item-title">上次更新</span>
+  <span class="item-content">
+    {{ $content.updateTime }}
+  </span>
+</p>
+
+
 </div>
 <footer class="post-footer">
-      <div class="post-tags">
-          <a href="/tags/web/">web</a>
-          </div>
-      <nav class="post-nav">
-        <a class="prev" href="/post/77-nftonxuperchain/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">77.百度开放网络发行数字藏品 </span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/75-paddledtx/">
-            <span class="next-text nav-default">75.链桨使用</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        
+    <div class="post-tags">
+        <a href="#">web</a>
+        </div>
+    <nav class="post-nav">
+      {{if ne $prevContent.sortNo 0 }}
+      <a class="prev" href="{{basePath}}content/{{$prevContent.id}}">
+          <i class="iconfont icon-left"></i>
+          <span class="prev-text nav-default">{{$prevContent.title}}</span>
+          <span class="prev-text nav-mobile">上一篇</span>
+        </a>
+      {{end}}
+      {{if ne $nextContent.sortNo 0 }}
+      <a class="next" href="{{basePath}}content/{{$nextContent.id}}">
+          <span class="next-text nav-default">{{$nextContent.title}}</span>
+          <span class="next-text nav-mobile">下一篇</span>
+          <i class="iconfont icon-right"></i>
+        </a>
+      {{end}}
+    </nav>
+  </footer>
+</article>
+
+
+
 
   {{template "bodyend.html" }}
