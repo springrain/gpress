@@ -7,12 +7,12 @@
 <article class="post">
     
   <header class="post-header">
-    <h1 class="post-title">{{ $content.title }}</h1>
+    <h1 class="post-title">{{ $content.data.title }}</h1>
 
     <div class="post-meta">
-      <span class="post-time"> {{ $content.createTime }} </span>
+      <span class="post-time"> {{ $content.data.createTime }} </span>
       <div class="post-category">
-          <a href="{{basePath}}navMenu/{{ $content.navMenuID }}"> {{ $content.navMenuName }} </a>
+          <a href="{{basePath}}navMenu/{{ $content.navMenuID }}"> {{ $content.data.navMenuName }} </a>
           </div>
       
     </div>
@@ -21,7 +21,7 @@
 
 
 
-{{ safeHTML $content.content }}
+{{ safeHTML $content.data.content }}
 
 
 
