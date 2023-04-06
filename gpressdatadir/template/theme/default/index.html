@@ -10,7 +10,7 @@
 {{ range $k,$v := $indexList.data }}
 <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="{{basePath}}{{ $v.pageURL }}">{{ $v.title }}</a></h1>
+    <h1 class="post-title"><a class="post-link" href="{{basePath}}content/{{$v.id}}">{{ $v.title }}</a></h1>
     <div class="post-meta">
       <span class="post-time">{{ $v.updateTime }}</span>
       <div class="post-category">
@@ -24,7 +24,7 @@
       {{ $v.summary }} 
     </div>
     <div class="read-more">
-      <a href="{{basePath}}{{ $v.pageURL }}" class="read-more-link">阅读更多</a>
+      <a href="{{basePath}}content/{{$v.id}}" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

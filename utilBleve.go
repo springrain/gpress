@@ -318,7 +318,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 func funcIndexList(indexName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
 
-	errMap := map[string]interface{}{"statusCode": 0, "urlPathIndexName": indexName}
+	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
 		errMap["err"] = err
@@ -415,13 +415,13 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, queryS
 		errMap["err"] = err
 		return errMap, err
 	}
-	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page, "urlPathIndexName": indexName}
+	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page, "urlPathParam": indexName}
 	return resultMap, err
 }
 
 func funcIndexOne(indexName string, id string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
-	errMap := map[string]interface{}{"statusCode": 0, "urlPathIndexName": indexName}
+	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
 		errMap["err"] = err
@@ -445,7 +445,7 @@ func funcIndexOne(indexName string, id string) (map[string]interface{}, error) {
 		errMap["err"] = err
 		return errMap, err
 	}
-	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathIndexName": indexName}
+	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": indexName}
 	return resultMap, err
 }
 

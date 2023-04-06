@@ -209,7 +209,7 @@ type ResponseData struct {
 	// QueryStruct interface{} `json:"queryStruct,omitempty"`
 	QueryString string `json:"queryString,omitempty"`
 	// 索引名称
-	UrlPathIndexName string `json:"urlPathIndexName,omitempty"`
+	UrlPathParam string `json:"urlPathParam,omitempty"`
 	// 索引字段信息
 	// IndexField []IndexFieldStruct `json:"indexField,omitempty"`
 	// 响应错误
@@ -224,7 +224,7 @@ func responData2Map(responseData ResponseData) map[string]interface{} {
 	result["extMap"] = responseData.ExtMap
 	result["page"] = responseData.Page
 	result["queryString"] = responseData.QueryString
-	result["urlPathIndexName"] = responseData.UrlPathIndexName
+	result["urlPathParam"] = responseData.UrlPathParam
 	result["err"] = responseData.ERR
 	return result
 }
