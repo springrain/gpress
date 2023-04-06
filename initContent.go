@@ -175,7 +175,7 @@ func init() {
 	contentNavMenuNames := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexContentName,
-		FieldCode:    "navMenuNames",
+		FieldCode:    "navMenuName",
 		FieldName:    "导航名称,逗号(,)隔开",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,

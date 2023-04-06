@@ -10,6 +10,7 @@ import (
 var funcMap = template.FuncMap{
 
 	"basePath":   funcBasePath,
+	"add":        funcAdd,
 	"T":          funcT,
 	"safeHTML":   funcSafeHTML,
 	"relURL":     funcRelURL,
@@ -97,6 +98,10 @@ var fieldTypeMap = map[int]string{1: "数字", 2: "日期", 3: "文本框", 4: "
 
 func funcFieldType() map[int]string {
 	return fieldTypeMap
+}
+
+func funcAdd(x, y int) int {
+	return x + y
 }
 
 /*

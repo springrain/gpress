@@ -50,6 +50,10 @@ func NewPage() *Page {
 func (page *Page) setTotalCount(total int) {
 	page.TotalCount = total
 	page.PageCount = (page.TotalCount + page.PageSize - 1) / page.PageSize
+	if page.PageCount <= 1 {
+		page.LastPage = true
+		return
+	}
 	if page.PageNo >= page.PageCount {
 		page.LastPage = true
 	} else {

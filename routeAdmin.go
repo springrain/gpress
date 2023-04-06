@@ -163,11 +163,18 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	//删除掉固定的两个
 	delete(mapParams, "pageNo")
 	delete(mapParams, "q")
-	params := make([]string, 0)
+	var params strings.Builder
+	i := 0
 	for k := range mapParams {
-		params = append(params, k+"="+c.Query(k))
+		if i > 0 {
+			params.WriteByte('&')
+		}
+		params.WriteString(k)
+		params.WriteByte('=')
+		params.WriteString(c.Query(k))
+		i++
 	}
-	responseData, err := funcIndexList(urlPathIndexName, "*", q, pageNo, params...)
+	responseData, err := funcIndexList(urlPathIndexName, "*", q, pageNo, params.String())
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用

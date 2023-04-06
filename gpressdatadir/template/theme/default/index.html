@@ -1,7 +1,7 @@
 {{ $site:=site }}
 
 <!-- 查询 content 列表 -->
-{{ $indexList:=indexList "content" "id,title,pageURL,navMenuNames,summary" .q .pageNo }}
+{{ $indexList:=indexList "content" "id,title,pageURL,navMenuID,navMenuName,summary,updateTime" .q .pageNo "" }}
 
 {{template "bodystart.html" }}
 
@@ -12,9 +12,9 @@
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="{{basePath}}{{ $v.pageURL }}">{{ $v.title }}</a></h1>
     <div class="post-meta">
-      <span class="post-time"> {{ $v.updateTime }} </span>
+      <span class="post-time">{{ $v.updateTime }}</span>
       <div class="post-category">
-          <a href="{{basePath}}categories/cloudnative/"> {{ $v.navMenuNames }} </a>
+          <a href="{{basePath}}list/{{ $v.navMenuID }}">{{ $v.navMenuName }}</a>
           </div>
     </div>
   </header>
@@ -33,13 +33,20 @@
 
 </section>
   
-  <nav class="pagination">
-    
-    <a class="next" href="{{basePath}}page/2/">
-        <span class="next-text">下一页</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-  </nav>
+<nav class="pagination">
+  {{ if $indexList.page.HasPrev }}
+  <a class="prev" href="{{basePath}}?pageNo={{ add $indexList.page.PageNo -1 }}">
+      <i class="iconfont icon-left"></i>
+      <span class="prev-text">上一页</span>
+    </a>
+  {{end}}
+  {{ if $indexList.page.HasPrev }}
+  <a class="next" href="{{basePath}}?pageNo={{ add $indexList.page.PageNo 1 }}">
+      <span class="next-text">下一页</span>
+      <i class="iconfont icon-right"></i>
+    </a>
+    {{end}}   
+</nav>
         
 
   {{template "bodyend.html" }}
