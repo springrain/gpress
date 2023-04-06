@@ -1,7 +1,7 @@
 # gpress
 
 ## 介绍
-云原生高性能内容平台,基于Hertz + Go template + Bleve全文检索实现,100M内存运行内存   
+云原生高性能内容平台,基于Hertz + Go template + Bleve全文检索实现,仅需100M运行内存   
 默认端口660  
 开发时需要先解压gpressdatadir/dict.zip      
 
