@@ -440,12 +440,14 @@ func funcIndexOne(indexName string, id string) (map[string]interface{}, error) {
 		errMap["err"] = err
 		return errMap, err
 	}
-	data, err := result2Map(indexName, searchResult)
+	resultMap, err := result2Map(indexName, searchResult)
 	if err != nil {
 		errMap["err"] = err
 		return errMap, err
 	}
-	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": indexName}
+	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": indexName}
+	resultMap["statusCode"] = 1
+	resultMap["urlPathParam"] = indexName
 	return resultMap, err
 }
 
