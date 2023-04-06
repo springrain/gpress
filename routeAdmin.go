@@ -129,30 +129,30 @@ func init() {
 	})
 
 	// 通用list列表,先都使用get方法
-	adminGroup.GET("/:urlPathIndexName/list", funcList)
-	//adminGroup.POST("/:urlPathIndexName/list", funcList)
+	adminGroup.GET("/:urlPathParam/list", funcList)
+	//adminGroup.POST("/:urlPathParam/list", funcList)
 
 	// 通用查看
-	adminGroup.GET("/:urlPathIndexName/look", funcLook)
+	adminGroup.GET("/:urlPathParam/look", funcLook)
 
 	//跳转到修改页面
-	adminGroup.GET("/:urlPathIndexName/update", funcUpdatePre)
+	adminGroup.GET("/:urlPathParam/update", funcUpdatePre)
 	//ajax POST提交JSON信息,返回方法JSON
-	adminGroup.POST("/:urlPathIndexName/update", funcUpdate)
+	adminGroup.POST("/:urlPathParam/update", funcUpdate)
 
 	//跳转到保存页面
-	adminGroup.GET("/:urlPathIndexName/save", funcSavePre)
+	adminGroup.GET("/:urlPathParam/save", funcSavePre)
 	//ajax POST提交JSON信息,返回方法JSON
-	adminGroup.POST("/:urlPathIndexName/save", funcSave)
+	adminGroup.POST("/:urlPathParam/save", funcSave)
 
 	//ajax POST提交JSON信息,返回方法JSON
-	adminGroup.POST("/:urlPathIndexName/delete", funcDelete)
+	adminGroup.POST("/:urlPathParam/delete", funcDelete)
 
 }
 
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
-	urlPathIndexName := c.Param("urlPathIndexName")
+	urlPathParam := c.Param("urlPathParam")
 	//获取页码
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	pageNo, _ := strconv.Atoi(pageNoStr)
@@ -174,7 +174,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 		params.WriteString(c.Query(k))
 		i++
 	}
-	responseData, err := funcIndexList(urlPathIndexName, "*", q, pageNo, params.String())
+	responseData, err := funcIndexList(urlPathParam, "*", q, pageNo, params.String())
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -182,14 +182,14 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//优先使用自定义模板文件
-	listFile := "admin/" + urlPathIndexName + "/list.html"
+	listFile := "admin/" + urlPathParam + "/list.html"
 	t := tmpl.Lookup(listFile)
 	if t == nil { //不存在自定义模板,使用通用模板
 		listFile = "admin/list.html"
 	}
 	//queryString := c.Request.QueryString()
 	//responseData.QueryString = string(queryString)
-	//responseData.UrlPathIndexName = urlPathIndexName
+	//responseData.UrlPathParam = urlPathParam
 	c.HTML(http.StatusOK, listFile, responseData)
 }
 
@@ -227,16 +227,16 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-	urlPathIndexName := c.Param("urlPathIndexName")
-	//indexName := bleveDataDir + urlPathIndexName
-	_, ok, _ := openBleveIndex(urlPathIndexName)
+	urlPathParam := c.Param("urlPathParam")
+	//indexName := bleveDataDir + urlPathParam
+	_, ok, _ := openBleveIndex(urlPathParam)
 	if !ok { //索引不存在
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
 		return
 	}
 
-	err = updateIndex(ctx, urlPathIndexName, id, newMap)
+	err = updateIndex(ctx, urlPathParam, id, newMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
 		c.Abort() // 终止后续调用
@@ -248,21 +248,21 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 
 // funcSavePre 保存页面
 func funcSavePre(ctx context.Context, c *app.RequestContext) {
-	urlPathIndexName := c.Param("urlPathIndexName")
+	urlPathParam := c.Param("urlPathParam")
 	//优先使用自定义模板文件
-	updateFile := "admin/" + urlPathIndexName + "/save.html"
+	updateFile := "admin/" + urlPathParam + "/save.html"
 	t := tmpl.Lookup(updateFile)
 	if t == nil { //不存在自定义模板,使用通用模板
 		updateFile = "admin/save.html"
 	}
-	c.HTML(http.StatusOK, updateFile, responData2Map(ResponseData{UrlPathIndexName: urlPathIndexName}))
+	c.HTML(http.StatusOK, updateFile, responData2Map(ResponseData{UrlPathParam: urlPathParam}))
 }
 
 // 保存内容
 func funcSave(ctx context.Context, c *app.RequestContext) {
-	urlPathIndexName := c.Param("urlPathIndexName")
-	//indexName := bleveDataDir + urlPathIndexName
-	_, ok, _ := openBleveIndex(urlPathIndexName)
+	urlPathParam := c.Param("urlPathParam")
+	//indexName := bleveDataDir + urlPathParam
+	_, ok, _ := openBleveIndex(urlPathParam)
 	if !ok { //索引不存在
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
@@ -283,7 +283,7 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	responseData, err := saveNewIndex(ctx, urlPathIndexName, newMap)
+	responseData, err := saveNewIndex(ctx, urlPathParam, newMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
 		c.Abort() // 终止后续调用
@@ -302,9 +302,9 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-	urlPathIndexName := c.Param("urlPathIndexName")
-	//indexName := bleveDataDir + urlPathIndexName
-	err := deleteById(ctx, urlPathIndexName, id)
+	urlPathParam := c.Param("urlPathParam")
+	//indexName := bleveDataDir + urlPathParam
+	err := deleteById(ctx, urlPathParam, id)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
 		c.Abort() // 终止后续调用
@@ -336,16 +336,16 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 		c.Abort() // 终止后续调用
 		return
 	}
-	urlPathIndexName := c.Param("urlPathIndexName")
-	//indexName := bleveDataDir + urlPathIndexName
-	responseData, err := funcIndexOne(urlPathIndexName, id)
+	urlPathParam := c.Param("urlPathParam")
+	//indexName := bleveDataDir + urlPathParam
+	responseData, err := funcIndexOne(urlPathParam, id)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
 		return
 	}
 	//优先使用自定义模板文件
-	lookFile := "admin/" + urlPathIndexName + "/" + htmlfile
+	lookFile := "admin/" + urlPathParam + "/" + htmlfile
 	t := tmpl.Lookup(lookFile)
 	if t == nil { //不存在自定义模板,使用通用模板
 		lookFile = "admin/" + htmlfile

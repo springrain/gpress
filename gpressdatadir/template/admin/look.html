@@ -1,7 +1,7 @@
 {{template "admin/header.html"}}
   <title>indexInfo - GPRESS</title>
 {{template "admin/bodystart.html"}}
-{{ $indexFiled := indexFiled .urlPathIndexName }}
+{{ $indexFiled := indexFiled .urlPathParam }}
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
@@ -25,7 +25,7 @@
 
         <div class="field is-grouped is-grouped-centered">
           <div class="control">
-            <a href="{{basePath}}admin/{{.urlPathIndexName}}/update?id={{$data.id}}"  class="button is-info is-light">edit</a>
+            <a href="{{basePath}}admin/{{.urlPathParam}}/update?id={{$data.id}}"  class="button is-info is-light">edit</a>
           </div>
           <div class="control">
             <button type="reset" class="button is-info is-light">Clear</button>

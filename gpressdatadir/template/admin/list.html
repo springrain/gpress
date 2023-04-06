@@ -2,12 +2,12 @@
   <title>indexInfo - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $indexFiled := indexFiled .urlPathIndexName }}
-{{$path := .urlPathIndexName}}
+{{ $indexFiled := indexFiled .urlPathParam }}
+{{$path := .urlPathParam}}
 <section class="section">
   <div class="container" >
     <!-- 搜索表单 -->
-    <form class="field is-horizontal" action="{{basePath}}admin/{{.urlPathIndexName}}/list" method="GET">
+    <form class="field is-horizontal" action="{{basePath}}admin/{{.urlPathParam}}/list" method="GET">
       <div class="field-body">
         <div class="field">
           <div class="control">
@@ -21,7 +21,7 @@
         </div>
         <div class="field">
           <div class="control">
-            <a href="{{basePath}}admin/{{.urlPathIndexName}}/save" class="button is-link" type="submit">新增</a>
+            <a href="{{basePath}}admin/{{.urlPathParam}}/save" class="button is-link" type="submit">新增</a>
           </div>
         </div>
       </div>

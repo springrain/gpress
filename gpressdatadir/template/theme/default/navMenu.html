@@ -1,8 +1,6 @@
-{{ $site:=site }}
-
 <!-- 查询 content 列表 -->
-{{ $indexList:=indexList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "navMenuID=%s" .urlPathNavMenu) }}
-{{ $nav:=indexOne "navMenu" .urlPathNavMenu }}
+{{ $indexList:=indexList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "navMenuID=%s" .urlPathParam) }}
+{{ $nav:=indexOne "navMenu" .urlPathParam }}
 
 {{template "bodystart.html"  }}
 
@@ -16,7 +14,7 @@
         {{ $v.updateTime }} 
       </span>
       <span class="archive-post-title">
-        <a href="{{basePath}}{{ $v.pageURL }}" class="archive-post-link">
+        <a href="{{basePath}}content/{{$v.id}}" class="archive-post-link">
           {{ $v.title }}
         </a>
       </span>
