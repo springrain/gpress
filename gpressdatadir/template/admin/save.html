@@ -24,14 +24,14 @@
                   {{if eq .FieldCode "fieldType"}}
                   <select  name="{{.FieldCode}}" class="input" >
                     <option value="0">请选择</option>
-                    {{ range $key,$value := $analyzer }}
+                    {{ range $key,$value := $fieldType }}
                       <option value={{$key}}>{{$value}}</option>
                     {{end}}
                   </select>
                   {{else if eq .FieldCode "analyzerName"}}
                   <select name="{{.FieldCode}}" class="input" >
                     <option value="0">请选择</option>
-                    {{ range $key,$value := $fieldType }}
+                    {{ range $key,$value := $analyzer }}
                       <option value={{$key}}>{{$value}} </option>
                     {{end}}
                   </select>
