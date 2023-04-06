@@ -331,7 +331,7 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	}
 	urlPathIndexName := c.Param("urlPathIndexName")
 	//indexName := bleveDataDir + urlPathIndexName
-	responseData, err := findIndexOne(ctx, c, urlPathIndexName, id)
+	responseData, err := funcIndexOne(urlPathIndexName, id)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -343,6 +343,5 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	if t == nil { //不存在自定义模板,使用通用模板
 		lookFile = "admin/" + htmlfile
 	}
-	responseData.UrlPathIndexName = urlPathIndexName
-	c.HTML(http.StatusOK, lookFile, responData2Map(responseData))
+	c.HTML(http.StatusOK, lookFile, responseData)
 }
