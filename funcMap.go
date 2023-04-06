@@ -17,6 +17,8 @@ var funcMap = template.FuncMap{
 	"site":       funcSite,
 	"navMenu":    funcNavMenu,
 	"indexList":  funcIndexList,
+	"analyzer":   funcAnalyzer,
+	"fieldType":  funcFieldType,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
@@ -82,6 +84,18 @@ func funcNavMenu() ([]map[string]interface{}, error) {
 	}
 	data, err := result2SliceMap(indexNavMenuName, searchResult)
 	return data, err
+}
+
+var analyzerMap = map[string]string{commaAnalyzerName: "逗号分词器", gseAnalyzerName: "默认分词器", keywordAnalyzerName: "不分词", numericAnalyzerName: "数字分词器", datetimeAnalyzerName: "日期分词器"}
+
+func funcAnalyzer() map[string]string {
+	return analyzerMap
+}
+
+var fieldTypeMap = map[int]string{1: "数字", 2: "日期", 3: "文本框", 4: "文本域", 5: "富文本", 6: "下拉框", 7: "单选", 8: "多选", 9: "上传图片", 10: "上传附件", 11: "轮播图", 12: "音频", 13: "视频"}
+
+func funcFieldType() map[int]string {
+	return fieldTypeMap
 }
 
 /*
