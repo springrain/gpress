@@ -49,13 +49,12 @@
         for (const [key, value] of formData.entries()) {
           jsonObject[key] = value;
         }
-        console.log('jsonObject',jsonObject);
-
+        
         const response = await fetch(form.action, {
           method: form.method,
           body: JSON.stringify(jsonObject),
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           }
         });
         console.log(await response.json());
