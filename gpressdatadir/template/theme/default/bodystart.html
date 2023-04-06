@@ -60,7 +60,7 @@
     </a>
 
     {{ range $k,$v := $navMenu }}
-    <a href="{{basePath}}{{ $v.hrefURL }}">
+    <a href="{{basePath}}navMenu/{{ $v.id }}">
         <li class="mobile-menu-item">{{ $v.menuName }}</li>
     </a>
     {{ end }}
@@ -80,7 +80,7 @@
       </li>
       {{ range $k,$v := $navMenu }}
       <li class="menu-item">
-        <a class="menu-item-link" href="{{basePath}}{{ $v.hrefURL }}">{{ $v.menuName }}</a>
+        <a class="menu-item-link" href="{{basePath}}navMenu/{{ $v.id }}">{{ $v.menuName }}</a>
       </li>
       {{ end }}
   </ul>
