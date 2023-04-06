@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -184,20 +185,6 @@ func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
 
 // 修改内容
 func funcUpdate(ctx context.Context, c *app.RequestContext) {
-	id := c.Query("id")
-	if id == "" { //没有id,认为是新增
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
-		c.Abort() // 终止后续调用
-		return
-	}
-	urlPathIndexName := c.Param("urlPathIndexName")
-	//indexName := bleveDataDir + urlPathIndexName
-	_, ok, _ := openBleveIndex(urlPathIndexName)
-	if !ok { //索引不存在
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
-		c.Abort() // 终止后续调用
-		return
-	}
 	jsonBody, err := c.Body()
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "获取body内容错误"})
@@ -213,6 +200,22 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
+
+	id := fmt.Sprintf("%v", newMap["id"])
+	if id == "" { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
+		c.Abort() // 终止后续调用
+		return
+	}
+	urlPathIndexName := c.Param("urlPathIndexName")
+	//indexName := bleveDataDir + urlPathIndexName
+	_, ok, _ := openBleveIndex(urlPathIndexName)
+	if !ok { //索引不存在
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
+		c.Abort() // 终止后续调用
+		return
+	}
+
 	err = updateIndex(ctx, urlPathIndexName, id, newMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
