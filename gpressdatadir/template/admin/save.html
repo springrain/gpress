@@ -1,7 +1,7 @@
 {{template "admin/header.html"}}
   <title>indexInfo - GPRESS</title>
 {{template "admin/bodystart.html"}}
-{{ $indexFiled := indexFiled .urlPathIndexName }}
+{{ $indexFiled := indexFiled .urlPathParam }}
 {{$analyzer := analyzer}}
 {{$fieldType := fieldType}}
 
@@ -9,7 +9,7 @@
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-9-desktop is-9-tablet">
-        <form id="gpress-form" action="{{basePath}}admin/{{.urlPathIndexName}}/save" method="POST">
+        <form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/save" method="POST">
           {{ $data := .data }}
           {{ range $indexFiled }}
 
@@ -83,7 +83,7 @@
         let res= await response.json();
         if (res.statusCode == 200){
           alert("保存成功");
-          window.location.href = '{{basePath}}admin/{{.urlPathIndexName}}/list';
+          window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list';
         }
       });
     </script>
