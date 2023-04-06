@@ -17,6 +17,7 @@ var funcMap = template.FuncMap{
 	"site":       funcSite,
 	"navMenu":    funcNavMenu,
 	"indexList":  funcIndexList,
+	"indexOne":   funcIndexOne,
 	"analyzer":   funcAnalyzer,
 	"fieldType":  funcFieldType,
 	//"md5":      funcMD5,

@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/blevesearch/bleve/v2"
-	"github.com/cloudwego/hertz/pkg/app"
 
 	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/search/query"
@@ -416,11 +415,13 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, params
 	return resultMap, err
 }
 
-func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, id string) (ResponseData, error) {
+func funcIndexOne(indexName string, id string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
+	errMap := map[string]interface{}{"statusCode": 0, "urlPathIndexName": indexName}
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
-		return ResponseData{StatusCode: 0, ERR: err}, err
+		errMap["err"] = err
+		return errMap, err
 	}
 	idQuery := bleveNewTermQuery(id)
 	// 指定查询的字段
@@ -430,16 +431,18 @@ func findIndexOne(ctx context.Context, c *app.RequestContext, indexName string, 
 	searchRequest.Fields = []string{"*"}
 	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
 	searchRequest.SortBy([]string{"sortNo", "-_score", "-_id"})
-	searchResult, err := searchIndex.SearchInContext(ctx, searchRequest)
+	searchResult, err := searchIndex.Search(searchRequest)
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}, err
+		errMap["err"] = err
+		return errMap, err
 	}
 	data, err := result2Map(indexName, searchResult)
 	if err != nil {
-		return ResponseData{StatusCode: 0, ERR: err}, err
+		errMap["err"] = err
+		return errMap, err
 	}
-	data["urlPathIndexName"] = indexName
-	return ResponseData{StatusCode: 1, Data: data}, err
+	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathIndexName": indexName}
+	return resultMap, err
 }
 
 func bleveNew(indexName string, mapping mapping.IndexMapping) (bleve.Index, error) {
