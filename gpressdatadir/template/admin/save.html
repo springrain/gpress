@@ -1,48 +1,27 @@
 {{template "admin/header.html"}}
   <title>indexInfo - GPRESS</title>
 {{template "admin/bodystart.html"}}
-
+{{ $indexFiled := indexFiled .urlPathIndexName }}
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-9-desktop is-9-tablet">
-        <form id="gpress-form" action="/" method="POST">
+        <form id="gpress-form" action="{{basePath}}admin/{{.urlPathIndexName}}/save" method="POST">
+          {{ $data := .data }}
+          {{ range $indexFiled }}
           <div class="field is-horizontal">
             <div class="field-label">
-              <label class="label">Name</label>
+              <label class="label">{{.FieldName}}</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" placeholder="Your Name" name="name" required>
+                  <input class="input" type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}">
                 </div>
               </div>
             </div>
           </div>
-          <div class="field is-horizontal">
-            <div class="field-label">
-              <label class="label">Email</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <input class="input" type="email" placeholder="Your Email" name="email" required>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="field is-horizontal">
-            <div class="field-label">
-              <label class="label">Message</label>
-            </div>
-            <div class="field-body">
-              <div class="field">
-                <div class="control">
-                  <textarea class="textarea" placeholder="Your Message" name="message"></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
+          {{end}}
 
         <div class="field is-grouped is-grouped-centered">
           <div class="control">
@@ -67,7 +46,11 @@
         const formData = new FormData(form);
         const jsonObject = {};
         for (const [key, value] of formData.entries()) {
-          jsonObject[key] = value;
+          if (key == "sortNo" ||key == "active"||key == "fieldType"||key == "required"){
+            jsonObject[key] = parseInt(value);
+          }else{
+            jsonObject[key] =  value;
+          }
         }
         const response = await fetch(form.action, {
           method: form.method,
@@ -76,12 +59,13 @@
             "Content-Type": "application/json"
           }
         });
-        console.log(await response.json());
+        let res= await response.json();
+        if (res.statusCode == 200){
+          alert("保存成功");
+          window.location.href = '{{basePath}}admin/{{.urlPathIndexName}}/list';
+        }
       });
     </script>
-
-
-
 
         
 {{template "admin/bodyend.html"}}
