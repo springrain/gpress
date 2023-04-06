@@ -1,4 +1,5 @@
-{{ $site:=site }}
+{{ $site := site }}
+{{ $navMenu := navMenu}}
 
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -27,8 +28,8 @@
 <link rel="manifest" href="{{basePath}}js/manifest.json">
 <link rel="mask-icon" href="{{basePath}}{{ $site.favicon }}" color="#5bbad5">
 
-<link href="{{basePath}}css/even.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" >
+<link rel="stylesheet" href="{{basePath}}css/even.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
 
 
 <!--[if lte IE 9]>
@@ -56,15 +57,14 @@
   <ul class="mobile-menu-list">
     <a href="{{basePath}}">
         <li class="mobile-menu-item">Home</li>
-      </a><a href="{{basePath}}categories/cloudnative/">
-        <li class="mobile-menu-item">CloudNative</li>
-      </a><a href="{{basePath}}categories/blockchain/">
-        <li class="mobile-menu-item">BlockChain</li>
-      </a><a href="{{basePath}}categories/web/">
-        <li class="mobile-menu-item">Web</li>
-      </a><a href="{{basePath}}about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
+    </a>
+
+    {{ range $k,$v := $navMenu }}
+    <a href="{{basePath}}{{ $v.hrefURL }}">
+        <li class="mobile-menu-item">{{ $v.menuName }}</li>
+    </a>
+    {{ end }}
+
   </ul>
 </nav>
   <div class="container" id="mobile-panel">
@@ -77,15 +77,12 @@
   <ul id="menu" class="menu">
     <li class="menu-item">
         <a class="menu-item-link" href="{{basePath}}">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="{{basePath}}categories/cloudnative/">CloudNative</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="{{basePath}}categories/blockchain/">BlockChain</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="{{basePath}}categories/web/">Web</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="{{basePath}}about/">About</a>
       </li>
+      {{ range $k,$v := $navMenu }}
+      <li class="menu-item">
+        <a class="menu-item-link" href="{{basePath}}{{ $v.hrefURL }}">{{ $v.menuName }}</a>
+      </li>
+      {{ end }}
   </ul>
 </nav>
     </header>
