@@ -216,7 +216,7 @@ type ResponseData struct {
 	ERR error `json:"err,omitempty"`
 }
 
-func responseResult(responseData ResponseData) map[string]interface{} {
+func responData2Map(responseData ResponseData) map[string]interface{} {
 	result := make(map[string]interface{}, 0)
 	result["statusCode"] = responseData.StatusCode
 	result["data"] = responseData.Data

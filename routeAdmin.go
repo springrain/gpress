@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -152,9 +153,21 @@ func init() {
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
 	urlPathIndexName := c.Param("urlPathIndexName")
-
-	//indexName := bleveDataDir + urlPathIndexName
-	responseData, err := findIndexList(ctx, c, urlPathIndexName)
+	//获取页码
+	pageNoStr := c.DefaultQuery("pageNo", "1")
+	pageNo, _ := strconv.Atoi(pageNoStr)
+	q := strings.TrimSpace(c.Query("q"))
+	mapParams := make(map[string]interface{}, 0)
+	//获取所有的参数
+	c.Bind(&mapParams)
+	//删除掉固定的两个
+	delete(mapParams, "pageNo")
+	delete(mapParams, "q")
+	params := make([]string, 0)
+	for k := range mapParams {
+		params = append(params, k+"="+c.Query(k))
+	}
+	responseData, err := funcIndexList(urlPathIndexName, "*", q, pageNo, params...)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -169,8 +182,8 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	}
 	//queryString := c.Request.QueryString()
 	//responseData.QueryString = string(queryString)
-	responseData.UrlPathIndexName = urlPathIndexName
-	c.HTML(http.StatusOK, listFile, responseResult(responseData))
+	//responseData.UrlPathIndexName = urlPathIndexName
+	c.HTML(http.StatusOK, listFile, responseData)
 }
 
 // funcLook 通用查看,根据id查看
@@ -201,7 +214,7 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	id := fmt.Sprintf("%v", newMap["id"])
+	id := newMap["id"].(string)
 	if id == "" { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
 		c.Abort() // 终止后续调用
@@ -235,7 +248,7 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	if t == nil { //不存在自定义模板,使用通用模板
 		updateFile = "admin/save.html"
 	}
-	c.HTML(http.StatusOK, updateFile, responseResult(ResponseData{UrlPathIndexName: urlPathIndexName}))
+	c.HTML(http.StatusOK, updateFile, responData2Map(ResponseData{UrlPathIndexName: urlPathIndexName}))
 }
 
 // 保存内容
@@ -270,7 +283,7 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	c.JSON(http.StatusOK, responseResult(responseData))
+	c.JSON(http.StatusOK, responData2Map(responseData))
 }
 
 // 修改内容
@@ -329,5 +342,5 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 		lookFile = "admin/" + htmlfile
 	}
 	responseData.UrlPathIndexName = urlPathIndexName
-	c.HTML(http.StatusOK, lookFile, responseResult(responseData))
+	c.HTML(http.StatusOK, lookFile, responData2Map(responseData))
 }
