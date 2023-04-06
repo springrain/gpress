@@ -33,8 +33,8 @@ type IndexFieldStruct struct {
 	Required int `json:"required,omitempty"`
 	// DefaultValue  默认值
 	DefaultValue string `json:"defaultValue,omitempty"`
-	// SelectOption 下拉框的选项值
-	//SelectOption string `json:"selectOption,omitempty"`
+	//SelectOption 下拉框的选项值
+	SelectOption string `json:"selectOption,omitempty"`
 	// AnalyzerName  分词器名称
 	AnalyzerName string `json:"analyzerName,omitempty"`
 	// CreateTime 创建时间
@@ -219,7 +219,7 @@ func initIndexField() (bool, error) {
 	}
 	index.Index(fieldComment.ID, fieldComment)
 	sortNo++
-
+	//ftSelect, _ := json.Marshal(fieldTypeMap)
 	fieldType := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexFieldName,
@@ -230,6 +230,7 @@ func initIndexField() (bool, error) {
 		//DefaultValue: "3",
 		// FieldType  字段类型,数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)
 		//SelectOption: `[{"text":"数字","value":1},{"text":"日期","value":2},{"text":"文本框","value":3},{"text":"文本域","value":4},{"text":"富文本","value":5},{"text":"下拉框","value":6},{"text":"单选","value":7},{"text":"多选","value":8},{"text":"上传图片","value":9},{"text":"上传附件","value":10},{"text":"轮播图","value":11},{"text":"音频","value":12},{"text":"视频","value":13}]`,
+		//SelectOption: string(ftSelect),
 		IndexName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
