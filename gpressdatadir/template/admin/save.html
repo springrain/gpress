@@ -16,6 +16,7 @@
           <div class="field is-horizontal">
             <div class="field-label">
               <label class="label">{{.FieldName}}</label>
+              <input type="hidden" id="fieldType_{{.FieldCode}}" value="{{.FieldType}}" />
             </div>
             <div class="field-body">
               <div class="field">
@@ -65,9 +66,14 @@
         const formData = new FormData(form);
         const jsonObject = {};
         for (const [key, value] of formData.entries()) {
-          if (key == "sortNo" ||key == "active"||key == "fieldType"||key == "required"){
+          const fieldType = document.querySelector("#fieldType_"+key).value;
+          if(!!fieldType&&fieldType==1){
             jsonObject[key] = parseInt(value);
-          }else{
+          }
+          //if (key == "sortNo" ||key == "active"||key == "fieldType"||key == "required"){
+          //  jsonObject[key] = parseInt(value);
+          //}
+          else{
             jsonObject[key] =  value;
           }
         }
