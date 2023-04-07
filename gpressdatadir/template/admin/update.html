@@ -11,6 +11,7 @@
         <form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/update" method="POST">
           {{ $data := . }}
           {{ range $indexFiled }}
+
             <div class="field is-horizontal">
               <div class="field-label">
                 <label class="label">{{.FieldName}}</label>
@@ -30,8 +31,10 @@
                         <option value={{$key}}>{{$value}}</option>
                       {{end}}
                     </select>
-                    {{else if ne .FieldCode "id"}}
-                    <input class="input" type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
+                    {{else if eq .FieldCode "id"}}
+                      <input class="input" readonly="readonly" type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
+                    {{else}}
+                      <input class="input"  type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
                     {{end}}
                   </div>
                 </div>
