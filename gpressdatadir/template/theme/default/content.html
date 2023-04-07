@@ -1,10 +1,10 @@
 <!-- 查询 content -->
-{{ $content := indexOne "content" .urlPathParam }}
+{{ $content := indexOne "content" "*" .urlPathParam }}
 
 {{ $prev := add $content.sortNo -1 }}
 {{ $next := add $content.sortNo 1 }}
-{{ $prevContent := indexOne "content" .urlPathParam (printf "sortNo=%d" $prev) }}
-{{ $nextContent := indexOne "content" .urlPathParam (printf "sortNo=%d" $next) }}
+{{ $prevContent := indexOne "content" "id,title"  (printf "sortNo=%d" $prev) }}
+{{ $nextContent := indexOne "content" "id,title"  (printf "sortNo=%d" $next) }}
 
 {{template "bodystart.html"  }}
 
@@ -62,14 +62,14 @@
         </div>
     <nav class="post-nav">
       {{if ne $prevContent.sortNo 0 }}
-      <a class="prev" href="{{basePath}}content/{{$prevContent.id}}">
+      <a class="prev" href="{{basePath}}post/{{$prevContent.id}}">
           <i class="iconfont icon-left"></i>
           <span class="prev-text nav-default">{{$prevContent.title}}</span>
           <span class="prev-text nav-mobile">上一篇</span>
         </a>
       {{end}}
       {{if ne $nextContent.sortNo 0 }}
-      <a class="next" href="{{basePath}}content/{{$nextContent.id}}">
+      <a class="next" href="{{basePath}}post/{{$nextContent.id}}">
           <span class="next-text nav-default">{{$nextContent.title}}</span>
           <span class="next-text nav-mobile">下一篇</span>
           <i class="iconfont icon-right"></i>
