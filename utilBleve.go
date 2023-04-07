@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"math/big"
 	"os"
 	"strconv"
@@ -375,18 +376,7 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, queryS
 	} else { //还有其他参数,认为是数据库字段,进行检索
 		qs := make([]query.Query, 0)
 		qs = append(qs, queryKey)
-		for _, param := range params {
-			if param == "" {
-				continue
-			}
-			p := strings.Split(param, "=")
-			if len(p) != 2 {
-				continue
-			}
-			term := bleveNewTermQuery(p[1])
-			term.SetField(p[0])
-			qs = append(qs, term)
-		}
+		params2qs(params, &qs)
 		searchQuery = bleve.NewConjunctionQuery(qs...)
 	}
 	page := NewPage()
@@ -444,18 +434,7 @@ func funcIndexOne(indexName string, fields string, queryString string) (map[stri
 	} else { //如果是多个字段
 		params := strings.Split(queryString, "&")
 		qs := make([]query.Query, 0)
-		for _, param := range params {
-			if param == "" {
-				continue
-			}
-			p := strings.Split(param, "=")
-			if len(p) != 2 {
-				continue
-			}
-			term := bleveNewTermQuery(p[1])
-			term.SetField(p[0])
-			qs = append(qs, term)
-		}
+		params2qs(params, &qs)
 		searchQuery = bleve.NewConjunctionQuery(qs...)
 	}
 	//searchRequest := bleve.NewSearchRequest(searchQuery)
@@ -515,4 +494,74 @@ func openBleveIndex(indexName string) (bleve.Index, bool, error) {
 func bleveNewTermQuery(term string) *query.TermQuery {
 	term = strings.ToLower(strings.TrimSpace(term))
 	return bleve.NewTermQuery(term)
+}
+
+func params2qs(params []string, qs *[]query.Query) {
+	for _, param := range params {
+		if param == "" {
+			continue
+		}
+		if strings.Contains(param, ">") || strings.Contains(param, "<") { //范围比较
+			var query query.Query
+			var err error
+			minInclusive := false
+			maxInclusive := false
+			minValue := ""
+			maxValue := ""
+
+			var p []string
+			if len(strings.Split(param, ">=")) == 2 {
+				p = strings.Split(param, ">=")
+				minValue = p[1]
+				minInclusive = true
+			} else if len(strings.Split(param, ">")) == 2 {
+				minValue = p[1]
+				p = strings.Split(param, ">")
+			} else if len(strings.Split(param, "<=")) == 2 {
+				p = strings.Split(param, "<=")
+				maxValue = p[1]
+				maxInclusive = true
+			} else if len(strings.Split(param, "<")) == 2 {
+				p = strings.Split(param, "<")
+				maxValue = p[1]
+			}
+
+			v := p[1]
+			if strings.Contains(v, "-") { //日期格式先不处理
+				continue
+				//NewDateRangeInclusiveQuery()
+			} else {
+				var min, max float64
+				if minValue == "" { //没有最小值
+					min = -1
+				} else {
+					min, err = strconv.ParseFloat(minValue, 64)
+					if err != nil {
+						continue
+					}
+				}
+				if maxValue == "" { //没有最大值
+					max = math.MaxFloat64
+				} else {
+					max, err = strconv.ParseFloat(maxValue, 64)
+					if err != nil {
+						continue
+					}
+				}
+				queryNum := bleve.NewNumericRangeInclusiveQuery(&min, &max, &minInclusive, &maxInclusive)
+				queryNum.SetField(p[0])
+				*qs = append(*qs, queryNum)
+			}
+
+			*qs = append(*qs, query)
+		} else { //其他认为是等于
+			p := strings.Split(param, "=")
+			if len(p) == 2 {
+				term := bleveNewTermQuery(p[1])
+				term.SetField(p[0])
+				*qs = append(*qs, term)
+			}
+		}
+
+	}
 }

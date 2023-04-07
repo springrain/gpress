@@ -3,8 +3,8 @@
 
 {{ $prev := add $content.sortNo -1 }}
 {{ $next := add $content.sortNo 1 }}
-{{ $prevContent := indexOne "content" "id,title"  (printf "sortNo=%d" $prev) }}
-{{ $nextContent := indexOne "content" "id,title"  (printf "sortNo=%d" $next) }}
+{{ $prevContent := indexOne "content" "id,title"  (printf "sortNo<%d" $prev) }}
+{{ $nextContent := indexOne "content" "id,title"  (printf "sortNo>%d" $next) }}
 
 {{template "bodystart.html"  }}
 
