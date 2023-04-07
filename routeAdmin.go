@@ -221,7 +221,10 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	id := newMap["id"].(string)
+	id := ""
+	if newMap["id"] != nil {
+		id = newMap["id"].(string)
+	}
 	if id == "" { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
 		c.Abort() // 终止后续调用
