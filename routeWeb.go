@@ -16,8 +16,11 @@ func init() {
 	h.GET("/", funcIndex)
 	// 导航菜单列表
 	h.GET("/navMenu/:urlPathParam", funcListNavMenu)
+	// 查看标签
+	h.GET("/tags/:urlPathParam", funcListTags)
 	// 查看内容
 	h.GET("/post/:urlPathParam", funcOneContent)
+
 }
 
 // funcIndex 模板首页
@@ -31,7 +34,11 @@ func funcListNavMenu(ctx context.Context, c *app.RequestContext) {
 	data["urlPathParam"] = c.Param("urlPathParam")
 	c.HTML(http.StatusOK, "navMenu.html", data)
 }
-
+func funcListTags(ctx context.Context, c *app.RequestContext) {
+	data := warpRequestMap(c)
+	data["urlPathParam"] = c.Param("urlPathParam")
+	c.HTML(http.StatusOK, "tags.html", data)
+}
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	data["urlPathParam"] = c.Param("urlPathParam")

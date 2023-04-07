@@ -1,0 +1,43 @@
+<!-- 查询 content 列表 -->
+{{ $indexList:=indexList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "tag=%s" .urlPathParam) }}
+{{ $nav:=indexOne "navMenu" .urlPathParam }}
+
+{{template "bodystart.html"  }}
+
+<section id="archive" class="archive">
+  <div class="archive-title category">
+        <h2 class="archive-name">{{$nav.menuName}}</h2>
+  </div>
+  {{ range $k,$v := $indexList.data }}
+  <div class="archive-post">
+      <span class="archive-post-time">
+        {{ $v.updateTime }} 
+      </span>
+      <span class="archive-post-title">
+        <a href="{{basePath}}post/{{$v.id}}" class="archive-post-link">
+          {{ $v.title }}
+        </a>
+      </span>
+  </div>
+  {{end}}
+    
+    
+</section>
+  
+<nav class="pagination">
+  {{ if $indexList.page.HasPrev }}
+  <a class="prev" href="{{basePath}}?pageNo={{ add $indexList.page.PageNo -1 }}">
+      <i class="iconfont icon-left"></i>
+      <span class="prev-text">上一页</span>
+    </a>
+  {{end}}
+  {{ if $indexList.page.HasPrev }}
+  <a class="next" href="{{basePath}}?pageNo={{ add $indexList.page.PageNo 1 }}">
+      <span class="next-text">下一页</span>
+      <i class="iconfont icon-right"></i>
+    </a>
+    {{end}}   
+</nav>
+        
+
+  {{template "bodyend.html" }}
