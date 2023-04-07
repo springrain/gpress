@@ -426,22 +426,48 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, queryS
 	return resultMap, err
 }
 
-func funcIndexOne(indexName string, id string) (map[string]interface{}, error) {
+func funcIndexOne(indexName string, fields string, queryString string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
-	if !ok { //索引不存在
+	if !ok || queryString == "" { //索引不存在
 		err := errors.New("索引不存在")
 		errMap["err"] = err
 		return errMap, err
 	}
-	idQuery := bleveNewTermQuery(id)
-	// 指定查询的字段
-	idQuery.SetField("id")
-	searchRequest := bleve.NewSearchRequest(idQuery)
+	var searchQuery query.Query
+
+	if !strings.Contains(queryString, "=") { //如果只有一个字符串,认为是ID
+		idQuery := bleveNewTermQuery(queryString)
+		// 指定查询的字段
+		idQuery.SetField("id")
+		searchQuery = idQuery
+	} else { //如果是多个字段
+		params := strings.Split(queryString, "&")
+		qs := make([]query.Query, 0)
+		for _, param := range params {
+			if param == "" {
+				continue
+			}
+			p := strings.Split(param, "=")
+			if len(p) != 2 {
+				continue
+			}
+			term := bleveNewTermQuery(p[1])
+			term.SetField(p[0])
+			qs = append(qs, term)
+		}
+		searchQuery = bleve.NewConjunctionQuery(qs...)
+	}
+	//searchRequest := bleve.NewSearchRequest(searchQuery)
+	searchRequest := bleve.NewSearchRequestOptions(searchQuery, 1, 0, false)
 	// 指定返回的字段
-	searchRequest.Fields = []string{"*"}
+	if fields == "" || fields == "*" {
+		searchRequest.Fields = []string{"*"}
+	} else {
+		searchRequest.Fields = strings.Split(fields, ",")
+	}
 	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
-	searchRequest.SortBy([]string{"sortNo", "-_score", "-_id"})
+	searchRequest.SortBy([]string{"-sortNo", "-_score", "-_id"})
 	searchResult, err := searchIndex.Search(searchRequest)
 	if err != nil {
 		errMap["err"] = err

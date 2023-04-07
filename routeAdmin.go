@@ -338,7 +338,7 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	}
 	urlPathParam := c.Param("urlPathParam")
 	//indexName := bleveDataDir + urlPathParam
-	responseData, err := funcIndexOne(urlPathParam, id)
+	responseData, err := funcIndexOne(urlPathParam, "*", id)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
