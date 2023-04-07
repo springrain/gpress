@@ -2,6 +2,8 @@
   <title>update - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $indexFiled := indexFiled .urlPathParam }}
+{{$analyzer := analyzer}}
+{{$fieldType := fieldType}}
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
@@ -9,7 +11,6 @@
         <form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/update" method="POST">
           {{ $data := . }}
           {{ range $indexFiled }}
-
             <div class="field is-horizontal">
               <div class="field-label">
                 <label class="label">{{.FieldName}}</label>
@@ -17,7 +18,19 @@
               <div class="field-body">
                 <div class="field">
                   <div class="control">
-                    {{if ne .FieldCode "id"}}
+                    {{if eq .FieldCode "fieldType"}}
+                    <select  name="{{.FieldCode}}" class="input" >
+                      {{ range $key,$value := $fieldType }}
+                        <option value={{$key}}>{{$value}}</option>
+                      {{end}}
+                    </select>
+                    {{else if eq .FieldCode "analyzerName"}}
+                    <select name="{{.FieldCode}}" class="input" >
+                      {{ range $key,$value := $analyzer }}
+                        <option value={{$key}}>{{$value}}</option>
+                      {{end}}
+                    </select>
+                    {{else if ne .FieldCode "id"}}
                     <input class="input" type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
                     {{end}}
                   </div>
