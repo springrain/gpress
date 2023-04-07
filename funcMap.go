@@ -10,7 +10,8 @@ import (
 var funcMap = template.FuncMap{
 
 	"basePath":   funcBasePath,
-	"add":        funcAdd,
+	"addInt":     funcAddInt,
+	"addFloat":   funcAddFloat,
 	"T":          funcT,
 	"safeHTML":   funcSafeHTML,
 	"relURL":     funcRelURL,
@@ -100,7 +101,10 @@ func funcFieldType() map[int]string {
 	return fieldTypeMap
 }
 
-func funcAdd(x, y int) int {
+func funcAddInt(x, y int) int {
+	return x + y
+}
+func funcAddFloat(x, y float64) float64 {
 	return x + y
 }
 

@@ -106,18 +106,18 @@ func checkBleveStatus() bool {
 
 // result2Map 单个查询结果转map
 func result2Map(indexName string, result *bleve.SearchResult) (map[string]interface{}, error) {
+	m := make(map[string]interface{}, 0)
 	if result == nil {
-		return nil, errors.New("结果集为空")
+		return m, errors.New("结果集为空")
 	}
 	if result.Total == 0 { //没有记录
-		return nil, nil
+		return m, nil
 	}
 	if result.Total > 1 { // 大于1条记录
-		return nil, errors.New("查询出多条记录")
+		return m, errors.New("查询出多条记录")
 	}
 	//获取到查询的对象
 	value := result.Hits[0]
-	m := make(map[string]interface{}, 0)
 	for k, v := range value.Fields {
 		m[k] = v
 	}
@@ -234,10 +234,10 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 		}
 	}
 	index, _, _ := openBleveIndex(tableName)
-	sortNo := newIndex["sortNo"].(int)
+	sortNo := newIndex["sortNo"].(float64)
 	if sortNo == 0 {
 		count, _ := index.DocCount()
-		sortNo, _ = strconv.Atoi(strconv.FormatUint(count, 10))
+		sortNo = float64(count)
 		newIndex["sortNo"] = sortNo
 	}
 
@@ -426,7 +426,7 @@ func funcIndexOne(indexName string, fields string, queryString string) (map[stri
 	}
 	var searchQuery query.Query
 
-	if !strings.Contains(queryString, "=") { //如果只有一个字符串,认为是ID
+	if !(strings.Contains(queryString, "=") || strings.Contains(queryString, "<") || strings.Contains(queryString, ">")) { //如果只有一个字符串,认为是ID
 		idQuery := bleveNewTermQuery(queryString)
 		// 指定查询的字段
 		idQuery.SetField("id")
@@ -515,8 +515,8 @@ func params2qs(params []string, qs *[]query.Query) {
 				minValue = p[1]
 				minInclusive = true
 			} else if len(strings.Split(param, ">")) == 2 {
-				minValue = p[1]
 				p = strings.Split(param, ">")
+				minValue = p[1]
 			} else if len(strings.Split(param, "<=")) == 2 {
 				p = strings.Split(param, "<=")
 				maxValue = p[1]
