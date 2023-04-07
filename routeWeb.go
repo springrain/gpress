@@ -17,7 +17,7 @@ func init() {
 	// 导航菜单列表
 	h.GET("/navMenu/:urlPathParam", funcListNavMenu)
 	// 查看内容
-	h.GET("/content/:urlPathParam", funcOneContent)
+	h.GET("/post/:urlPathParam", funcOneContent)
 }
 
 // funcIndex 模板首页
