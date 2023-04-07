@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-  <title>indexInfo - GPRESS</title>
+  <title>update - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $indexFiled := indexFiled .urlPathParam }}
 <section class="section">
@@ -7,7 +7,7 @@
     <div class="columns is-centered">
       <div class="column is-9-desktop is-9-tablet">
         <form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/update" method="POST">
-          {{ $data := .data }}
+          {{ $data := . }}
           {{ range $indexFiled }}
 
             <div class="field is-horizontal">
