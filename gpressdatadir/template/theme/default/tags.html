@@ -1,12 +1,11 @@
 <!-- 查询 content 列表 -->
 {{ $indexList:=indexList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "tag=%s" .urlPathParam) }}
-{{ $nav:=indexOne "navMenu" .urlPathParam }}
 
 {{template "bodystart.html"  }}
 
 <section id="archive" class="archive">
   <div class="archive-title category">
-        <h2 class="archive-name">{{$nav.menuName}}</h2>
+        <h2 class="archive-name">{{ .urlPathParam }}</h2>
   </div>
   {{ range $k,$v := $indexList.data }}
   <div class="archive-post">
