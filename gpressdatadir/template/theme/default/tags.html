@@ -25,13 +25,13 @@
   
 <nav class="pagination">
   {{ if $indexList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}?pageNo={{ add $indexList.page.PageNo -1 }}">
+  <a class="prev" href="{{basePath}}?pageNo={{ addInt $indexList.page.PageNo -1 }}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
   {{ if $indexList.page.HasPrev }}
-  <a class="next" href="{{basePath}}?pageNo={{ add $indexList.page.PageNo 1 }}">
+  <a class="next" href="{{basePath}}?pageNo={{ addInt $indexList.page.PageNo 1 }}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>
