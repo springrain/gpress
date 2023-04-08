@@ -220,7 +220,15 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 		responseData.Message = "查询异常"
 		return responseData, err
 	}
-	id := FuncGenerateStringID()
+	id := ""
+	newId, ok := newIndex["id"]
+	if ok {
+		id = newId.(string)
+	}
+	if id == "" {
+		id = FuncGenerateStringID()
+	}
+
 	newIndex["id"] = id
 	result := searchResult.Hits
 
@@ -234,10 +242,9 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 		}
 	}
 	index, _, _ := openBleveIndex(tableName)
-	sortNo := newIndex["sortNo"].(float64)
-	if sortNo == 0 {
+	if newIndex["sortNo"] == 0 {
 		count, _ := index.DocCount()
-		sortNo = float64(count)
+		sortNo := float64(count)
 		newIndex["sortNo"] = sortNo
 	}
 

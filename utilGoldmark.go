@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"os"
 	"strings"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
@@ -58,11 +57,8 @@ func init() {
 }
 
 // conver2Html 由markdown转成html
-func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error) {
-	source, err := os.ReadFile(mkfile)
-	if err != nil {
-		return nil, nil, nil, err
-	}
+func conver2Html(source []byte) (map[string]interface{}, *string, *string, error) {
+
 	var htmlBuffer bytes.Buffer
 	// 生成id时支持中文
 	parserContext := parser.NewContext(parser.WithIDs(newIDs()))
@@ -86,7 +82,9 @@ func conver2Html(mkfile string) (map[string]interface{}, *string, *string, error
 		return metaData, nil, &html, err
 	}
 	tocNode := toc.RenderList(tocTree)
-	markdown.Renderer().Render(&tocBuffer, source, tocNode)
+	if tocNode != nil {
+		markdown.Renderer().Render(&tocBuffer, source, tocNode)
+	}
 	tocHtml := tocBuffer.String()
 
 	return metaData, &tocHtml, &html, err
