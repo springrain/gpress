@@ -131,6 +131,11 @@ func initHighlighting() goldmark.Extender {
 	// var css bytes.Buffer
 	return highlighting.NewHighlighting(
 		highlighting.WithStyle("monokai"),
+		// 用于处理没有指定语言的情况,例如:
+		// ```
+		// 不写语言
+		// ````
+		highlighting.WithGuessLanguage(true),
 		// highlighting.WithCSSWriter(&css),
 		/*
 			highlighting.WithFormatOptions(
@@ -143,29 +148,31 @@ func initHighlighting() goldmark.Extender {
 			),
 		*/
 		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
-			language, _ := c.Language()
+			//language, _ := c.Language()
 			if entering {
 				w.WriteString(`<div class="highlight">`)
-				if language == nil {
-					_, _ = w.WriteString(`<pre tabindex="0" class="chroma"><code class="language-fallback"  data-lang="fallback" />`)
-				}
+				// 使用 highlighting.WithGuessLanguage(true),
+				//if language == nil {
+				//	_, _ = w.WriteString(`<pre tabindex="0" class="chroma"><code class="language-fallback"  data-lang="fallback" />`)
+				//}
 			} else {
-				if language == nil {
-					w.WriteString(`</code></pre>`)
-				}
+				// 使用 highlighting.WithGuessLanguage(true),
+				//if language == nil {
+				//	w.WriteString(`</code></pre>`)
+				//}
 				w.WriteString(`</div>`)
 			}
 		}),
 
 		highlighting.WithCodeBlockOptions(func(c highlighting.CodeBlockContext) []chromahtml.Option {
-			languageByte, _ := c.Language()
-			//if !ok {
-			//	return nil
-			//}
-			language := string(languageByte)
-			if language == "" {
-				language = "fallback"
+			languageByte, ok := c.Language()
+			if !ok {
+				return nil
 			}
+			language := string(languageByte)
+			//if language == "" {
+			//	language = "fallback"
+			//}
 			wrapper := &preWrapper{language: language}
 			return []chromahtml.Option{
 				chromahtml.WithClasses(true),
