@@ -8,15 +8,15 @@ import (
 )
 
 // 获取菜单树 pid 为0 为一级菜单
-var active float64 = 1
+var status float64 = 1
 
 func getNavMenu(pid string) (interface{}, error) {
 	navIndex, _, _ := openBleveIndex(indexNavMenuName)
-	// PID 跟 Active 为查询字段
+	// PID 跟 Status 为查询字段
 	queryPID := bleveNewTermQuery(pid)
 	queryPID.SetField("PID")
-	queryActive := bleve.NewNumericRangeInclusiveQuery(&active, &active, &inclusive, &inclusive)
-	queryActive.SetField("active")
+	queryActive := bleve.NewNumericRangeInclusiveQuery(&status, &status, &inclusive, &inclusive)
+	queryActive.SetField("status")
 	query := bleve.NewConjunctionQuery(queryPID, queryActive)
 	serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
 	serarch.Fields = []string{"*"}

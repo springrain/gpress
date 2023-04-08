@@ -25,7 +25,7 @@ type IndexInfoStruct struct {
 	// SortNo 排序
 	SortNo int `json:"sortNo,omitempty"`
 	// 是否有效 无效(0),正常显示(1),界面不显示(3)
-	Active int `json:"active,omitempty"`
+	Status int `json:"status,omitempty"`
 }
 
 // initIndexInfo 初始化创建indexInfo索引
@@ -64,7 +64,7 @@ func initIndexInfo() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, infoId)
@@ -82,7 +82,7 @@ func initIndexInfo() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, infoName)
@@ -100,7 +100,7 @@ func initIndexInfo() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, infoCode)
@@ -120,7 +120,7 @@ func initIndexInfo() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, infoType)
@@ -142,7 +142,7 @@ func initIndexInfo() (bool, error) {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     3,
-		Active:     1,
+		Status:     1,
 	})
 	return true, nil
 }

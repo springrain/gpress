@@ -39,7 +39,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | ipdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序         | -       |  正序  |
-| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 ### 索引字段(索引名:indexField)
 记录所有索引字段code和中文说明.  
@@ -61,7 +61,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序         | -       |  正序  |
-| Active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| Status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 ### 用户(索引名:user)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
@@ -99,7 +99,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | templateName| string      | 模板名称     | 否       |    -  |
 | templatePath| string      | 模板路径     | 否       |    -  |
 | sortNo      | int         | 排序        | -       |  正序  |
-| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 ### 导航菜单(索引名:navMenu)
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
@@ -115,7 +115,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | templateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | childTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | sortNo      | int         | 排序        | -       |  正序  |
-| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 ### 模型数据(索引名:module_default)
 在indexInfo表里设置indexType='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索   
@@ -133,7 +133,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序        | -       |  正序  |
-| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 
 ### 文章内容(索引名:content)
@@ -156,5 +156,5 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序        | -       |  正序  |
-| active      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
