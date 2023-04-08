@@ -17,7 +17,7 @@ func init() {
 	// 导航菜单列表
 	h.GET("/navMenu/:urlPathParam", funcListNavMenu)
 	// 查看标签
-	h.GET("/tags/:urlPathParam", funcListTags)
+	h.GET("/tag/:urlPathParam", funcListTags)
 	// 查看内容
 	h.GET("/post/:urlPathParam", funcOneContent)
 
@@ -37,7 +37,7 @@ func funcListNavMenu(ctx context.Context, c *app.RequestContext) {
 func funcListTags(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	data["urlPathParam"] = c.Param("urlPathParam")
-	c.HTML(http.StatusOK, "tags.html", data)
+	c.HTML(http.StatusOK, "tag.html", data)
 }
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
