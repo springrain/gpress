@@ -81,6 +81,7 @@ func funcNavMenu() ([]map[string]interface{}, error) {
 	searchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
+	searchRequest.SortBy([]string{"-sortNo", "-_score", "-_id"})
 	searchResult, err := searchIndex.Search(searchRequest)
 	if err != nil {
 		return make([]map[string]interface{}, 0), err
