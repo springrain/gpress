@@ -27,6 +27,13 @@ func TestNavMenu(t *testing.T) {
 		saveNewIndex(context.Background(), indexNavMenuName, menu)
 	}
 
+	siteMap := make(map[string]interface{}, 0)
+	siteMap["id"] = "gpress"
+	siteMap["title"] = "jiagou"
+	siteMap["name"] = "架构"
+	siteMap["domain"] = "jiagou.com"
+	updateIndex(context.Background(), "site", "gpress", siteMap)
+
 }
 
 func TestReadmks(t *testing.T) {
@@ -35,28 +42,33 @@ func TestReadmks(t *testing.T) {
 	if err != nil {
 		t.Error("读取错误")
 	}
+	lists := make([]map[string]interface{}, 0)
 	for i, file := range files {
 		fileName := file.Name()
 		source, err := os.ReadFile("D:/post/" + fileName)
 		if err != nil {
 			continue
 		}
+		sortNo := i + 1
 		id := fileName[:strings.LastIndex(fileName, ".")]
+
 		fmt.Println(id)
 		markdown := strings.TrimSpace(string(source))
 		smk := markdown[strings.Index(markdown, "---")+3:]
-		start := strings.Index(smk, "---") + 6
-		end := start + 200
-		if len(markdown) < end {
-			end = len(markdown)
+		start := strings.Index(smk, "---") + 3
+		smk = strings.TrimSpace(smk[start:])
+		smkRune := []rune(smk)
+		end := 100
+		if end > len(smkRune) {
+			end = len(smkRune)
 		}
-		summary := markdown[start:end]
+		summary := string(smkRune[0:end])
 		summary = strings.TrimSpace(summary)
 		cMap := make(map[string]interface{}, 0)
 		cMap["id"] = id
 		cMap["summary"] = summary
 		cMap["markdown"] = markdown
-		cMap["sortNo"] = i + 1
+		cMap["sortNo"] = sortNo
 
 		metaData, tocHtml, html, _ := conver2Html([]byte(markdown))
 		dateStr := metaData["date"].(string)
@@ -75,12 +87,33 @@ func TestReadmks(t *testing.T) {
 
 		cMap["content"] = html
 		cMap["toc"] = tocHtml
-
-		saveNewIndex(context.Background(), "content", cMap)
+		lists = append(lists, cMap)
+		//saveNewIndex(context.Background(), "content", cMap)
 
 	}
 
 	fmt.Println("------------")
+
+	var temp map[string]interface{}     // 定义临时变量,进行数据交换
+	for j := 0; j < len(lists)-1; j++ { // 外循环 循环次数
+		for i := 0; i < len(lists)-1; i++ { // 内循环 数组遍历
+			m1 := lists[i]
+			m2 := lists[i+1]
+			d1 := m1["updateTime"].(time.Time)
+			d2 := m2["updateTime"].(time.Time)
+			if d1.After(d2) {
+				temp = lists[i]
+				lists[i] = lists[i+1]
+				lists[i+1] = temp
+			}
+		}
+	}
+
+	for i := 0; i < len(lists); i++ { // 内循环 数组遍历
+		cMap := lists[i]
+		cMap["sortNo"] = i + 1
+		saveNewIndex(context.Background(), "content", cMap)
+	}
 
 }
 func slice2string(slice []interface{}) string {

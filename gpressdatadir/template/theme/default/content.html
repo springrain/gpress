@@ -13,7 +13,7 @@
     <h1 class="post-title">{{ $content.title }}</h1>
 
     <div class="post-meta">
-      <span class="post-time"> {{ $content.createTime }} </span>
+      <span class="post-time"> {{ slice $content.createTime  0 10 }} </span>
       <div class="post-category">
           <a href="{{basePath}}navMenu/{{ $content.navMenuID }}"> {{ $content.navMenuName }} </a>
           </div>
@@ -28,16 +28,12 @@
 
   {{  safeHTML $content.toc }}
 
-
 </nav>
 </div>
 </div>
   <div class="post-content">
 
-
     {{ safeHTML $content.content }}
-
-
 
 </div>
 <div class="post-copyright">
@@ -48,7 +44,7 @@
 <p class="copyright-item">
   <span class="item-title">上次更新</span>
   <span class="item-content">
-    {{ $content.updateTime }}
+    {{ slice $content.updateTime 0 10 }}
   </span>
 </p>
 
@@ -56,7 +52,7 @@
 </div>
 <footer class="post-footer">
     <div class="post-tags">
-        <a href="#">web</a>
+        <a href="{{basePath}}tag/{{$content.tag}}">{{$content.tag}}</a>
         </div>
     <nav class="post-nav">
       {{if ne $prevContent.id "" }}

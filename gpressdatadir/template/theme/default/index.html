@@ -12,7 +12,7 @@
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="{{basePath}}post/{{$v.id}}">{{ $v.title }}</a></h1>
     <div class="post-meta">
-      <span class="post-time">{{ $v.updateTime }}</span>
+      <span class="post-time">{{ slice $v.updateTime 0 10 }}</span>
       <div class="post-category">
           <a href="{{basePath}}navMenu/{{ $v.navMenuID }}">{{ $v.navMenuName }}</a>
           </div>
@@ -40,7 +40,7 @@
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
-  {{ if $selectList.page.HasPrev }}
+  {{ if $selectList.page.HasNext }}
   <a class="next" href="{{basePath}}?pageNo={{ addInt $selectList.page.PageNo 1 }}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>

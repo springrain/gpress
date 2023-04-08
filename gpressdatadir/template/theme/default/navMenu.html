@@ -11,7 +11,7 @@
   {{ range $k,$v := $selectList.data }}
   <div class="archive-post">
       <span class="archive-post-time">
-        {{ $v.updateTime }} 
+        {{ slice $v.updateTime 0 10 }} 
       </span>
       <span class="archive-post-title">
         <a href="{{basePath}}post/{{$v.id}}" class="archive-post-link">
@@ -26,13 +26,13 @@
   
 <nav class="pagination">
   {{ if $selectList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}?pageNo={{ addInt $selectList.page.PageNo -1 }}">
+  <a class="prev" href="{{basePath}}navMenu/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo -1 }}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
-  {{ if $selectList.page.HasPrev }}
-  <a class="next" href="{{basePath}}?pageNo={{ addInt $selectList.page.PageNo 1 }}">
+  {{ if $selectList.page.HasNext }}
+  <a class="next" href="{{basePath}}navMenu/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo 1 }}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>
