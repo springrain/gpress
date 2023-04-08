@@ -69,7 +69,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       3,
 		Active:       3,
 	}
 	addIndexField(mapping, contentTitle)
@@ -89,7 +89,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       3,
+		SortNo:       4,
 		Active:       3,
 	}
 	addIndexField(mapping, contentKeyword)
@@ -109,7 +109,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       5,
 		Active:       3,
 	}
 	addIndexField(mapping, contentDescription)
@@ -128,7 +128,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       5,
+		SortNo:       6,
 		Active:       3,
 	}
 	addIndexField(mapping, contentPageURL)
@@ -146,7 +146,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       7,
 		Active:       3,
 	}
 	addIndexField(mapping, contentSubtitle)
@@ -165,7 +165,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       8,
 		Active:       3,
 	}
 	addIndexField(mapping, contentNavMenuId)
@@ -184,7 +184,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       5,
+		SortNo:       9,
 		Active:       3,
 	}
 	addIndexField(mapping, contentNavMenuNames)
@@ -203,7 +203,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       10,
 		Active:       3,
 	}
 	addIndexField(mapping, contentTemplateID)
@@ -220,7 +220,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       11,
 		Active:       3,
 	}
 	addIndexField(mapping, contentAuthor)
@@ -237,7 +237,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       12,
 		Active:       3,
 	}
 	addIndexField(mapping, contentTag)
@@ -254,7 +254,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       13,
 		Active:       3,
 	}
 	addIndexField(mapping, contentToc)
@@ -271,7 +271,7 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       7,
+		SortNo:       14,
 		Active:       3,
 	}
 	addIndexField(mapping, contentSummary)
@@ -288,15 +288,49 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       7,
+		SortNo:       15,
 		Active:       3,
 	}
 	addIndexField(mapping, contentContent)
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
+	contentMarkdown := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexContentName,
+		FieldCode:    "markdown",
+		FieldName:    "markdown原文",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       16,
+		Active:       3,
+	}
+	addIndexField(mapping, contentMarkdown)
+
+	contentThumbnail := IndexFieldStruct{
+		ID:           FuncGenerateStringID(),
+		IndexCode:    indexContentName,
+		FieldCode:    "thumbnail",
+		FieldName:    "封面图",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: gseAnalyzerName,
+		IndexName:    "文章内容",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       17,
+		Active:       3,
+	}
+	addIndexField(mapping, contentThumbnail)
+
 	// 添加公共字段
-	indexCommonField(mapping, indexContentName, "文章内容", 7, now)
+	indexCommonField(mapping, indexContentName, "文章内容", 17, now)
 
 	_, err = bleveNew(indexContentName, mapping)
 	if err != nil {
