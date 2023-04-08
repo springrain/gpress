@@ -19,6 +19,7 @@ func init() {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = gseAnalyzerName
+	sortNo := 1
 	// 初始化各个字段
 	navMenuId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -32,11 +33,12 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       1,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     1,
 	}
 	// 放入文件中
+	sortNo++
 	addIndexField(mapping, navMenuId)
 
 	navMenuMenuName := IndexFieldStruct{
@@ -51,10 +53,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     1,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuMenuName)
 
 	navMenuHrefURL := IndexFieldStruct{
@@ -69,10 +72,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       3,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuHrefURL)
 
 	navMenuHrefTarget := IndexFieldStruct{
@@ -87,10 +91,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuHrefTarget)
 
 	navMenuPID := IndexFieldStruct{
@@ -105,10 +110,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       5,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuPID)
 
 	navMenuThemePC := IndexFieldStruct{
@@ -123,10 +129,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuThemePC)
 
 	navMenuModuleID := IndexFieldStruct{
@@ -141,10 +148,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       7,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuModuleID)
 
 	navMenuComCode := IndexFieldStruct{
@@ -159,10 +167,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       8,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuComCode)
 
 	navMenuTemplateID := IndexFieldStruct{
@@ -177,10 +186,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       9,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuTemplateID)
 
 	navMenuChildTemplateID := IndexFieldStruct{
@@ -195,14 +205,15 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       10,
+		SortNo:       sortNo,
 		Active:       3,
 		Required:     0,
 	}
+	sortNo++
 	addIndexField(mapping, navMenuChildTemplateID)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexNavMenuName, "导航菜单", 10, now)
+	indexCommonField(mapping, indexNavMenuName, "导航菜单", sortNo, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	_, err = bleveNew(indexNavMenuName, mapping)
@@ -220,7 +231,7 @@ func init() {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     6,
+		SortNo:     5,
 		Active:     1,
 	})
 }

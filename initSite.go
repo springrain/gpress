@@ -20,7 +20,7 @@ func init() {
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	// 获取当前时间
 	now := time.Now()
-
+	sortNo := 1
 	// 初始化各个字段
 	siteId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -34,10 +34,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       1,
+		SortNo:       sortNo,
 		Active:       3,
 	}
 	// 放入文件中
+	sortNo++
 	addIndexField(mapping, siteId)
 
 	siteTitle := IndexFieldStruct{
@@ -52,9 +53,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
@@ -71,9 +73,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteName)
 
 	domain := IndexFieldStruct{
@@ -88,9 +91,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, domain)
 
 	siteKeyword := IndexFieldStruct{
@@ -105,9 +109,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       3,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteKeyword)
 
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
@@ -125,9 +130,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteDescription)
 
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
@@ -145,9 +151,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       5,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteTheme)
 
 	siteThemePC := IndexFieldStruct{
@@ -162,9 +169,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteThemePC)
 
 	siteThemeWAP := IndexFieldStruct{
@@ -179,9 +187,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       7,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteThemeWAP)
 
 	siteThemeWEIXIN := IndexFieldStruct{
@@ -196,9 +205,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       8,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteThemeWEIXIN)
 
 	siteLogo := IndexFieldStruct{
@@ -213,9 +223,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       9,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteLogo)
 
 	siteFavicon := IndexFieldStruct{
@@ -230,9 +241,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       10,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteFavicon)
 
 	siteFooter := IndexFieldStruct{
@@ -247,13 +259,14 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       11,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, siteFooter)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexSiteName, "站点信息", 11, now)
+	indexCommonField(mapping, indexSiteName, "站点信息", sortNo, now)
 
 	index, err := bleveNew(indexSiteName, mapping)
 	if err != nil {
@@ -293,7 +306,7 @@ func init() {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     3,
+		SortNo:     7,
 		Active:     1,
 	})
 

@@ -434,6 +434,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, commonCreateTime)
 
 	sortNo++
@@ -449,9 +450,10 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       9,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, commonUpdateTime)
 
 	sortNo++
@@ -467,9 +469,10 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       10,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, commonCreateUser)
 
 	sortNo++
@@ -485,9 +488,10 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       11,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, commonSortNo)
 
 	sortNo++
@@ -503,9 +507,10 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       12,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, commonActive)
 }
 

@@ -19,7 +19,7 @@ func init() {
 
 	// 获取当前时间
 	now := time.Now()
-
+	sortNo := 1
 	// 初始化各个字段
 	contentId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -33,10 +33,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       1,
+		SortNo:       sortNo,
 		Active:       3,
 	}
 	// 放入文件中
+	sortNo++
 	addIndexField(mapping, contentId)
 
 	contentModuleID := IndexFieldStruct{
@@ -51,9 +52,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentModuleID)
 
 	contentTitle := IndexFieldStruct{
@@ -69,9 +71,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       3,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
@@ -89,9 +92,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentKeyword)
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
@@ -109,9 +113,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       5,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentDescription)
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
@@ -128,9 +133,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentPageURL)
 
 	contentSubtitle := IndexFieldStruct{
@@ -146,9 +152,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       7,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentSubtitle)
 	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
@@ -165,9 +172,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       8,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentNavMenuId)
 	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	// //mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
@@ -184,9 +192,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       9,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentNavMenuNames)
 	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
@@ -203,9 +212,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       10,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentTemplateID)
 
 	contentAuthor := IndexFieldStruct{
@@ -220,9 +230,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       11,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentAuthor)
 
 	contentTag := IndexFieldStruct{
@@ -237,9 +248,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       12,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentTag)
 
 	contentToc := IndexFieldStruct{
@@ -254,9 +266,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       13,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentToc)
 
 	contentSummary := IndexFieldStruct{
@@ -271,9 +284,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       14,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentSummary)
 
 	contentContent := IndexFieldStruct{
@@ -288,9 +302,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       15,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentContent)
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
@@ -307,9 +322,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       16,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentMarkdown)
 
 	contentThumbnail := IndexFieldStruct{
@@ -318,19 +334,20 @@ func init() {
 		FieldCode:    "thumbnail",
 		FieldName:    "封面图",
 		FieldType:    fieldType_文本框,
-		AnalyzerName: gseAnalyzerName,
+		AnalyzerName: keywordAnalyzerName,
 		IndexName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       17,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, contentThumbnail)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexContentName, "文章内容", 17, now)
+	indexCommonField(mapping, indexContentName, "文章内容", sortNo, now)
 
 	_, err = bleveNew(indexContentName, mapping)
 	if err != nil {
@@ -347,7 +364,7 @@ func init() {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     5,
+		SortNo:     1,
 		Active:     1,
 	})
 }
