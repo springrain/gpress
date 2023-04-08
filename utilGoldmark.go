@@ -143,19 +143,30 @@ func initHighlighting() goldmark.Extender {
 			),
 		*/
 		highlighting.WithWrapperRenderer(func(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
+			language, _ := c.Language()
 			if entering {
 				w.WriteString(`<div class="highlight">`)
+				if language == nil {
+					_, _ = w.WriteString(`<pre class="chroma"><code class="language-fallback"  data-lang="fallback" />`)
+				}
 			} else {
+				if language == nil {
+					w.WriteString(`</code></pre>`)
+				}
 				w.WriteString(`</div>`)
 			}
 		}),
 
 		highlighting.WithCodeBlockOptions(func(c highlighting.CodeBlockContext) []chromahtml.Option {
-			language, ok := c.Language()
-			if !ok {
-				return nil
+			languageByte, _ := c.Language()
+			//if !ok {
+			//	return nil
+			//}
+			language := string(languageByte)
+			if language == "" {
+				language = "fallback"
 			}
-			wrapper := &preWrapper{language: string(language)}
+			wrapper := &preWrapper{language: language}
 			return []chromahtml.Option{
 				chromahtml.WithClasses(true),
 				chromahtml.WithLineNumbers(true),
@@ -205,6 +216,7 @@ func (p *preWrapper) Start(code bool, styleAttr string) string {
 func WritePreStart(w io.Writer, language, styleAttr string) {
 	fmt.Fprintf(w, `<pre tabindex="0"%s>`, styleAttr)
 	fmt.Fprint(w, "<code")
+
 	if language != "" {
 		fmt.Fprint(w, ` class="language-`+language+`"`)
 		fmt.Fprint(w, ` data-lang="`+language+`"`)
