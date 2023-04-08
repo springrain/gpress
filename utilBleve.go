@@ -323,7 +323,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return nil
 }
 
-func funcIndexList(indexName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
+func funcSelectList(indexName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
 
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
@@ -416,7 +416,7 @@ func funcIndexList(indexName string, fields string, q string, pageNo int, queryS
 	return resultMap, err
 }
 
-func funcIndexOne(indexName string, fields string, queryString string) (map[string]interface{}, error) {
+func funcSelectOne(indexName string, fields string, queryString string) (map[string]interface{}, error) {
 	searchIndex, ok, _ := openBleveIndex(indexName)
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
 	if !ok || queryString == "" { //索引不存在

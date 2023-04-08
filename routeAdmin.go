@@ -174,7 +174,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 		params.WriteString(c.Query(k))
 		i++
 	}
-	responseData, err := funcIndexList(urlPathParam, "*", q, pageNo, params.String())
+	responseData, err := funcSelectList(urlPathParam, "*", q, pageNo, params.String())
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -341,7 +341,7 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	}
 	urlPathParam := c.Param("urlPathParam")
 	//indexName := bleveDataDir + urlPathParam
-	responseData, err := funcIndexOne(urlPathParam, "*", id)
+	responseData, err := funcSelectOne(urlPathParam, "*", id)
 	if err != nil { //索引不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用

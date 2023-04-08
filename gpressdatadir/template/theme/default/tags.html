@@ -1,5 +1,5 @@
 <!-- 查询 content 列表 -->
-{{ $indexList:=indexList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "tag=%s" .urlPathParam) }}
+{{ $selectList:=selectList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "tag=%s" .urlPathParam) }}
 
 {{template "bodystart.html"  }}
 
@@ -7,7 +7,7 @@
   <div class="archive-title category">
         <h2 class="archive-name">{{ .urlPathParam }}</h2>
   </div>
-  {{ range $k,$v := $indexList.data }}
+  {{ range $k,$v := $selectList.data }}
   <div class="archive-post">
       <span class="archive-post-time">
         {{ $v.updateTime }} 
@@ -24,14 +24,14 @@
 </section>
   
 <nav class="pagination">
-  {{ if $indexList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}?pageNo={{ addInt $indexList.page.PageNo -1 }}">
+  {{ if $selectList.page.HasPrev }}
+  <a class="prev" href="{{basePath}}?pageNo={{ addInt $selectList.page.PageNo -1 }}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
-  {{ if $indexList.page.HasPrev }}
-  <a class="next" href="{{basePath}}?pageNo={{ addInt $indexList.page.PageNo 1 }}">
+  {{ if $selectList.page.HasPrev }}
+  <a class="next" href="{{basePath}}?pageNo={{ addInt $selectList.page.PageNo 1 }}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>
