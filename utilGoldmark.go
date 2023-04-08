@@ -147,7 +147,7 @@ func initHighlighting() goldmark.Extender {
 			if entering {
 				w.WriteString(`<div class="highlight">`)
 				if language == nil {
-					_, _ = w.WriteString(`<pre class="chroma"><code class="language-fallback"  data-lang="fallback" />`)
+					_, _ = w.WriteString(`<pre tabindex="0" class="chroma"><code class="language-fallback"  data-lang="fallback" />`)
 				}
 			} else {
 				if language == nil {
@@ -207,6 +207,8 @@ func (p *preWrapper) Start(code bool, styleAttr string) string {
 	var language string
 	if code {
 		language = p.language
+	} else {
+		language = "fallback"
 	}
 	w := &strings.Builder{}
 	WritePreStart(w, language, styleAttr)
