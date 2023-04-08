@@ -34,7 +34,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	// 放入文件中
 	sortNo++
@@ -53,7 +53,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, pageTemplateNameName)
@@ -71,7 +71,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, pageTemplateNamePath)
@@ -96,6 +96,6 @@ func init() {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     6,
-		Active:     1,
+		Status:     1,
 	})
 }

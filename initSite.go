@@ -35,7 +35,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	// 放入文件中
 	sortNo++
@@ -54,7 +54,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteTitle)
@@ -74,7 +74,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteName)
@@ -92,7 +92,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, domain)
@@ -110,7 +110,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteKeyword)
@@ -131,7 +131,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteDescription)
@@ -152,7 +152,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteTheme)
@@ -170,7 +170,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteThemePC)
@@ -188,7 +188,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteThemeWAP)
@@ -206,7 +206,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteThemeWEIXIN)
@@ -224,7 +224,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteLogo)
@@ -242,7 +242,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteFavicon)
@@ -260,7 +260,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, siteFooter)
@@ -307,7 +307,7 @@ func init() {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     7,
-		Active:     1,
+		Status:     1,
 	})
 
 }

@@ -34,7 +34,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	// 放入文件中
 	sortNo++
@@ -53,7 +53,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentModuleID)
@@ -72,7 +72,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentTitle)
@@ -93,7 +93,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentKeyword)
@@ -114,7 +114,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentDescription)
@@ -134,7 +134,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentPageURL)
@@ -153,7 +153,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentSubtitle)
@@ -173,7 +173,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentNavMenuId)
@@ -193,7 +193,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentNavMenuNames)
@@ -213,7 +213,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentTemplateID)
@@ -231,7 +231,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentAuthor)
@@ -249,7 +249,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentTag)
@@ -267,7 +267,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentToc)
@@ -285,7 +285,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentSummary)
@@ -303,7 +303,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentContent)
@@ -323,7 +323,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentMarkdown)
@@ -341,7 +341,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, contentThumbnail)
@@ -365,6 +365,6 @@ func init() {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     1,
-		Active:     1,
+		Status:     1,
 	})
 }

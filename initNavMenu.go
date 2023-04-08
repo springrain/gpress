@@ -34,7 +34,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	// 放入文件中
@@ -54,7 +54,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	sortNo++
@@ -73,7 +73,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -92,7 +92,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -111,7 +111,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -130,7 +130,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -149,7 +149,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -168,7 +168,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -187,7 +187,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -206,7 +206,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     0,
 	}
 	sortNo++
@@ -232,6 +232,6 @@ func init() {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     5,
-		Active:     1,
+		Status:     1,
 	})
 }

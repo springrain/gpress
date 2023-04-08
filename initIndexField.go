@@ -46,7 +46,7 @@ type IndexFieldStruct struct {
 	// SortNo 排序
 	SortNo int `json:"sortNo,omitempty"`
 	// 是否有效 无效(0),正常显示(1),界面不显示(3)
-	Active int `json:"active,omitempty"`
+	Status int `json:"status,omitempty"`
 }
 
 // initIndexField 初始化创建IndexField索引
@@ -78,7 +78,7 @@ func initIndexField() (bool, error) {
 	mapping.DefaultMapping.AddFieldMappingsAt("updateTime", datetimeAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("createUser", keywordAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", numericAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("active", numericAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("status", numericAnalyzerMapping)
 
 	index, err := bleveNew(indexFieldName, mapping)
 	if err != nil {
@@ -100,7 +100,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(id.ID, id)
@@ -119,7 +119,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(indexCode.ID, indexCode)
@@ -138,7 +138,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(indexName.ID, indexName)
@@ -157,7 +157,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(businessID.ID, businessID)
@@ -176,7 +176,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(fieldCode.ID, fieldCode)
@@ -195,7 +195,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(fieldName.ID, fieldName)
@@ -214,7 +214,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(fieldComment.ID, fieldComment)
@@ -237,7 +237,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(fieldType.ID, fieldType)
@@ -256,7 +256,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(fieldFormat.ID, fieldFormat)
@@ -275,7 +275,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(required.ID, required)
@@ -294,7 +294,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(defaultValue.ID, defaultValue)
@@ -313,7 +313,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(analyzerName.ID, analyzerName)
@@ -332,7 +332,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(createTime.ID, createTime)
@@ -351,7 +351,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(updateTime.ID, updateTime)
@@ -370,7 +370,7 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(createUserField.ID, createUserField)
@@ -389,16 +389,16 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
 	index.Index(sortNoField.ID, sortNoField)
 	sortNo++
 
-	active := IndexFieldStruct{
+	status := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexFieldName,
-		FieldCode:    "active",
+		FieldCode:    "status",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: numericAnalyzerName,
@@ -408,10 +408,10 @@ func initIndexField() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 		Required:     1,
 	}
-	index.Index(active.ID, active)
+	index.Index(status.ID, status)
 
 	return true, nil
 }
@@ -432,7 +432,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, commonCreateTime)
@@ -451,7 +451,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, commonUpdateTime)
@@ -470,7 +470,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, commonCreateUser)
@@ -489,7 +489,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, commonSortNo)
@@ -498,7 +498,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 	commonActive := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
 		IndexCode:    indexCode,
-		FieldCode:    "active",
+		FieldCode:    "status",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: numericAnalyzerName,
@@ -508,7 +508,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, commonActive)
