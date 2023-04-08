@@ -33,7 +33,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 	sortNo++
 	addIndexField(mapping, userId)
@@ -52,7 +52,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, userAccount)
@@ -70,7 +70,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, userPassWord)
@@ -88,7 +88,7 @@ func init() {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, userName)
@@ -114,6 +114,6 @@ func init() {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     8,
-		Active:     1,
+		Status:     1,
 	})
 }

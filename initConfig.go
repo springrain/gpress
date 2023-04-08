@@ -41,7 +41,7 @@ func initConfig() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       3,
+		Status:       3,
 	}
 
 	sortNo++
@@ -61,7 +61,7 @@ func initConfig() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, basePath)
@@ -80,7 +80,7 @@ func initConfig() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, jwtSecret)
@@ -99,7 +99,7 @@ func initConfig() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, jwttokenKey)
@@ -118,7 +118,7 @@ func initConfig() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, serverPort)
@@ -137,7 +137,7 @@ func initConfig() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, theme)
@@ -156,7 +156,7 @@ func initConfig() (bool, error) {
 		UpdateTime:   now,
 		CreateUser:   createUser,
 		SortNo:       sortNo,
-		Active:       1,
+		Status:       1,
 	}
 	sortNo++
 	addIndexField(mapping, timeout)
@@ -180,7 +180,7 @@ func initConfig() (bool, error) {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     sortNo,
-		Active:     1,
+		Status:     1,
 	})
 
 	return true, nil

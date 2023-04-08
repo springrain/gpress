@@ -22,6 +22,6 @@ func init() {
 		UpdateTime: now,
 		CreateUser: createUser,
 		SortNo:     4,
-		Active:     1,
+		Status:     1,
 	})
 }
