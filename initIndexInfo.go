@@ -48,6 +48,7 @@ func initIndexInfo() (bool, error) {
 	// 获取当前时间
 	now := time.Now()
 
+	sortNo := 1
 	// 初始化各个字段
 	// 主键 值为 IndexName,也就是表名
 	infoId := IndexFieldStruct{
@@ -62,9 +63,10 @@ func initIndexInfo() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       1,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, infoId)
 	// 索引名称,类似表名中文说明
 	infoName := IndexFieldStruct{
@@ -79,9 +81,10 @@ func initIndexInfo() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, infoName)
 	//索引代码
 	infoCode := IndexFieldStruct{
@@ -96,9 +99,10 @@ func initIndexInfo() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       3,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, infoCode)
 	// IndexType index/module 索引和模型,两种类型
 	infoType := IndexFieldStruct{
@@ -115,13 +119,14 @@ func initIndexInfo() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, infoType)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexInfoName, "表信息", 4, now)
+	indexCommonField(mapping, indexInfoName, "表信息", sortNo, now)
 
 	indexInfo, err := bleveNew(indexInfoName, mapping)
 	if err != nil {
@@ -136,7 +141,7 @@ func initIndexInfo() (bool, error) {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     5,
+		SortNo:     3,
 		Active:     1,
 	})
 	return true, nil

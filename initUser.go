@@ -14,7 +14,7 @@ func init() {
 	}
 	// 当前时间
 	now := time.Now()
-
+	sortNo := 1
 	// 创建用户表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
@@ -32,9 +32,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       1,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, userId)
 
 	// 用户表的 Account 字段
@@ -50,9 +51,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, userAccount)
 	// 用户表的 PassWord 字段
 	userPassWord := IndexFieldStruct{
@@ -67,9 +69,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       3,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, userPassWord)
 	// 用户表的 UserName 字段
 	userName := IndexFieldStruct{
@@ -84,9 +87,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, userName)
 
 	// 添加公共字段
@@ -109,7 +113,7 @@ func init() {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     2,
+		SortNo:     8,
 		Active:     1,
 	})
 }
