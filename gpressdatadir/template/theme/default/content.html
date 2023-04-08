@@ -1,8 +1,8 @@
 <!-- 查询 content -->
 {{ $content := selectOne "content" "*" .urlPathParam }}
 
-{{ $prevContent := selectOne "content" "id,title"  (printf "sortNo<%d" $content.sortNo) }}
-{{ $nextContent := selectOne "content" "id,title"  (printf "sortNo>%d" $content.sortNo) }}
+{{ $prevContent := selectOne "content" "id,title"  (printf "sortNo<%f" $content.sortNo) }}
+{{ $nextContent := selectOne "content" "id,title"  (printf "sortNo>%f" $content.sortNo) }}
 
 {{template "bodystart.html"  }}
 
