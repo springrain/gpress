@@ -63,7 +63,9 @@ func pathExists(path string) bool {
 
 // 初始化 bleve 索引
 func checkBleveStatus() bool {
-
+	//代替内存存储,降低内存使用
+	//bleve.Config.DefaultMemKVStore = scorch.Name
+	//bleve.Config.DefaultKVStore = scorch.Name
 	// 注册bleve分词器,包括逗号,中文,小写keyword
 	initRegisterAnalyzer()
 
