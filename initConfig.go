@@ -26,7 +26,7 @@ func initConfig() (bool, error) {
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = keywordAnalyzerName
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-
+	sortNo := 1
 	// ID 字段
 	configId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -40,9 +40,11 @@ func initConfig() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       1,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+
+	sortNo++
 	addIndexField(mapping, configId)
 
 	// 配置 basePath 字段
@@ -58,9 +60,10 @@ func initConfig() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, basePath)
 
 	// 配置 jwtSecret 字段
@@ -76,9 +79,10 @@ func initConfig() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       4,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, jwtSecret)
 
 	// 配置 jwtSecret 字段
@@ -94,9 +98,10 @@ func initConfig() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       5,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, jwttokenKey)
 
 	// 配置 serverPort 字段
@@ -112,9 +117,10 @@ func initConfig() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       6,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, serverPort)
 
 	// 配置 theme 字段
@@ -130,9 +136,10 @@ func initConfig() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       7,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, theme)
 
 	// 配置 timeout 字段
@@ -148,13 +155,14 @@ func initConfig() (bool, error) {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       8,
+		SortNo:       sortNo,
 		Active:       1,
 	}
+	sortNo++
 	addIndexField(mapping, timeout)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexConfigName, "配置信息", 9, now)
+	indexCommonField(mapping, indexConfigName, "配置信息", sortNo, now)
 
 	_, err = bleveNew(indexConfigName, mapping)
 	if err != nil {
@@ -171,7 +179,7 @@ func initConfig() (bool, error) {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     1,
+		SortNo:     sortNo,
 		Active:     1,
 	})
 

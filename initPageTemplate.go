@@ -19,6 +19,7 @@ func init() {
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = gseAnalyzerName
+	sortNo := 1
 	// 初始化各个字段
 	pageId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -32,10 +33,11 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       1,
+		SortNo:       sortNo,
 		Active:       3,
 	}
 	// 放入文件中
+	sortNo++
 	addIndexField(mapping, pageId)
 
 	pageTemplateNameName := IndexFieldStruct{
@@ -50,9 +52,10 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       2,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, pageTemplateNameName)
 
 	pageTemplateNamePath := IndexFieldStruct{
@@ -67,13 +70,14 @@ func init() {
 		CreateTime:   now,
 		UpdateTime:   now,
 		CreateUser:   createUser,
-		SortNo:       3,
+		SortNo:       sortNo,
 		Active:       3,
 	}
+	sortNo++
 	addIndexField(mapping, pageTemplateNamePath)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexPageTemplateName, "页面模板", 3, now)
+	indexCommonField(mapping, indexPageTemplateName, "页面模板", sortNo, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	_, err = bleveNew(indexPageTemplateName, mapping)
@@ -91,7 +95,7 @@ func init() {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     7,
+		SortNo:     6,
 		Active:     1,
 	})
 }
