@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	_, ok, err := openBleveIndex(indexContentName)
+	ok, err := indexExist(indexContentName)
 	if err != nil || ok {
 		return
 	}
@@ -355,8 +355,8 @@ func init() {
 	}
 
 	//保存表信息
-	indexInfo, _, _ := openBleveIndex(indexInfoName)
-	indexInfo.Index(indexContentName, IndexInfoStruct{
+	//indexInfo, _, _ := openBleveIndex(indexInfoName)
+	bleveSaveIndex(indexInfoName, indexContentName, IndexInfoStruct{
 		ID:         indexContentName,
 		Name:       "文章内容",
 		Code:       "content",

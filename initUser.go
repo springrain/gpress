@@ -8,7 +8,7 @@ import (
 
 // initUser 初始化创建User索引
 func init() {
-	_, ok, err := openBleveIndex(indexUserName)
+	ok, err := indexExist(indexUserName)
 	if err != nil || ok {
 		return
 	}
@@ -104,8 +104,7 @@ func init() {
 	}
 
 	//保存表信息
-	indexInfo, _, _ := openBleveIndex(indexInfoName)
-	indexInfo.Index(indexUserName, IndexInfoStruct{
+	bleveSaveIndex(indexInfoName, indexUserName, IndexInfoStruct{
 		ID:         indexUserName,
 		Name:       "用户信息",
 		IndexType:  "index",

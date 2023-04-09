@@ -51,7 +51,7 @@ type IndexFieldStruct struct {
 
 // initIndexField 初始化创建IndexField索引
 func initIndexField() (bool, error) {
-	_, ok, err := openBleveIndex(indexFieldName)
+	ok, err := indexExist(indexFieldName)
 	if err != nil {
 		return false, err
 	}
@@ -80,8 +80,8 @@ func initIndexField() (bool, error) {
 	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", numericAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("status", numericAnalyzerMapping)
 
-	index, err := bleveNew(indexFieldName, mapping)
-	if err != nil {
+	ok, err = bleveNew(indexFieldName, mapping)
+	if err != nil || !ok {
 		return false, err
 	}
 
@@ -103,7 +103,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(id.ID, id)
+	bleveSaveIndex(indexFieldName, id.ID, id)
 	sortNo++
 
 	indexCode := IndexFieldStruct{
@@ -122,7 +122,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(indexCode.ID, indexCode)
+	bleveSaveIndex(indexFieldName, indexCode.ID, indexCode)
 	sortNo++
 
 	indexName := IndexFieldStruct{
@@ -141,7 +141,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(indexName.ID, indexName)
+	bleveSaveIndex(indexFieldName, indexName.ID, indexName)
 	sortNo++
 
 	businessID := IndexFieldStruct{
@@ -160,7 +160,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(businessID.ID, businessID)
+	bleveSaveIndex(indexFieldName, businessID.ID, businessID)
 	sortNo++
 
 	fieldCode := IndexFieldStruct{
@@ -179,7 +179,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(fieldCode.ID, fieldCode)
+	bleveSaveIndex(indexFieldName, fieldCode.ID, fieldCode)
 	sortNo++
 
 	fieldName := IndexFieldStruct{
@@ -198,7 +198,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(fieldName.ID, fieldName)
+	bleveSaveIndex(indexFieldName, fieldName.ID, fieldName)
 	sortNo++
 
 	fieldComment := IndexFieldStruct{
@@ -217,7 +217,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(fieldComment.ID, fieldComment)
+	bleveSaveIndex(indexFieldName, fieldComment.ID, fieldComment)
 	sortNo++
 	//ftSelect, _ := json.Marshal(fieldTypeMap)
 	fieldType := IndexFieldStruct{
@@ -240,7 +240,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(fieldType.ID, fieldType)
+	bleveSaveIndex(indexFieldName, fieldType.ID, fieldType)
 	sortNo++
 
 	fieldFormat := IndexFieldStruct{
@@ -259,7 +259,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(fieldFormat.ID, fieldFormat)
+	bleveSaveIndex(indexFieldName, fieldFormat.ID, fieldFormat)
 	sortNo++
 
 	required := IndexFieldStruct{
@@ -278,7 +278,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(required.ID, required)
+	bleveSaveIndex(indexFieldName, required.ID, required)
 	sortNo++
 
 	defaultValue := IndexFieldStruct{
@@ -297,7 +297,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(defaultValue.ID, defaultValue)
+	bleveSaveIndex(indexFieldName, defaultValue.ID, defaultValue)
 	sortNo++
 
 	analyzerName := IndexFieldStruct{
@@ -316,7 +316,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(analyzerName.ID, analyzerName)
+	bleveSaveIndex(indexFieldName, analyzerName.ID, analyzerName)
 	sortNo++
 
 	createTime := IndexFieldStruct{
@@ -335,7 +335,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(createTime.ID, createTime)
+	bleveSaveIndex(indexFieldName, createTime.ID, createTime)
 	sortNo++
 
 	updateTime := IndexFieldStruct{
@@ -354,7 +354,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(updateTime.ID, updateTime)
+	bleveSaveIndex(indexFieldName, updateTime.ID, updateTime)
 	sortNo++
 
 	createUserField := IndexFieldStruct{
@@ -373,7 +373,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(createUserField.ID, createUserField)
+	bleveSaveIndex(indexFieldName, createUserField.ID, createUserField)
 	sortNo++
 
 	sortNoField := IndexFieldStruct{
@@ -392,7 +392,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(sortNoField.ID, sortNoField)
+	bleveSaveIndex(indexFieldName, sortNoField.ID, sortNoField)
 	sortNo++
 
 	status := IndexFieldStruct{
@@ -411,7 +411,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	index.Index(status.ID, status)
+	bleveSaveIndex(indexFieldName, status.ID, status)
 
 	return true, nil
 }
@@ -516,8 +516,7 @@ func indexCommonField(mapping *mapping.IndexMappingImpl, indexCode string, index
 
 func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct IndexFieldStruct) {
 	// 获取索引字段的表
-	indexField, _, _ := openBleveIndex(indexFieldName)
-	indexField.Index(indexFiledStruct.ID, indexFiledStruct)
+	bleveSaveIndex(indexFieldName, indexFiledStruct.ID, indexFiledStruct)
 	if bleveMapping == nil {
 		return
 	}

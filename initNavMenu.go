@@ -8,7 +8,7 @@ import (
 
 // 导航菜单
 func init() {
-	_, ok, err := openBleveIndex(indexNavMenuName)
+	ok, err := indexExist(indexNavMenuName)
 	if err != nil || ok {
 		return
 	}
@@ -222,8 +222,7 @@ func init() {
 		return
 	}
 	//保存表信息
-	indexInfo, _, _ := openBleveIndex(indexInfoName)
-	indexInfo.Index(indexNavMenuName, IndexInfoStruct{
+	bleveSaveIndex(indexInfoName, indexNavMenuName, IndexInfoStruct{
 		ID:         indexNavMenuName,
 		Name:       "导航菜单",
 		Code:       "navMenu",
