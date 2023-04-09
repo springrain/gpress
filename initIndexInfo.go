@@ -132,17 +132,6 @@ func initIndexInfo() (bool, error) {
 	if err != nil || !ok {
 		return false, err
 	}
-	//
-	bleveSaveIndex(indexInfoName, indexFieldName, IndexInfoStruct{
-		ID:         indexFieldName,
-		Name:       "表字段",
-		Code:       "indexField",
-		IndexType:  "index",
-		CreateTime: now,
-		UpdateTime: now,
-		CreateUser: createUser,
-		SortNo:     3,
-		Status:     1,
-	})
+
 	return true, nil
 }
