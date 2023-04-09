@@ -26,15 +26,21 @@ func TestKeyword(t *testing.T) {
 	os.RemoveAll(bleveDataDir + indexName)
 	mapping := bleve.NewIndexMapping()
 
-	mapping.DefaultAnalyzer = gseAnalyzerName
 	mapping.DefaultAnalyzer = keywordAnalyzerName
+	mapping.DefaultMapping.AddFieldMappingsAt("Age", numericAnalyzerMapping)
+	mapping.DefaultMapping.AddFieldMappingsAt("Date", datetimeAnalyzerMapping)
+	//mapping.DefaultAnalyzer = keywordAnalyzerName
 	bleveNew(indexName, mapping)
 	user := struct {
 		Id   string
 		Name string
+		Age  int
+		Date string
 	}{
 		Id:   "userId",
 		Name: "我爱学中文",
+		Age:  1,
+		Date: "2023-01-01 18:00:00",
 	}
 	bleveSaveIndex(indexName, user.Id, user)
 
