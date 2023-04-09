@@ -65,8 +65,7 @@ func funcSite() (map[string]interface{}, error) {
 	searchRequest := bleve.NewSearchRequest(idQuery)
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
-	searchIndex, _, _ := openBleveIndex(indexSiteName)
-	searchResult, err := searchIndex.Search(searchRequest)
+	searchResult, err := bleveSearchInContext(context.Background(), indexSiteName, searchRequest)
 	if err != nil {
 		return make(map[string]interface{}, 0), err
 	}
@@ -76,13 +75,12 @@ func funcSite() (map[string]interface{}, error) {
 
 // 菜单信息
 func funcNavMenu() ([]map[string]interface{}, error) {
-	searchIndex, _, _ := openBleveIndex(indexNavMenuName)
 	query := bleve.NewQueryStringQuery("*")
 	searchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
 	// 指定返回的字段
 	searchRequest.Fields = []string{"*"}
 	searchRequest.SortBy([]string{"-sortNo", "-_score", "-_id"})
-	searchResult, err := searchIndex.Search(searchRequest)
+	searchResult, err := bleveSearchInContext(context.Background(), indexNavMenuName, searchRequest)
 	if err != nil {
 		return make([]map[string]interface{}, 0), err
 	}

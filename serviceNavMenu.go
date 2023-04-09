@@ -11,7 +11,6 @@ import (
 var status float64 = 1
 
 func getNavMenu(pid string) (interface{}, error) {
-	navIndex, _, _ := openBleveIndex(indexNavMenuName)
 	// PID 跟 Status 为查询字段
 	queryPID := bleveNewTermQuery(pid)
 	queryPID.SetField("PID")
@@ -20,7 +19,7 @@ func getNavMenu(pid string) (interface{}, error) {
 	query := bleve.NewConjunctionQuery(queryPID, queryActive)
 	serarch := bleve.NewSearchRequestOptions(query, 1000, 0, false)
 	serarch.Fields = []string{"*"}
-	result, err := navIndex.SearchInContext(context.Background(), serarch)
+	result, err := bleveSearchInContext(context.Background(), indexNavMenuName, serarch)
 	if err != nil {
 		FuncLogError(err)
 		return nil, err
