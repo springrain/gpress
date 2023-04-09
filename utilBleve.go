@@ -49,8 +49,8 @@ func generateStringID() string {
 	return pk
 }
 
-// pathExists 文件或者目录是否存在
-func pathExists(path string) bool {
+// pathExist 文件或者目录是否存在
+func pathExist(path string) bool {
 	_, err := os.Stat(path)
 	if err == nil {
 		return true
@@ -77,7 +77,7 @@ func checkBleveStatus() bool {
 	keywordAnalyzerMapping.DocValues = false
 	keywordAnalyzerMapping.Analyzer = keywordAnalyzerName
 
-	if !pathExists(bleveDataDir) { //目录如果不存在
+	if !pathExist(bleveDataDir) { //目录如果不存在
 		// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
 		err := os.Mkdir(bleveDataDir, os.ModePerm)
 		if err != nil {
@@ -155,7 +155,6 @@ var inclusive = true
 // required: 字段是否可以为空,0查询所有字段,1查询必填字段
 func findIndexFieldResult(ctx context.Context, indexName string, required int) (*bleve.SearchResult, error) {
 	var queryBleve query.Query
-	index, _, _ := openBleveIndex(indexFieldName)
 	// 查询指定表
 	queryIndexCode := bleveNewTermQuery(indexName)
 	// 查询指定字段,和json字段保持一致
@@ -179,7 +178,7 @@ func findIndexFieldResult(ctx context.Context, indexName string, required int) (
 	searchRequest.SortBy([]string{"sortNo", "-_id"})
 	//searchRequest.SortBy([]string{"sortNo"})
 
-	searchResult, err := index.SearchInContext(ctx, searchRequest)
+	searchResult, err := bleveSearchInContext(ctx, indexFieldName, searchRequest)
 	return searchResult, err
 }
 
@@ -243,14 +242,13 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 			return responseData, err
 		}
 	}
-	index, _, _ := openBleveIndex(tableName)
+
 	if newIndex["sortNo"] == 0 {
-		count, _ := index.DocCount()
-		sortNo := float64(count)
-		newIndex["sortNo"] = sortNo
+		count, _ := bleveDocCount(tableName)
+		newIndex["sortNo"] = count
 	}
 
-	err = index.Index(id, newIndex)
+	err = bleveSaveIndex(tableName, id, newIndex)
 
 	if err != nil {
 		FuncLogError(err)
@@ -265,15 +263,14 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 }
 
 func updateIndex(ctx context.Context, tableName string, indexId string, newMap map[string]interface{}) error {
-	// 查出原始数据
-	index, _, _ := openBleveIndex(tableName)             // 拿到index
+
 	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
 	// queryIndex := bleveNewTermQuery(indexId)            //查询索引
 	// queryIndex.SetField("id")
 	searchRequest := bleve.NewSearchRequestOptions(queryIndex, 1000, 0, false)
 	searchRequest.Fields = []string{"*"} // 查询所有字段
 
-	result, err := index.SearchInContext(ctx, searchRequest)
+	result, err := bleveSearchInContext(ctx, tableName, searchRequest)
 	if err != nil {
 		FuncLogError(err)
 		return err
@@ -292,23 +289,23 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 			newMap[k] = newV
 		}
 	}
-	err = index.Index(indexId, newMap)
+	err = bleveSaveIndex(tableName, indexId, newMap)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 func deleteById(ctx context.Context, tableName string, id string) error {
-	index, ok, _ := openBleveIndex(tableName)
-	if !ok {
-		return errors.New("数据不存在")
+	index, err := openBleveIndex(tableName)
+	if err != nil {
+		FuncLogError(err)
+		return err
 	}
-	err := index.Delete(id)
+	err = index.Delete(id)
 	return err
 }
 func deleteAll(ctx context.Context, tableName string) error {
-	index, _, _ := openBleveIndex(tableName)
-	count, err := index.DocCount()
+	count, err := bleveDocCount(tableName)
 	if err != nil {
 		return err
 	}
@@ -318,13 +315,13 @@ func deleteAll(ctx context.Context, tableName string) error {
 	// 只查询id
 	searchRequest.Fields = []string{"id"}
 
-	result, err := index.SearchInContext(ctx, searchRequest)
+	result, err := bleveSearchInContext(ctx, tableName, searchRequest)
 	if err != nil {
 		return err
 	}
 
 	for i := 0; i < len(result.Hits); i++ {
-		err = index.Delete(result.Hits[i].ID)
+		err = deleteById(ctx, tableName, result.Hits[i].ID)
 		if err != nil {
 			return err
 		}
@@ -333,7 +330,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 }
 
 func funcSelectList(indexName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
-	searchIndex, ok, _ := openBleveIndex(indexName)
+	ok, _ := indexExist(indexName)
 
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
 	if !ok { //索引不存在
@@ -405,7 +402,7 @@ func funcSelectList(indexName string, fields string, q string, pageNo int, query
 	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
 	searchRequest.SortBy([]string{"-sortNo", "-_score", "-_id"})
 
-	searchResult, err := searchIndex.Search(searchRequest)
+	searchResult, err := bleveSearchInContext(context.Background(), indexName, searchRequest)
 	if err != nil {
 		errMap["err"] = err
 		return errMap, err
@@ -416,7 +413,7 @@ func funcSelectList(indexName string, fields string, q string, pageNo int, query
 		return errMap, err
 	}
 	page.setTotalCount(total)
-	data, err := result2SliceMap(searchIndex.Name(), searchResult)
+	data, err := result2SliceMap(indexName, searchResult)
 	if err != nil {
 		errMap["err"] = err
 		return errMap, err
@@ -426,7 +423,7 @@ func funcSelectList(indexName string, fields string, q string, pageNo int, query
 }
 
 func funcSelectOne(indexName string, fields string, queryString string) (map[string]interface{}, error) {
-	searchIndex, ok, _ := openBleveIndex(indexName)
+	ok, _ := indexExist(indexName)
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
 	if !ok || queryString == "" { //索引不存在
 		err := errors.New("索引不存在")
@@ -456,7 +453,7 @@ func funcSelectOne(indexName string, fields string, queryString string) (map[str
 	}
 	// 先将按"sortNo"字段对结果进行排序.如果两个文档在此字段中具有相同的值,则它们将按得分(_score)降序排序,如果文档具有相同的SortNo和得分,则将按文档ID(_id)降序排序.
 	searchRequest.SortBy([]string{"-sortNo", "-_score", "-_id"})
-	searchResult, err := searchIndex.Search(searchRequest)
+	searchResult, err := bleveSearchInContext(context.Background(), indexName, searchRequest)
 	if err != nil {
 		errMap["err"] = err
 		return errMap, err
@@ -472,33 +469,89 @@ func funcSelectOne(indexName string, fields string, queryString string) (map[str
 	return resultMap, err
 }
 
-func bleveNew(indexName string, mapping mapping.IndexMapping) (bleve.Index, error) {
+func bleveNew(indexName string, mapping mapping.IndexMapping) (bool, error) {
 	index, err := bleve.New(bleveDataDir+indexName, mapping)
+	if err != nil {
+		FuncLogError(err)
+		return false, err
+	}
+	IndexMap.Store(indexName, index)
+	//IndexMap[indexName] = index
+	return true, err
+}
+
+func bleveSearchInContext(ctx context.Context, indexName string, searchRequest *bleve.SearchRequest) (*bleve.SearchResult, error) {
+	index, err := openBleveIndex(indexName)
 	if err != nil {
 		FuncLogError(err)
 		return nil, err
 	}
-	IndexMap.Store(indexName, index)
-	return index, err
+	return index.SearchInContext(ctx, searchRequest)
 }
 
-// openBleveIndex 打开索引目录
-func openBleveIndex(indexName string) (bleve.Index, bool, error) {
-	if !pathExists(bleveDataDir + indexName) { //如果索文件不存在
-		return nil, false, nil
+func bleveSaveIndex(indexName string, id string, value interface{}) error {
+	index, err := openBleveIndex(indexName)
+	if err != nil {
+		FuncLogError(err)
+		return err
 	}
+	err = index.Index(id, value)
+	return err
+}
+
+func bleveDocCount(indexName string) (int, error) {
+	index, err := openBleveIndex(indexName)
+	if err != nil {
+		FuncLogError(err)
+		return -1, err
+	}
+	count, err := index.DocCount()
+	if err != nil {
+		FuncLogError(err)
+		return -1, err
+	}
+	return int(count), err
+}
+
+// indexExist 索引目录是否已经存在
+func indexExist(indexName string) (bool, error) {
+	return pathExist(bleveDataDir + indexName), nil
+	/*
+		//index, ok := IndexMap.Load(indexName)
+		index, ok := IndexMap[indexName]
+		if ok { //已经打开过
+			return index, true, nil
+		}
+		// 打开所有的索引,放到map里,一个索引只能打开一次.
+		index, err := bleve.Open(bleveDataDir + indexName)
+		if err != nil {
+			FuncLogError(err)
+			return nil, false, err
+		}
+		//IndexMap.Store(indexName, index)
+		IndexMap[indexName] = index
+		return index, true, nil
+	*/
+}
+
+// indexExist 索引目录是否已经存在
+func openBleveIndex(indexName string) (bleve.Index, error) {
+
 	index, ok := IndexMap.Load(indexName)
+	//index, ok := IndexMap[indexName]
 	if ok { //已经打开过
-		return index.(bleve.Index), true, nil
+		return index.(bleve.Index), nil
 	}
 	// 打开所有的索引,放到map里,一个索引只能打开一次.
 	index, err := bleve.Open(bleveDataDir + indexName)
 	if err != nil {
 		FuncLogError(err)
-		return nil, false, err
+		return nil, err
 	}
 	IndexMap.Store(indexName, index)
-	return index.(bleve.Index), true, nil
+	//IndexMap[indexName] = index
+	return index.(bleve.Index), nil
+
 }
 func bleveNewTermQuery(term string) *query.TermQuery {
 	term = strings.ToLower(strings.TrimSpace(term))

@@ -232,7 +232,7 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 	}
 	urlPathParam := c.Param("urlPathParam")
 	//indexName := bleveDataDir + urlPathParam
-	_, ok, _ := openBleveIndex(urlPathParam)
+	ok, _ := indexExist(urlPathParam)
 	if !ok { //索引不存在
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
@@ -265,7 +265,7 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 	//indexName := bleveDataDir + urlPathParam
-	_, ok, _ := openBleveIndex(urlPathParam)
+	ok, _ := indexExist(urlPathParam)
 	if !ok { //索引不存在
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用

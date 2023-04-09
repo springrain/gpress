@@ -31,7 +31,7 @@ type IndexInfoStruct struct {
 // initIndexInfo 初始化创建indexInfo索引
 func initIndexInfo() (bool, error) {
 
-	_, ok, err := openBleveIndex(indexInfoName)
+	ok, err := indexExist(indexInfoName)
 	if err != nil {
 		return false, err
 	}
@@ -128,12 +128,12 @@ func initIndexInfo() (bool, error) {
 	// 添加公共字段
 	indexCommonField(mapping, indexInfoName, "表信息", sortNo, now)
 
-	indexInfo, err := bleveNew(indexInfoName, mapping)
-	if err != nil {
+	ok, err = bleveNew(indexInfoName, mapping)
+	if err != nil || !ok {
 		return false, err
 	}
 	//
-	indexInfo.Index(indexFieldName, IndexInfoStruct{
+	bleveSaveIndex(indexInfoName, indexFieldName, IndexInfoStruct{
 		ID:         indexFieldName,
 		Name:       "表字段",
 		Code:       "indexField",

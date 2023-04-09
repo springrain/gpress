@@ -28,7 +28,7 @@ func TestKeyword(t *testing.T) {
 
 	mapping.DefaultAnalyzer = gseAnalyzerName
 	mapping.DefaultAnalyzer = keywordAnalyzerName
-	index, _ := bleveNew(indexName, mapping)
+	bleveNew(indexName, mapping)
 	user := struct {
 		Id   string
 		Name string
@@ -36,20 +36,20 @@ func TestKeyword(t *testing.T) {
 		Id:   "userId",
 		Name: "我爱学中文",
 	}
-	index.Index(user.Id, user)
+	bleveSaveIndex(indexName, user.Id, user)
 
 	termQuery := bleveNewTermQuery(user.Name)
 	termQuery.SetField("Name")
 	termRequest := bleve.NewSearchRequest(termQuery)
 	termRequest.Fields = []string{"*"}
-	termResult, _ := index.Search(termRequest)
+	termResult, _ := bleveSearchInContext(context.Background(), indexName, termRequest)
 	fmt.Println("termQuery total:", termResult.Total)
 
 	stringQuery := bleve.NewQueryStringQuery(`"我爱学中文"`)
 	stringQuery.SetBoost(100)
 	stringRequest := bleve.NewSearchRequest(stringQuery)
 	stringRequest.Fields = []string{"*"}
-	stringResult, _ := index.Search(stringRequest)
+	stringResult, _ := bleveSearchInContext(context.Background(), indexName, stringRequest)
 	// total is zero, why?
 	fmt.Println("stringQuery total:", stringResult.Total)
 	fmt.Println("stringResult:", stringResult)
@@ -247,7 +247,6 @@ func TestSearchWhere(t *testing.T) {
 }
 
 func TestSearchOrder(t *testing.T) {
-	index, _, _ := openBleveIndex(indexFieldName)
 	// 查询的关键字,使用keyword分词器,不对Adress字段分词,精确匹配
 	query := bleveNewTermQuery(indexUserName)
 	// query := bleveNewTermQuery("zhongguo  zhengzhou")
@@ -265,7 +264,7 @@ func TestSearchOrder(t *testing.T) {
 	// searchRequest := bleve.NewSearchRequestOptions(query, 10, 0, true)
 	// 查询所有的字段
 	searchRequest.Fields = []string{"sortNo"}
-	searchResult, _ := index.SearchInContext(ctx, searchRequest)
+	searchResult, _ := bleveSearchInContext(ctx, indexFieldName, searchRequest)
 	// 本次查询的总条数,用于分页
 	fmt.Println("总条数:", searchResult.Total)
 	fmt.Println(searchResult)
