@@ -13,7 +13,8 @@ gpress使用GPL-3.0开源协议,特授权项目贡献者商业化时无需开源
 
 ## 目前的问题
 - hertz不能动态更新静态映射,会造成切换模板时,重复加载同名js异常,需要根据模板区分路径  
-- bleve使用的json,会把int变成float64,datetime变成string
+- bleve使用的json,会把int变成float64,datetime变成string  
+- 启动时,bleve会占用较高的内存,原因待查
 
 ## 软件架构
 使用 Hertz + Go template + Bleve全文检索,不使用数据库    
