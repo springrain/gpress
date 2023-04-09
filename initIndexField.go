@@ -536,3 +536,20 @@ func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct Inde
 	}
 	bleveMapping.DefaultMapping.AddFieldMappingsAt(indexFiledStruct.FieldCode, analyzerMapping)
 }
+func init() {
+
+	// 获取当前时间
+	now := time.Now()
+
+	bleveSaveIndex(indexInfoName, indexFieldName, IndexInfoStruct{
+		ID:         indexFieldName,
+		Name:       "表字段",
+		Code:       "indexField",
+		IndexType:  "index",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     3,
+		Status:     1,
+	})
+}
