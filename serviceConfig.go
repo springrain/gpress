@@ -76,24 +76,22 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	// 清空配置,重新创建
 	deleteAll(ctx, indexConfigName)
 
-	configIndex, _, _ := openBleveIndex(indexConfigName)
 	ID := FuncGenerateStringID()
 
 	m := make(map[string]interface{})
 	b, _ := json.Marshal(config)
 	json.Unmarshal(b, &m)
 
-	configIndex.Index(ID, m)
+	bleveSaveIndex(indexConfigName, ID, m)
 	return nil
 }
 
 func findConfig() (configStruct, error) {
-	configIndex, _, _ := openBleveIndex(indexConfigName)
 	query := bleve.NewQueryStringQuery("*")
 	searchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
 	searchRequest.Fields = []string{"*"}
 	config := defaultConfig
-	result, err := configIndex.SearchInContext(context.Background(), searchRequest)
+	result, err := bleveSearchInContext(context.Background(), indexConfigName, searchRequest)
 	if err != nil {
 		return config, err
 	}

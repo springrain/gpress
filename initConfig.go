@@ -9,7 +9,7 @@ import (
 // initConfig 初始化创建Config索引
 func initConfig() (bool, error) {
 
-	_, ok, err := openBleveIndex(indexConfigName)
+	ok, err := indexExist(indexConfigName)
 	if err != nil {
 		return false, err
 	}
@@ -170,8 +170,8 @@ func initConfig() (bool, error) {
 	}
 
 	//保存表信息
-	indexInfo, _, _ := openBleveIndex(indexInfoName)
-	indexInfo.Index(indexConfigName, IndexInfoStruct{
+	//indexInfo, _, _ := openBleveIndex(indexInfoName)
+	bleveSaveIndex(indexInfoName, indexConfigName, IndexInfoStruct{
 		ID:         indexConfigName,
 		Name:       "配置信息",
 		Code:       "config",

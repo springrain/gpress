@@ -12,8 +12,7 @@ func init() {
 	now := time.Now()
 
 	//保存表信息
-	indexInfo, _, _ := openBleveIndex(indexInfoName)
-	indexInfo.Index(indexModuleDefaultName, IndexInfoStruct{
+	bleveSaveIndex(indexInfoName, indexModuleDefaultName, IndexInfoStruct{
 		ID:         indexModuleDefaultName,
 		Name:       "默认模型",
 		Code:       indexModuleDefaultName,

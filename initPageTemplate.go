@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	_, ok, err := openBleveIndex(indexPageTemplateName)
+	ok, err := indexExist(indexPageTemplateName)
 	if err != nil || ok {
 		return
 	}
@@ -86,8 +86,7 @@ func init() {
 		return
 	}
 	//保存表信息
-	indexInfo, _, _ := openBleveIndex(indexInfoName)
-	indexInfo.Index(indexPageTemplateName, IndexInfoStruct{
+	bleveSaveIndex(indexInfoName, indexPageTemplateName, IndexInfoStruct{
 		ID:         indexPageTemplateName,
 		Name:       "页面模板",
 		IndexType:  "index",
