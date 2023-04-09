@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"strconv"
 	"strings"
 
+	//"github.com/bytedance/go-tagexpr/v2/binding"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol"
@@ -19,6 +19,15 @@ var adminGroup = initAdminGroup()
 func initAdminGroup() *route.RouterGroup {
 	// 设置日志级别
 	hlog.SetLevel(hlog.LevelInfo)
+	//设置json处理函数
+	//binding.ResetJSONUnmarshaler(json.Unmarshal)
+	/*
+		binding.Default().ResetJSONUnmarshaler(func(data []byte, v interface{}) error {
+			dec := json.NewDecoder(bytes.NewBuffer(data))
+			dec.UseNumber()
+			return dec.Decode(v)
+		})
+	*/
 	// 初始化模板
 	err := initTemplate()
 	if err != nil { // 初始化模板异常
@@ -205,15 +214,9 @@ func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
 
 // 修改内容
 func funcUpdate(ctx context.Context, c *app.RequestContext) {
-	jsonBody, err := c.Body()
-	if err != nil { //没有id,认为是新增
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "获取body内容错误"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
+
 	newMap := make(map[string]interface{}, 0)
-	err = json.Unmarshal(jsonBody, &newMap)
+	err := c.Bind(&newMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
 		c.Abort() // 终止后续调用
@@ -271,15 +274,11 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-	jsonBody, err := c.Body()
-	if err != nil { //没有id,认为是新增
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "获取body内容错误"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
+
 	newMap := make(map[string]interface{}, 0)
-	err = json.Unmarshal(jsonBody, &newMap)
+
+	//err = json.Unmarshal(jsonBody, &newMap)
+	err := c.Bind(&newMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
 		c.Abort() // 终止后续调用
