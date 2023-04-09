@@ -169,6 +169,14 @@ func initConfig() (bool, error) {
 		return false, err
 	}
 
+	return true, nil
+}
+
+func init() {
+
+	// 获取当前时间
+	now := time.Now()
+
 	//保存表信息
 	//indexInfo, _, _ := openBleveIndex(indexInfoName)
 	bleveSaveIndex(indexInfoName, indexConfigName, IndexInfoStruct{
@@ -179,9 +187,8 @@ func initConfig() (bool, error) {
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
-		SortNo:     sortNo,
+		SortNo:     2,
 		Status:     1,
 	})
 
-	return true, nil
 }
