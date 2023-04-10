@@ -3,7 +3,6 @@ package main
 import (
 	"time"
 
-	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
@@ -55,7 +54,7 @@ func initIndexField() (bool, error) {
 		return false, nil
 	}
 
-	mapping := bleve.NewIndexMapping()
+	mapping := bleveNewIndexMapping()
 	// 指定默认的分词器,为了检索字段名可以分词,默认分词器为gse,其他字段都要手动指定为keyword
 	mapping.DefaultAnalyzer = gseAnalyzerName
 

@@ -2,8 +2,6 @@ package main
 
 import (
 	"time"
-
-	"github.com/blevesearch/bleve/v2"
 )
 
 // initConfig 初始化创建Config索引
@@ -16,8 +14,9 @@ func initConfig() (bool, error) {
 	// 当前时间
 	now := time.Now()
 	// 创建配置表的索引
-	mapping := bleve.NewIndexMapping()
-
+	mapping := bleveNewIndexMapping()
+	mapping.DocValuesDynamic = false
+	mapping.IndexDynamic = false
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = keywordAnalyzerName
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
