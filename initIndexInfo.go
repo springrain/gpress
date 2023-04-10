@@ -2,8 +2,6 @@ package main
 
 import (
 	"time"
-
-	"github.com/blevesearch/bleve/v2"
 )
 
 // IndexInfoStruct 记录所有的表信息(索引名:indexInfo)
@@ -34,7 +32,7 @@ func initIndexInfo() (bool, error) {
 		return false, nil
 	}
 	// 创建内容表的索引
-	mapping := bleve.NewIndexMapping()
+	mapping := bleveNewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = gseAnalyzerName
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)

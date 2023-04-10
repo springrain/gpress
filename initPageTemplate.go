@@ -2,8 +2,6 @@ package main
 
 import (
 	"time"
-
-	"github.com/blevesearch/bleve/v2"
 )
 
 func init() {
@@ -15,7 +13,7 @@ func init() {
 	now := time.Now()
 
 	// 创建用户表的索引
-	mapping := bleve.NewIndexMapping()
+	mapping := bleveNewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = gseAnalyzerName
 	sortNo := 1
