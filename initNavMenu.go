@@ -8,8 +8,7 @@ import (
 
 // 导航菜单
 func init() {
-	ok, err := indexExist(indexNavMenuName)
-	if err != nil || ok {
+	if pathExist(bleveDataDir + indexNavMenuName) {
 		return
 	}
 
@@ -216,9 +215,9 @@ func init() {
 	indexCommonField(mapping, indexNavMenuName, "导航菜单", sortNo, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	_, err = bleveNew(indexNavMenuName, mapping)
+	ok, err := bleveNew(indexNavMenuName, mapping)
 
-	if err != nil {
+	if err != nil || !ok {
 		return
 	}
 	//保存表信息

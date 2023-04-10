@@ -8,8 +8,8 @@ import (
 
 // 初始化站点信息
 func init() {
-	ok, err := indexExist(indexSiteName)
-	if err != nil || ok {
+
+	if pathExist(bleveDataDir + indexSiteName) {
 		return
 	}
 
@@ -268,7 +268,7 @@ func init() {
 	// 添加公共字段
 	indexCommonField(mapping, indexSiteName, "站点信息", sortNo, now)
 
-	ok, err = bleveNew(indexSiteName, mapping)
+	ok, err := bleveNew(indexSiteName, mapping)
 	if err != nil || !ok {
 		return
 	}

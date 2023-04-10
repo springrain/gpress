@@ -30,15 +30,9 @@ type IndexInfoStruct struct {
 
 // initIndexInfo 初始化创建indexInfo索引
 func initIndexInfo() (bool, error) {
-
-	ok, err := indexExist(indexInfoName)
-	if err != nil {
-		return false, err
+	if pathExist(bleveDataDir + indexInfoName) {
+		return false, nil
 	}
-	if ok {
-		return true, nil
-	}
-
 	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
@@ -128,7 +122,7 @@ func initIndexInfo() (bool, error) {
 	// 添加公共字段
 	indexCommonField(mapping, indexInfoName, "表信息", sortNo, now)
 
-	ok, err = bleveNew(indexInfoName, mapping)
+	ok, err := bleveNew(indexInfoName, mapping)
 	if err != nil || !ok {
 		return false, err
 	}

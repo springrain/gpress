@@ -330,8 +330,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 }
 
 func funcSelectList(indexName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
-	ok, _ := indexExist(indexName)
-
+	ok := pathExist(bleveDataDir + indexName)
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
 	if !ok { //索引不存在
 		err := errors.New("索引不存在")
@@ -423,7 +422,7 @@ func funcSelectList(indexName string, fields string, q string, pageNo int, query
 }
 
 func funcSelectOne(indexName string, fields string, queryString string) (map[string]interface{}, error) {
-	ok, _ := indexExist(indexName)
+	ok := pathExist(bleveDataDir + indexName)
 	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": indexName}
 	if !ok || queryString == "" { //索引不存在
 		err := errors.New("索引不存在")
@@ -470,6 +469,10 @@ func funcSelectOne(indexName string, fields string, queryString string) (map[str
 }
 
 func bleveNew(indexName string, mapping mapping.IndexMapping) (bool, error) {
+	if pathExist(bleveDataDir + indexName) {
+		return false, nil
+	}
+
 	index, err := bleve.New(bleveDataDir+indexName, mapping)
 	if err != nil {
 		FuncLogError(err)
@@ -514,25 +517,25 @@ func bleveDocCount(indexName string) (int, error) {
 }
 
 // indexExist 索引目录是否已经存在
-func indexExist(indexName string) (bool, error) {
-	return pathExist(bleveDataDir + indexName), nil
-	/*
-		//index, ok := IndexMap.Load(indexName)
-		index, ok := IndexMap[indexName]
-		if ok { //已经打开过
-			return index, true, nil
-		}
-		// 打开所有的索引,放到map里,一个索引只能打开一次.
-		index, err := bleve.Open(bleveDataDir + indexName)
-		if err != nil {
-			FuncLogError(err)
-			return nil, false, err
-		}
-		//IndexMap.Store(indexName, index)
-		IndexMap[indexName] = index
+//func indexExist(indexName string) (bool, error) {
+//	return pathExist(bleveDataDir + indexName), nil
+/*
+	//index, ok := IndexMap.Load(indexName)
+	index, ok := IndexMap[indexName]
+	if ok { //已经打开过
 		return index, true, nil
-	*/
-}
+	}
+	// 打开所有的索引,放到map里,一个索引只能打开一次.
+	index, err := bleve.Open(bleveDataDir + indexName)
+	if err != nil {
+		FuncLogError(err)
+		return nil, false, err
+	}
+	//IndexMap.Store(indexName, index)
+	IndexMap[indexName] = index
+	return index, true, nil
+*/
+//}
 
 // indexExist 索引目录是否已经存在
 func openBleveIndex(indexName string) (bleve.Index, error) {
