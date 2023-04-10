@@ -24,7 +24,7 @@ var ctx context.Context = context.Background()
 func TestKeyword(t *testing.T) {
 	indexName := "testkeyword"
 	os.RemoveAll(bleveDataDir + indexName)
-	mapping := bleve.NewIndexMapping()
+	mapping := bleveNewIndexMapping()
 
 	mapping.DefaultAnalyzer = keywordAnalyzerName
 	mapping.DefaultMapping.AddFieldMappingsAt("Age", numericAnalyzerMapping)
@@ -66,7 +66,7 @@ func TestKeyword(t *testing.T) {
 func TestCreate(t *testing.T) {
 	os.RemoveAll(indexName)
 	// open a new index
-	mapping := bleve.NewIndexMapping()
+	mapping := bleveNewIndexMapping()
 	// userMapping := bleve.NewDocumentMapping()
 	// userMapping.AddFieldMappingsAt("Address", bleve.NewBooleanFieldMapping())
 	// mapping.DefaultMapping = userMapping

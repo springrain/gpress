@@ -468,11 +468,19 @@ func funcSelectOne(indexName string, fields string, queryString string) (map[str
 	return resultMap, err
 }
 
+func bleveNewIndexMapping() *mapping.IndexMappingImpl {
+	mapping := bleve.NewIndexMapping()
+	mapping.IndexDynamic = false
+	mapping.DefaultMapping.Dynamic = false
+	mapping.DocValuesDynamic = false
+	mapping.StoreDynamic = false
+	return mapping
+}
+
 func bleveNew(indexName string, mapping mapping.IndexMapping) (bool, error) {
 	if pathExist(bleveDataDir + indexName) {
 		return false, nil
 	}
-
 	index, err := bleve.New(bleveDataDir+indexName, mapping)
 	if err != nil {
 		FuncLogError(err)
