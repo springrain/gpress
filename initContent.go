@@ -365,4 +365,17 @@ func init() {
 		SortNo:     1,
 		Status:     1,
 	})
+
+	//保存默认模型表信息
+	bleveSaveIndex(indexInfoName, indexModuleDefaultName, IndexInfoStruct{
+		ID:         indexModuleDefaultName,
+		Name:       "默认模型",
+		Code:       indexModuleDefaultName,
+		IndexType:  "module",
+		CreateTime: now,
+		UpdateTime: now,
+		CreateUser: createUser,
+		SortNo:     4,
+		Status:     1,
+	})
 }
