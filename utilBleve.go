@@ -63,6 +63,7 @@ func pathExist(path string) bool {
 
 // 初始化 bleve 索引
 func checkBleveStatus() bool {
+	mapping.MappingJSONStrict = true
 	//代替内存存储,降低内存使用
 	//bleve.Config.DefaultMemKVStore = scorch.Name
 	//bleve.Config.DefaultKVStore = scorch.Name
@@ -469,12 +470,13 @@ func funcSelectOne(indexName string, fields string, queryString string) (map[str
 }
 
 func bleveNewIndexMapping() *mapping.IndexMappingImpl {
-	mapping := bleve.NewIndexMapping()
-	mapping.IndexDynamic = false
-	mapping.DefaultMapping.Dynamic = false
-	mapping.DocValuesDynamic = false
-	mapping.StoreDynamic = false
-	return mapping
+	bleveMapping := bleve.NewIndexMapping()
+
+	bleveMapping.DefaultMapping.Dynamic = false
+	bleveMapping.IndexDynamic = false
+	bleveMapping.DocValuesDynamic = false
+	bleveMapping.StoreDynamic = false
+	return bleveMapping
 }
 
 func bleveNew(indexName string, mapping mapping.IndexMapping) (bool, error) {
