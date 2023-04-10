@@ -51,13 +51,10 @@ type IndexFieldStruct struct {
 
 // initIndexField 初始化创建IndexField索引
 func initIndexField() (bool, error) {
-	ok, err := indexExist(indexFieldName)
-	if err != nil {
-		return false, err
+	if pathExist(bleveDataDir + indexFieldName) {
+		return false, nil
 	}
-	if ok {
-		return true, nil
-	}
+
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器,为了检索字段名可以分词,默认分词器为gse,其他字段都要手动指定为keyword
 	mapping.DefaultAnalyzer = gseAnalyzerName
@@ -80,7 +77,7 @@ func initIndexField() (bool, error) {
 	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", numericAnalyzerMapping)
 	mapping.DefaultMapping.AddFieldMappingsAt("status", numericAnalyzerMapping)
 
-	ok, err = bleveNew(indexFieldName, mapping)
+	ok, err := bleveNew(indexFieldName, mapping)
 	if err != nil || !ok {
 		return false, err
 	}
