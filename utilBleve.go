@@ -78,7 +78,7 @@ func checkBleveStatus() bool {
 	keywordAnalyzerMapping.DocValues = false
 	keywordAnalyzerMapping.Analyzer = keywordAnalyzerName
 
-	if !pathExist(bleveDataDir) { //目录如果不存在
+	if !pathExist(bleveDataDir) { //如果索引目录不存在
 		// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
 		err := os.Mkdir(bleveDataDir, os.ModePerm)
 		if err != nil {
