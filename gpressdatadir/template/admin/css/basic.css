@@ -1,0 +1,11 @@
+
+.flex{
+  display: flex;
+}
+.pagination .flex > div{
+  order: 2;
+}
+
+.lineheight40{
+  line-height: 40px;
+}
