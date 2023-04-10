@@ -7,10 +7,10 @@ import (
 )
 
 func init() {
-	ok, err := indexExist(indexContentName)
-	if err != nil || ok {
+	if pathExist(bleveDataDir + indexContentName) {
 		return
 	}
+
 	// 创建内容表的索引
 	mapping := bleve.NewIndexMapping()
 	// 指定默认的分词器
@@ -349,8 +349,8 @@ func init() {
 	// 添加公共字段
 	indexCommonField(mapping, indexContentName, "文章内容", sortNo, now)
 
-	_, err = bleveNew(indexContentName, mapping)
-	if err != nil {
+	ok, err := bleveNew(indexContentName, mapping)
+	if err != nil || !ok {
 		return
 	}
 

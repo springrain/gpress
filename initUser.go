@@ -8,10 +8,10 @@ import (
 
 // initUser 初始化创建User索引
 func init() {
-	ok, err := indexExist(indexUserName)
-	if err != nil || ok {
+	if pathExist(bleveDataDir + indexUserName) {
 		return
 	}
+
 	// 当前时间
 	now := time.Now()
 	sortNo := 1
@@ -97,9 +97,8 @@ func init() {
 	// indexCommonField(indexField, indexUserName, 4, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	_, err = bleveNew(indexUserName, mapping)
-	if err != nil {
-
+	ok, err := bleveNew(indexUserName, mapping)
+	if err != nil || !ok {
 		return
 	}
 
