@@ -2,8 +2,6 @@ package main
 
 import (
 	"time"
-
-	"github.com/blevesearch/bleve/v2"
 )
 
 // initUser 初始化创建User索引
@@ -16,7 +14,7 @@ func init() {
 	now := time.Now()
 	sortNo := 1
 	// 创建用户表的索引
-	mapping := bleve.NewIndexMapping()
+	mapping := bleveNewIndexMapping()
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = keywordAnalyzerName
 	// 用户表的 ID 字段
