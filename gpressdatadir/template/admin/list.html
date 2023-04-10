@@ -60,37 +60,35 @@
 
     <!-- 分页条 -->
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-      <a class="pagination-previous">上一页</a>
-      <a class="pagination-next">下一页</a>
-      <ul class="pagination-list">
-        <li>
-          <a class="pagination-link" aria-label="总条数">共 {{ .page.TotalCount }} 条</a>
-        </li>
-        <li>
-          <a class="pagination-link" aria-label="总页数">共 {{ .page.PageCount }} 页</a>
-        </li>
-        <li>
-          <span class="pagination-ellipsis">&hellip;</span>
-        </li>
-        <li>
-          <a class="pagination-link is-current" aria-label="当前页" aria-current="page">{{ .page.PageNo }}</a>
-        </li>
-        <li>
-          <a class="pagination-link" aria-label="跳转到第2页">2</a>
-        </li>
-        <li>
-          <a class="pagination-link" aria-label="跳转到第3页">3</a>
-        </li>
-        <li>
-          <span class="pagination-ellipsis">&hellip;</span>
-        </li>
-        <li>
-          <a class="pagination-link" aria-label="跳转到最后一页">10</a>
-        </li>
-      </ul>
-      <div class="pagination-page">
-        <input class="input is-small" type="text" placeholder="页码">
-        <button class="button is-small">跳转</button>
+      <div class="flex">
+        <div class="lineheight40">共 {{ .page.TotalCount }} 条</div>
+        <div ><a class="pagination-link" aria-label="总页数">共 {{ .page.PageCount }} 页</a></div>
+        <div ><a class="pagination-previous">上一页</a></div>
+        <ul class="pagination-list ">
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link is-current" aria-label="当前页" aria-current="page">{{ .page.PageNo }}</a>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="跳转到第2页">2</a>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="跳转到第3页">3</a>
+          </li>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+          <li>
+            <a class="pagination-link" aria-label="跳转到最后一页">10</a>
+          </li>
+        </ul>
+        <div ><a class="pagination-next">下一页</a></div>
+        <div class="pagination-page flex">
+          <button class="button ">跳转</button>
+          <input class="input " type="text" placeholder="页码">
+        </div>
       </div>
     </nav>
     
