@@ -7,8 +7,7 @@ import (
 )
 
 func init() {
-	ok, err := indexExist(indexPageTemplateName)
-	if err != nil || ok {
+	if pathExist(bleveDataDir + indexPageTemplateName) {
 		return
 	}
 
@@ -80,9 +79,8 @@ func init() {
 	indexCommonField(mapping, indexPageTemplateName, "页面模板", sortNo, now)
 
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	_, err = bleveNew(indexPageTemplateName, mapping)
-
-	if err != nil {
+	ok, err := bleveNew(indexPageTemplateName, mapping)
+	if err != nil || !ok {
 		return
 	}
 	//保存表信息

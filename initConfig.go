@@ -8,13 +8,8 @@ import (
 
 // initConfig 初始化创建Config索引
 func initConfig() (bool, error) {
-
-	ok, err := indexExist(indexConfigName)
-	if err != nil {
-		return false, err
-	}
-	if ok {
-		return true, nil
+	if pathExist(bleveDataDir + indexConfigName) {
+		return false, nil
 	}
 	// 获取索引字段的表
 	//indexField ,_:= openBleveIndex(indexFieldName]
@@ -164,8 +159,8 @@ func initConfig() (bool, error) {
 	// 添加公共字段
 	indexCommonField(mapping, indexConfigName, "配置信息", sortNo, now)
 
-	_, err = bleveNew(indexConfigName, mapping)
-	if err != nil {
+	ok, err := bleveNew(indexConfigName, mapping)
+	if err != nil || !ok {
 		return false, err
 	}
 
