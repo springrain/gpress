@@ -29,7 +29,7 @@ type IndexInfoStruct struct {
 // initIndexInfo 初始化创建indexInfo索引
 func initIndexInfo() (bool, error) {
 	if pathExist(bleveDataDir + indexInfoName) {
-		return false, nil
+		return true, nil
 	}
 	// 创建内容表的索引
 	mapping := bleveNewIndexMapping()

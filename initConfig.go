@@ -7,7 +7,7 @@ import (
 // initConfig 初始化创建Config索引
 func initConfig() (bool, error) {
 	if pathExist(bleveDataDir + indexConfigName) {
-		return false, nil
+		return true, nil
 	}
 	// 获取索引字段的表
 	//indexField ,_:= openBleveIndex(indexFieldName]
@@ -15,8 +15,6 @@ func initConfig() (bool, error) {
 	now := time.Now()
 	// 创建配置表的索引
 	mapping := bleveNewIndexMapping()
-	mapping.DocValuesDynamic = false
-	mapping.IndexDynamic = false
 	// 指定默认的分词器
 	mapping.DefaultAnalyzer = keywordAnalyzerName
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)

@@ -51,7 +51,7 @@ type IndexFieldStruct struct {
 // initIndexField 初始化创建IndexField索引
 func initIndexField() (bool, error) {
 	if pathExist(bleveDataDir + indexFieldName) {
-		return false, nil
+		return true, nil
 	}
 
 	mapping := bleveNewIndexMapping()
