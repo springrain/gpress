@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"time"
 
+	"gitee.com/chunanyong/zorm"
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
@@ -10,74 +12,93 @@ import (
 // 记录所有索引字段code和中文说明.
 // 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)
 type IndexFieldStruct struct {
+	// 引入默认的struct,隔离IEntityStruct的方法改动
+	zorm.EntityStruct
 	// ID 主键
-	ID string `json:"id"`
+	ID string `column:"id" json:"id"`
 	// IndexCode 索引代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
-	IndexCode string `json:"indexCode,omitempty"`
+	IndexCode string `column:"indexCode" json:"indexCode,omitempty"`
 	// IndexName 索引表中文名
-	IndexName string `json:"indexName,omitempty"`
+	IndexName string `column:"indexName" json:"indexName,omitempty"`
 	// BusinessID  业务ID,处理业务记录临时增加的字段,意外情况
-	BusinessID string `json:"businessID,omitempty"`
+	BusinessID string `column:"businessID" json:"businessID,omitempty"`
 	// FieldCode  字段代码
-	FieldCode string `json:"fieldCode,omitempty"`
+	FieldCode string `column:"fieldCode" json:"fieldCode,omitempty"`
 	// FieldName  字段中文名称
-	FieldName string `json:"fieldName,omitempty"`
+	FieldName string `column:"fieldName" json:"fieldName,omitempty"`
 	// FieldComment 字段说明
-	FieldComment string `json:"fieldComment,omitempty"`
+	FieldComment string `column:"fieldComment" json:"fieldComment,omitempty"`
 	// FieldType  字段类型,数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)
-	FieldType int `json:"fieldType,omitempty"`
+	FieldType int `column:"fieldType" json:"fieldType,omitempty"`
 	// FieldFormat 数据格式,用于日期或者数字
-	FieldFormat string `json:"fieldFormat,omitempty"`
+	FieldFormat string `column:"fieldFormat" json:"fieldFormat,omitempty"`
 	// Required 字段是否为空. 0可以为空,1必填
-	Required int `json:"required,omitempty"`
+	Required int `column:"required" json:"required,omitempty"`
 	// DefaultValue  默认值
-	DefaultValue string `json:"defaultValue,omitempty"`
+	DefaultValue string `column:"defaultValue" json:"defaultValue,omitempty"`
 	//SelectOption 下拉框的选项值
-	SelectOption string `json:"selectOption,omitempty"`
+	SelectOption string `column:"selectOption" json:"selectOption,omitempty"`
 	// AnalyzerName  分词器名称
-	AnalyzerName string `json:"analyzerName,omitempty"`
+	AnalyzerName string `column:"analyzerName" json:"analyzerName,omitempty"`
 	// CreateTime 创建时间
-	CreateTime time.Time `json:"createTime,omitempty"`
+	CreateTime time.Time `column:"createTime" json:"createTime,omitempty"`
 	// UpdateTime 更新时间
-	UpdateTime time.Time `json:"updateTime,omitempty"`
+	UpdateTime time.Time `column:"updateTime" json:"updateTime,omitempty"`
 	// CreateUser  创建人,初始化 system
-	CreateUser string `json:"createUser,omitempty"`
+	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 	// SortNo 排序
-	SortNo int `json:"sortNo,omitempty"`
+	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 	// 是否有效 无效(0),正常显示(1),界面不显示(3)
-	Status int `json:"status,omitempty"`
+	Status int `column:"status" json:"status,omitempty"`
+}
+
+// GetTableName 获取表名称
+// IEntityStruct 接口的方法,实体类需要实现!!!
+func (entity *IndexFieldStruct) GetTableName() string {
+	return indexFieldName
+}
+
+// GetPKColumnName 获取数据库表的主键字段名称.因为要兼容Map,只能是数据库的字段名称
+// 不支持联合主键,变通认为无主键,业务控制实现(艰难取舍)
+// 如果没有主键,也需要实现这个方法, return "" 即可
+// IEntityStruct 接口的方法,实体类需要实现!!!
+func (entity *IndexFieldStruct) GetPKColumnName() string {
+	return "id"
 }
 
 // initIndexField 初始化创建IndexField索引
 func initIndexField() (bool, error) {
-	if pathExist(bleveDataDir + indexFieldName) {
+	if tableExist(indexFieldName) {
 		return true, nil
 	}
 
-	mapping := bleveNewIndexMapping()
-	// 指定默认的分词器,为了检索字段名可以分词,默认分词器为gse,其他字段都要手动指定为keyword
-	mapping.DefaultAnalyzer = gseAnalyzerName
-
-	mapping.DefaultMapping.AddFieldMappingsAt("id", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("indexCode", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("indexName", gseAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("businessID", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("fieldCode", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("fieldName", gseAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("fieldComment", gseAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("fieldType", numericAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("fieldFormat", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("required", numericAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("defaultValue", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("analyzerName", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("createTime", datetimeAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("updateTime", datetimeAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("createUser", keywordAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("sortNo", numericAnalyzerMapping)
-	mapping.DefaultMapping.AddFieldMappingsAt("status", numericAnalyzerMapping)
-
-	ok, err := bleveNew(indexFieldName, mapping)
-	if err != nil || !ok {
+	createSQL := `CREATE TABLE indexField (
+		id TEXT PRIMARY KEY     NOT NULL,
+		indexCode         TEXT  NOT NULL,
+		indexName         TEXT   NOT NULL,
+		businessID        TEXT,
+		fieldCode         TEXT NOT NULL,
+		fieldName         TEXT NOT NULL,
+		fieldComment      TEXT,
+		fieldType         INT NOT NULL,
+		fieldFormat       TEXT,
+		required          INT ,
+		defaultValue      TEXT,
+		selectOption      TEXT,
+		analyzerName      TEXT,
+		createTime        TEXT,
+		updateTime        TEXT,
+		createUser        TEXT,
+		sortNo            int NOT NULL,
+		status            int NOT NULL
+	 ) strict ;`
+	ctx := context.Background()
+	finder := zorm.NewFinder().Append(createSQL)
+	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.UpdateFinder(ctx, finder)
+		return nil, err
+	})
+	if err != nil {
 		return false, err
 	}
 
@@ -99,7 +120,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, id.ID, id)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &id)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, id.ID, id)
 	sortNo++
 
 	indexCode := IndexFieldStruct{
@@ -118,7 +143,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, indexCode.ID, indexCode)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &indexCode)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, indexCode.ID, indexCode)
 	sortNo++
 
 	indexName := IndexFieldStruct{
@@ -137,7 +166,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, indexName.ID, indexName)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &indexName)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, indexName.ID, indexName)
 	sortNo++
 
 	businessID := IndexFieldStruct{
@@ -156,7 +189,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, businessID.ID, businessID)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &businessID)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, businessID.ID, businessID)
 	sortNo++
 
 	fieldCode := IndexFieldStruct{
@@ -175,7 +212,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, fieldCode.ID, fieldCode)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &fieldCode)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, fieldCode.ID, fieldCode)
 	sortNo++
 
 	fieldName := IndexFieldStruct{
@@ -194,7 +235,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, fieldName.ID, fieldName)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &fieldName)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, fieldName.ID, fieldName)
 	sortNo++
 
 	fieldComment := IndexFieldStruct{
@@ -213,7 +258,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, fieldComment.ID, fieldComment)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &fieldComment)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, fieldComment.ID, fieldComment)
 	sortNo++
 	//ftSelect, _ := json.Marshal(fieldTypeMap)
 	fieldType := IndexFieldStruct{
@@ -236,7 +285,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, fieldType.ID, fieldType)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &fieldType)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, fieldType.ID, fieldType)
 	sortNo++
 
 	fieldFormat := IndexFieldStruct{
@@ -255,7 +308,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, fieldFormat.ID, fieldFormat)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &fieldFormat)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, fieldFormat.ID, fieldFormat)
 	sortNo++
 
 	required := IndexFieldStruct{
@@ -274,7 +331,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, required.ID, required)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &required)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, required.ID, required)
 	sortNo++
 
 	defaultValue := IndexFieldStruct{
@@ -293,7 +354,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, defaultValue.ID, defaultValue)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &defaultValue)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, defaultValue.ID, defaultValue)
 	sortNo++
 
 	analyzerName := IndexFieldStruct{
@@ -312,7 +377,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, analyzerName.ID, analyzerName)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &analyzerName)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, analyzerName.ID, analyzerName)
 	sortNo++
 
 	createTime := IndexFieldStruct{
@@ -331,7 +400,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, createTime.ID, createTime)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &createTime)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, createTime.ID, createTime)
 	sortNo++
 
 	updateTime := IndexFieldStruct{
@@ -350,7 +423,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, updateTime.ID, updateTime)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &updateTime)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, updateTime.ID, updateTime)
 	sortNo++
 
 	createUserField := IndexFieldStruct{
@@ -369,7 +446,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, createUserField.ID, createUserField)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &createUserField)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, createUserField.ID, createUserField)
 	sortNo++
 
 	sortNoField := IndexFieldStruct{
@@ -388,7 +469,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, sortNoField.ID, sortNoField)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &sortNoField)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, sortNoField.ID, sortNoField)
 	sortNo++
 
 	status := IndexFieldStruct{
@@ -407,7 +492,11 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	bleveSaveIndex(indexFieldName, status.ID, status)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &status)
+		return nil, err
+	})
+	//bleveSaveIndex(indexFieldName, status.ID, status)
 
 	return true, nil
 }
@@ -532,7 +621,7 @@ func addIndexField(bleveMapping *mapping.IndexMappingImpl, indexFiledStruct Inde
 	}
 	bleveMapping.DefaultMapping.AddFieldMappingsAt(indexFiledStruct.FieldCode, analyzerMapping)
 }
-func init() {
+func init7() {
 
 	// 获取当前时间
 	now := time.Now()

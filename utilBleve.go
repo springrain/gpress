@@ -16,9 +16,34 @@ import (
 
 	"github.com/blevesearch/bleve/v2"
 
+	"gitee.com/chunanyong/zorm"
 	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/search/query"
+
+	// 00.引入数据库驱动
+	_ "modernc.org/sqlite"
 )
+
+// dbDaoConfig 数据库的配置.这里只是模拟,生产应该是读取配置配置文件,构造DataSourceConfig
+var dbDaoConfig = zorm.DataSourceConfig{
+	// DSN 数据库的连接字符串,parseTime=true会自动转换为time格式,默认查询出来的是[]byte数组.&loc=Local用于设置时区
+	DSN: datadir + "gpress.db",
+	// DriverName 数据库驱动名称:mysql,postgres,oracle(go-ora),sqlserver,sqlite3,go_ibm_db,clickhouse,dm,kingbase,aci,taosSql|taosRestful 和Dialect对应
+	// sql.Open(DriverName,DSN) DriverName就是驱动的sql.Open第一个字符串参数,根据驱动实际情况获取
+	DriverName: "sqlite",
+	// Dialect 数据库方言:mysql,postgresql,oracle,mssql,sqlite,db2,clickhouse,dm,kingbase,shentong,tdengine 和 DriverName 对应
+	Dialect: "sqlite",
+	// MaxOpenConns 数据库最大连接数 默认50
+	MaxOpenConns: 50,
+	// MaxIdleConns 数据库最大空闲连接数 默认50
+	MaxIdleConns: 50,
+	// ConnMaxLifetimeSecond 连接存活秒时间. 默认600(10分钟)后连接被销毁重建.避免数据库主动断开连接,造成死连接.MySQL默认wait_timeout 28800秒(8小时)
+	ConnMaxLifetimeSecond: 600,
+	// SlowSQLMillis 慢sql的时间阈值,单位毫秒.小于0是禁用SQL语句输出;等于0是只输出SQL语句,不计算执行时间;大于0是计算SQL执行时间,并且>=SlowSQLMillis值
+	SlowSQLMillis: 0,
+}
+
+var dbDao, _ = zorm.NewDBDao(&dbDaoConfig)
 
 // 全局存放 索引对象,启动之后,所有的索引都通过这个map获取,一个索引只能打开一次,类似数据库连接,用一个对象操作
 //var IndexMap map[string]bleve.Index = make(map[string]bleve.Index)
@@ -61,50 +86,30 @@ func pathExist(path string) bool {
 	return false
 }
 
+func tableExist(tableName string) bool {
+	finder := zorm.NewSelectFinder("sqlite_master", "count(*)").Append("WHERE type=? and name=?", "table", tableName)
+	count := 0
+	zorm.QueryRow(context.Background(), finder, &count)
+	return count > 0
+}
+
 // 初始化 bleve 索引
 func checkBleveStatus() bool {
-	mapping.MappingJSONStrict = true
-	//代替内存存储,降低内存使用
-	//bleve.Config.DefaultMemKVStore = scorch.Name
-	//bleve.Config.DefaultKVStore = scorch.Name
-	// 注册bleve分词器,包括逗号,中文,小写keyword
-	initRegisterAnalyzer()
-
-	// 初始化分词器
-	commaAnalyzerMapping.DocValues = false
-	commaAnalyzerMapping.Analyzer = commaAnalyzerName
-	gseAnalyzerMapping.DocValues = false
-	gseAnalyzerMapping.Analyzer = gseAnalyzerName
-	keywordAnalyzerMapping.DocValues = false
-	keywordAnalyzerMapping.Analyzer = keywordAnalyzerName
-
-	if !pathExist(bleveDataDir) { //如果索引目录不存在
-		// 如果是初次安装,创建数据目录,默认的 ./gpressdatadir 必须存在,页面模板文件夹 ./gpressdatadir/template
-		err := os.Mkdir(bleveDataDir, os.ModePerm)
-		if err != nil {
-			FuncLogError(err)
-			return false
-		}
+	if dbDao == nil { //数据库初始化失败
+		return false
 	}
-
-	//这三张表是系统表,使用变量初始化,优先级高于init,其他表使用 init函数初始化
-
+	isInit := pathExist(datadir + "gpress.db")
+	if !isInit { //需要初始化数据库
+		return isInit
+	}
 	// 初始化indexField
 	_, err := initIndexField()
 	if err != nil {
 		return false
 	}
-	// 初始化indexInfo
-	_, err = initIndexInfo()
-	if err != nil {
-		return false
-	}
-	// 初始化 config
-	ok, err := initConfig()
-	if err != nil {
-		return false
-	}
-	return ok
+
+	return true
+
 }
 
 // result2Map 单个查询结果转map

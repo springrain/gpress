@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-func init() {
+func init1() {
 	if pathExist(bleveDataDir + indexContentName) {
 		return
 	}
