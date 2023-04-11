@@ -10,10 +10,10 @@ import (
 var bleveStatus = checkBleveStatus()
 
 // 是否已经安装过了
-var installed = isInstalled()
+var installed = true
 
 // 加载配置文件
-var config = loadInstallConfig()
+var config = defaultConfig
 
 // 使用的主题
 var themePath = "/theme/" + config.Theme + "/"

@@ -5,7 +5,7 @@ import (
 )
 
 // 初始化站点信息
-func init() {
+func init4() {
 
 	if pathExist(bleveDataDir + indexSiteName) {
 		return
