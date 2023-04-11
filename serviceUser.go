@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 
+	"gitee.com/chunanyong/zorm"
 	"github.com/blevesearch/bleve/v2"
 )
 
@@ -10,14 +11,15 @@ func insertUser(ctx context.Context, account string, password string) error {
 	// 清空用户,只能有一个管理员
 	deleteAll(ctx, indexUserName)
 	// 初始化数据
-	user := make(map[string]string)
+	user := zorm.NewEntityMap(indexUserName)
 	id := FuncGenerateStringID()
-	user["id"] = id
-	user["account"] = account
-	user["password"] = password
-	user["userName"] = account
+	user.PkColumnName = "id"
+	user.Set("id", id)
+	user.Set("account", account)
+	user.Set("password", password)
+	user.Set("userName", account)
 
-	return bleveSaveIndex(indexUserName, id, user)
+	return bleveSaveEntityMap(indexUserName, user)
 }
 
 func findUserId(ctx context.Context, account string, password string) (string, error) {
