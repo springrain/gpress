@@ -24,7 +24,7 @@ func TestNavMenu(t *testing.T) {
 		menu["sortNo"] = i + 1
 		menu["createTime"] = now
 		menu["updateTime"] = now
-		saveNewIndex(context.Background(), indexNavMenuName, menu)
+		//saveNewIndex(context.Background(), indexNavMenuName, menu)
 	}
 
 	siteMap := make(map[string]interface{}, 0)
@@ -32,7 +32,7 @@ func TestNavMenu(t *testing.T) {
 	siteMap["title"] = "jiagou"
 	siteMap["name"] = "架构"
 	siteMap["domain"] = "jiagou.com"
-	updateIndex(context.Background(), "site", "gpress", siteMap)
+	//updateIndex(context.Background(), "site", "gpress", siteMap)
 
 }
 
@@ -112,7 +112,7 @@ func TestReadmks(t *testing.T) {
 	for i := 0; i < len(lists); i++ { // 内循环 数组遍历
 		cMap := lists[i]
 		cMap["sortNo"] = i + 1
-		saveNewIndex(context.Background(), "content", cMap)
+		//saveNewIndex(context.Background(), "content", cMap)
 	}
 
 }

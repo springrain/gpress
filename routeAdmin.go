@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	//"github.com/bytedance/go-tagexpr/v2/binding"
+	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol"
@@ -241,8 +242,11 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-
-	err = updateIndex(ctx, urlPathParam, id, newMap)
+	entityMap := zorm.NewEntityMap(indexConfigName)
+	for k, v := range newMap {
+		entityMap.Set(k, v)
+	}
+	err = updateIndex(ctx, urlPathParam, id, entityMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
 		c.Abort() // 终止后续调用
@@ -284,7 +288,11 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	responseData, err := saveNewIndex(ctx, urlPathParam, newMap)
+	entityMap := zorm.NewEntityMap(indexConfigName)
+	for k, v := range newMap {
+		entityMap.Set(k, v)
+	}
+	responseData, err := saveNewIndex(ctx, urlPathParam, entityMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
 		c.Abort() // 终止后续调用

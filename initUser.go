@@ -5,8 +5,8 @@ import (
 )
 
 // initUser 初始化创建User索引
-func init5() {
-	if pathExist(bleveDataDir + indexUserName) {
+func init() {
+	if tableExist(indexUserName) {
 		return
 	}
 
@@ -14,9 +14,17 @@ func init5() {
 	now := time.Now()
 	sortNo := 1
 	// 创建用户表的索引
-	mapping := bleveNewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultAnalyzer = keywordAnalyzerName
+	createTableSQL := `CREATE TABLE user (
+		id TEXT PRIMARY KEY     NOT NULL,
+		account         TEXT  NOT NULL,
+		password         TEXT   NOT NULL,
+		userName         TEXT NOT NULL
+	 ) strict ;`
+	_, err := bleveNewIndexMapping(createTableSQL)
+	if err != nil {
+		return
+	}
+
 	// 用户表的 ID 字段
 	userId := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -34,7 +42,7 @@ func init5() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, userId)
+	addIndexField(userId)
 
 	// 用户表的 Account 字段
 	userAccount := IndexFieldStruct{
@@ -53,7 +61,7 @@ func init5() {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, userAccount)
+	addIndexField(userAccount)
 	// 用户表的 PassWord 字段
 	userPassWord := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -71,7 +79,7 @@ func init5() {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, userPassWord)
+	addIndexField(userPassWord)
 	// 用户表的 UserName 字段
 	userName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -89,16 +97,7 @@ func init5() {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, userName)
-
-	// 添加公共字段
-	// indexCommonField(indexField, indexUserName, 4, now)
-
-	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	ok, err := bleveNew(indexUserName, mapping)
-	if err != nil || !ok {
-		return
-	}
+	addIndexField(userName)
 
 	//保存表信息
 	bleveSaveIndex(indexInfoName, indexUserName, IndexInfoStruct{

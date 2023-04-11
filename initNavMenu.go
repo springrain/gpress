@@ -5,17 +5,36 @@ import (
 )
 
 // 导航菜单
-func init2() {
-	if pathExist(bleveDataDir + indexNavMenuName) {
+func init() {
+	if tableExist(indexNavMenuName) {
 		return
 	}
 
 	// 获取当前时间
 	now := time.Now()
 	// 创建用户表的索引
-	mapping := bleveNewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultAnalyzer = gseAnalyzerName
+	createTableSQL := `CREATE TABLE navMenu (
+		id TEXT PRIMARY KEY     NOT NULL,
+		menuName          TEXT  NOT NULL,
+		hrefURL           TEXT,
+		hrefTarget        TEXT,
+		pid        TEXT,
+		themePC        TEXT,
+		moduleID        TEXT,
+		comCode        TEXT,
+		templateID        TEXT,
+		childTemplateID        TEXT,
+		createTime        TEXT,
+		updateTime        TEXT,
+		createUser        TEXT,
+		sortNo            int NOT NULL,
+		status            int NOT NULL
+	 ) strict ;`
+	_, err := bleveNewIndexMapping(createTableSQL)
+	if err != nil {
+		return
+	}
+
 	sortNo := 1
 	// 初始化各个字段
 	navMenuId := IndexFieldStruct{
@@ -36,7 +55,7 @@ func init2() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(mapping, navMenuId)
+	addIndexField(navMenuId)
 
 	navMenuMenuName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -55,7 +74,7 @@ func init2() {
 		Required:     1,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuMenuName)
+	addIndexField(navMenuMenuName)
 
 	navMenuHrefURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -74,7 +93,7 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuHrefURL)
+	addIndexField(navMenuHrefURL)
 
 	navMenuHrefTarget := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -93,7 +112,7 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuHrefTarget)
+	addIndexField(navMenuHrefTarget)
 
 	navMenuPID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -112,7 +131,7 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuPID)
+	addIndexField(navMenuPID)
 
 	navMenuThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -131,7 +150,7 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuThemePC)
+	addIndexField(navMenuThemePC)
 
 	navMenuModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -150,7 +169,7 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuModuleID)
+	addIndexField(navMenuModuleID)
 
 	navMenuComCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -169,7 +188,7 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuComCode)
+	addIndexField(navMenuComCode)
 
 	navMenuTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -188,7 +207,7 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuTemplateID)
+	addIndexField(navMenuTemplateID)
 
 	navMenuChildTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -207,17 +226,11 @@ func init2() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(mapping, navMenuChildTemplateID)
+	addIndexField(navMenuChildTemplateID)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexNavMenuName, "导航菜单", sortNo, now)
+	indexCommonField(indexNavMenuName, "导航菜单", sortNo, now)
 
-	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	ok, err := bleveNew(indexNavMenuName, mapping)
-
-	if err != nil || !ok {
-		return
-	}
 	//保存表信息
 	bleveSaveIndex(indexInfoName, indexNavMenuName, IndexInfoStruct{
 		ID:         indexNavMenuName,
