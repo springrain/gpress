@@ -4,16 +4,40 @@ import (
 	"time"
 )
 
-func init1() {
-	if pathExist(bleveDataDir + indexContentName) {
+func init() {
+	if tableExist(indexContentName) {
 		return
 	}
 
 	// 创建内容表的索引
-	mapping := bleveNewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultAnalyzer = gseAnalyzerName
-	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	createTableSQL := `CREATE TABLE content (
+		id TEXT PRIMARY KEY     NOT NULL,
+		moduleID         TEXT  ,
+		title         TEXT   NOT NULL,
+		keyword           TEXT,
+		description           TEXT,
+		pageURL           TEXT,
+		subtitle           TEXT,
+		navMenuID           TEXT,
+		navMenuName           TEXT,
+		templateID           TEXT,
+		author           TEXT,
+		tag           TEXT,
+		toc           TEXT,
+		summary           TEXT,
+		content           TEXT,
+		markdown           TEXT,
+		thumbnail           TEXT,
+		createTime        TEXT,
+		updateTime        TEXT,
+		createUser        TEXT,
+		sortNo            int NOT NULL,
+		status            int NOT NULL
+	 ) strict ;`
+	_, err := bleveNewIndexMapping(createTableSQL)
+	if err != nil {
+		return
+	}
 
 	// 获取当前时间
 	now := time.Now()
@@ -36,7 +60,7 @@ func init1() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(mapping, contentId)
+	addIndexField(contentId)
 
 	contentModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -54,7 +78,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentModuleID)
+	addIndexField(contentModuleID)
 
 	contentTitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -73,7 +97,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentTitle)
+	addIndexField(contentTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
@@ -94,7 +118,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentKeyword)
+	addIndexField(contentKeyword)
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
@@ -115,7 +139,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentDescription)
+	addIndexField(contentDescription)
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
@@ -135,7 +159,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentPageURL)
+	addIndexField(contentPageURL)
 
 	contentSubtitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -154,7 +178,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentSubtitle)
+	addIndexField(contentSubtitle)
 	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
@@ -174,7 +198,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentNavMenuId)
+	addIndexField(contentNavMenuId)
 	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	// //mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
 
@@ -194,7 +218,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentNavMenuNames)
+	addIndexField(contentNavMenuNames)
 	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
 
@@ -214,7 +238,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentTemplateID)
+	addIndexField(contentTemplateID)
 
 	contentAuthor := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -232,7 +256,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentAuthor)
+	addIndexField(contentAuthor)
 
 	contentTag := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -250,7 +274,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentTag)
+	addIndexField(contentTag)
 
 	contentToc := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -268,7 +292,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentToc)
+	addIndexField(contentToc)
 
 	contentSummary := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -286,7 +310,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentSummary)
+	addIndexField(contentSummary)
 
 	contentContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -304,7 +328,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentContent)
+	addIndexField(contentContent)
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
@@ -324,7 +348,7 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentMarkdown)
+	addIndexField(contentMarkdown)
 
 	contentThumbnail := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -342,15 +366,10 @@ func init1() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, contentThumbnail)
+	addIndexField(contentThumbnail)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexContentName, "文章内容", sortNo, now)
-
-	ok, err := bleveNew(indexContentName, mapping)
-	if err != nil || !ok {
-		return
-	}
+	indexCommonField(indexContentName, "文章内容", sortNo, now)
 
 	//保存表信息
 	//indexInfo, _, _ := openBleveIndex(indexInfoName)

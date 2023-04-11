@@ -5,16 +5,37 @@ import (
 )
 
 // 初始化站点信息
-func init4() {
-
-	if pathExist(bleveDataDir + indexSiteName) {
+func init() {
+	if tableExist(indexSiteName) {
 		return
 	}
 
 	// 创建用户表的索引
-	mapping := bleveNewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultAnalyzer = gseAnalyzerName
+	createTableSQL := `CREATE TABLE site (
+		id TEXT PRIMARY KEY     NOT NULL,
+		title         TEXT  NOT NULL,
+		name         TEXT   NOT NULL,
+		domain         TEXT,
+		keyword         TEXT,
+		description         TEXT,
+		theme         TEXT,
+		themePC         TEXT,
+		themeWAP         TEXT,
+		siteThemeWEIXIN         TEXT,
+		logo         TEXT,
+		favicon         TEXT,
+		footer         TEXT,
+		createTime        TEXT,
+		updateTime        TEXT,
+		createUser        TEXT,
+		sortNo            int NOT NULL,
+		status            int NOT NULL
+	 ) strict ;`
+	_, err := bleveNewIndexMapping(createTableSQL)
+	if err != nil {
+		return
+	}
+
 	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	// 获取当前时间
 	now := time.Now()
@@ -37,7 +58,7 @@ func init4() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(mapping, siteId)
+	addIndexField(siteId)
 
 	siteTitle := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -55,7 +76,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteTitle)
+	addIndexField(siteTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
@@ -75,7 +96,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteName)
+	addIndexField(siteName)
 
 	domain := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -93,7 +114,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, domain)
+	addIndexField(domain)
 
 	siteKeyword := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -111,7 +132,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteKeyword)
+	addIndexField(siteKeyword)
 
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
@@ -132,7 +153,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteDescription)
+	addIndexField(siteDescription)
 
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
@@ -153,7 +174,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteTheme)
+	addIndexField(siteTheme)
 
 	siteThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -171,7 +192,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteThemePC)
+	addIndexField(siteThemePC)
 
 	siteThemeWAP := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -189,7 +210,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteThemeWAP)
+	addIndexField(siteThemeWAP)
 
 	siteThemeWEIXIN := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -207,7 +228,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteThemeWEIXIN)
+	addIndexField(siteThemeWEIXIN)
 
 	siteLogo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -225,7 +246,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteLogo)
+	addIndexField(siteLogo)
 
 	siteFavicon := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -243,7 +264,7 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteFavicon)
+	addIndexField(siteFavicon)
 
 	siteFooter := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -261,15 +282,11 @@ func init4() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, siteFooter)
+	addIndexField(siteFooter)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexSiteName, "站点信息", sortNo, now)
+	indexCommonField(indexSiteName, "站点信息", sortNo, now)
 
-	ok, err := bleveNew(indexSiteName, mapping)
-	if err != nil || !ok {
-		return
-	}
 	siteMap := make(map[string]interface{}, 0)
 	siteMap["id"] = "gpress"
 	siteMap["title"] = "gpress"
@@ -293,7 +310,7 @@ func init4() {
 	</span>
 	</div>`
 
-	bleveSaveIndex(indexSiteName, "gpress", siteMap)
+	//bleveSaveIndex(indexSiteName, "gpress", siteMap)
 	//保存表信息
 	bleveSaveIndex(indexInfoName, indexSiteName, IndexInfoStruct{
 		ID:         indexSiteName,
