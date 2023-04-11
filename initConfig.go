@@ -164,7 +164,7 @@ func initConfig() (bool, error) {
 	return true, nil
 }
 
-func init() {
+func init8() {
 
 	// 获取当前时间
 	now := time.Now()

@@ -5,7 +5,7 @@ import (
 )
 
 // 导航菜单
-func init() {
+func init2() {
 	if pathExist(bleveDataDir + indexNavMenuName) {
 		return
 	}

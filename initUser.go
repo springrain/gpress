@@ -5,7 +5,7 @@ import (
 )
 
 // initUser 初始化创建User索引
-func init() {
+func init5() {
 	if pathExist(bleveDataDir + indexUserName) {
 		return
 	}
