@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 
+	"gitee.com/chunanyong/zorm"
 	"github.com/blevesearch/bleve/v2"
 )
 
@@ -79,10 +80,17 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	ID := FuncGenerateStringID()
 
 	m := make(map[string]interface{})
+	m["id"] = ID
 	b, _ := json.Marshal(config)
 	json.Unmarshal(b, &m)
 
-	bleveSaveIndex(indexConfigName, ID, m)
+	entityMap := zorm.NewEntityMap(indexConfigName)
+
+	for k, v := range m {
+		entityMap.Set(k, v)
+	}
+
+	bleveSaveEntityMap(indexConfigName, entityMap)
 	return nil
 }
 

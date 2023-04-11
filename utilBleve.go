@@ -40,7 +40,7 @@ var dbDaoConfig = zorm.DataSourceConfig{
 	// ConnMaxLifetimeSecond 连接存活秒时间. 默认600(10分钟)后连接被销毁重建.避免数据库主动断开连接,造成死连接.MySQL默认wait_timeout 28800秒(8小时)
 	ConnMaxLifetimeSecond: 600,
 	// SlowSQLMillis 慢sql的时间阈值,单位毫秒.小于0是禁用SQL语句输出;等于0是只输出SQL语句,不计算执行时间;大于0是计算SQL执行时间,并且>=SlowSQLMillis值
-	SlowSQLMillis: 0,
+	SlowSQLMillis: -1,
 }
 
 var dbDao, _ = zorm.NewDBDao(&dbDaoConfig)
@@ -102,14 +102,23 @@ func checkBleveStatus() bool {
 	if !isInit { //需要初始化数据库
 		return isInit
 	}
+
 	// 初始化indexField
 	_, err := initIndexField()
 	if err != nil {
 		return false
 	}
-
-	return true
-
+	// 初始化indexInfo
+	_, err = initIndexInfo()
+	if err != nil {
+		return false
+	}
+	// 初始化 config
+	ok, err := initConfig()
+	if err != nil {
+		return false
+	}
+	return ok
 }
 
 // result2Map 单个查询结果转map
@@ -217,7 +226,7 @@ func findIndexFieldStruct(ctx context.Context, indexName string) ([]IndexFieldSt
 }
 
 // 保存新索引
-func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]interface{}) (ResponseData, error) {
+func saveNewIndex(ctx context.Context, tableName string, newIndex zorm.IEntityMap) (ResponseData, error) {
 	searchResult, err := findIndexFieldResult(ctx, tableName, 1)
 
 	responseData := ResponseData{StatusCode: 1}
@@ -228,7 +237,7 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 		return responseData, err
 	}
 	id := ""
-	newId, ok := newIndex["id"]
+	newId, ok := newIndex.GetDBFieldMap()["id"]
 	if ok {
 		id = newId.(string)
 	}
@@ -236,12 +245,12 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 		id = FuncGenerateStringID()
 	}
 
-	newIndex["id"] = id
+	newIndex.Set("id", id)
 	result := searchResult.Hits
 
 	for _, v := range result {
 		tmp := v.Fields["fieldCode"].(string) // 转为字符串
-		_, ok := newIndex[tmp]
+		_, ok := newIndex.GetDBFieldMap()[tmp]
 		if !ok {
 			responseData.StatusCode = 401
 			responseData.Message = tmp + "不能为空"
@@ -249,12 +258,12 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 		}
 	}
 
-	if newIndex["sortNo"] == 0 {
+	if newIndex.GetDBFieldMap()["sortNo"] == 0 {
 		count, _ := bleveDocCount(tableName)
-		newIndex["sortNo"] = count
+		newIndex.Set("sortNo", count)
 	}
 
-	err = bleveSaveIndex(tableName, id, newIndex)
+	err = bleveSaveEntityMap(tableName, newIndex)
 
 	if err != nil {
 		FuncLogError(err)
@@ -268,7 +277,7 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex map[string]int
 	return responseData, err
 }
 
-func updateIndex(ctx context.Context, tableName string, indexId string, newMap map[string]interface{}) error {
+func updateIndex(ctx context.Context, tableName string, indexId string, newMap zorm.IEntityMap) error {
 
 	queryIndex := bleve.NewDocIDQuery([]string{indexId}) // 查询索引
 	// queryIndex := bleveNewTermQuery(indexId)            //查询索引
@@ -290,12 +299,12 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap m
 
 	for k, v := range oldMap {
 		newV := v
-		if _, ok := newMap[k]; !ok {
+		if _, ok := newMap.GetDBFieldMap()[k]; !ok {
 			// 如果key不存在
-			newMap[k] = newV
+			newMap.Set(k, newV)
 		}
 	}
-	err = bleveSaveIndex(tableName, indexId, newMap)
+	err = bleveSaveEntityMap(tableName, newMap)
 	if err != nil {
 		return err
 	}
@@ -474,14 +483,17 @@ func funcSelectOne(indexName string, fields string, queryString string) (map[str
 	return resultMap, err
 }
 
-func bleveNewIndexMapping() *mapping.IndexMappingImpl {
-	bleveMapping := bleve.NewIndexMapping()
-
-	bleveMapping.DefaultMapping.Dynamic = false
-	bleveMapping.IndexDynamic = false
-	bleveMapping.DocValuesDynamic = false
-	bleveMapping.StoreDynamic = false
-	return bleveMapping
+func bleveNewIndexMapping(createTableSQL string) (bool, error) {
+	ctx := context.Background()
+	finder := zorm.NewFinder().Append(createTableSQL)
+	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.UpdateFinder(ctx, finder)
+		return nil, err
+	})
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func bleveNew(indexName string, mapping mapping.IndexMapping) (bool, error) {
@@ -507,13 +519,19 @@ func bleveSearchInContext(ctx context.Context, indexName string, searchRequest *
 	return index.SearchInContext(ctx, searchRequest)
 }
 
-func bleveSaveIndex(indexName string, id string, value interface{}) error {
-	index, err := openBleveIndex(indexName)
-	if err != nil {
-		FuncLogError(err)
-		return err
-	}
-	err = index.Index(id, value)
+func bleveSaveIndex(indexName string, id string, indexInfoStruct IndexInfoStruct) error {
+	_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &indexInfoStruct)
+		return nil, err
+	})
+	return err
+}
+
+func bleveSaveEntityMap(indexName string, entityMap zorm.IEntityMap) error {
+	_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.InsertEntityMap(ctx, entityMap)
+		return nil, err
+	})
 	return err
 }
 

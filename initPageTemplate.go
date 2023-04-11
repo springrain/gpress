@@ -4,8 +4,8 @@ import (
 	"time"
 )
 
-func init3() {
-	if pathExist(bleveDataDir + indexPageTemplateName) {
+func init() {
+	if tableExist(indexPageTemplateName) {
 		return
 	}
 
@@ -13,9 +13,21 @@ func init3() {
 	now := time.Now()
 
 	// 创建用户表的索引
-	mapping := bleveNewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultAnalyzer = gseAnalyzerName
+	createTableSQL := `CREATE TABLE pageTemplate (
+		id TEXT PRIMARY KEY     NOT NULL,
+		templateName         TEXT  NOT NULL,
+		templatePath         TEXT   NOT NULL,
+		createTime        TEXT,
+		updateTime        TEXT,
+		createUser        TEXT,
+		sortNo            int NOT NULL,
+		status            int NOT NULL
+	 ) strict ;`
+	_, err := bleveNewIndexMapping(createTableSQL)
+	if err != nil {
+		return
+	}
+
 	sortNo := 1
 	// 初始化各个字段
 	pageId := IndexFieldStruct{
@@ -35,7 +47,7 @@ func init3() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(mapping, pageId)
+	addIndexField(pageId)
 
 	pageTemplateNameName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -53,7 +65,7 @@ func init3() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, pageTemplateNameName)
+	addIndexField(pageTemplateNameName)
 
 	pageTemplateNamePath := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -71,16 +83,11 @@ func init3() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(mapping, pageTemplateNamePath)
+	addIndexField(pageTemplateNamePath)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexPageTemplateName, "页面模板", sortNo, now)
+	indexCommonField(indexPageTemplateName, "页面模板", sortNo, now)
 
-	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	ok, err := bleveNew(indexPageTemplateName, mapping)
-	if err != nil || !ok {
-		return
-	}
 	//保存表信息
 	bleveSaveIndex(indexInfoName, indexPageTemplateName, IndexInfoStruct{
 		ID:         indexPageTemplateName,

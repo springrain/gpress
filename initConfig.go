@@ -6,7 +6,7 @@ import (
 
 // initConfig 初始化创建Config索引
 func initConfig() (bool, error) {
-	if pathExist(bleveDataDir + indexConfigName) {
+	if tableExist(indexConfigName) {
 		return true, nil
 	}
 	// 获取索引字段的表
@@ -14,10 +14,24 @@ func initConfig() (bool, error) {
 	// 当前时间
 	now := time.Now()
 	// 创建配置表的索引
-	mapping := bleveNewIndexMapping()
-	// 指定默认的分词器
-	mapping.DefaultAnalyzer = keywordAnalyzerName
-	// //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
+	createTableSQL := `CREATE TABLE config (
+		id TEXT PRIMARY KEY     NOT NULL,
+		basePath         TEXT  NOT NULL,
+		jwtSecret        TEXT   NOT NULL,
+		jwttokenKey      TEXT NOT NULL,
+		serverPort       TEXT NOT NULL,
+		theme            TEXT NOT NULL,
+		timeout          INT NOT NULL,
+		createTime       TEXT,
+		updateTime       TEXT,
+		createUser       TEXT,
+		sortNo           int NOT NULL,
+		status           int NOT NULL
+	 ) strict ;`
+	_, err := bleveNewIndexMapping(createTableSQL)
+	if err != nil {
+		return false, err
+	}
 	sortNo := 1
 	// ID 字段
 	configId := IndexFieldStruct{
@@ -37,7 +51,7 @@ func initConfig() (bool, error) {
 	}
 
 	sortNo++
-	addIndexField(mapping, configId)
+	addIndexField(configId)
 
 	// 配置 basePath 字段
 	basePath := IndexFieldStruct{
@@ -56,7 +70,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, basePath)
+	addIndexField(basePath)
 
 	// 配置 jwtSecret 字段
 	jwtSecret := IndexFieldStruct{
@@ -75,7 +89,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, jwtSecret)
+	addIndexField(jwtSecret)
 
 	// 配置 jwtSecret 字段
 	jwttokenKey := IndexFieldStruct{
@@ -94,7 +108,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, jwttokenKey)
+	addIndexField(jwttokenKey)
 
 	// 配置 serverPort 字段
 	serverPort := IndexFieldStruct{
@@ -113,7 +127,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, serverPort)
+	addIndexField(serverPort)
 
 	// 配置 theme 字段
 	theme := IndexFieldStruct{
@@ -132,7 +146,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, theme)
+	addIndexField(theme)
 
 	// 配置 timeout 字段
 	timeout := IndexFieldStruct{
@@ -151,21 +165,15 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(mapping, timeout)
+	addIndexField(timeout)
 
 	// 添加公共字段
-	indexCommonField(mapping, indexConfigName, "配置信息", sortNo, now)
-
-	ok, err := bleveNew(indexConfigName, mapping)
-	if err != nil || !ok {
-		return false, err
-	}
+	indexCommonField(indexConfigName, "配置信息", sortNo, now)
 
 	return true, nil
 }
 
-func init8() {
-
+func init() {
 	// 获取当前时间
 	now := time.Now()
 
