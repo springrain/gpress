@@ -4,7 +4,7 @@ import (
 	"context"
 	"html/template"
 
-	"github.com/blevesearch/bleve/v2"
+	"gitee.com/chunanyong/zorm"
 )
 
 var funcMap = template.FuncMap{
@@ -15,7 +15,7 @@ var funcMap = template.FuncMap{
 	"T":          funcT,
 	"safeHTML":   funcSafeHTML,
 	"relURL":     funcRelURL,
-	"indexFiled": funcIndexFiled,
+	"tableFiled": funcTableFiled,
 	"site":       funcSite,
 	"navMenu":    funcNavMenu,
 	"selectList": funcSelectList,
@@ -50,42 +50,26 @@ func funcRelURL(url string) (template.HTML, error) {
 	return funcSafeHTML(themePath + url)
 }
 
-// funcIndexFiled 根据indexName查找字段
-func funcIndexFiled(indexName string) ([]IndexFieldStruct, error) {
+// funcTableFiled 根据indexName查找字段
+func funcTableFiled(tableName string) ([]TableFieldStruct, error) {
 	ctx := context.Background()
-	indexField, err := findIndexFieldStruct(ctx, indexName)
-	return indexField, err
+	tableField, err := findTableFieldStruct(ctx, tableName, 0)
+	return tableField, err
 }
 
 // 站点信息
 func funcSite() (map[string]interface{}, error) {
-	idQuery := bleveNewTermQuery("gpress")
-	// 指定查询的字段
-	idQuery.SetField("id")
-	searchRequest := bleve.NewSearchRequest(idQuery)
-	// 指定返回的字段
-	searchRequest.Fields = []string{"*"}
-	searchResult, err := bleveSearchInContext(context.Background(), indexSiteName, searchRequest)
+	finder := zorm.NewSelectFinder(tableSiteName, "*").Append(" WHERE id=?", "gpress")
+	rowMap, err := zorm.QueryRowMap(context.Background(), finder)
 	if err != nil {
 		return make(map[string]interface{}, 0), err
 	}
-	data, err := result2Map(indexSiteName, searchResult)
-	return data, err
+	return rowMap, err
 }
 
 // 菜单信息
 func funcNavMenu() ([]map[string]interface{}, error) {
-	query := bleve.NewQueryStringQuery("*")
-	searchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
-	// 指定返回的字段
-	searchRequest.Fields = []string{"*"}
-	searchRequest.SortBy([]string{"-sortNo", "-_score", "-_id"})
-	searchResult, err := bleveSearchInContext(context.Background(), indexNavMenuName, searchRequest)
-	if err != nil {
-		return make([]map[string]interface{}, 0), err
-	}
-	data, err := result2SliceMap(indexNavMenuName, searchResult)
-	return data, err
+	return nil, nil
 }
 
 var analyzerMap = map[string]string{commaAnalyzerName: "逗号分词器", gseAnalyzerName: "默认分词器", keywordAnalyzerName: "不分词", numericAnalyzerName: "数字分词器", datetimeAnalyzerName: "日期分词器"}

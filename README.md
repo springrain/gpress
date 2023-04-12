@@ -23,33 +23,33 @@ gpress使用GPL-3.0开源协议,特授权项目贡献者商业化时无需开源
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 值使用逗号(,)隔开,使用 commaAnalyzerName 分词器,实现类似sql in 的效果.  
 
-在IndexInfo表里设置indexType='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索    
+在TableInfo表里设置tableFiled='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索    
 
 
 ID默认使用时间戳(23位)+随机数(9位),全局唯一      
-### 索引信息(索引名:indexInfo)
+### 表信息(表名:tableInfo)
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | id          | string      | 主键         | 否      |    -  |
-| code        | string      | 索引Code     | 否      |    -  |
-| name        | string      | 索引名称     | 否      |    -  |
-| indexType   | string      | 索引类型     | 否      |  index:索引.  module:模型  |
+| code        | string      | 表Code     | 否      |    -  |
+| name        | string      | 表名称     | 否      |    -  |
+| tableFiled   | string      | 表类型     | 否      |  index:表.  module:模型  |
 | createTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
 | ipdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序         | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 索引字段(索引名:indexField)
-记录所有索引字段code和中文说明.  
-理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)  
+### 表字段(表名:tableField)
+记录所有表字段code和中文说明.  
+理论上所有的表字段都可以放到这个表里,因为都是Map,就不需要再单独指定表的字段了,可以动态创建Table(目前建议这样做)  
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | ID          | string      | 主键        | 否       |    -  |
-| IndexCode   | string      | 索引代码     | 否       |  类似表名 user,site,pageTemplate,navMenu,module,content  |
-| IndexName   | string      | 索引名称     | 否       |  类似表名中文说明  |
+| TableCode   | string      | 表代码     | 否       |  类似表名 user,site,pageTemplate,navMenu,module,content  |
+| TableName   | string      | 表名称     | 否       |  类似表名中文说明  |
 | BusinessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
 | FieldCode   | string      | 字段代码     |否       |    -  |
 | FieldName   | string      | 字段中文名称 | 否       |    -  |
@@ -63,7 +63,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | SortNo      | int         | 排序         | -       |  正序  |
 | Status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 用户(索引名:user)
+### 用户(表名:user)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
@@ -90,7 +90,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | favicon     | string      | Favicon     | 否      |     -  |
 
 
-### 页面模板(索引名:pageTemplate)
+### 页面模板(表名:pageTemplate)
 后台只有一个用户,账号admin 密码默认admin 可以自己修改.
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
@@ -101,7 +101,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | sortNo      | int         | 排序        | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 导航菜单(索引名:navMenu)
+### 导航菜单(表名:navMenu)
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | id          | string      | 主键        | 否       |    -  |
@@ -110,15 +110,15 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | hrefURL     | string      | 跳转路径     | 否       |    -  |
 | hrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | pid         | string      | 父菜单ID     | 否       | 父菜单ID  |
-| moduleID    | string      | module索引ID | 否       |  导航菜单下的文章默认使用的模型字段 |
+| moduleID    | string      | module表ID | 否       |  导航菜单下的文章默认使用的模型字段 |
 | comCode     | string      | 逗号隔开的全路径 | 否    | 逗号隔开的全路径  |
 | templateID  | string      | 模板Id       | 否       | 当前导航页的模板  |
 | childTemplateID  | string | 子页面模板Id  | 否      | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | sortNo      | int         | 排序        | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 模型数据(索引名:module_default)
-在indexInfo表里设置indexType='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索   
+### 模型数据(表名:module_default)
+在tableInfo表里设置tableFiled='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索   
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
@@ -136,7 +136,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
 
-### 文章内容(索引名:content)
+### 文章内容(表名:content)
 文章内容表,默认使用 module_default 的模型字段
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 

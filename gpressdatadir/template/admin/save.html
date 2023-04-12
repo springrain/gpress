@@ -1,7 +1,7 @@
 {{template "admin/header.html"}}
   <title>save - GPRESS</title>
 {{template "admin/bodystart.html"}}
-{{ $indexFiled := indexFiled .urlPathParam }}
+{{ $tableFiled := tableFiled .urlPathParam }}
 {{$analyzer := analyzer}}
 {{$fieldType := fieldType}}
 
@@ -11,7 +11,7 @@
       <div class="column is-9-desktop is-9-tablet">
         <form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/save" method="POST">
           {{ $data := . }}
-          {{ range $indexFiled }}
+          {{ range $tableFiled }}
           {{ if ne .FieldCode "id" }}
           <div class="field is-horizontal">
             <div class="field-label">

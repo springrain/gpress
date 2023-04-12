@@ -10,7 +10,7 @@ import (
 )
 
 func TestNavMenu(t *testing.T) {
-	deleteAll(context.Background(), indexNavMenuName)
+	deleteAll(context.Background(), tableNavMenuName)
 	// 获取当前时间
 	now := time.Now()
 
@@ -24,7 +24,7 @@ func TestNavMenu(t *testing.T) {
 		menu["sortNo"] = i + 1
 		menu["createTime"] = now
 		menu["updateTime"] = now
-		//saveNewIndex(context.Background(), indexNavMenuName, menu)
+		//saveNewTable(context.Background(), indexNavMenuName, menu)
 	}
 
 	siteMap := make(map[string]interface{}, 0)
@@ -32,7 +32,7 @@ func TestNavMenu(t *testing.T) {
 	siteMap["title"] = "jiagou"
 	siteMap["name"] = "架构"
 	siteMap["domain"] = "jiagou.com"
-	//updateIndex(context.Background(), "site", "gpress", siteMap)
+	//updateTable(context.Background(), "site", "gpress", siteMap)
 
 }
 
@@ -88,7 +88,7 @@ func TestReadmks(t *testing.T) {
 		cMap["content"] = html
 		cMap["toc"] = tocHtml
 		lists = append(lists, cMap)
-		//saveNewIndex(context.Background(), "content", cMap)
+		//saveNewTable(context.Background(), "content", cMap)
 
 	}
 
@@ -112,7 +112,7 @@ func TestReadmks(t *testing.T) {
 	for i := 0; i < len(lists); i++ { // 内循环 数组遍历
 		cMap := lists[i]
 		cMap["sortNo"] = i + 1
-		//saveNewIndex(context.Background(), "content", cMap)
+		//saveNewTable(context.Background(), "content", cMap)
 	}
 
 }

@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -151,7 +152,7 @@ func isInstalled() bool {
 
 // updateInstall 更新安装状态
 func updateInstall(ctx context.Context) error {
-	// 将config配置写入到索引,写入前先把config表清空
+	// 将config配置写入到表,写入前先把config表清空
 	err := insertConfig(ctx, config)
 	if err != nil {
 		return err
@@ -204,14 +205,14 @@ type ResponseData struct {
 	// 扩展的map,用于处理返回多个值的情况
 	ExtMap map[string]interface{} `json:"extMap,omitempty"`
 	// 列表的分页对象
-	Page *Page `json:"page,omitempty"`
+	Page *zorm.Page `json:"page,omitempty"`
 	// 查询条件的struct回传
 	// QueryStruct interface{} `json:"queryStruct,omitempty"`
 	QueryString string `json:"queryString,omitempty"`
-	// 索引名称
+	// 表名称
 	UrlPathParam string `json:"urlPathParam,omitempty"`
-	// 索引字段信息
-	// IndexField []IndexFieldStruct `json:"indexField,omitempty"`
+	// 表字段信息
+	// TableField []TableFieldStruct `json:"tableField,omitempty"`
 	// 响应错误
 	ERR error `json:"err,omitempty"`
 }

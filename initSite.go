@@ -8,11 +8,11 @@ import (
 
 // 初始化站点信息
 func init() {
-	if tableExist(indexSiteName) {
+	if tableExist(tableSiteName) {
 		return
 	}
 
-	// 创建用户表的索引
+	// 创建用户表的表
 	createTableSQL := `CREATE TABLE site (
 		id TEXT PRIMARY KEY     NOT NULL,
 		title         TEXT  NOT NULL,
@@ -33,7 +33,7 @@ func init() {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := bleveNewIndexMapping(createTableSQL)
+	_, err := crateTable(createTableSQL)
 	if err != nil {
 		return
 	}
@@ -43,14 +43,14 @@ func init() {
 	now := time.Now()
 	sortNo := 1
 	// 初始化各个字段
-	siteId := IndexFieldStruct{
+	siteId := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "id",
 		FieldName:    "站点信息ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -62,14 +62,14 @@ func init() {
 	sortNo++
 	saveTableField(siteId)
 
-	siteTitle := IndexFieldStruct{
+	siteTitle := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "title",
 		FieldName:    "标题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -82,14 +82,14 @@ func init() {
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
-	siteName := IndexFieldStruct{
+	siteName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "name",
 		FieldName:    "名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -100,14 +100,14 @@ func init() {
 	sortNo++
 	saveTableField(siteName)
 
-	domain := IndexFieldStruct{
+	domain := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "domain",
 		FieldName:    "域名",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -118,14 +118,14 @@ func init() {
 	sortNo++
 	saveTableField(domain)
 
-	siteKeyword := IndexFieldStruct{
+	siteKeyword := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "keyword",
 		FieldName:    "关键字",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -139,14 +139,14 @@ func init() {
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
-	siteDescription := IndexFieldStruct{
+	siteDescription := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "description",
 		FieldName:    "站点描述",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -160,14 +160,14 @@ func init() {
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
-	siteTheme := IndexFieldStruct{
+	siteTheme := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "theme",
 		FieldName:    "默认主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -178,14 +178,14 @@ func init() {
 	sortNo++
 	saveTableField(siteTheme)
 
-	siteThemePC := IndexFieldStruct{
+	siteThemePC := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -196,14 +196,14 @@ func init() {
 	sortNo++
 	saveTableField(siteThemePC)
 
-	siteThemeWAP := IndexFieldStruct{
+	siteThemeWAP := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "themeWAP",
 		FieldName:    "手机主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -214,14 +214,14 @@ func init() {
 	sortNo++
 	saveTableField(siteThemeWAP)
 
-	siteThemeWEIXIN := IndexFieldStruct{
+	siteThemeWEIXIN := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "siteThemeWEIXIN",
 		FieldName:    "微信主题",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -232,14 +232,14 @@ func init() {
 	sortNo++
 	saveTableField(siteThemeWEIXIN)
 
-	siteLogo := IndexFieldStruct{
+	siteLogo := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "logo",
 		FieldName:    "Logo",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -250,14 +250,14 @@ func init() {
 	sortNo++
 	saveTableField(siteLogo)
 
-	siteFavicon := IndexFieldStruct{
+	siteFavicon := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "favicon",
 		FieldName:    "Favicon",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -268,14 +268,14 @@ func init() {
 	sortNo++
 	saveTableField(siteFavicon)
 
-	siteFooter := IndexFieldStruct{
+	siteFooter := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexSiteName,
+		TableCode:    tableSiteName,
 		FieldCode:    "footer",
 		FieldName:    "底部信息",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "站点信息",
+		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -287,9 +287,9 @@ func init() {
 	saveTableField(siteFooter)
 
 	// 添加公共字段
-	indexCommonField(indexSiteName, "站点信息", sortNo, now)
+	indexCommonField(tableSiteName, "站点信息", sortNo, now)
 
-	siteMap := zorm.NewEntityMap(indexSiteName)
+	siteMap := zorm.NewEntityMap(tableSiteName)
 	siteMap.Set("id", "gpress")
 	siteMap.Set("title", "gpress")
 	siteMap.Set("name", "gpress")
@@ -311,13 +311,15 @@ func init() {
 	<span class="author">jiagou.com 版权所有 <a href='https://beian.miit.gov.cn' target='_blank'>豫ICP备2020026846号-1</a>   <a href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41010302002680'  target='_blank'><img src='/public/gongan.png'>豫公网安备41010302002680号</a></span>
 	</span>
 	</div>`)
+	siteMap.Set("sortNo", 1)
+	siteMap.Set("status", 1)
 	//保存站点信息
 	saveEntityMap(siteMap)
 	//保存表信息
-	saveTableInfo(IndexInfoStruct{
-		ID:         indexSiteName,
+	saveTableInfo(TableInfoStruct{
+		ID:         tableSiteName,
 		Name:       "站点信息",
-		IndexType:  "index",
+		TableType:  "table",
 		Code:       "site",
 		CreateTime: now,
 		UpdateTime: now,
