@@ -60,7 +60,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(contentId)
+	saveTableField(contentId)
 
 	contentModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -78,7 +78,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentModuleID)
+	saveTableField(contentModuleID)
 
 	contentTitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -97,7 +97,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentTitle)
+	saveTableField(contentTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
@@ -118,7 +118,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentKeyword)
+	saveTableField(contentKeyword)
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
@@ -139,7 +139,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentDescription)
+	saveTableField(contentDescription)
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
@@ -159,7 +159,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentPageURL)
+	saveTableField(contentPageURL)
 
 	contentSubtitle := IndexFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -178,7 +178,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentSubtitle)
+	saveTableField(contentSubtitle)
 	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
@@ -198,7 +198,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentNavMenuId)
+	saveTableField(contentNavMenuId)
 	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	// //mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
 
@@ -218,7 +218,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentNavMenuNames)
+	saveTableField(contentNavMenuNames)
 	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
 
@@ -238,7 +238,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentTemplateID)
+	saveTableField(contentTemplateID)
 
 	contentAuthor := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -256,7 +256,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentAuthor)
+	saveTableField(contentAuthor)
 
 	contentTag := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -274,7 +274,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentTag)
+	saveTableField(contentTag)
 
 	contentToc := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -292,7 +292,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentToc)
+	saveTableField(contentToc)
 
 	contentSummary := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -310,7 +310,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentSummary)
+	saveTableField(contentSummary)
 
 	contentContent := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -328,7 +328,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentContent)
+	saveTableField(contentContent)
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
@@ -348,7 +348,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentMarkdown)
+	saveTableField(contentMarkdown)
 
 	contentThumbnail := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -366,14 +366,14 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(contentThumbnail)
+	saveTableField(contentThumbnail)
 
 	// 添加公共字段
 	indexCommonField(indexContentName, "文章内容", sortNo, now)
 
 	//保存表信息
 	//indexInfo, _, _ := openBleveIndex(indexInfoName)
-	bleveSaveIndex(indexInfoName, indexContentName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexContentName,
 		Name:       "文章内容",
 		Code:       "content",
@@ -386,7 +386,7 @@ func init() {
 	})
 
 	//保存默认模型表信息
-	bleveSaveIndex(indexInfoName, indexModuleDefaultName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexModuleDefaultName,
 		Name:       "默认模型",
 		Code:       indexModuleDefaultName,

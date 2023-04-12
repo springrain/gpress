@@ -85,12 +85,10 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	json.Unmarshal(b, &m)
 
 	entityMap := zorm.NewEntityMap(indexConfigName)
-
 	for k, v := range m {
 		entityMap.Set(k, v)
 	}
-
-	bleveSaveEntityMap(indexConfigName, entityMap)
+	saveEntityMap(entityMap)
 	return nil
 }
 
