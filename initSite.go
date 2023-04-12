@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 
 	"gitee.com/chunanyong/zorm"
@@ -33,7 +34,8 @@ func init() {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
@@ -60,7 +62,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	saveTableField(siteId)
+	saveTableField(ctx, siteId)
 
 	siteTitle := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -78,7 +80,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteTitle)
+	saveTableField(ctx, siteTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
@@ -98,7 +100,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteName)
+	saveTableField(ctx, siteName)
 
 	domain := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -116,7 +118,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(domain)
+	saveTableField(ctx, domain)
 
 	siteKeyword := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -134,7 +136,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteKeyword)
+	saveTableField(ctx, siteKeyword)
 
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
@@ -155,7 +157,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteDescription)
+	saveTableField(ctx, siteDescription)
 
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
@@ -176,7 +178,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteTheme)
+	saveTableField(ctx, siteTheme)
 
 	siteThemePC := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -194,7 +196,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteThemePC)
+	saveTableField(ctx, siteThemePC)
 
 	siteThemeWAP := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -212,7 +214,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteThemeWAP)
+	saveTableField(ctx, siteThemeWAP)
 
 	siteThemeWEIXIN := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -230,7 +232,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteThemeWEIXIN)
+	saveTableField(ctx, siteThemeWEIXIN)
 
 	siteLogo := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -248,7 +250,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteLogo)
+	saveTableField(ctx, siteLogo)
 
 	siteFavicon := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -266,7 +268,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteFavicon)
+	saveTableField(ctx, siteFavicon)
 
 	siteFooter := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -284,10 +286,10 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(siteFooter)
+	saveTableField(ctx, siteFooter)
 
 	// 添加公共字段
-	indexCommonField(tableSiteName, "站点信息", sortNo, now)
+	indexCommonField(ctx, tableSiteName, "站点信息", sortNo, now)
 
 	siteMap := zorm.NewEntityMap(tableSiteName)
 	siteMap.Set("id", "gpress")
@@ -314,9 +316,9 @@ func init() {
 	siteMap.Set("sortNo", 1)
 	siteMap.Set("status", 1)
 	//保存站点信息
-	saveEntityMap(siteMap)
+	saveEntityMap(ctx, siteMap)
 	//保存表信息
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(ctx, TableInfoStruct{
 		ID:         tableSiteName,
 		Name:       "站点信息",
 		TableType:  "table",

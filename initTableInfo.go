@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 
 	"gitee.com/chunanyong/zorm"
@@ -61,7 +62,8 @@ func initTableInfo() (bool, error) {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return false, err
 	}
@@ -87,7 +89,7 @@ func initTableInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(infoId)
+	saveTableField(ctx, infoId)
 	// 表名称,类似表名中文说明
 	infoName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -105,7 +107,7 @@ func initTableInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(infoName)
+	saveTableField(ctx, infoName)
 	//表代码
 	infoCode := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -123,7 +125,7 @@ func initTableInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(infoCode)
+	saveTableField(ctx, infoCode)
 	// TableType index/module 表和模型,两种类型
 	infoType := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -143,10 +145,10 @@ func initTableInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(infoType)
+	saveTableField(ctx, infoType)
 
 	// 添加公共字段
-	indexCommonField(tableInfoName, "表信息", sortNo, now)
+	indexCommonField(ctx, tableInfoName, "表信息", sortNo, now)
 
 	return true, nil
 }
