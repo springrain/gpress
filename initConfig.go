@@ -12,7 +12,7 @@ func initConfig() (bool, error) {
 	// 获取表字段的表
 	//tableField ,_:= openBleveTable(indexFieldName]
 	// 当前时间
-	now := time.Now()
+	now := time.Now().Format("2006-01-02 15:04:05")
 	// 创建配置表的表
 	createTableSQL := `CREATE TABLE config (
 		id TEXT PRIMARY KEY     NOT NULL,
@@ -178,7 +178,7 @@ func init() {
 		return
 	}
 	// 获取当前时间
-	now := time.Now()
+	now := time.Now().Format("2006-01-02 15:04:05")
 
 	//保存表信息
 	//tableInfo, _, _ := openBleveTable(tableInfoName)

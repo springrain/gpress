@@ -35,8 +35,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | code        | string      | 表Code     | 否      |    -  |
 | name        | string      | 表名称     | 否      |    -  |
 | tableFiled   | string      | 表类型     | 否      |  index:表.  module:模型  |
-| createTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
-| ipdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| createTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
+| ipdateTime  |string  | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序         | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
@@ -57,8 +57,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | FieldFormat | string      | 数据格式,用于日期或者数字| 否 |  -  |    
 | DefaultValue| string      | 默认值       | 否      |       -  |
 | AnalyzerName| string      | 分词器名称    | -       | 为 '' 不设置  |
-| CreateTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
-| UpdateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| CreateTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
+| UpdateTime  |string  | 更新时间     | -       |  2006-01-02 15:04:05  |
 | CreateUser  | string      | 创建人       | -       |  初始化 system  |
 | SortNo      | int         | 排序         | -       |  正序  |
 | Status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
@@ -129,8 +129,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | pageURL     | string      | 自身页面路径 | 否       |    -  |
 | subtitle    | string      | 副标题       | 是      |     -  |
 | content     | string      | 文章内容     | 是      |       |
-| createTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
-| updateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| createTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
+| updateTime  |string  | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序        | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
@@ -152,8 +152,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | navMenuNames| string      | 导航名称,逗号(,)隔开     | 是      | 使用 gseAnalyzerMapping 分词器.  |
 | templateID  | string      | 模板Id       | 否      | 模板  |
 | content     | string      | 文章内容     | 是      |       |
-| createTime  | time.Time   | 创建时间     | -       |  2006-01-02 15:04:05  |
-| updateTime  | time.Time   | 更新时间     | -       |  2006-01-02 15:04:05  |
+| createTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
+| updateTime  |string  | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序        | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |

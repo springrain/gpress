@@ -11,7 +11,7 @@ func init() {
 	}
 
 	// 获取当前时间
-	now := time.Now()
+	now := time.Now().Format("2006-01-02 15:04:05")
 	// 创建用户表的表
 	createTableSQL := `CREATE TABLE navMenu (
 		id TEXT PRIMARY KEY     NOT NULL,
