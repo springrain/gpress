@@ -4,7 +4,7 @@ const (
 	// 基本目录
 	datadir = "gpressdatadir/"
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
-	bleveDataDir = datadir + "bleve/"
+	sqliteDBfile = datadir + "gpress.db"
 	// 表表信息的名称
 	tableInfoName = "tableInfo"
 	// 表字段的名称
