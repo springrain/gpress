@@ -14,7 +14,7 @@ func init() {
 	now := time.Now().Format("2006-01-02 15:04:05")
 
 	// 创建用户表的表
-	createTableSQL := `CREATE TABLE pageTemplate (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS pageTemplate (
 		id TEXT PRIMARY KEY     NOT NULL,
 		templateName         TEXT  NOT NULL,
 		templatePath         TEXT   NOT NULL,
