@@ -51,7 +51,7 @@ func initTableInfo() (bool, error) {
 		return true, nil
 	}
 
-	createTableSQL := `CREATE TABLE tableInfo (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS tableInfo (
 		id TEXT PRIMARY KEY     NOT NULL,
 		name         TEXT  NOT NULL,
 		code         TEXT   NOT NULL,

@@ -11,7 +11,7 @@ func init() {
 	}
 
 	// 创建内容表的表
-	createTableSQL := `CREATE TABLE content (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
 		moduleID         TEXT  ,
 		title         TEXT   NOT NULL,
