@@ -87,7 +87,7 @@ func initIndexInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(infoId)
+	saveTableField(infoId)
 	// 索引名称,类似表名中文说明
 	infoName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -105,7 +105,7 @@ func initIndexInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(infoName)
+	saveTableField(infoName)
 	//索引代码
 	infoCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -123,7 +123,7 @@ func initIndexInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(infoCode)
+	saveTableField(infoCode)
 	// IndexType index/module 索引和模型,两种类型
 	infoType := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -143,7 +143,7 @@ func initIndexInfo() (bool, error) {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(infoType)
+	saveTableField(infoType)
 
 	// 添加公共字段
 	indexCommonField(indexInfoName, "表信息", sortNo, now)

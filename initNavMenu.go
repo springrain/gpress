@@ -55,7 +55,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(navMenuId)
+	saveTableField(navMenuId)
 
 	navMenuMenuName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -74,7 +74,7 @@ func init() {
 		Required:     1,
 	}
 	sortNo++
-	addIndexField(navMenuMenuName)
+	saveTableField(navMenuMenuName)
 
 	navMenuHrefURL := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -93,7 +93,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuHrefURL)
+	saveTableField(navMenuHrefURL)
 
 	navMenuHrefTarget := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -112,7 +112,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuHrefTarget)
+	saveTableField(navMenuHrefTarget)
 
 	navMenuPID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -131,7 +131,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuPID)
+	saveTableField(navMenuPID)
 
 	navMenuThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -150,7 +150,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuThemePC)
+	saveTableField(navMenuThemePC)
 
 	navMenuModuleID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -169,7 +169,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuModuleID)
+	saveTableField(navMenuModuleID)
 
 	navMenuComCode := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -188,7 +188,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuComCode)
+	saveTableField(navMenuComCode)
 
 	navMenuTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -207,7 +207,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuTemplateID)
+	saveTableField(navMenuTemplateID)
 
 	navMenuChildTemplateID := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -226,13 +226,13 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	addIndexField(navMenuChildTemplateID)
+	saveTableField(navMenuChildTemplateID)
 
 	// 添加公共字段
 	indexCommonField(indexNavMenuName, "导航菜单", sortNo, now)
 
 	//保存表信息
-	bleveSaveIndex(indexInfoName, indexNavMenuName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexNavMenuName,
 		Name:       "导航菜单",
 		Code:       "navMenu",

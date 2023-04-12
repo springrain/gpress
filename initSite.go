@@ -2,6 +2,8 @@ package main
 
 import (
 	"time"
+
+	"gitee.com/chunanyong/zorm"
 )
 
 // 初始化站点信息
@@ -58,7 +60,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(siteId)
+	saveTableField(siteId)
 
 	siteTitle := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -76,7 +78,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteTitle)
+	saveTableField(siteTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
@@ -96,7 +98,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteName)
+	saveTableField(siteName)
 
 	domain := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -114,7 +116,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(domain)
+	saveTableField(domain)
 
 	siteKeyword := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -132,7 +134,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteKeyword)
+	saveTableField(siteKeyword)
 
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
@@ -153,7 +155,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteDescription)
+	saveTableField(siteDescription)
 
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
@@ -174,7 +176,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteTheme)
+	saveTableField(siteTheme)
 
 	siteThemePC := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -192,7 +194,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteThemePC)
+	saveTableField(siteThemePC)
 
 	siteThemeWAP := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -210,7 +212,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteThemeWAP)
+	saveTableField(siteThemeWAP)
 
 	siteThemeWEIXIN := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -228,7 +230,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteThemeWEIXIN)
+	saveTableField(siteThemeWEIXIN)
 
 	siteLogo := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -246,7 +248,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteLogo)
+	saveTableField(siteLogo)
 
 	siteFavicon := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -264,7 +266,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteFavicon)
+	saveTableField(siteFavicon)
 
 	siteFooter := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -282,25 +284,25 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(siteFooter)
+	saveTableField(siteFooter)
 
 	// 添加公共字段
 	indexCommonField(indexSiteName, "站点信息", sortNo, now)
 
-	siteMap := make(map[string]interface{}, 0)
-	siteMap["id"] = "gpress"
-	siteMap["title"] = "gpress"
-	siteMap["name"] = "gpress"
-	siteMap["domain"] = "127.0.0.1"
-	siteMap["keyword"] = "gpress"
-	siteMap["description"] = "gpress"
-	siteMap["theme"] = "default"
-	siteMap["themePC"] = "default"
-	siteMap["themeWAP"] = "default"
-	siteMap["siteThemeWEIXIN"] = "default"
-	siteMap["logo"] = "public/logo.png"
-	siteMap["favicon"] = "public/favicon.png"
-	siteMap["footer"] = `<div class="copyright">
+	siteMap := zorm.NewEntityMap(indexSiteName)
+	siteMap.Set("id", "gpress")
+	siteMap.Set("title", "gpress")
+	siteMap.Set("name", "gpress")
+	siteMap.Set("domain", "127.0.0.1")
+	siteMap.Set("keyword", "gpress")
+	siteMap.Set("description", "gpress")
+	siteMap.Set("theme", "default")
+	siteMap.Set("themePC", "default")
+	siteMap.Set("themeWAP", "default")
+	siteMap.Set("siteThemeWEIXIN", "default")
+	siteMap.Set("logo", "public/logo.png")
+	siteMap.Set("favicon", "public/favicon.png")
+	siteMap.Set("footer", `<div class="copyright">
 
 	<span class="copyright-year">
 	&copy; 
@@ -308,11 +310,11 @@ func init() {
 	2023
 	<span class="author">jiagou.com 版权所有 <a href='https://beian.miit.gov.cn' target='_blank'>豫ICP备2020026846号-1</a>   <a href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41010302002680'  target='_blank'><img src='/public/gongan.png'>豫公网安备41010302002680号</a></span>
 	</span>
-	</div>`
-
-	//bleveSaveIndex(indexSiteName, "gpress", siteMap)
+	</div>`)
+	//保存站点信息
+	saveEntityMap(siteMap)
 	//保存表信息
-	bleveSaveIndex(indexInfoName, indexSiteName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexSiteName,
 		Name:       "站点信息",
 		IndexType:  "index",
