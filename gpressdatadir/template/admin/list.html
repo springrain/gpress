@@ -1,8 +1,8 @@
 {{template "admin/header.html"}}
-  <title>indexInfo - GPRESS</title>
+  <title>tableInfo - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $indexFiled := indexFiled .urlPathParam }}
+{{ $tableFiled := tableFiled .urlPathParam }}
 {{$path := .urlPathParam}}
 <section class="section">
   <div class="container" >
@@ -34,7 +34,7 @@
       <thead>
         <tr>
           <!-- 循环表头 -->
-          {{ range $indexFiled }}
+          {{ range $tableFiled }}
           <th>{{.FieldName}}</th>
           {{end }}
           <th>操作</th>
@@ -45,7 +45,7 @@
         {{ range $i,$v := .data }}
         <tr>
           <!-- 循环表头,需要和表格的表头对应 -->
-          {{ range $indexFiled }}
+          {{ range $tableFiled }}
           <!-- 获取每一列的值 -->
           <td> {{ index $v .FieldCode }}</td>
           {{end }}

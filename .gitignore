@@ -4,7 +4,7 @@
 *.iml
 *.iws
 gpressdatadir/bleve/*
-testIndex/
+testTable/
 dict/
 *.db
 

@@ -8,13 +8,12 @@ import (
 	"os"
 
 	"gitee.com/chunanyong/zorm"
-	"github.com/blevesearch/bleve/v2"
 )
 
-// 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入索引,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
+// 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入表,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
 func loadInstallConfig() configStruct {
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
-	if installed { // 如果已经安装,需要从索引读取配置,这里暂时返回defaultConfig
+	if installed { // 如果已经安装,需要从表读取配置,这里暂时返回defaultConfig
 		config, err := findConfig()
 		if err != nil {
 			return defaultConfig
@@ -75,7 +74,7 @@ type configStruct struct {
 // insertConfig 插入config
 func insertConfig(ctx context.Context, config configStruct) error {
 	// 清空配置,重新创建
-	deleteAll(ctx, indexConfigName)
+	deleteAll(ctx, tableConfigName)
 
 	ID := FuncGenerateStringID()
 
@@ -84,7 +83,7 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	b, _ := json.Marshal(config)
 	json.Unmarshal(b, &m)
 
-	entityMap := zorm.NewEntityMap(indexConfigName)
+	entityMap := zorm.NewEntityMap(tableConfigName)
 	for k, v := range m {
 		entityMap.Set(k, v)
 	}
@@ -93,15 +92,12 @@ func insertConfig(ctx context.Context, config configStruct) error {
 }
 
 func findConfig() (configStruct, error) {
-	query := bleve.NewQueryStringQuery("*")
-	searchRequest := bleve.NewSearchRequestOptions(query, 100, 0, false)
-	searchRequest.Fields = []string{"*"}
+
+	finder := zorm.NewSelectFinder(tableConfigName, "*")
+
+	m, err := zorm.QueryRowMap(context.Background(), finder)
+
 	config := defaultConfig
-	result, err := bleveSearchInContext(context.Background(), indexConfigName, searchRequest)
-	if err != nil {
-		return config, err
-	}
-	m, err := result2Map(indexConfigName, result)
 	if err != nil {
 		return config, err
 	}
