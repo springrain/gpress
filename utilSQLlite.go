@@ -77,7 +77,7 @@ func findTableFieldStruct(ctx context.Context, tableName string, required int) (
 	if required != 0 {
 		finder.Append(" and required=? ", required)
 	}
-	finder.Append("order by sortNo desc,id desc", tableName)
+	finder.Append("order by sortNo asc,id desc", tableName)
 	page := zorm.NewPage()
 	page.PageNo = 1
 	page.PageSize = 1000
@@ -91,8 +91,8 @@ func findTableFieldStruct(ctx context.Context, tableName string, required int) (
 }
 
 // 保存新表
-func saveNewTable(ctx context.Context, tableName string, newTable zorm.IEntityMap) (ResponseData, error) {
-	tableFields, err := findTableFieldStruct(ctx, tableName, 1)
+func saveEntityMap(ctx context.Context, newTable zorm.IEntityMap) (ResponseData, error) {
+	tableFields, err := findTableFieldStruct(ctx, newTable.GetTableName(), 1)
 
 	responseData := ResponseData{StatusCode: 1}
 	if err != nil {
@@ -123,11 +123,14 @@ func saveNewTable(ctx context.Context, tableName string, newTable zorm.IEntityMa
 	}
 
 	if newTable.GetDBFieldMap()["sortNo"] == 0 {
-		count, _ := selectTableCount(tableName)
+		count, _ := selectTableCount(ctx, newTable.GetTableName())
 		newTable.Set("sortNo", count)
 	}
 
-	err = saveEntityMap(newTable)
+	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.InsertEntityMap(ctx, newTable)
+		return nil, err
+	})
 
 	if err != nil {
 		FuncLogError(err)
@@ -167,8 +170,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return err
 }
 
-func crateTable(createTableSQL string) (bool, error) {
-	ctx := context.Background()
+func crateTable(ctx context.Context, createTableSQL string) (bool, error) {
 	finder := zorm.NewFinder().Append(createTableSQL)
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.UpdateFinder(ctx, finder)
@@ -180,34 +182,26 @@ func crateTable(createTableSQL string) (bool, error) {
 	return true, nil
 }
 
-func saveTableInfo(tableInfoStruct TableInfoStruct) error {
-	_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+func saveTableInfo(ctx context.Context, tableInfoStruct TableInfoStruct) error {
+	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.Insert(ctx, &tableInfoStruct)
 		return nil, err
 	})
 	return err
 }
 
-func saveEntityMap(entityMap zorm.IEntityMap) error {
-	_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
-		_, err := zorm.InsertEntityMap(ctx, entityMap)
-		return nil, err
-	})
-	return err
-}
-
-func saveTableField(tableFiledStruct TableFieldStruct) {
-	zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+func saveTableField(ctx context.Context, tableFiledStruct TableFieldStruct) {
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.Insert(ctx, &tableFiledStruct)
 		return nil, err
 	})
 }
 
-func selectTableCount(tableName string) (int, error) {
+func selectTableCount(ctx context.Context, tableName string) (int, error) {
 
 	finder := zorm.NewSelectFinder(tableName, "count(*)")
 	count := 0
-	_, err := zorm.QueryRow(context.Background(), finder, &count)
+	_, err := zorm.QueryRow(ctx, finder, &count)
 
 	return count, err
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 )
 
@@ -23,7 +24,9 @@ func init() {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
@@ -47,7 +50,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	saveTableField(pageId)
+	saveTableField(ctx, pageId)
 
 	pageTemplateNameName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -65,7 +68,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(pageTemplateNameName)
+	saveTableField(ctx, pageTemplateNameName)
 
 	pageTemplateNamePath := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -83,13 +86,13 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(pageTemplateNamePath)
+	saveTableField(ctx, pageTemplateNamePath)
 
 	// 添加公共字段
-	indexCommonField(tablePageTemplateName, "页面模板", sortNo, now)
+	indexCommonField(ctx, tablePageTemplateName, "页面模板", sortNo, now)
 
 	//保存表信息
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(ctx, TableInfoStruct{
 		ID:         tablePageTemplateName,
 		Name:       "页面模板",
 		TableType:  "table",
