@@ -185,7 +185,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 		i++
 	}
 	responseData, err := funcSelectList(urlPathParam, "*", q, pageNo, params.String())
-	if err != nil { //索引不存在
+	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
 		return
@@ -205,12 +205,12 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 
 // funcLook 通用查看,根据id查看
 func funcLook(ctx context.Context, c *app.RequestContext) {
-	funcIndexById(ctx, c, "look.html")
+	funcTableById(ctx, c, "look.html")
 }
 
 // funcUpdatePre 修改页面
 func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
-	funcIndexById(ctx, c, "update.html")
+	funcTableById(ctx, c, "update.html")
 }
 
 // 修改内容
@@ -235,18 +235,19 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	urlPathParam := c.Param("urlPathParam")
-	//indexName := bleveDataDir + urlPathParam
+	//tableName := bleveDataDir + urlPathParam
 
 	if !pathExist(bleveDataDir + urlPathParam) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
 		return
 	}
-	entityMap := zorm.NewEntityMap(indexConfigName)
+	entityMap := zorm.NewEntityMap(tableConfigName)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
-	err = updateIndex(ctx, urlPathParam, id, entityMap)
+	entityMap.PkColumnName = "id"
+	err = updateTable(ctx, entityMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
 		c.Abort() // 终止后续调用
@@ -271,7 +272,7 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 // 保存内容
 func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
-	//indexName := bleveDataDir + urlPathParam
+	//tableName := bleveDataDir + urlPathParam
 	if !pathExist(bleveDataDir + urlPathParam) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
@@ -288,11 +289,11 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	entityMap := zorm.NewEntityMap(indexConfigName)
+	entityMap := zorm.NewEntityMap(tableConfigName)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
-	responseData, err := saveNewIndex(ctx, urlPathParam, entityMap)
+	responseData, err := saveNewTable(ctx, urlPathParam, entityMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
 		c.Abort() // 终止后续调用
@@ -312,7 +313,7 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	urlPathParam := c.Param("urlPathParam")
-	//indexName := bleveDataDir + urlPathParam
+	//tableName := bleveDataDir + urlPathParam
 	err := deleteById(ctx, urlPathParam, id)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
@@ -337,8 +338,8 @@ func permissionHandler() app.HandlerFunc {
 	}
 }
 
-// funcIndexById 根据Id查询索引信息
-func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) {
+// funcTableById 根据Id查询表信息
+func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) {
 	id := c.Query("id")
 	if id == "" {
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
@@ -346,9 +347,9 @@ func funcIndexById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 		return
 	}
 	urlPathParam := c.Param("urlPathParam")
-	//indexName := bleveDataDir + urlPathParam
+	//tableName := bleveDataDir + urlPathParam
 	responseData, err := funcSelectOne(urlPathParam, "*", id)
-	if err != nil { //索引不存在
+	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
 		return

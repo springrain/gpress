@@ -13,7 +13,7 @@ import (
 func init() {
 
 	// 默认首页
-	h.GET("/", funcIndex)
+	h.GET("/", funcTable)
 	// 导航菜单列表
 	h.GET("/navMenu/:urlPathParam", funcListNavMenu)
 	// 查看标签
@@ -23,8 +23,8 @@ func init() {
 
 }
 
-// funcIndex 模板首页
-func funcIndex(ctx context.Context, c *app.RequestContext) {
+// funcTable 模板首页
+func funcTable(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	c.HTML(http.StatusOK, "index.html", data)
 }

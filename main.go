@@ -6,14 +6,14 @@ import (
 
 // 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init函数!!!
 
-// 检查索引状态
-var bleveStatus = checkBleveStatus()
+// 检查表状态
+var bleveStatus = checkSQLliteStatus()
 
 // 是否已经安装过了
-var installed = true
+var installed = isInstalled()
 
 // 加载配置文件
-var config = defaultConfig
+var config = loadInstallConfig()
 
 // 使用的主题
 var themePath = "/theme/" + config.Theme + "/"
@@ -22,8 +22,8 @@ var themePath = "/theme/" + config.Theme + "/"
 var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.BasePath))
 
 func init() {
-	if !bleveStatus { // 索引状态检查失败
-		panic("索引检查失败")
+	if !bleveStatus { // 表状态检查失败
+		panic("表检查失败")
 	}
 
 	// 设置随机种子

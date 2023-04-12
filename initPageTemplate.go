@@ -5,14 +5,14 @@ import (
 )
 
 func init() {
-	if tableExist(indexPageTemplateName) {
+	if tableExist(tablePageTemplateName) {
 		return
 	}
 
 	// 获取当前时间
 	now := time.Now()
 
-	// 创建用户表的索引
+	// 创建用户表的表
 	createTableSQL := `CREATE TABLE pageTemplate (
 		id TEXT PRIMARY KEY     NOT NULL,
 		templateName         TEXT  NOT NULL,
@@ -23,21 +23,21 @@ func init() {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := bleveNewIndexMapping(createTableSQL)
+	_, err := crateTable(createTableSQL)
 	if err != nil {
 		return
 	}
 
 	sortNo := 1
 	// 初始化各个字段
-	pageId := IndexFieldStruct{
+	pageId := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexPageTemplateName,
+		TableCode:    tablePageTemplateName,
 		FieldCode:    "id",
 		FieldName:    "页面模板id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "页面模板",
+		TableName:    "页面模板",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -49,14 +49,14 @@ func init() {
 	sortNo++
 	saveTableField(pageId)
 
-	pageTemplateNameName := IndexFieldStruct{
+	pageTemplateNameName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexPageTemplateName,
+		TableCode:    tablePageTemplateName,
 		FieldCode:    "templateName",
 		FieldName:    "模板名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "页面模板",
+		TableName:    "页面模板",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -67,14 +67,14 @@ func init() {
 	sortNo++
 	saveTableField(pageTemplateNameName)
 
-	pageTemplateNamePath := IndexFieldStruct{
+	pageTemplateNamePath := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexPageTemplateName,
+		TableCode:    tablePageTemplateName,
 		FieldCode:    "templatePath",
 		FieldName:    "模板路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "页面模板",
+		TableName:    "页面模板",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -86,13 +86,13 @@ func init() {
 	saveTableField(pageTemplateNamePath)
 
 	// 添加公共字段
-	indexCommonField(indexPageTemplateName, "页面模板", sortNo, now)
+	indexCommonField(tablePageTemplateName, "页面模板", sortNo, now)
 
 	//保存表信息
-	saveTableInfo(IndexInfoStruct{
-		ID:         indexPageTemplateName,
+	saveTableInfo(TableInfoStruct{
+		ID:         tablePageTemplateName,
 		Name:       "页面模板",
-		IndexType:  "index",
+		TableType:  "table",
 		Code:       "pageTemplate",
 		CreateTime: now,
 		UpdateTime: now,
