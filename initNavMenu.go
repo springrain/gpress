@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 )
 
@@ -30,7 +31,8 @@ func init() {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
@@ -55,7 +57,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	saveTableField(navMenuId)
+	saveTableField(ctx, navMenuId)
 
 	navMenuMenuName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -74,7 +76,7 @@ func init() {
 		Required:     1,
 	}
 	sortNo++
-	saveTableField(navMenuMenuName)
+	saveTableField(ctx, navMenuMenuName)
 
 	navMenuHrefURL := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -93,7 +95,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuHrefURL)
+	saveTableField(ctx, navMenuHrefURL)
 
 	navMenuHrefTarget := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -112,7 +114,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuHrefTarget)
+	saveTableField(ctx, navMenuHrefTarget)
 
 	navMenuPID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -131,7 +133,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuPID)
+	saveTableField(ctx, navMenuPID)
 
 	navMenuThemePC := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -150,7 +152,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuThemePC)
+	saveTableField(ctx, navMenuThemePC)
 
 	navMenuModuleID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -169,7 +171,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuModuleID)
+	saveTableField(ctx, navMenuModuleID)
 
 	navMenuComCode := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -188,7 +190,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuComCode)
+	saveTableField(ctx, navMenuComCode)
 
 	navMenuTemplateID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -207,7 +209,7 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuTemplateID)
+	saveTableField(ctx, navMenuTemplateID)
 
 	navMenuChildTemplateID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -226,13 +228,13 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(navMenuChildTemplateID)
+	saveTableField(ctx, navMenuChildTemplateID)
 
 	// 添加公共字段
-	indexCommonField(tableNavMenuName, "导航菜单", sortNo, now)
+	indexCommonField(ctx, tableNavMenuName, "导航菜单", sortNo, now)
 
 	//保存表信息
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(ctx, TableInfoStruct{
 		ID:         tableNavMenuName,
 		Name:       "导航菜单",
 		Code:       "navMenu",

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 )
 
@@ -18,9 +19,12 @@ func init() {
 		id TEXT PRIMARY KEY     NOT NULL,
 		account         TEXT  NOT NULL,
 		password         TEXT   NOT NULL,
-		userName         TEXT NOT NULL
+		userName         TEXT NOT NULL,
+		sortNo            int,
+		status            int  
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
@@ -42,7 +46,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(userId)
+	saveTableField(ctx, userId)
 
 	// 用户表的 Account 字段
 	userAccount := TableFieldStruct{
@@ -61,7 +65,7 @@ func init() {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(userAccount)
+	saveTableField(ctx, userAccount)
 	// 用户表的 PassWord 字段
 	userPassWord := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -79,7 +83,7 @@ func init() {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(userPassWord)
+	saveTableField(ctx, userPassWord)
 	// 用户表的 UserName 字段
 	userName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -97,10 +101,10 @@ func init() {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(userName)
+	saveTableField(ctx, userName)
 
 	//保存表信息
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(ctx, TableInfoStruct{
 		ID:         tableUserName,
 		Name:       "用户信息",
 		TableType:  "table",

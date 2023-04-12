@@ -237,12 +237,12 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 	//tableName := bleveDataDir + urlPathParam
 
-	if !pathExist(bleveDataDir + urlPathParam) {
+	if !tableExist(urlPathParam) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
 		return
 	}
-	entityMap := zorm.NewEntityMap(tableConfigName)
+	entityMap := zorm.NewEntityMap(urlPathParam)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
@@ -273,7 +273,7 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 	//tableName := bleveDataDir + urlPathParam
-	if !pathExist(bleveDataDir + urlPathParam) {
+	if !tableExist(urlPathParam) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
 		c.Abort() // 终止后续调用
 		return
@@ -289,11 +289,11 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
-	entityMap := zorm.NewEntityMap(tableConfigName)
+	entityMap := zorm.NewEntityMap(urlPathParam)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
-	responseData, err := saveNewTable(ctx, urlPathParam, entityMap)
+	responseData, err := saveEntityMap(ctx, entityMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
 		c.Abort() // 终止后续调用
