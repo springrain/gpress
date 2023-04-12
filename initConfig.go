@@ -174,6 +174,9 @@ func initConfig() (bool, error) {
 }
 
 func init() {
+	if tableExist(tableConfigName) {
+		return
+	}
 	// 获取当前时间
 	now := time.Now()
 
