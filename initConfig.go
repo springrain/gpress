@@ -51,7 +51,7 @@ func initConfig() (bool, error) {
 	}
 
 	sortNo++
-	addIndexField(configId)
+	saveTableField(configId)
 
 	// 配置 basePath 字段
 	basePath := IndexFieldStruct{
@@ -70,7 +70,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(basePath)
+	saveTableField(basePath)
 
 	// 配置 jwtSecret 字段
 	jwtSecret := IndexFieldStruct{
@@ -89,7 +89,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(jwtSecret)
+	saveTableField(jwtSecret)
 
 	// 配置 jwtSecret 字段
 	jwttokenKey := IndexFieldStruct{
@@ -108,7 +108,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(jwttokenKey)
+	saveTableField(jwttokenKey)
 
 	// 配置 serverPort 字段
 	serverPort := IndexFieldStruct{
@@ -127,7 +127,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(serverPort)
+	saveTableField(serverPort)
 
 	// 配置 theme 字段
 	theme := IndexFieldStruct{
@@ -146,7 +146,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(theme)
+	saveTableField(theme)
 
 	// 配置 timeout 字段
 	timeout := IndexFieldStruct{
@@ -165,7 +165,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(timeout)
+	saveTableField(timeout)
 
 	// 添加公共字段
 	indexCommonField(indexConfigName, "配置信息", sortNo, now)
@@ -179,7 +179,7 @@ func init() {
 
 	//保存表信息
 	//indexInfo, _, _ := openBleveIndex(indexInfoName)
-	bleveSaveIndex(indexInfoName, indexConfigName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexConfigName,
 		Name:       "配置信息",
 		Code:       "config",

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"time"
 
 	"gitee.com/chunanyong/zorm"
@@ -114,7 +113,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(id)
+	saveTableField(id)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, id.ID, id)
 	sortNo++
@@ -135,7 +134,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(indexCode)
+	saveTableField(indexCode)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, indexCode.ID, indexCode)
 	sortNo++
@@ -156,7 +155,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(indexName)
+	saveTableField(indexName)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, indexName.ID, indexName)
 	sortNo++
@@ -177,7 +176,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(businessID)
+	saveTableField(businessID)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, businessID.ID, businessID)
 	sortNo++
@@ -198,7 +197,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(fieldCode)
+	saveTableField(fieldCode)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, fieldCode.ID, fieldCode)
 	sortNo++
@@ -219,7 +218,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(fieldName)
+	saveTableField(fieldName)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, fieldName.ID, fieldName)
 	sortNo++
@@ -240,7 +239,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(fieldComment)
+	saveTableField(fieldComment)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, fieldComment.ID, fieldComment)
 	sortNo++
@@ -265,7 +264,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(fieldType)
+	saveTableField(fieldType)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, fieldType.ID, fieldType)
 	sortNo++
@@ -286,7 +285,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(fieldFormat)
+	saveTableField(fieldFormat)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, fieldFormat.ID, fieldFormat)
 	sortNo++
@@ -307,7 +306,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(required)
+	saveTableField(required)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, required.ID, required)
 	sortNo++
@@ -328,7 +327,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(defaultValue)
+	saveTableField(defaultValue)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, defaultValue.ID, defaultValue)
 	sortNo++
@@ -349,7 +348,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(analyzerName)
+	saveTableField(analyzerName)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, analyzerName.ID, analyzerName)
 	sortNo++
@@ -370,7 +369,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(createTime)
+	saveTableField(createTime)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, createTime.ID, createTime)
 	sortNo++
@@ -391,7 +390,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(updateTime)
+	saveTableField(updateTime)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, updateTime.ID, updateTime)
 	sortNo++
@@ -412,7 +411,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(createUserField)
+	saveTableField(createUserField)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, createUserField.ID, createUserField)
 	sortNo++
@@ -433,7 +432,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(sortNoField)
+	saveTableField(sortNoField)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, sortNoField.ID, sortNoField)
 	sortNo++
@@ -454,7 +453,7 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	addIndexField(status)
+	saveTableField(status)
 	//bleveSaveIndex
 	//bleveSaveIndex(indexFieldName, status.ID, status)
 
@@ -480,7 +479,7 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(commonCreateTime)
+	saveTableField(commonCreateTime)
 
 	sortNo++
 	commonUpdateTime := IndexFieldStruct{
@@ -499,7 +498,7 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(commonUpdateTime)
+	saveTableField(commonUpdateTime)
 
 	sortNo++
 	commonCreateUser := IndexFieldStruct{
@@ -518,7 +517,7 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(commonCreateUser)
+	saveTableField(commonCreateUser)
 
 	sortNo++
 	commonSortNo := IndexFieldStruct{
@@ -537,7 +536,7 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(commonSortNo)
+	saveTableField(commonSortNo)
 
 	sortNo++
 	commonActive := IndexFieldStruct{
@@ -556,21 +555,14 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(commonActive)
+	saveTableField(commonActive)
 }
 
-func addIndexField(indexFiledStruct IndexFieldStruct) {
-	zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
-		_, err := zorm.Insert(ctx, &indexFiledStruct)
-		return nil, err
-	})
-}
-func init7() {
+func init() {
 
 	// 获取当前时间
 	now := time.Now()
-
-	bleveSaveIndex(indexInfoName, indexFieldName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexFieldName,
 		Name:       "表字段",
 		Code:       "indexField",

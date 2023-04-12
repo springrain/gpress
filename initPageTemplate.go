@@ -47,7 +47,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	addIndexField(pageId)
+	saveTableField(pageId)
 
 	pageTemplateNameName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -65,7 +65,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(pageTemplateNameName)
+	saveTableField(pageTemplateNameName)
 
 	pageTemplateNamePath := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -83,13 +83,13 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(pageTemplateNamePath)
+	saveTableField(pageTemplateNamePath)
 
 	// 添加公共字段
 	indexCommonField(indexPageTemplateName, "页面模板", sortNo, now)
 
 	//保存表信息
-	bleveSaveIndex(indexInfoName, indexPageTemplateName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexPageTemplateName,
 		Name:       "页面模板",
 		IndexType:  "index",
