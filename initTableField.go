@@ -559,7 +559,9 @@ func indexCommonField(tableCode string, tableName string, sortNo int, now time.T
 }
 
 func init() {
-
+	if tableExist(tableFieldName) {
+		return
+	}
 	// 获取当前时间
 	now := time.Now()
 	saveTableInfo(TableInfoStruct{
