@@ -88,7 +88,9 @@ func insertConfig(ctx context.Context, config configStruct) error {
 	for k, v := range m {
 		entityMap.Set(k, v)
 	}
-	saveEntityMap(entityMap)
+	entityMap.Set("sortNo", 0)
+	entityMap.Set("status", 1)
+	saveEntityMap(ctx, entityMap)
 	return nil
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 
 	"gitee.com/chunanyong/zorm"
@@ -90,7 +91,8 @@ func initTableField() (bool, error) {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return false, err
 	}
@@ -113,7 +115,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(id)
+	saveTableField(ctx, id)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, id.ID, id)
 	sortNo++
@@ -134,7 +136,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(tableCode)
+	saveTableField(ctx, tableCode)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, tableCode.ID, tableCode)
 	sortNo++
@@ -155,7 +157,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(tableName)
+	saveTableField(ctx, tableName)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, tableName.ID, tableName)
 	sortNo++
@@ -176,7 +178,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(businessID)
+	saveTableField(ctx, businessID)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, businessID.ID, businessID)
 	sortNo++
@@ -197,7 +199,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(fieldCode)
+	saveTableField(ctx, fieldCode)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, fieldCode.ID, fieldCode)
 	sortNo++
@@ -218,7 +220,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(fieldName)
+	saveTableField(ctx, fieldName)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, fieldName.ID, fieldName)
 	sortNo++
@@ -239,7 +241,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(fieldComment)
+	saveTableField(ctx, fieldComment)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, fieldComment.ID, fieldComment)
 	sortNo++
@@ -264,7 +266,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(fieldType)
+	saveTableField(ctx, fieldType)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, fieldType.ID, fieldType)
 	sortNo++
@@ -285,7 +287,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(fieldFormat)
+	saveTableField(ctx, fieldFormat)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, fieldFormat.ID, fieldFormat)
 	sortNo++
@@ -306,7 +308,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(required)
+	saveTableField(ctx, required)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, required.ID, required)
 	sortNo++
@@ -327,7 +329,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(defaultValue)
+	saveTableField(ctx, defaultValue)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, defaultValue.ID, defaultValue)
 	sortNo++
@@ -348,7 +350,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(analyzerName)
+	saveTableField(ctx, analyzerName)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, analyzerName.ID, analyzerName)
 	sortNo++
@@ -369,7 +371,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(createTime)
+	saveTableField(ctx, createTime)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, createTime.ID, createTime)
 	sortNo++
@@ -390,7 +392,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(updateTime)
+	saveTableField(ctx, updateTime)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, updateTime.ID, updateTime)
 	sortNo++
@@ -411,7 +413,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(createUserField)
+	saveTableField(ctx, createUserField)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, createUserField.ID, createUserField)
 	sortNo++
@@ -432,7 +434,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(sortNoField)
+	saveTableField(ctx, sortNoField)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, sortNoField.ID, sortNoField)
 	sortNo++
@@ -453,7 +455,7 @@ func initTableField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(status)
+	saveTableField(ctx, status)
 	//bleveSaveTable
 	//bleveSaveTable(indexFieldName, status.ID, status)
 
@@ -461,7 +463,7 @@ func initTableField() (bool, error) {
 }
 
 // indexCommonField 插入公共字段
-func indexCommonField(tableCode string, tableName string, sortNo int, now string) {
+func indexCommonField(ctx context.Context, tableCode string, tableName string, sortNo int, now string) {
 	sortNo++
 	commonCreateTime := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -479,7 +481,7 @@ func indexCommonField(tableCode string, tableName string, sortNo int, now string
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(commonCreateTime)
+	saveTableField(ctx, commonCreateTime)
 
 	sortNo++
 	commonUpdateTime := TableFieldStruct{
@@ -498,7 +500,7 @@ func indexCommonField(tableCode string, tableName string, sortNo int, now string
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(commonUpdateTime)
+	saveTableField(ctx, commonUpdateTime)
 
 	sortNo++
 	commonCreateUser := TableFieldStruct{
@@ -517,7 +519,7 @@ func indexCommonField(tableCode string, tableName string, sortNo int, now string
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(commonCreateUser)
+	saveTableField(ctx, commonCreateUser)
 
 	sortNo++
 	commonSortNo := TableFieldStruct{
@@ -536,7 +538,7 @@ func indexCommonField(tableCode string, tableName string, sortNo int, now string
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(commonSortNo)
+	saveTableField(ctx, commonSortNo)
 
 	sortNo++
 	commonActive := TableFieldStruct{
@@ -555,7 +557,7 @@ func indexCommonField(tableCode string, tableName string, sortNo int, now string
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(commonActive)
+	saveTableField(ctx, commonActive)
 }
 
 func init() {
@@ -564,7 +566,7 @@ func init() {
 	}
 	// 获取当前时间
 	now := time.Now().Format("2006-01-02 15:04:05")
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(context.Background(), TableInfoStruct{
 		ID:         tableFieldName,
 		Name:       "表字段",
 		Code:       "tableField",

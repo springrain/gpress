@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 )
 
@@ -34,7 +35,8 @@ func init() {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
@@ -60,7 +62,7 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	saveTableField(contentId)
+	saveTableField(ctx, contentId)
 
 	contentModuleID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -78,7 +80,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentModuleID)
+	saveTableField(ctx, contentModuleID)
 
 	contentTitle := TableFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -97,7 +99,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentTitle)
+	saveTableField(ctx, contentTitle)
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
@@ -118,7 +120,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentKeyword)
+	saveTableField(ctx, contentKeyword)
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
@@ -139,7 +141,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentDescription)
+	saveTableField(ctx, contentDescription)
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
@@ -159,7 +161,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentPageURL)
+	saveTableField(ctx, contentPageURL)
 
 	contentSubtitle := TableFieldStruct{
 		ID:        FuncGenerateStringID(),
@@ -178,7 +180,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentSubtitle)
+	saveTableField(ctx, contentSubtitle)
 	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
@@ -198,7 +200,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentNavMenuId)
+	saveTableField(ctx, contentNavMenuId)
 	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	// //mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
 
@@ -218,7 +220,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentNavMenuNames)
+	saveTableField(ctx, contentNavMenuNames)
 	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
 
@@ -238,7 +240,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentTemplateID)
+	saveTableField(ctx, contentTemplateID)
 
 	contentAuthor := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -256,7 +258,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentAuthor)
+	saveTableField(ctx, contentAuthor)
 
 	contentTag := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -274,7 +276,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentTag)
+	saveTableField(ctx, contentTag)
 
 	contentToc := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -292,7 +294,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentToc)
+	saveTableField(ctx, contentToc)
 
 	contentSummary := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -310,7 +312,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentSummary)
+	saveTableField(ctx, contentSummary)
 
 	contentContent := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -328,7 +330,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentContent)
+	saveTableField(ctx, contentContent)
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
@@ -348,7 +350,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentMarkdown)
+	saveTableField(ctx, contentMarkdown)
 
 	contentThumbnail := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -366,14 +368,14 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(contentThumbnail)
+	saveTableField(ctx, contentThumbnail)
 
 	// 添加公共字段
-	indexCommonField(tableContentName, "文章内容", sortNo, now)
+	indexCommonField(ctx, tableContentName, "文章内容", sortNo, now)
 
 	//保存表信息
 	//tableInfo, _, _ := openBleveTable(tableInfoName)
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(ctx, TableInfoStruct{
 		ID:         tableContentName,
 		Name:       "文章内容",
 		Code:       "content",
@@ -386,7 +388,7 @@ func init() {
 	})
 
 	//保存默认模型表信息
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(ctx, TableInfoStruct{
 		ID:         tableModuleDefaultName,
 		Name:       "默认模型",
 		Code:       tableModuleDefaultName,

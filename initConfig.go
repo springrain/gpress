@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"time"
 )
 
@@ -28,7 +29,8 @@ func initConfig() (bool, error) {
 		sortNo           int NOT NULL,
 		status           int NOT NULL
 	 ) strict ;`
-	_, err := crateTable(createTableSQL)
+	ctx := context.Background()
+	_, err := crateTable(ctx, createTableSQL)
 	if err != nil {
 		return false, err
 	}
@@ -51,7 +53,7 @@ func initConfig() (bool, error) {
 	}
 
 	sortNo++
-	saveTableField(configId)
+	saveTableField(ctx, configId)
 
 	// 配置 basePath 字段
 	basePath := TableFieldStruct{
@@ -70,7 +72,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(basePath)
+	saveTableField(ctx, basePath)
 
 	// 配置 jwtSecret 字段
 	jwtSecret := TableFieldStruct{
@@ -89,7 +91,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(jwtSecret)
+	saveTableField(ctx, jwtSecret)
 
 	// 配置 jwtSecret 字段
 	jwttokenKey := TableFieldStruct{
@@ -108,7 +110,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(jwttokenKey)
+	saveTableField(ctx, jwttokenKey)
 
 	// 配置 serverPort 字段
 	serverPort := TableFieldStruct{
@@ -127,7 +129,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(serverPort)
+	saveTableField(ctx, serverPort)
 
 	// 配置 theme 字段
 	theme := TableFieldStruct{
@@ -146,7 +148,7 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(theme)
+	saveTableField(ctx, theme)
 
 	// 配置 timeout 字段
 	timeout := TableFieldStruct{
@@ -165,10 +167,10 @@ func initConfig() (bool, error) {
 		Status:       1,
 	}
 	sortNo++
-	saveTableField(timeout)
+	saveTableField(ctx, timeout)
 
 	// 添加公共字段
-	indexCommonField(tableConfigName, "配置信息", sortNo, now)
+	indexCommonField(ctx, tableConfigName, "配置信息", sortNo, now)
 
 	return true, nil
 }
@@ -182,7 +184,7 @@ func init() {
 
 	//保存表信息
 	//tableInfo, _, _ := openBleveTable(tableInfoName)
-	saveTableInfo(TableInfoStruct{
+	saveTableInfo(context.Background(), TableInfoStruct{
 		ID:         tableConfigName,
 		Name:       "配置信息",
 		Code:       "config",
