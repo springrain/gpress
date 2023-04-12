@@ -7,7 +7,7 @@ import (
 // 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init函数!!!
 
 // 检查表状态
-var bleveStatus = checkSQLliteStatus()
+var sqliteStatus = checkSQLliteStatus()
 
 // 是否已经安装过了
 var installed = isInstalled()
@@ -22,7 +22,7 @@ var themePath = "/theme/" + config.Theme + "/"
 var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.BasePath))
 
 func init() {
-	if !bleveStatus { // 表状态检查失败
+	if !sqliteStatus { // 表状态检查失败
 		panic("表检查失败")
 	}
 
