@@ -14,7 +14,7 @@ func init() {
 	}
 
 	// 创建用户表的表
-	createTableSQL := `CREATE TABLE site (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS site (
 		id TEXT PRIMARY KEY     NOT NULL,
 		title         TEXT  NOT NULL,
 		name         TEXT   NOT NULL,

@@ -71,7 +71,7 @@ func initTableField() (bool, error) {
 		return true, nil
 	}
 
-	createTableSQL := `CREATE TABLE tableField (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS tableField (
 		id TEXT PRIMARY KEY     NOT NULL,
 		tableCode         TEXT  NOT NULL,
 		tableName         TEXT   NOT NULL,
