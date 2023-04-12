@@ -1,14 +1,14 @@
 {{template "admin/header.html"}}
   <title>look - GPRESS</title>
 {{template "admin/bodystart.html"}}
-{{ $indexFiled := indexFiled .urlPathParam }}
+{{ $tableFiled := tableFiled .urlPathParam }}
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-9-desktop is-9-tablet">
         <form id="gpress-form" action="/" method="POST">
           {{ $data := . }}
-          {{ range $indexFiled }}
+          {{ range $tableFiled }}
           <div class="field is-horizontal">
             <div class="field-label">
               <label class="label">{{.FieldName}}</label>

@@ -5,11 +5,11 @@ import (
 )
 
 func init() {
-	if tableExist(indexContentName) {
+	if tableExist(tableContentName) {
 		return
 	}
 
-	// 创建内容表的索引
+	// 创建内容表的表
 	createTableSQL := `CREATE TABLE content (
 		id TEXT PRIMARY KEY     NOT NULL,
 		moduleID         TEXT  ,
@@ -34,7 +34,7 @@ func init() {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := bleveNewIndexMapping(createTableSQL)
+	_, err := crateTable(createTableSQL)
 	if err != nil {
 		return
 	}
@@ -43,14 +43,14 @@ func init() {
 	now := time.Now()
 	sortNo := 1
 	// 初始化各个字段
-	contentId := IndexFieldStruct{
+	contentId := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "id",
 		FieldName:    "文章内容ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -62,14 +62,14 @@ func init() {
 	sortNo++
 	saveTableField(contentId)
 
-	contentModuleID := IndexFieldStruct{
+	contentModuleID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "moduleID",
 		FieldName:    "模型的Code",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -80,15 +80,15 @@ func init() {
 	sortNo++
 	saveTableField(contentModuleID)
 
-	contentTitle := IndexFieldStruct{
+	contentTitle := TableFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: indexContentName,
+		TableCode: tableContentName,
 		FieldCode: "title",
 		FieldName: "标题",
 		FieldType: fieldType_文本框,
 		// 文章标题使用中文分词
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -101,15 +101,15 @@ func init() {
 	// title 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
-	contentKeyword := IndexFieldStruct{
+	contentKeyword := TableFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: indexContentName,
+		TableCode: tableContentName,
 		FieldCode: "keyword",
 		FieldName: "关键字",
 		FieldType: fieldType_文本框,
 		// 文章关键字使用逗号分词器
 		AnalyzerName: commaAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -122,15 +122,15 @@ func init() {
 	// keyword 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
-	contentDescription := IndexFieldStruct{
+	contentDescription := TableFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: indexContentName,
+		TableCode: tableContentName,
 		FieldCode: "description",
 		FieldName: "站点描述",
 		FieldType: fieldType_文本框,
 		// 文章描述使用中文分词器
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -143,14 +143,14 @@ func init() {
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
-	contentPageURL := IndexFieldStruct{
+	contentPageURL := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "pageURL",
 		FieldName:    "自身页面路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -161,15 +161,15 @@ func init() {
 	sortNo++
 	saveTableField(contentPageURL)
 
-	contentSubtitle := IndexFieldStruct{
+	contentSubtitle := TableFieldStruct{
 		ID:        FuncGenerateStringID(),
-		IndexCode: indexContentName,
+		TableCode: tableContentName,
 		FieldCode: "subtitle",
 		FieldName: "副标题",
 		FieldType: fieldType_文本框,
 		// 文章副标题使用中文分词器
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -182,14 +182,14 @@ func init() {
 	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
-	contentNavMenuId := IndexFieldStruct{
+	contentNavMenuId := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "navMenuID",
 		FieldName:    "导航ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -202,14 +202,14 @@ func init() {
 	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
 	// //mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
 
-	contentNavMenuNames := IndexFieldStruct{
+	contentNavMenuNames := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "navMenuName",
 		FieldName:    "导航名称,逗号(,)隔开",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -222,14 +222,14 @@ func init() {
 	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
 
-	contentTemplateID := IndexFieldStruct{
+	contentTemplateID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "templateID",
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -240,14 +240,14 @@ func init() {
 	sortNo++
 	saveTableField(contentTemplateID)
 
-	contentAuthor := IndexFieldStruct{
+	contentAuthor := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "author",
 		FieldName:    "作者",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -258,14 +258,14 @@ func init() {
 	sortNo++
 	saveTableField(contentAuthor)
 
-	contentTag := IndexFieldStruct{
+	contentTag := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "tag",
 		FieldName:    "标签",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -276,14 +276,14 @@ func init() {
 	sortNo++
 	saveTableField(contentTag)
 
-	contentToc := IndexFieldStruct{
+	contentToc := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "toc",
 		FieldName:    "文章目录",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -294,14 +294,14 @@ func init() {
 	sortNo++
 	saveTableField(contentToc)
 
-	contentSummary := IndexFieldStruct{
+	contentSummary := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "summary",
 		FieldName:    "文章摘要",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -312,14 +312,14 @@ func init() {
 	sortNo++
 	saveTableField(contentSummary)
 
-	contentContent := IndexFieldStruct{
+	contentContent := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "content",
 		FieldName:    "文章内容",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -332,14 +332,14 @@ func init() {
 	// content 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("content", gseAnalyzerMapping)
 
-	contentMarkdown := IndexFieldStruct{
+	contentMarkdown := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "markdown",
 		FieldName:    "markdown原文",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -350,14 +350,14 @@ func init() {
 	sortNo++
 	saveTableField(contentMarkdown)
 
-	contentThumbnail := IndexFieldStruct{
+	contentThumbnail := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexContentName,
+		TableCode:    tableContentName,
 		FieldCode:    "thumbnail",
 		FieldName:    "封面图",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "文章内容",
+		TableName:    "文章内容",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -369,15 +369,15 @@ func init() {
 	saveTableField(contentThumbnail)
 
 	// 添加公共字段
-	indexCommonField(indexContentName, "文章内容", sortNo, now)
+	indexCommonField(tableContentName, "文章内容", sortNo, now)
 
 	//保存表信息
-	//indexInfo, _, _ := openBleveIndex(indexInfoName)
-	saveTableInfo(IndexInfoStruct{
-		ID:         indexContentName,
+	//tableInfo, _, _ := openBleveTable(tableInfoName)
+	saveTableInfo(TableInfoStruct{
+		ID:         tableContentName,
 		Name:       "文章内容",
 		Code:       "content",
-		IndexType:  "index",
+		TableType:  "table",
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,
@@ -386,11 +386,11 @@ func init() {
 	})
 
 	//保存默认模型表信息
-	saveTableInfo(IndexInfoStruct{
-		ID:         indexModuleDefaultName,
+	saveTableInfo(TableInfoStruct{
+		ID:         tableModuleDefaultName,
 		Name:       "默认模型",
-		Code:       indexModuleDefaultName,
-		IndexType:  "module",
+		Code:       tableModuleDefaultName,
+		TableType:  "module",
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,

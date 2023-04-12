@@ -6,18 +6,18 @@ import (
 	"gitee.com/chunanyong/zorm"
 )
 
-// IndexFieldStruct 索引和字段(索引名:indexField)
-// 记录所有索引字段code和中文说明.
-// 理论上所有的索引字段都可以放到这个表里,因为都是Map,就不需要再单独指定索引的字段了,可以动态创建Index(目前建议这样做)
-type IndexFieldStruct struct {
+// TableFieldStruct 表和字段(表名:tableField)
+// 记录所有表字段code和中文说明.
+// 理论上所有的表字段都可以放到这个表里,因为都是Map,就不需要再单独指定表的字段了,可以动态创建Table(目前建议这样做)
+type TableFieldStruct struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
 	// ID 主键
 	ID string `column:"id" json:"id"`
-	// IndexCode 索引代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
-	IndexCode string `column:"indexCode" json:"indexCode,omitempty"`
-	// IndexName 索引表中文名
-	IndexName string `column:"indexName" json:"indexName,omitempty"`
+	// TableCode 表代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
+	TableCode string `column:"tableCode" json:"tableCode,omitempty"`
+	// TableName 表表中文名
+	TableName string `column:"tableName" json:"tableName,omitempty"`
 	// BusinessID  业务ID,处理业务记录临时增加的字段,意外情况
 	BusinessID string `column:"businessID" json:"businessID,omitempty"`
 	// FieldCode  字段代码
@@ -52,28 +52,28 @@ type IndexFieldStruct struct {
 
 // GetTableName 获取表名称
 // IEntityStruct 接口的方法,实体类需要实现!!!
-func (entity *IndexFieldStruct) GetTableName() string {
-	return indexFieldName
+func (entity *TableFieldStruct) GetTableName() string {
+	return tableFieldName
 }
 
 // GetPKColumnName 获取数据库表的主键字段名称.因为要兼容Map,只能是数据库的字段名称
 // 不支持联合主键,变通认为无主键,业务控制实现(艰难取舍)
 // 如果没有主键,也需要实现这个方法, return "" 即可
 // IEntityStruct 接口的方法,实体类需要实现!!!
-func (entity *IndexFieldStruct) GetPKColumnName() string {
+func (entity *TableFieldStruct) GetPKColumnName() string {
 	return "id"
 }
 
-// initIndexField 初始化创建IndexField索引
-func initIndexField() (bool, error) {
-	if tableExist(indexFieldName) {
+// initTableField 初始化创建TableField表
+func initTableField() (bool, error) {
+	if tableExist(tableFieldName) {
 		return true, nil
 	}
 
-	createTableSQL := `CREATE TABLE indexField (
+	createTableSQL := `CREATE TABLE tableField (
 		id TEXT PRIMARY KEY     NOT NULL,
-		indexCode         TEXT  NOT NULL,
-		indexName         TEXT   NOT NULL,
+		tableCode         TEXT  NOT NULL,
+		tableName         TEXT   NOT NULL,
 		businessID        TEXT,
 		fieldCode         TEXT NOT NULL,
 		fieldName         TEXT NOT NULL,
@@ -90,21 +90,21 @@ func initIndexField() (bool, error) {
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;`
-	_, err := bleveNewIndexMapping(createTableSQL)
+	_, err := crateTable(createTableSQL)
 	if err != nil {
 		return false, err
 	}
 
 	sortNo := 1
 	now := time.Now()
-	id := IndexFieldStruct{
+	id := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "id",
 		FieldName:    "字段ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -114,18 +114,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(id)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, id.ID, id)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, id.ID, id)
 	sortNo++
 
-	indexCode := IndexFieldStruct{
+	tableCode := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
-		FieldCode:    "indexCode",
+		TableCode:    tableFieldName,
+		FieldCode:    "tableCode",
 		FieldName:    "表名",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -134,19 +134,19 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(indexCode)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, indexCode.ID, indexCode)
+	saveTableField(tableCode)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, tableCode.ID, tableCode)
 	sortNo++
 
-	indexName := IndexFieldStruct{
+	tableName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
-		FieldCode:    "indexName",
+		TableCode:    tableFieldName,
+		FieldCode:    "tableName",
 		FieldName:    "表名",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -155,19 +155,19 @@ func initIndexField() (bool, error) {
 		Status:       3,
 		Required:     1,
 	}
-	saveTableField(indexName)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, indexName.ID, indexName)
+	saveTableField(tableName)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, tableName.ID, tableName)
 	sortNo++
 
-	businessID := IndexFieldStruct{
+	businessID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "businessID",
 		FieldName:    "业务ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -177,18 +177,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(businessID)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, businessID.ID, businessID)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, businessID.ID, businessID)
 	sortNo++
 
-	fieldCode := IndexFieldStruct{
+	fieldCode := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "fieldCode",
 		FieldName:    "字段",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -198,18 +198,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(fieldCode)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, fieldCode.ID, fieldCode)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, fieldCode.ID, fieldCode)
 	sortNo++
 
-	fieldName := IndexFieldStruct{
+	fieldName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "fieldName",
 		FieldName:    "字段名",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -219,18 +219,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(fieldName)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, fieldName.ID, fieldName)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, fieldName.ID, fieldName)
 	sortNo++
 
-	fieldComment := IndexFieldStruct{
+	fieldComment := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "fieldComment",
 		FieldName:    "字段备注",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -240,13 +240,13 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(fieldComment)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, fieldComment.ID, fieldComment)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, fieldComment.ID, fieldComment)
 	sortNo++
 	//ftSelect, _ := json.Marshal(fieldTypeMap)
-	fieldType := IndexFieldStruct{
+	fieldType := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "fieldType",
 		FieldName:    "字段类型",
 		FieldType:    fieldType_数字,
@@ -255,7 +255,7 @@ func initIndexField() (bool, error) {
 		// FieldType  字段类型,数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)
 		//SelectOption: `[{"text":"数字","value":1},{"text":"日期","value":2},{"text":"文本框","value":3},{"text":"文本域","value":4},{"text":"富文本","value":5},{"text":"下拉框","value":6},{"text":"单选","value":7},{"text":"多选","value":8},{"text":"上传图片","value":9},{"text":"上传附件","value":10},{"text":"轮播图","value":11},{"text":"音频","value":12},{"text":"视频","value":13}]`,
 		//SelectOption: string(ftSelect),
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -265,18 +265,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(fieldType)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, fieldType.ID, fieldType)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, fieldType.ID, fieldType)
 	sortNo++
 
-	fieldFormat := IndexFieldStruct{
+	fieldFormat := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "fieldFormat",
 		FieldName:    "数据格式",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -286,18 +286,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(fieldFormat)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, fieldFormat.ID, fieldFormat)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, fieldFormat.ID, fieldFormat)
 	sortNo++
 
-	required := IndexFieldStruct{
+	required := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "required",
 		FieldName:    "是否必填",
 		FieldType:    fieldType_数字,
 		AnalyzerName: numericAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -307,18 +307,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(required)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, required.ID, required)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, required.ID, required)
 	sortNo++
 
-	defaultValue := IndexFieldStruct{
+	defaultValue := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "defaultValue",
 		FieldName:    "默认值",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -328,18 +328,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(defaultValue)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, defaultValue.ID, defaultValue)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, defaultValue.ID, defaultValue)
 	sortNo++
 
-	analyzerName := IndexFieldStruct{
+	analyzerName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "analyzerName",
 		FieldName:    "分词器",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -349,18 +349,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(analyzerName)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, analyzerName.ID, analyzerName)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, analyzerName.ID, analyzerName)
 	sortNo++
 
-	createTime := IndexFieldStruct{
+	createTime := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "createTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: datetimeAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -370,18 +370,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(createTime)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, createTime.ID, createTime)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, createTime.ID, createTime)
 	sortNo++
 
-	updateTime := IndexFieldStruct{
+	updateTime := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "updateTime",
 		FieldName:    "更新时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: datetimeAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -391,18 +391,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(updateTime)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, updateTime.ID, updateTime)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, updateTime.ID, updateTime)
 	sortNo++
 
-	createUserField := IndexFieldStruct{
+	createUserField := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "createUser",
 		FieldName:    "创建人",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -412,18 +412,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(createUserField)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, createUserField.ID, createUserField)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, createUserField.ID, createUserField)
 	sortNo++
 
-	sortNoField := IndexFieldStruct{
+	sortNoField := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "sortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_数字,
 		AnalyzerName: numericAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -433,18 +433,18 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(sortNoField)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, sortNoField.ID, sortNoField)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, sortNoField.ID, sortNoField)
 	sortNo++
 
-	status := IndexFieldStruct{
+	status := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexFieldName,
+		TableCode:    tableFieldName,
 		FieldCode:    "status",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: numericAnalyzerName,
-		IndexName:    "表字段",
+		TableName:    "表字段",
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -454,23 +454,23 @@ func initIndexField() (bool, error) {
 		Required:     1,
 	}
 	saveTableField(status)
-	//bleveSaveIndex
-	//bleveSaveIndex(indexFieldName, status.ID, status)
+	//bleveSaveTable
+	//bleveSaveTable(indexFieldName, status.ID, status)
 
 	return true, nil
 }
 
 // indexCommonField 插入公共字段
-func indexCommonField(indexCode string, indexName string, sortNo int, now time.Time) {
+func indexCommonField(tableCode string, tableName string, sortNo int, now time.Time) {
 	sortNo++
-	commonCreateTime := IndexFieldStruct{
+	commonCreateTime := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexCode,
+		TableCode:    tableCode,
 		FieldCode:    "createTime",
 		FieldName:    "创建时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: datetimeAnalyzerName,
-		IndexName:    indexName,
+		TableName:    tableName,
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -482,14 +482,14 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 	saveTableField(commonCreateTime)
 
 	sortNo++
-	commonUpdateTime := IndexFieldStruct{
+	commonUpdateTime := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexCode,
+		TableCode:    tableCode,
 		FieldCode:    "updateTime",
 		FieldName:    "更新时间",
 		FieldType:    fieldType_日期,
 		AnalyzerName: datetimeAnalyzerName,
-		IndexName:    indexName,
+		TableName:    tableName,
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -501,14 +501,14 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 	saveTableField(commonUpdateTime)
 
 	sortNo++
-	commonCreateUser := IndexFieldStruct{
+	commonCreateUser := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexCode,
+		TableCode:    tableCode,
 		FieldCode:    "createUser",
 		FieldName:    "创建人",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
-		IndexName:    indexName,
+		TableName:    tableName,
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -520,14 +520,14 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 	saveTableField(commonCreateUser)
 
 	sortNo++
-	commonSortNo := IndexFieldStruct{
+	commonSortNo := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexCode,
+		TableCode:    tableCode,
 		FieldCode:    "sortNo",
 		FieldName:    "排序",
 		FieldType:    fieldType_数字,
 		AnalyzerName: numericAnalyzerName,
-		IndexName:    indexName,
+		TableName:    tableName,
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -539,14 +539,14 @@ func indexCommonField(indexCode string, indexName string, sortNo int, now time.T
 	saveTableField(commonSortNo)
 
 	sortNo++
-	commonActive := IndexFieldStruct{
+	commonActive := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		IndexCode:    indexCode,
+		TableCode:    tableCode,
 		FieldCode:    "status",
 		FieldName:    "是否有效",
 		FieldType:    fieldType_数字,
 		AnalyzerName: numericAnalyzerName,
-		IndexName:    indexName,
+		TableName:    tableName,
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
@@ -562,11 +562,11 @@ func init() {
 
 	// 获取当前时间
 	now := time.Now()
-	saveTableInfo(IndexInfoStruct{
-		ID:         indexFieldName,
+	saveTableInfo(TableInfoStruct{
+		ID:         tableFieldName,
 		Name:       "表字段",
-		Code:       "indexField",
-		IndexType:  "index",
+		Code:       "tableField",
+		TableType:  "index",
 		CreateTime: now,
 		UpdateTime: now,
 		CreateUser: createUser,

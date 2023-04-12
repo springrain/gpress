@@ -5,27 +5,27 @@ const (
 	datadir = "gpressdatadir/"
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
 	bleveDataDir = datadir + "bleve/"
-	// 索引表信息的名称
-	indexInfoName = "indexInfo"
-	// 索引字段的名称
-	indexFieldName = "indexField"
+	// 表表信息的名称
+	tableInfoName = "tableInfo"
+	// 表字段的名称
+	tableFieldName = "tableField"
 
-	// config 配置的索引名称
-	indexConfigName = "config"
+	// config 配置的表名称
+	tableConfigName = "config"
 
-	// user 用户的索引名称
-	indexUserName = "user"
+	// user 用户的表名称
+	tableUserName = "user"
 	// site  站点信息
-	indexSiteName = "site"
+	tableSiteName = "site"
 	// 页面模板
-	indexPageTemplateName = "pageTemplate"
+	tablePageTemplateName = "pageTemplate"
 	// 导航菜单
-	indexNavMenuName = "navMenu"
+	tableNavMenuName = "navMenu"
 
 	// 默认模型
-	indexModuleDefaultName = "module_default"
+	tableModuleDefaultName = "module_default"
 	// 文章内容
-	indexContentName = "content"
+	tableContentName = "content"
 	//---------------------------//
 
 	// 模板的路径
