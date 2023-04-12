@@ -39,9 +39,9 @@ type TableFieldStruct struct {
 	// AnalyzerName  分词器名称
 	AnalyzerName string `column:"analyzerName" json:"analyzerName,omitempty"`
 	// CreateTime 创建时间
-	CreateTime time.Time `column:"createTime" json:"createTime,omitempty"`
+	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 	// UpdateTime 更新时间
-	UpdateTime time.Time `column:"updateTime" json:"updateTime,omitempty"`
+	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
 	// CreateUser  创建人,初始化 system
 	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 	// SortNo 排序
@@ -96,7 +96,7 @@ func initTableField() (bool, error) {
 	}
 
 	sortNo := 1
-	now := time.Now()
+	now := time.Now().Format("2006-01-02 15:04:05")
 	id := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
 		TableCode:    tableFieldName,
@@ -461,7 +461,7 @@ func initTableField() (bool, error) {
 }
 
 // indexCommonField 插入公共字段
-func indexCommonField(tableCode string, tableName string, sortNo int, now time.Time) {
+func indexCommonField(tableCode string, tableName string, sortNo int, now string) {
 	sortNo++
 	commonCreateTime := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -563,7 +563,7 @@ func init() {
 		return
 	}
 	// 获取当前时间
-	now := time.Now()
+	now := time.Now().Format("2006-01-02 15:04:05")
 	saveTableInfo(TableInfoStruct{
 		ID:         tableFieldName,
 		Name:       "表字段",

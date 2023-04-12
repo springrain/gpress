@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"errors"
 	"html/template"
+	"strings"
 
 	"gitee.com/chunanyong/zorm"
 )
@@ -89,6 +91,80 @@ func funcAddInt(x, y int) int {
 }
 func funcAddFloat(x, y float64) float64 {
 	return x + y
+}
+
+func funcSelectList(tableName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
+	ok := tableExist(tableName)
+	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": tableName}
+	if !ok { //表不存在
+		err := errors.New("表不存在")
+		errMap["err"] = err
+		return errMap, err
+	}
+
+	finder := zorm.NewFinder().Append("SELECT")
+	if fields == "" || fields == "*" {
+		finder.Append("*")
+	} else {
+		finder.Append(fields)
+	}
+	finder.Append("FROM " + tableName)
+
+	if queryString != "" {
+		finder.Append("WHERE " + queryString)
+	}
+
+	page := zorm.NewPage()
+	page.PageNo = pageNo
+
+	finder.Append("order by sortNo desc,id desc")
+	data, err := zorm.QueryMap(context.Background(), finder, page)
+	if err != nil {
+		errMap["err"] = err
+		return errMap, err
+	}
+
+	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page, "urlPathParam": tableName}
+	return resultMap, err
+}
+
+func funcSelectOne(tableName string, fields string, queryString string) (map[string]interface{}, error) {
+	ok := tableExist(tableName)
+	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": tableName}
+	if !ok || queryString == "" { //表不存在
+		err := errors.New("表不存在")
+		errMap["err"] = err
+		return errMap, err
+	}
+
+	finder := zorm.NewFinder().Append("SELECT")
+	if fields == "" || fields == "*" {
+		finder.Append("*")
+	} else {
+		finder.Append(fields)
+	}
+	finder.Append("FROM " + tableName)
+
+	whereSQL := ""
+
+	if !(strings.Contains(queryString, "=") || strings.Contains(queryString, "<") || strings.Contains(queryString, ">")) { //如果只有一个字符串,认为是ID
+		finder.Append("WHERE id=?", queryString)
+	} else { //如果是多个字段
+		finder.Append("WHERE " + queryString)
+	}
+	if whereSQL != "" {
+		finder.Append(whereSQL)
+	}
+	finder.Append("order by sortNo desc,id desc")
+	resultMap, err := zorm.QueryRowMap(context.Background(), finder)
+	if err != nil {
+		errMap["err"] = err
+		return errMap, err
+	}
+	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": tableName}
+	resultMap["statusCode"] = 1
+	resultMap["urlPathParam"] = tableName
+	return resultMap, err
 }
 
 /*

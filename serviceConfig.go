@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"math/rand"
 	"os"
 
 	"gitee.com/chunanyong/zorm"
@@ -112,4 +113,14 @@ func findConfig() (configStruct, error) {
 	}
 
 	return config, nil
+}
+
+// randStr 生成随机字符串
+func randStr(n int) string {
+	//rand.Seed(time.Now().UnixNano())
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
