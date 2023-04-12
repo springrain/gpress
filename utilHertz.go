@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"html/template"
-	"math/rand"
+	"math/big"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -175,23 +177,6 @@ func updateInstall(ctx context.Context) error {
 	return nil
 }
 
-// randStr 生成随机字符串
-func randStr(n int) string {
-	//rand.Seed(time.Now().UnixNano())
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
-}
-
-// hashSha256 使用sha256计算hash值
-func hashSha256(str string) string {
-	hashByte := sha256.Sum256([]byte(str))
-	hashStr := hex.EncodeToString(hashByte[:])
-	return hashStr
-}
-
 // ResponseData 返回数据包装器
 type ResponseData struct {
 	// 业务状态代码 // 异常 0, 成功 1,默认失败0,业务代码见说明
@@ -252,4 +237,47 @@ func hStatic(relativePath, root string) {
 
 func cRedirecURI(uri string) []byte {
 	return []byte(config.BasePath + uri)
+}
+
+// hashSha256 使用sha256计算hash值
+func hashSha256(str string) string {
+	hashByte := sha256.Sum256([]byte(str))
+	hashStr := hex.EncodeToString(hashByte[:])
+	return hashStr
+}
+
+// FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
+// FuncGenerateStringID Function to generate string ID by default. Convenient for custom extension
+var FuncGenerateStringID func() string = generateStringID
+
+// generateStringID 生成主键字符串
+// generateStringID Generate primary key string
+func generateStringID() string {
+	// 使用 crypto/rand 真随机9位数
+	randNum, randErr := rand.Int(rand.Reader, big.NewInt(1000000000))
+	if randErr != nil {
+		return ""
+	}
+	// 获取9位数,前置补0,确保9位数
+	rand9 := fmt.Sprintf("%09d", randNum)
+
+	// 获取纳秒 按照 年月日时分秒毫秒微秒纳秒 拼接为长度23位的字符串
+	pk := time.Now().Format("2006.01.02.15.04.05.000000000")
+	pk = strings.ReplaceAll(pk, ".", "")
+
+	// 23位字符串+9位随机数=32位字符串,这样的好处就是可以使用ID进行排序
+	pk = pk + rand9
+	return pk
+}
+
+// pathExist 文件或者目录是否存在
+func pathExist(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return false
 }
