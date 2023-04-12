@@ -19,9 +19,9 @@ type TableInfoStruct struct {
 	// TableType index/module 表和模型,两种类型
 	TableType string `column:"tableType" json:"tableType,omitempty"`
 	// CreateTime 创建时间
-	CreateTime time.Time `column:"createTime" json:"createTime,omitempty"`
+	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 	// UpdateTime 更新时间
-	UpdateTime time.Time `column:"updateTime" json:"updateTime,omitempty"`
+	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
 	// CreateUser  创建人,初始化 system
 	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 	// SortNo 排序
@@ -66,7 +66,7 @@ func initTableInfo() (bool, error) {
 		return false, err
 	}
 	// 获取当前时间
-	now := time.Now()
+	now := time.Now().Format("2006-01-02 15:04:05")
 
 	sortNo := 1
 	// 初始化各个字段

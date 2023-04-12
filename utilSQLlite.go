@@ -2,14 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/rand"
-	"errors"
-	"fmt"
-	"math/big"
-	"os"
-	"strings"
-	"sync"
-	"time"
 
 	"gitee.com/chunanyong/zorm"
 
@@ -41,43 +33,7 @@ var dbDao, _ = zorm.NewDBDao(&dbDaoConfig)
 // 全局存放 表对象,启动之后,所有的表都通过这个map获取,一个表只能打开一次,类似数据库连接,用一个对象操作
 //var TableMap map[string]bleve.Table = make(map[string]bleve.Table)
 
-var TableMap sync.Map
-
-// FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
-// FuncGenerateStringID Function to generate string ID by default. Convenient for custom extension
-var FuncGenerateStringID func() string = generateStringID
-
-// generateStringID 生成主键字符串
-// generateStringID Generate primary key string
-func generateStringID() string {
-	// 使用 crypto/rand 真随机9位数
-	randNum, randErr := rand.Int(rand.Reader, big.NewInt(1000000000))
-	if randErr != nil {
-		return ""
-	}
-	// 获取9位数,前置补0,确保9位数
-	rand9 := fmt.Sprintf("%09d", randNum)
-
-	// 获取纳秒 按照 年月日时分秒毫秒微秒纳秒 拼接为长度23位的字符串
-	pk := time.Now().Format("2006.01.02.15.04.05.000000000")
-	pk = strings.ReplaceAll(pk, ".", "")
-
-	// 23位字符串+9位随机数=32位字符串,这样的好处就是可以使用ID进行排序
-	pk = pk + rand9
-	return pk
-}
-
-// pathExist 文件或者目录是否存在
-func pathExist(path string) bool {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	return false
-}
+//var TableMap sync.Map
 
 func tableExist(tableName string) bool {
 	finder := zorm.NewSelectFinder("sqlite_master", "count(*)").Append("WHERE type=? and name=?", "table", tableName)
@@ -209,80 +165,6 @@ func deleteAll(ctx context.Context, tableName string) error {
 	})
 
 	return err
-}
-
-func funcSelectList(tableName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
-	ok := pathExist(bleveDataDir + tableName)
-	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": tableName}
-	if !ok { //表不存在
-		err := errors.New("表不存在")
-		errMap["err"] = err
-		return errMap, err
-	}
-
-	finder := zorm.NewFinder().Append("SELECT")
-	if fields == "" || fields == "*" {
-		finder.Append("*")
-	} else {
-		finder.Append(fields)
-	}
-	finder.Append("FROM " + tableName)
-
-	if queryString != "" {
-		finder.Append("WHERE " + queryString)
-	}
-
-	page := zorm.NewPage()
-	page.PageNo = pageNo
-
-	finder.Append("order by sortNo desc,id desc")
-	data, err := zorm.QueryMap(context.Background(), finder, page)
-	if err != nil {
-		errMap["err"] = err
-		return errMap, err
-	}
-
-	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page, "urlPathParam": tableName}
-	return resultMap, err
-}
-
-func funcSelectOne(tableName string, fields string, queryString string) (map[string]interface{}, error) {
-	ok := pathExist(bleveDataDir + tableName)
-	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": tableName}
-	if !ok || queryString == "" { //表不存在
-		err := errors.New("表不存在")
-		errMap["err"] = err
-		return errMap, err
-	}
-
-	finder := zorm.NewFinder().Append("SELECT")
-	if fields == "" || fields == "*" {
-		finder.Append("*")
-	} else {
-		finder.Append(fields)
-	}
-	finder.Append("FROM " + tableName)
-
-	whereSQL := ""
-
-	if !(strings.Contains(queryString, "=") || strings.Contains(queryString, "<") || strings.Contains(queryString, ">")) { //如果只有一个字符串,认为是ID
-		finder.Append("WHERE id=?", queryString)
-	} else { //如果是多个字段
-		finder.Append("WHERE " + queryString)
-	}
-	if whereSQL != "" {
-		finder.Append(whereSQL)
-	}
-	finder.Append("order by sortNo desc,id desc")
-	resultMap, err := zorm.QueryRowMap(context.Background(), finder)
-	if err != nil {
-		errMap["err"] = err
-		return errMap, err
-	}
-	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": tableName}
-	resultMap["statusCode"] = 1
-	resultMap["urlPathParam"] = tableName
-	return resultMap, err
 }
 
 func crateTable(createTableSQL string) (bool, error) {
