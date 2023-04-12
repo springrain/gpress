@@ -15,7 +15,7 @@ func initConfig() (bool, error) {
 	// 当前时间
 	now := time.Now().Format("2006-01-02 15:04:05")
 	// 创建配置表的表
-	createTableSQL := `CREATE TABLE config (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS config (
 		id TEXT PRIMARY KEY     NOT NULL,
 		basePath         TEXT  NOT NULL,
 		jwtSecret        TEXT   NOT NULL,
