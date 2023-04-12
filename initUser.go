@@ -42,7 +42,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	addIndexField(userId)
+	saveTableField(userId)
 
 	// 用户表的 Account 字段
 	userAccount := IndexFieldStruct{
@@ -61,7 +61,7 @@ func init() {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(userAccount)
+	saveTableField(userAccount)
 	// 用户表的 PassWord 字段
 	userPassWord := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -79,7 +79,7 @@ func init() {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(userPassWord)
+	saveTableField(userPassWord)
 	// 用户表的 UserName 字段
 	userName := IndexFieldStruct{
 		ID:           FuncGenerateStringID(),
@@ -97,10 +97,10 @@ func init() {
 		Status:       1,
 	}
 	sortNo++
-	addIndexField(userName)
+	saveTableField(userName)
 
 	//保存表信息
-	bleveSaveIndex(indexInfoName, indexUserName, IndexInfoStruct{
+	saveTableInfo(IndexInfoStruct{
 		ID:         indexUserName,
 		Name:       "用户信息",
 		IndexType:  "index",

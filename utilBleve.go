@@ -17,7 +17,6 @@ import (
 	"github.com/blevesearch/bleve/v2"
 
 	"gitee.com/chunanyong/zorm"
-	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/search/query"
 
 	// 00.引入数据库驱动
@@ -259,11 +258,11 @@ func saveNewIndex(ctx context.Context, tableName string, newIndex zorm.IEntityMa
 	}
 
 	if newIndex.GetDBFieldMap()["sortNo"] == 0 {
-		count, _ := bleveDocCount(tableName)
+		count, _ := selectTableCount(tableName)
 		newIndex.Set("sortNo", count)
 	}
 
-	err = bleveSaveEntityMap(tableName, newIndex)
+	err = saveEntityMap(newIndex)
 
 	if err != nil {
 		FuncLogError(err)
@@ -304,7 +303,7 @@ func updateIndex(ctx context.Context, tableName string, indexId string, newMap z
 			newMap.Set(k, newV)
 		}
 	}
-	err = bleveSaveEntityMap(tableName, newMap)
+	err = saveEntityMap(newMap)
 	if err != nil {
 		return err
 	}
@@ -320,7 +319,7 @@ func deleteById(ctx context.Context, tableName string, id string) error {
 	return err
 }
 func deleteAll(ctx context.Context, tableName string) error {
-	count, err := bleveDocCount(tableName)
+	count, err := selectTableCount(tableName)
 	if err != nil {
 		return err
 	}
@@ -496,20 +495,6 @@ func bleveNewIndexMapping(createTableSQL string) (bool, error) {
 	return true, nil
 }
 
-func bleveNew(indexName string, mapping mapping.IndexMapping) (bool, error) {
-	if pathExist(bleveDataDir + indexName) {
-		return false, nil
-	}
-	index, err := bleve.New(bleveDataDir+indexName, mapping)
-	if err != nil {
-		FuncLogError(err)
-		return false, err
-	}
-	IndexMap.Store(indexName, index)
-	//IndexMap[indexName] = index
-	return true, err
-}
-
 func bleveSearchInContext(ctx context.Context, indexName string, searchRequest *bleve.SearchRequest) (*bleve.SearchResult, error) {
 	index, err := openBleveIndex(indexName)
 	if err != nil {
@@ -519,7 +504,7 @@ func bleveSearchInContext(ctx context.Context, indexName string, searchRequest *
 	return index.SearchInContext(ctx, searchRequest)
 }
 
-func bleveSaveIndex(indexName string, id string, indexInfoStruct IndexInfoStruct) error {
+func saveTableInfo(indexInfoStruct IndexInfoStruct) error {
 	_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.Insert(ctx, &indexInfoStruct)
 		return nil, err
@@ -527,7 +512,7 @@ func bleveSaveIndex(indexName string, id string, indexInfoStruct IndexInfoStruct
 	return err
 }
 
-func bleveSaveEntityMap(indexName string, entityMap zorm.IEntityMap) error {
+func saveEntityMap(entityMap zorm.IEntityMap) error {
 	_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.InsertEntityMap(ctx, entityMap)
 		return nil, err
@@ -535,18 +520,20 @@ func bleveSaveEntityMap(indexName string, entityMap zorm.IEntityMap) error {
 	return err
 }
 
-func bleveDocCount(indexName string) (int, error) {
-	index, err := openBleveIndex(indexName)
-	if err != nil {
-		FuncLogError(err)
-		return -1, err
-	}
-	count, err := index.DocCount()
-	if err != nil {
-		FuncLogError(err)
-		return -1, err
-	}
-	return int(count), err
+func saveTableField(indexFiledStruct IndexFieldStruct) {
+	zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.Insert(ctx, &indexFiledStruct)
+		return nil, err
+	})
+}
+
+func selectTableCount(indexName string) (int, error) {
+
+	finder := zorm.NewSelectFinder(indexName, "count(*)")
+	count := 0
+	_, err := zorm.QueryRow(context.Background(), finder, &count)
+
+	return count, err
 }
 
 // indexExist 索引目录是否已经存在

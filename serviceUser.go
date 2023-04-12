@@ -19,7 +19,7 @@ func insertUser(ctx context.Context, account string, password string) error {
 	user.Set("password", password)
 	user.Set("userName", account)
 
-	return bleveSaveEntityMap(indexUserName, user)
+	return saveEntityMap(user)
 }
 
 func findUserId(ctx context.Context, account string, password string) (string, error) {
