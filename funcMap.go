@@ -71,7 +71,11 @@ func funcSite() (map[string]interface{}, error) {
 
 // 菜单信息
 func funcNavMenu() ([]map[string]interface{}, error) {
-	return nil, nil
+	finder := zorm.NewSelectFinder(tableNavMenuName)
+	finder.Append(" order by sortNo desc")
+	page := zorm.NewPage()
+	page.PageSize = 200
+	return zorm.QueryMap(context.Background(), finder, page)
 }
 
 var analyzerMap = map[string]string{commaAnalyzerName: "逗号分词器", gseAnalyzerName: "默认分词器", keywordAnalyzerName: "不分词", numericAnalyzerName: "数字分词器", datetimeAnalyzerName: "日期分词器"}
@@ -103,6 +107,7 @@ func funcSelectList(tableName string, fields string, q string, pageNo int, query
 	}
 
 	finder := zorm.NewFinder().Append("SELECT")
+	finder.InjectionCheck = false
 	if fields == "" || fields == "*" {
 		finder.Append("*")
 	} else {
@@ -117,7 +122,7 @@ func funcSelectList(tableName string, fields string, q string, pageNo int, query
 	page := zorm.NewPage()
 	page.PageNo = pageNo
 
-	finder.Append("order by sortNo desc,id desc")
+	finder.Append("order by sortNo desc")
 	data, err := zorm.QueryMap(context.Background(), finder, page)
 	if err != nil {
 		errMap["err"] = err
@@ -138,6 +143,7 @@ func funcSelectOne(tableName string, fields string, queryString string) (map[str
 	}
 
 	finder := zorm.NewFinder().Append("SELECT")
+	finder.InjectionCheck = false
 	if fields == "" || fields == "*" {
 		finder.Append("*")
 	} else {
@@ -155,12 +161,20 @@ func funcSelectOne(tableName string, fields string, queryString string) (map[str
 	if whereSQL != "" {
 		finder.Append(whereSQL)
 	}
-	finder.Append("order by sortNo desc,id desc")
-	resultMap, err := zorm.QueryRowMap(context.Background(), finder)
+	finder.Append("order by sortNo desc")
+	page := zorm.NewPage()
+	page.PageSize = 1
+	page.PageNo = 1
+	resultMaps, err := zorm.QueryMap(context.Background(), finder, page)
+
 	if err != nil {
 		errMap["err"] = err
 		return errMap, err
 	}
+	if len(resultMaps) < 1 {
+		return errMap, err
+	}
+	resultMap := resultMaps[0]
 	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": tableName}
 	resultMap["statusCode"] = 1
 	resultMap["urlPathParam"] = tableName
