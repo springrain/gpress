@@ -55,14 +55,14 @@
         <a href="{{basePath}}tag/{{$content.tag}}">{{$content.tag}}</a>
         </div>
     <nav class="post-nav">
-      {{if ne $prevContent.id "" }}
+      {{if ne $prevContent.sortNo 0 }}
       <a class="prev" href="{{basePath}}post/{{$prevContent.id}}">
           <i class="iconfont icon-left"></i>
           <span class="prev-text nav-default">{{$prevContent.title}}</span>
           <span class="prev-text nav-mobile">上一篇</span>
         </a>
       {{end}}
-      {{if ne $nextContent.id "" }}
+      {{if ne $nextContent.sortNo 0 }}
       <a class="next" href="{{basePath}}post/{{$nextContent.id}}">
           <span class="next-text nav-default">{{$nextContent.title}}</span>
           <span class="next-text nav-mobile">下一篇</span>
