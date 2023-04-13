@@ -1,5 +1,5 @@
 <!-- 查询 content 列表 -->
-{{ $selectList:=selectList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "tag=%s" .urlPathParam) }}
+{{ $selectList:=selectList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "tag='%s'" .urlPathParam) }}
 
 {{template "bodystart.html"  }}
 
