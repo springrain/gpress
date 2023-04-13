@@ -1,5 +1,5 @@
 <!-- 查询 content 列表 -->
-{{ $selectList:=selectList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "navMenuID=%s" .urlPathParam) }}
+{{ $selectList:=selectList "content" "id,title,pageURL,updateTime" .q .pageNo  (printf "navMenuID='%s'" .urlPathParam) }}
 {{ $nav:=selectOne "navMenu" "menuName" .urlPathParam }}
 
 {{template "bodystart.html"  }}
