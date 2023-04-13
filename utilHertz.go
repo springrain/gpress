@@ -145,9 +145,9 @@ func walkTemplateDir(loadTmpl *template.Template, reload bool, walkDir string, b
 
 // isInstalled 是否已经安装过了
 func isInstalled() bool {
-	// 依赖bleveStatus变量,确保bleve在isInstalled之前初始化
+	// 依赖sqliteStatus变量,确保bleve在isInstalled之前初始化
 	if !sqliteStatus {
-		FuncLogError(errors.New("bleveStatus状态为false"))
+		FuncLogError(errors.New("sqliteStatus状态为false"))
 	}
 	return !pathExist(templateDir + "admin/install.html")
 }
