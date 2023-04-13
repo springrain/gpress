@@ -6,6 +6,7 @@
 开发时需要先解压gpressdatadir/dict.zip      
 需要配置CGO的编译环境,设置```set CGO_ENABLED=1```,下载mingw64和cmake,并把bin配置到环境变量,注意把```mingw64/bin/mingw32-make.exe``` 改名为 ```make.exe```  
 注意修改vscode的launch.json,增加 ``` ,"buildFlags": "--tags=fts5" ``` 用于调试fts5  
+``` go build --tags "fts5" ```
 
 ## 贡献者授权说明
 gpress使用GPL-3.0开源协议,特授权项目贡献者商业化时无需开源,说明如下:  
