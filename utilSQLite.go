@@ -45,18 +45,18 @@ func checkSQLliteStatus() bool {
 
 	//初始化结巴分词的字典
 	finder := zorm.NewFinder().Append("SELECT jieba_dict(?)", datadir+"dict")
-	fts5simple := ""
-	_, err = zorm.QueryRow(context.Background(), finder, &fts5simple)
+	fts5jieba := ""
+	_, err = zorm.QueryRow(context.Background(), finder, &fts5jieba)
 	if err != nil {
 		return false
 	}
 
 	finder = zorm.NewFinder().Append("select jieba_query(?)", "让数据自由一点点,让世界美好一点点")
-	_, err = zorm.QueryRow(context.Background(), finder, &fts5simple)
+	_, err = zorm.QueryRow(context.Background(), finder, &fts5jieba)
 	if err != nil {
 		return false
 	}
-
+	//fmt.Println(fts5jieba)
 	isInit := pathExist(datadir + "gpress.db")
 	if !isInit { //需要初始化数据库
 		return isInit
