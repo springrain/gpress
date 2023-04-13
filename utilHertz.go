@@ -228,8 +228,8 @@ func hStatic(relativePath, root string) {
 	h.StaticFS(relativePath, &app.FS{
 		Root: filePath,
 		PathRewrite: func(c *app.RequestContext) []byte {
-			//path := "/" + c.Param("filepath")
-			path := c.Param("filepath")
+			path := "/" + c.Param("filepath")
+			//path := c.Param("filepath")
 			return []byte(path)
 		},
 	},
