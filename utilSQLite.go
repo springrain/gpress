@@ -50,13 +50,13 @@ func checkSQLliteStatus() bool {
 	if err != nil {
 		return false
 	}
-	/*
-		finder = zorm.NewFinder().Append("select jieba_query(?)", "中国人")
-		_, err = zorm.QueryRow(context.Background(), finder, &fts5simple)
-		if err != nil {
-			return false
-		}
-	*/
+
+	finder = zorm.NewFinder().Append("select jieba_query(?)", "让数据自由一点点,让世界美好一点点")
+	_, err = zorm.QueryRow(context.Background(), finder, &fts5simple)
+	if err != nil {
+		return false
+	}
+
 	isInit := pathExist(datadir + "gpress.db")
 	if !isInit { //需要初始化数据库
 		return isInit
