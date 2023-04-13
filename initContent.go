@@ -17,7 +17,7 @@ func init() {
 		title         TEXT   NOT NULL,
 		keyword           TEXT,
 		description           TEXT,
-		pageURL           TEXT,
+		hrefURL           TEXT,
 		subtitle           TEXT,
 		navMenuID           TEXT,
 		navMenuName           TEXT,
@@ -145,10 +145,10 @@ func init() {
 	// description 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
-	contentPageURL := TableFieldStruct{
+	contentHrefURL := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
 		TableCode:    tableContentName,
-		FieldCode:    "pageURL",
+		FieldCode:    "hrefURL",
 		FieldName:    "自身页面路径",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -161,7 +161,7 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(ctx, contentPageURL)
+	saveTableField(ctx, contentHrefURL)
 
 	contentSubtitle := TableFieldStruct{
 		ID:        FuncGenerateStringID(),

@@ -113,10 +113,10 @@ func funcSelectList(tableName string, fields string, q string, pageNo int, query
 	} else {
 		finder.Append(fields)
 	}
-	finder.Append("FROM " + tableName)
+	finder.Append("FROM " + tableName + " WHERE status=1 ")
 
 	if queryString != "" {
-		finder.Append("WHERE " + queryString)
+		finder.Append("and " + queryString)
 	}
 
 	page := zorm.NewPage()
