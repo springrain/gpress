@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"gitee.com/chunanyong/zorm"
 
@@ -58,7 +57,6 @@ func checkSQLliteStatus() bool {
 			return false
 		}
 	*/
-	fmt.Println(fts5simple)
 	isInit := pathExist(datadir + "gpress.db")
 	if !isInit { //需要初始化数据库
 		return isInit
