@@ -2,58 +2,70 @@ package main
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 
 	"gitee.com/chunanyong/zorm"
 
 	// 00.引入数据库驱动
-	_ "modernc.org/sqlite"
+	"github.com/mattn/go-sqlite3"
 )
 
-// dbDaoConfig 数据库的配置.这里只是模拟,生产应该是读取配置配置文件,构造DataSourceConfig
-var dbDaoConfig = zorm.DataSourceConfig{
-	// DSN 数据库的连接字符串,parseTime=true会自动转换为time格式,默认查询出来的是[]byte数组.&loc=Local用于设置时区
-	DSN: sqliteDBfile,
-	// DriverName 数据库驱动名称:mysql,postgres,oracle(go-ora),sqlserver,sqlite3,go_ibm_db,clickhouse,dm,kingbase,aci,taosSql|taosRestful 和Dialect对应
-	// sql.Open(DriverName,DSN) DriverName就是驱动的sql.Open第一个字符串参数,根据驱动实际情况获取
-	DriverName: "sqlite",
-	// Dialect 数据库方言:mysql,postgresql,oracle,mssql,sqlite,db2,clickhouse,dm,kingbase,shentong,tdengine 和 DriverName 对应
-	Dialect: "sqlite",
-	// MaxOpenConns 数据库最大连接数 默认50
-	MaxOpenConns: 50,
-	// MaxIdleConns 数据库最大空闲连接数 默认50
-	MaxIdleConns: 50,
-	// ConnMaxLifetimeSecond 连接存活秒时间. 默认600(10分钟)后连接被销毁重建.避免数据库主动断开连接,造成死连接.MySQL默认wait_timeout 28800秒(8小时)
-	ConnMaxLifetimeSecond: 600,
-	// SlowSQLMillis 慢sql的时间阈值,单位毫秒.小于0是禁用SQL语句输出;等于0是只输出SQL语句,不计算执行时间;大于0是计算SQL执行时间,并且>=SlowSQLMillis值
-	SlowSQLMillis: -1,
-}
+var dbDao *zorm.DBDao
 
-var dbDao, _ = zorm.NewDBDao(&dbDaoConfig)
+var dbDaoConfig = zorm.DataSourceConfig{
+	DSN:                   sqliteDBfile,
+	DriverName:            "sqlite3_simple", // 使用simple分词器会注册这个驱动名
+	Dialect:               "sqlite",
+	MaxOpenConns:          50,
+	MaxIdleConns:          50,
+	ConnMaxLifetimeSecond: 600,
+	SlowSQLMillis:         -1,
+}
 
 // 全局存放 表对象,启动之后,所有的表都通过这个map获取,一个表只能打开一次,类似数据库连接,用一个对象操作
 //var TableMap map[string]bleve.Table = make(map[string]bleve.Table)
 
 //var TableMap sync.Map
 
-func tableExist(tableName string) bool {
-	finder := zorm.NewSelectFinder("sqlite_master", "count(*)").Append("WHERE type=? and name=?", "table", tableName)
-	count := 0
-	zorm.QueryRow(context.Background(), finder, &count)
-	return count > 0
-}
-
 // 初始化 sqlite数据库
 func checkSQLliteStatus() bool {
-	if dbDao == nil { //数据库初始化失败
+	//注册fts5的simple分词器,建议使用jieba分词
+	//需要  --tags "fts5"
+	sql.Register("sqlite3_simple", &sqlite3.SQLiteDriver{
+		Extensions: []string{
+			datadir + "fts5/libsimple", //不要加后缀,它会自己处理,这样代码也统一
+		},
+	})
+
+	var err error
+	dbDao, err = zorm.NewDBDao(&dbDaoConfig)
+	if dbDao == nil || err != nil { //数据库初始化失败
 		return false
 	}
+
+	//初始化结巴分词的字典
+	finder := zorm.NewFinder().Append("SELECT jieba_dict(?)", datadir+"dict")
+	fts5simple := ""
+	_, err = zorm.QueryRow(context.Background(), finder, &fts5simple)
+	if err != nil {
+		return false
+	}
+	/*
+		finder = zorm.NewFinder().Append("select jieba_query(?)", "中国人")
+		_, err = zorm.QueryRow(context.Background(), finder, &fts5simple)
+		if err != nil {
+			return false
+		}
+	*/
+	fmt.Println(fts5simple)
 	isInit := pathExist(datadir + "gpress.db")
 	if !isInit { //需要初始化数据库
 		return isInit
 	}
 
 	// 初始化indexField
-	_, err := initTableField()
+	_, err = initTableField()
 	if err != nil {
 		return false
 	}
@@ -68,6 +80,13 @@ func checkSQLliteStatus() bool {
 		return false
 	}
 	return ok
+}
+
+func tableExist(tableName string) bool {
+	finder := zorm.NewSelectFinder("sqlite_master", "count(*)").Append("WHERE type=? and name=?", "table", tableName)
+	count := 0
+	zorm.QueryRow(context.Background(), finder, &count)
+	return count > 0
 }
 
 // findTableFieldStruct 获取表中符合条件字段,返回Struct对象

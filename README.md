@@ -1,7 +1,7 @@
 # gpress
 
 ## 介绍
-云原生高性能内容平台,基于Hertz + Go template + Bleve全文检索实现,仅需100M运行内存   
+云原生高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需100M运行内存   
 默认端口660  
 开发时需要先解压gpressdatadir/dict.zip      
 
@@ -12,18 +12,18 @@ gpress使用GPL-3.0开源协议,特授权项目贡献者商业化时无需开源
 - 项目管理员角色,不限制商业化站点数量,可二次授权客户商业化用途
 
 ## 软件架构
-使用 Hertz + Go template + Bleve全文检索,不使用数据库    
+使用 Hertz + Go template + FTS5全文检索    
 
 不使用struct对象,全部使用map保存数据,可以随时增加属性字段.记录所有字段的名称,类型,中文名,code
 
 模型的字段属性也是map,应用的文章回把模型的map属性全部取出,和自己的map覆盖合并.  
 
 ## 数据结构
-所有的数据结构都使用Map实现,不再使用struct.因使用Bleve做NoSQL数据库,所以map可以任意添加字段.  
+所有的数据结构都使用Map实现,不再使用struct.map可以任意添加字段.  
 所有不需要分词的字符串,Mapping.Analyzer = keyword.Name 指定为keyword分词器.这样就可以类似数据库 name=value 作为精确的查询条件了.  
 值使用逗号(,)隔开,使用 commaAnalyzerName 分词器,实现类似sql in 的效果.  
 
-在TableInfo表里设置tableFiled='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索    
+在tableInfo表里设置tableFiled='module',记录所有的Module.只是记录,并不创建index,全部保存到context里,用于全局检索    
 
 
 ID默认使用时间戳(23位)+随机数(9位),全局唯一      
