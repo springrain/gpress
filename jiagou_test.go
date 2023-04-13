@@ -7,32 +7,43 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"gitee.com/chunanyong/zorm"
 )
 
 func TestNavMenu(t *testing.T) {
 	deleteAll(context.Background(), tableNavMenuName)
 	// 获取当前时间
-	now := time.Now()
+	now := time.Now().Format("2006-01-02 15:04:05")
 
 	navs := []string{"About", "Web", "BlockChain", "CloudNative"}
 
 	for i := 0; i < len(navs); i++ {
 		nav := navs[i]
-		menu := make(map[string]interface{}, 0)
-		menu["id"] = strings.ToLower(nav)
-		menu["menuName"] = nav
-		menu["sortNo"] = i + 1
-		menu["createTime"] = now
-		menu["updateTime"] = now
-		//saveNewTable(context.Background(), indexNavMenuName, menu)
+		menu := zorm.NewEntityMap(tableNavMenuName)
+		menu.Set("id", strings.ToLower(nav))
+		menu.Set("menuName", nav)
+		menu.Set("status", 1)
+		menu.Set("sortNo", i+1)
+		menu.Set("createTime", now)
+		menu.Set("updateTime", now)
+
+		_, err := saveEntityMap(context.Background(), menu)
+		if err != nil {
+			t.Error(err)
+		}
 	}
 
-	siteMap := make(map[string]interface{}, 0)
-	siteMap["id"] = "gpress"
-	siteMap["title"] = "jiagou"
-	siteMap["name"] = "架构"
-	siteMap["domain"] = "jiagou.com"
-	//updateTable(context.Background(), "site", "gpress", siteMap)
+	siteMap := zorm.NewEntityMap(tableSiteName)
+	siteMap.PkColumnName = "id"
+	siteMap.Set("id", "gpress")
+	siteMap.Set("title", "jiagou")
+	siteMap.Set("name", "架构")
+	siteMap.Set("domain", "jiagou.com")
+	err := updateTable(context.Background(), siteMap)
+	if err != nil {
+		t.Error(err)
+	}
 
 }
 
@@ -42,7 +53,7 @@ func TestReadmks(t *testing.T) {
 	if err != nil {
 		t.Error("读取错误")
 	}
-	lists := make([]map[string]interface{}, 0)
+	lists := make([]zorm.IEntityMap, 0)
 	for i, file := range files {
 		fileName := file.Name()
 		source, err := os.ReadFile("D:/post/" + fileName)
@@ -64,11 +75,12 @@ func TestReadmks(t *testing.T) {
 		}
 		summary := string(smkRune[0:end])
 		summary = strings.TrimSpace(summary)
-		cMap := make(map[string]interface{}, 0)
-		cMap["id"] = id
-		cMap["summary"] = summary
-		cMap["markdown"] = markdown
-		cMap["sortNo"] = sortNo
+		cMap := zorm.NewEntityMap(tableContentName)
+		cMap.Set("id", id)
+		cMap.Set("summary", summary)
+		cMap.Set("markdown", markdown)
+		cMap.Set("sortNo", sortNo)
+		cMap.Set("status", 1)
 
 		metaData, tocHtml, html, _ := conver2Html([]byte(markdown))
 		dateStr := metaData["date"].(string)
@@ -77,16 +89,16 @@ func TestReadmks(t *testing.T) {
 		navMenu := slice2string(categories)
 		tags := metaData["tags"].([]interface{})
 		tag := slice2string(tags)
-		cMap["title"] = metaData["title"]
-		cMap["author"] = metaData["author"]
-		cMap["updateTime"] = date
-		cMap["createTime"] = date
-		cMap["navMenuName"] = navMenu
-		cMap["navMenuID"] = navMenu
-		cMap["tag"] = tag
+		cMap.Set("title", metaData["title"])
+		cMap.Set("author", metaData["author"])
+		cMap.Set("updateTime", date)
+		cMap.Set("createTime", date)
+		cMap.Set("navMenuName", navMenu)
+		cMap.Set("navMenuID", navMenu)
+		cMap.Set("tag", tag)
 
-		cMap["content"] = html
-		cMap["toc"] = tocHtml
+		cMap.Set("content", html)
+		cMap.Set("toc", tocHtml)
 		lists = append(lists, cMap)
 		//saveNewTable(context.Background(), "content", cMap)
 
@@ -94,13 +106,13 @@ func TestReadmks(t *testing.T) {
 
 	fmt.Println("------------")
 
-	var temp map[string]interface{}     // 定义临时变量,进行数据交换
+	var temp zorm.IEntityMap            // 定义临时变量,进行数据交换
 	for j := 0; j < len(lists)-1; j++ { // 外循环 循环次数
 		for i := 0; i < len(lists)-1; i++ { // 内循环 数组遍历
 			m1 := lists[i]
 			m2 := lists[i+1]
-			d1 := m1["updateTime"].(time.Time)
-			d2 := m2["updateTime"].(time.Time)
+			d1 := m1.GetDBFieldMap()["updateTime"].(time.Time)
+			d2 := m2.GetDBFieldMap()["updateTime"].(time.Time)
 			if d1.After(d2) {
 				temp = lists[i]
 				lists[i] = lists[i+1]
@@ -111,8 +123,15 @@ func TestReadmks(t *testing.T) {
 
 	for i := 0; i < len(lists); i++ { // 内循环 数组遍历
 		cMap := lists[i]
-		cMap["sortNo"] = i + 1
-		//saveNewTable(context.Background(), "content", cMap)
+		cMap.Set("sortNo", i+1)
+		date := cMap.GetDBFieldMap()["updateTime"].(time.Time)
+		dateStr := date.Format("2006-01-02 15:04:05")
+		cMap.Set("updateTime", dateStr)
+		cMap.Set("createTime", dateStr)
+		_, err := saveEntityMap(context.Background(), cMap)
+		if err != nil {
+			t.Error(err)
+		}
 	}
 
 }
