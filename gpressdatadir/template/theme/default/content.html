@@ -1,5 +1,5 @@
 <!-- 查询 content -->
-{{ $content := selectOne "* FROM content WHERE status=1 and id=? order by sortNo desc " .urlPathParam }}
+{{ $content := selectOne "* FROM content WHERE id=? order by sortNo desc " .urlPathParam }}
 
 {{ $prevContent := selectOne "id,title FROM content WHERE status=1 and sortNo < ? order by sortNo desc " $content.sortNo  }}
 {{ $nextContent := selectOne "id,title FROM content WHERE status=1 and sortNo > ? order by sortNo desc " $content.sortNo  }}
@@ -21,7 +21,8 @@
     </div>
   </header>
 
-  <div class="post-toc" id="post-toc">
+{{ if ne  $content.toc "" }}
+<div class="post-toc" id="post-toc">
 <h2 class="post-toc-title">文章目录</h2>
 <div class="post-toc-content always-active">
 <nav id="TableOfContents">
@@ -31,6 +32,7 @@
 </nav>
 </div>
 </div>
+{{ end }}
   <div class="post-content">
 
     {{ safeHTML $content.content }}
