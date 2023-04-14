@@ -33,6 +33,8 @@
 </div>
 </div>
 {{ end }}
+
+
   <div class="post-content">
 
     {{ safeHTML $content.content }}
@@ -53,9 +55,13 @@
 
 </div>
 <footer class="post-footer">
+
+    {{if ne $content.tag "" }}
     <div class="post-tags">
         <a href="{{basePath}}tag/{{$content.tag}}">{{$content.tag}}</a>
-        </div>
+    </div>
+    {{end}}
+
     <nav class="post-nav">
       {{if ne $prevContent.sortNo 0 }}
       <a class="prev" href="{{basePath}}post/{{$prevContent.id}}">
