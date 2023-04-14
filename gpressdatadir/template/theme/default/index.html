@@ -1,7 +1,7 @@
 {{ $site:=site }}
 
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList "content" "id,title,hrefURL,navMenuID,navMenuName,summary,updateTime" .q .pageNo "" }}
+{{ $selectList := selectList .q .pageNo "id,title,hrefURL,navMenuID,navMenuName,summary,updateTime FROM content WHERE status=1 order by sortNo desc"  }}
 
 {{template "bodystart.html" }}
 
