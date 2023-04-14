@@ -59,21 +59,21 @@ func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 }
 
 // hrefURLRoute href 需要跳转的地址,hrefURL原地址
-func hrefURLRoute(href string, realURL string) error {
-	if href == "" || realURL == "" {
+func hrefURLRoute(realURL string, hrefURL string) error {
+	if hrefURL == "" || realURL == "" {
 		return errors.New("跳转路径为空")
 	}
 
-	if strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") { //外部跳转
+	if strings.HasPrefix(hrefURL, "http://") || strings.HasPrefix(hrefURL, "https://") { //外部跳转
 		h.GET("/"+realURL, func(ctx context.Context, c *app.RequestContext) { //注册内部地址,解析跳转到外部
-			c.Redirect(consts.StatusMovedPermanently, []byte(href))
+			c.Redirect(consts.StatusMovedPermanently, []byte(hrefURL))
 			c.Abort() // 终止后续调用
 		})
 		return nil
 	}
 	//内部跳转, 跳转到内部路由,例如 navMenu/about 跳转到 content/about
-	h.GET(href, func(ctx context.Context, c *app.RequestContext) {
-		c.Redirect(consts.StatusFound, cRedirecURI(config.BasePath+realURL))
+	h.GET("/"+realURL, func(ctx context.Context, c *app.RequestContext) {
+		c.Redirect(http.StatusOK, cRedirecURI(hrefURL))
 		c.Abort() // 终止后续调用
 	})
 

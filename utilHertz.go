@@ -297,7 +297,7 @@ func registerHrefRoute() error {
 	for _, navMap := range navMaps {
 		id := navMap["id"].(string)
 		hrefURL := navMap["hrefURL"].(string)
-		err := hrefURLRoute(hrefURL, "navMenu/"+id)
+		err := hrefURLRoute("navMenu/"+id, hrefURL)
 		if err != nil {
 			return err
 		}
@@ -311,7 +311,7 @@ func registerHrefRoute() error {
 	for _, contentMap := range contentMaps {
 		id := contentMap["id"].(string)
 		hrefURL := contentMap["hrefURL"].(string)
-		err := hrefURLRoute(hrefURL, "content/"+id)
+		err := hrefURLRoute("post/"+id, hrefURL)
 		if err != nil {
 			return err
 		}
