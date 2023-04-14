@@ -41,6 +41,53 @@ func init() {
 		return
 	}
 
+	//创建fts虚拟表,用于全文检索,id只作为查询字段,并不索引
+
+	createFTSTableSQL := `CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
+		id UNINDEXED, 
+		title, 
+		keyword, 
+		description,
+		subtitle,
+		navMenuName,
+		summary,
+		toc,
+		tag,
+		author, 
+
+	    tokenize = 'simple',
+		content='content', 
+		content_rowid='rowid'
+	);`
+	_, err = crateTable(ctx, createFTSTableSQL)
+	if err != nil {
+		return
+	}
+	//创建触发器
+	triggerContentSQL := `CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
+		BEGIN
+			INSERT INTO fts_content (rowid, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES (new.rowid, new.id, new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
+		END;
+	
+	CREATE TRIGGER IF NOT EXISTS trigger_content_delete AFTER DELETE ON content
+		BEGIN
+			INSERT INTO fts_content (fts_content, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES ('delete', old.id, old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
+		END;
+	
+	CREATE TRIGGER IF NOT EXISTS trigger_content_update AFTER UPDATE ON content
+		BEGIN
+			INSERT INTO fts_content (fts_content, rowid, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES ('delete', old.rowid, old.id, old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
+			INSERT INTO fts_content (rowid, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES (new.rowid, new.id, new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
+		END;`
+	_, err = crateTable(ctx, triggerContentSQL)
+	if err != nil {
+		return
+	}
+
 	// 获取当前时间
 	now := time.Now().Format("2006-01-02 15:04:05")
 	sortNo := 1
@@ -399,4 +446,5 @@ func init() {
 		SortNo:     4,
 		Status:     1,
 	})
+
 }

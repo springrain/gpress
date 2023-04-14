@@ -107,9 +107,22 @@ func funcSelectList(q string, pageNo int, sql string, values ...interface{}) (ma
 	}
 
 	finder := zorm.NewFinder().Append("SELECT")
+	if q != "" { // 如果有搜索关键字
+		whereSQL := strings.ToLower(sql)
+		i := strings.Index(whereSQL, " where ")
+		if i < 0 { // 没有where
+			finder.Append(sql, values...)
+			finder.Append(" where id in (select id from fts_content where fts_content match jieba_query(?) ) ", q)
+		} else {
+			finder.Append(sql[:i+7]+" id in (select id from fts_content where fts_content match jieba_query(?) ) and ", q)
+			finder.Append(sql[i+7:], values...)
+		}
 
-	finder.Append(sql, values...)
+	} else {
+		finder.Append(sql, values...)
+	}
 
+	//finder.Append("order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageNo = pageNo
 	data, err := zorm.QueryMap(context.Background(), finder, page)
