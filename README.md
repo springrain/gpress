@@ -1,7 +1,7 @@
 # gpress
 
 ## 介绍
-云原生高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需100M运行内存   
+云原生高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需 200M 运行内存   
 默认端口660  
 开发时需要先解压gpressdatadir/dict.zip      
 需要配置CGO的编译环境,设置```set CGO_ENABLED=1```,下载mingw64和cmake,并把bin配置到环境变量,注意把```mingw64/bin/mingw32-make.exe``` 改名为 ```make.exe```  
