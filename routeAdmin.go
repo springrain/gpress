@@ -191,6 +191,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	responseData, err := funcSelectList(q, pageNo, sql)
+	responseData["urlPathParam"] = urlPathParam
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -355,6 +356,7 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	urlPathParam := c.Param("urlPathParam")
 	//tableName := bleveDataDir + urlPathParam
 	responseData, err := funcSelectOne(urlPathParam, "*", id)
+	responseData["urlPathParam"] = urlPathParam
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
