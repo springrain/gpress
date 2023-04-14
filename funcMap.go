@@ -112,9 +112,9 @@ func funcSelectList(q string, pageNo int, sql string, values ...interface{}) (ma
 		i := strings.Index(whereSQL, " where ")
 		if i < 0 { // 没有where
 			finder.Append(sql, values...)
-			finder.Append(" where id in (select id from fts_content where fts_content match jieba_query(?) ) ", q)
+			finder.Append(" where rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) ", q)
 		} else {
-			finder.Append(sql[:i+7]+" id in (select id from fts_content where fts_content match jieba_query(?) ) and ", q)
+			finder.Append(sql[:i+7]+" rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) and ", q)
 			finder.Append(sql[i+7:], values...)
 		}
 
