@@ -1,6 +1,6 @@
 <!-- 查询 content 列表 -->
-{{ $selectList:=selectList "content" "id,title,hrefURL,updateTime" .q .pageNo  (printf "navMenuID='%s'" .urlPathParam) }}
-{{ $nav:=selectOne "navMenu" "menuName" .urlPathParam }}
+{{ $selectList := selectList .q .pageNo "id,title,hrefURL,updateTime FROM content WHERE status=1 and navMenuID=? order by sortNo desc" .urlPathParam }}
+{{ $nav := selectOne "menuName FROM navMenu WHERE id=?" .urlPathParam }}
 
 {{template "bodystart.html"  }}
 
