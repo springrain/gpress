@@ -311,7 +311,7 @@ func registerHrefRoute() error {
 	for _, contentMap := range contentMaps {
 		id := contentMap["id"].(string)
 		hrefURL := contentMap["hrefURL"].(string)
-		err := hrefURLRoute(hrefURL, "contentMap/"+id)
+		err := hrefURLRoute(hrefURL, "content/"+id)
 		if err != nil {
 			return err
 		}

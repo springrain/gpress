@@ -130,7 +130,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | title       | string      | 文章标题     | 是      |     -  |
 | keyword     | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
 | description | string      | 站点描述     | 否      |     -  |
-| pageURL     | string      | 自身页面路径 | 否       |    -  |
+| hrefURL     | string      | 自身页面路径 | 否       |    -  |
 | subtitle    | string      | 副标题       | 是      |     -  |
 | content     | string      | 文章内容     | 是      |       |
 | createTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
@@ -150,7 +150,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | title       | string      | 文章标题     | 是      |     -  |
 | keyword     | string      | 关键字       | 是      |    使用 commaAnalyzerName 分词器,实现类似sql in 的效果.    |
 | description | string      | 站点描述     | 否      |     -  |
-| pageURL     | string      | 自身页面路径 | 否       |    -  |
+| hrefURL     | string      | 自身页面路径 | 否       |    -  |
 | subtitle    | string      | 副标题       | 是      |     -  |
 | navMenuID   | string      | 导航ID       | 否      | -    |
 | navMenuNames| string      | 导航名称,逗号(,)隔开     | 是      | 使用 gseAnalyzerMapping 分词器.  |
