@@ -135,6 +135,47 @@ func TestReadmks(t *testing.T) {
 	}
 
 }
+
+func TestAbout(t *testing.T) {
+	ctx := context.Background()
+	source, err := os.ReadFile("D:/about.md")
+	if err != nil {
+		t.Error(err)
+	}
+	markdown := strings.TrimSpace(string(source))
+	cMap := zorm.NewEntityMap(tableContentName)
+	cMap.Set("id", "about")
+	cMap.Set("summary", "jiagou.com")
+	cMap.Set("markdown", markdown)
+	cMap.Set("sortNo", 100)
+	cMap.Set("status", 0)
+
+	_, tocHtml, html, _ := conver2Html([]byte(markdown))
+	date := time.Now().Format("2006-01-02 15:04:05")
+	cMap.Set("title", "about")
+	cMap.Set("author", "springrain")
+	cMap.Set("updateTime", date)
+	cMap.Set("createTime", date)
+	cMap.Set("navMenuName", "about")
+	cMap.Set("navMenuID", "about")
+	cMap.Set("content", html)
+	cMap.Set("toc", tocHtml)
+
+	_, err = saveEntityMap(ctx, cMap)
+	if err != nil {
+		t.Error(err)
+	}
+
+	//更新about的hrefURL
+	finder := zorm.NewUpdateFinder(tableNavMenuName).Append("hrefURL=? WHERE id=?", "content/about", "about")
+	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		return zorm.UpdateFinder(ctx, finder)
+	})
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func slice2string(slice []interface{}) string {
 	len := len(slice)
 	s := ""
