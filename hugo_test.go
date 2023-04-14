@@ -160,7 +160,8 @@ func TestAbout(t *testing.T) {
 	cMap.Set("navMenuID", "about")
 	cMap.Set("content", html)
 	cMap.Set("toc", tocHtml)
-	cMap.Set("summary", `本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用hugo和even模板,编译成静态文件,Nginx作为WEB服务器.`)
+	cMap.Set("summary", `本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......
+	不妨大胆一些,大胆一些......`)
 
 	_, err = saveEntityMap(ctx, cMap)
 	if err != nil {

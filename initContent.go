@@ -55,7 +55,7 @@ func init() {
 		tag,
 		author, 
 
-	    tokenize = 'simple',
+	    tokenize = 'simple 0',
 		content='content', 
 		content_rowid='rowid'
 	);`
