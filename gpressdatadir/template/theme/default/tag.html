@@ -25,13 +25,13 @@
   
 <nav class="pagination">
   {{ if $selectList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}tag/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo -1 }}">
+  <a class="prev" href="{{basePath}}tag/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo -1 }}&q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
   {{ if $selectList.page.HasPrev }}
-  <a class="next" href="{{basePath}}tag/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo 1 }}">
+  <a class="next" href="{{basePath}}tag/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo 1 }}&q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>
