@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
+
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func init() {
@@ -24,7 +25,8 @@ var FuncLogError func(err error) = defaultLogError
 var FuncLogPanic func(err error) = defaultLogPanic
 
 func defaultLogError(err error) {
-	log.Output(LogCallDepth, fmt.Sprintln(err))
+	//log.Output(LogCallDepth, fmt.Sprintln(err))
+	hlog.Error(err)
 }
 
 func defaultLogPanic(err error) {
