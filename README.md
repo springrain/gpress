@@ -6,7 +6,7 @@
 开发时需要先解压gpressdatadir/dict.zip      
 需要配置CGO的编译环境,设置```set CGO_ENABLED=1```,下载mingw64和cmake,并把bin配置到环境变量,注意把```mingw64/bin/mingw32-make.exe``` 改名为 ```make.exe```  
 注意修改vscode的launch.json,增加 ``` ,"buildFlags": "--tags=fts5" ``` 用于调试fts5    
-test需要手动测试:``` go test -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress```  
+test需要手动测试:``` go test -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress ```  
 打包: ``` go build --tags "fts5" -ldflags "-w -s" ```   
 
 ## 贡献者授权说明
@@ -30,13 +30,13 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 ### 表信息(表名:tableInfo)
 
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
-| ----------- | ----------- | ----------- | ------- | ----------- |
+| ----------- | ----------- | -----------  | ------- | ----------- |
 | id          | string      | 主键         | 否      |    -  |
-| code        | string      | 表Code     | 否      |    -  |
-| name        | string      | 表名称     | 否      |    -  |
-| tableFiled   | string      | 表类型     | 否      |  index:表.  module:模型  |
-| createTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
-| ipdateTime  |string  | 更新时间     | -       |  2006-01-02 15:04:05  |
+| code        | string      | 表Code       | 否      |    -  |
+| name        | string      | 表名称       | 否      |    -  |
+| tableFiled  | string      | 表类型       | 否      |  index:表.  module:模型  |
+| createTime  |string       | 创建时间     | -       |  2006-01-02 15:04:05  |
+| ipdateTime  |string       | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |
 | sortNo      | int         | 排序         | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
