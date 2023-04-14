@@ -17,7 +17,6 @@ import (
 
 	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 var tmpl *template.Template = template.New(defaultName).Delims("", "").Funcs(funcMap)
@@ -284,20 +283,39 @@ func pathExist(path string) bool {
 	return false
 }
 
-func hrefURLRoute(href string, pageUrl string) error {
-	if href == "" || pageUrl == "" {
-		return errors.New("跳转路径为空")
+// registerHrefRoute 注册navMenu 和 content的自定义路由,最多500个
+func registerHrefRoute() error {
+	ctx := context.Background()
+	page := zorm.NewPage()
+	page.PageNo = 1
+	page.PageSize = 500
+	finder1 := zorm.NewSelectFinder(tableNavMenuName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
+	navMaps, err := zorm.QueryMap(ctx, finder1, page)
+	if err != nil {
+		return err
 	}
-	// 默认首页
-	h.GET(href, func(ctx context.Context, c *app.RequestContext) {
-		// 指定重定向的URL
-		if strings.HasPrefix(pageUrl, "http://") || strings.HasPrefix(pageUrl, "https://") { //外部跳转
-			c.Redirect(consts.StatusMovedPermanently, []byte(pageUrl))
-		} else {
-			c.Redirect(consts.StatusFound, cRedirecURI(pageUrl))
+	for _, navMap := range navMaps {
+		id := navMap["id"].(string)
+		hrefURL := navMap["hrefURL"].(string)
+		err := hrefURLRoute(hrefURL, "navMenu/"+id)
+		if err != nil {
+			return err
 		}
-		c.Abort() // 终止后续调用
-	})
+	}
 
+	finder2 := zorm.NewSelectFinder(tableContentName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
+	contentMaps, err := zorm.QueryMap(ctx, finder2, page)
+	if err != nil {
+		return err
+	}
+	for _, contentMap := range contentMaps {
+		id := contentMap["id"].(string)
+		hrefURL := contentMap["hrefURL"].(string)
+		err := hrefURLRoute(hrefURL, "contentMap/"+id)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
+
 }

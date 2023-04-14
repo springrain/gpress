@@ -36,6 +36,12 @@ func main() {
 	// 初始化admin路由,使用init实现
 	//initAdminRoute()
 
+	//注册navMenu和context的herf路由
+	err := registerHrefRoute()
+	if err != nil {
+		FuncLogError(err)
+	}
+
 	// 启动服务
 	h.Spin()
 }
