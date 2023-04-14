@@ -97,71 +97,42 @@ func funcAddFloat(x, y float64) float64 {
 	return x + y
 }
 
-func funcSelectList(tableName string, fields string, q string, pageNo int, queryString string) (map[string]interface{}, error) {
-	ok := tableExist(tableName)
-	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": tableName}
-	if !ok { //表不存在
-		err := errors.New("表不存在")
+func funcSelectList(q string, pageNo int, sql string, values ...interface{}) (map[string]interface{}, error) {
+	errMap := map[string]interface{}{"statusCode": 0}
+	sql = strings.TrimSpace(sql)
+	if sql == "" || strings.Contains(sql, ";") {
+		err := errors.New("sql语句错误")
 		errMap["err"] = err
 		return errMap, err
 	}
 
 	finder := zorm.NewFinder().Append("SELECT")
-	finder.InjectionCheck = false
-	if fields == "" || fields == "*" {
-		finder.Append("*")
-	} else {
-		finder.Append(fields)
-	}
-	finder.Append("FROM " + tableName + " WHERE status=1 ")
 
-	if queryString != "" {
-		finder.Append("and " + queryString)
-	}
+	finder.Append(sql, values...)
 
 	page := zorm.NewPage()
 	page.PageNo = pageNo
-
-	finder.Append("order by sortNo desc")
 	data, err := zorm.QueryMap(context.Background(), finder, page)
 	if err != nil {
 		errMap["err"] = err
 		return errMap, err
 	}
 
-	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page, "urlPathParam": tableName}
+	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page}
 	return resultMap, err
 }
 
-func funcSelectOne(tableName string, fields string, queryString string) (map[string]interface{}, error) {
-	ok := tableExist(tableName)
-	errMap := map[string]interface{}{"statusCode": 0, "urlPathParam": tableName}
-	if !ok || queryString == "" { //表不存在
-		err := errors.New("表不存在")
+func funcSelectOne(sql string, values ...interface{}) (map[string]interface{}, error) {
+	errMap := map[string]interface{}{"statusCode": 0}
+	sql = strings.TrimSpace(sql)
+	if sql == "" || strings.Contains(sql, ";") {
+		err := errors.New("sql语句错误")
 		errMap["err"] = err
 		return errMap, err
 	}
-
 	finder := zorm.NewFinder().Append("SELECT")
-	finder.InjectionCheck = false
-	if fields == "" || fields == "*" {
-		finder.Append("*")
-	} else {
-		finder.Append(fields)
-	}
-	finder.Append("FROM " + tableName)
+	finder.Append(sql, values...)
 
-	whereSQL := ""
-
-	if !(strings.Contains(queryString, "=") || strings.Contains(queryString, "<") || strings.Contains(queryString, ">")) { //如果只有一个字符串,认为是ID
-		finder.Append("WHERE id=?", queryString)
-	} else { //如果是多个字段
-		finder.Append("WHERE " + queryString)
-	}
-	if whereSQL != "" {
-		finder.Append(whereSQL)
-	}
-	finder.Append("order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 1
 	page.PageNo = 1
@@ -177,7 +148,6 @@ func funcSelectOne(tableName string, fields string, queryString string) (map[str
 	resultMap := resultMaps[0]
 	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": tableName}
 	resultMap["statusCode"] = 1
-	resultMap["urlPathParam"] = tableName
 	return resultMap, err
 }
 

@@ -177,14 +177,20 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	i := 0
 	for k := range mapParams {
 		if i > 0 {
-			params.WriteByte('&')
+			params.WriteString(" and ")
 		}
 		params.WriteString(k)
 		params.WriteByte('=')
 		params.WriteString(c.Query(k))
 		i++
 	}
-	responseData, err := funcSelectList(urlPathParam, "*", q, pageNo, params.String())
+	where := params.String()
+	sql := "* from " + urlPathParam
+	if where != "" {
+		sql += " WHERE " + where
+	}
+
+	responseData, err := funcSelectList(q, pageNo, sql)
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
