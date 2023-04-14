@@ -189,6 +189,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 
 func crateTable(ctx context.Context, createTableSQL string) (bool, error) {
 	finder := zorm.NewFinder().Append(createTableSQL)
+	finder.InjectionCheck = false
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.UpdateFinder(ctx, finder)
 		return nil, err

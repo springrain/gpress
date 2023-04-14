@@ -160,6 +160,7 @@ func TestAbout(t *testing.T) {
 	cMap.Set("navMenuID", "about")
 	cMap.Set("content", html)
 	cMap.Set("toc", tocHtml)
+	cMap.Set("summary", `本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用hugo和even模板,编译成静态文件,Nginx作为WEB服务器.`)
 
 	_, err = saveEntityMap(ctx, cMap)
 	if err != nil {
@@ -167,7 +168,7 @@ func TestAbout(t *testing.T) {
 	}
 
 	//更新about的hrefURL
-	finder := zorm.NewUpdateFinder(tableNavMenuName).Append("hrefURL=? WHERE id=?", "content/about", "about")
+	finder := zorm.NewUpdateFinder(tableNavMenuName).Append("hrefURL=? WHERE id=?", "post/about", "about")
 	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.UpdateFinder(ctx, finder)
 	})
