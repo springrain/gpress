@@ -1,8 +1,8 @@
 <!-- 查询 content -->
-{{ $content := selectOne "* FROM content WHERE id=?" .urlPathParam }}
+{{ $content := selectOne "* FROM content WHERE id=? order by sortNo desc " .urlPathParam }}
 
-{{ $prevContent := selectOne "id,title FROM content WHERE sortNo < ?" $content.sortNo  }}
-{{ $nextContent := selectOne "id,title FROM content WHERE sortNo < ?" $content.sortNo  }}
+{{ $prevContent := selectOne "id,title FROM content WHERE sortNo < ? order by sortNo desc " $content.sortNo  }}
+{{ $nextContent := selectOne "id,title FROM content WHERE sortNo > ? order by sortNo desc " $content.sortNo  }}
 
 {{template "bodystart.html"  }}
 
