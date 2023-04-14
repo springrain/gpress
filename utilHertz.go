@@ -17,6 +17,7 @@ import (
 
 	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 var tmpl *template.Template = template.New(defaultName).Delims("", "").Funcs(funcMap)
@@ -281,4 +282,22 @@ func pathExist(path string) bool {
 		return false
 	}
 	return false
+}
+
+func hrefURLRoute(href string, pageUrl string) error {
+	if href == "" || pageUrl == "" {
+		return errors.New("跳转路径为空")
+	}
+	// 默认首页
+	h.GET(href, func(ctx context.Context, c *app.RequestContext) {
+		// 指定重定向的URL
+		if strings.HasPrefix(pageUrl, "http://") || strings.HasPrefix(pageUrl, "https://") { //外部跳转
+			c.Redirect(consts.StatusMovedPermanently, []byte(pageUrl))
+		} else {
+			c.Redirect(consts.StatusFound, cRedirecURI(pageUrl))
+		}
+		c.Abort() // 终止后续调用
+	})
+
+	return nil
 }
