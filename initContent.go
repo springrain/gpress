@@ -42,9 +42,8 @@ func init() {
 	}
 
 	//创建fts虚拟表,用于全文检索,id只作为查询字段,并不索引
-
+	//id UNINDEXED, 去掉id,直接使用rowid
 	createFTSTableSQL := `CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
-		id UNINDEXED, 
 		title, 
 		keyword, 
 		description,
@@ -66,22 +65,22 @@ func init() {
 	//创建触发器
 	triggerContentSQL := `CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
 		BEGIN
-			INSERT INTO fts_content (rowid, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES (new.rowid, new.id, new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
+			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES (new.rowid,  new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
 		END;
 	
 	CREATE TRIGGER IF NOT EXISTS trigger_content_delete AFTER DELETE ON content
 		BEGIN
-			INSERT INTO fts_content (fts_content, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES ('delete', old.id, old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
+			INSERT INTO fts_content (fts_content,  title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES ('delete',  old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
 		END;
 	
 	CREATE TRIGGER IF NOT EXISTS trigger_content_update AFTER UPDATE ON content
 		BEGIN
-			INSERT INTO fts_content (fts_content, rowid, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES ('delete', old.rowid, old.id, old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
-			INSERT INTO fts_content (rowid, id, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES (new.rowid, new.id, new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
+			INSERT INTO fts_content (fts_content, rowid, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES ('delete', old.rowid,  old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
+			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
+			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
 		END;`
 	_, err = crateTable(ctx, triggerContentSQL)
 	if err != nil {
