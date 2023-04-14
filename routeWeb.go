@@ -74,8 +74,8 @@ func hrefURLRoute(realURL string, hrefURL string) error {
 	//内部跳转, 跳转到内部路由,例如 navMenu/about 跳转到 content/about
 	h.GET("/"+realURL, func(ctx context.Context, c *app.RequestContext) {
 		//https://github.com/cloudwego/hertz/issues/724
-		//c.Redirect(http.StatusOK, cRedirecURI(hrefURL))
-		c.Redirect(consts.StatusFound, []byte("/"+hrefURL))
+		c.Redirect(http.StatusOK, cRedirecURI(hrefURL))
+		//c.Redirect(consts.StatusFound, []byte("/"+hrefURL))
 		c.Abort() // 终止后续调用
 	})
 
