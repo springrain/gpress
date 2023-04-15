@@ -28,7 +28,7 @@ var dbDaoConfig = zorm.DataSourceConfig{
 //var TableMap sync.Map
 
 // 初始化 sqlite数据库
-func checkSQLliteStatus() bool {
+func checkSQLiteStatus() bool {
 	//注册fts5的simple分词器,建议使用jieba分词
 	//需要  --tags "fts5"
 	sql.Register("sqlite3_simple", &sqlite3.SQLiteDriver{
