@@ -10,9 +10,11 @@ import (
 	"html/template"
 	"math/big"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"gitee.com/chunanyong/zorm"
@@ -27,30 +29,30 @@ func initTemplate() error {
 	// h.LoadHTMLFiles(themePath + "index.html")
 	// h.LoadHTMLGlob(datadir + "html/theme/default/*")
 	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
-	err := loadTemplate(false)
+	err := loadTemplate()
 	// 设置模板
 	h.SetHTMLTemplate(tmpl)
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
-	hStatic("/public", datadir)
+	hStaticFS("/public", datadir)
 	// 设置静态网页目录
-	hStatic("/statichtml", datadir)
+	hStaticFS("/statichtml", datadir)
 	return err
 }
 
 // loadTemplate 用于更新重复加载
-func loadTemplate(reload bool) error {
+func loadTemplate() error {
 	//声明新的template
 	loadTmpl := template.New(defaultName).Delims("", "").Funcs(funcMap)
 
 	staticFileMap := make(map[string]string)
 	//遍历后台admin模板
-	err := walkTemplateDir(loadTmpl, reload, templateDir+"admin/", templateDir, &staticFileMap)
+	err := walkTemplateDir(loadTmpl, templateDir+"admin/", templateDir, &staticFileMap)
 	if err != nil {
 		FuncLogError(err)
 		return err
 	}
 	//遍历用户配置的主题模板
-	err = walkTemplateDir(loadTmpl, reload, templateDir+"theme/"+config.Theme+"/", templateDir+"theme/"+config.Theme+"/", &staticFileMap)
+	err = walkTemplateDir(loadTmpl, templateDir+"theme/"+config.Theme+"/", templateDir+"theme/"+config.Theme+"/", &staticFileMap)
 	if err != nil {
 		FuncLogError(err)
 		return err
@@ -61,18 +63,12 @@ func loadTemplate(reload bool) error {
 
 	// 设置模板
 	//h.SetHTMLTemplate(tmpl)
-	if reload { //如果是reload,不处理静态文件
-		return nil
-	}
 
 	//增加静态文件夹
 	for k, v := range staticFileMap {
 		//staticFS2 := http.Dir(v)
-
-		hStatic(k, v)
-
+		hStaticFS(k, v)
 		//h.Handle("GET", k+"/*filepath", http.FileServer(staticFS2))
-
 	}
 
 	/*
@@ -94,7 +90,7 @@ func loadTemplate(reload bool) error {
 	return nil
 }
 
-func walkTemplateDir(loadTmpl *template.Template, reload bool, walkDir string, baseDir string, staticFileMap *map[string]string) error {
+func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string, staticFileMap *map[string]string) error {
 	//遍历模板文件夹
 	err := filepath.Walk(walkDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
@@ -102,7 +98,7 @@ func walkTemplateDir(loadTmpl *template.Template, reload bool, walkDir string, b
 		// 相对路径
 
 		// 如果是静态资源
-		if !reload && (strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/")) {
+		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
 			relativePath := path[len(baseDir)-1:]
 			/*
 				// 直接映射静态文件夹
@@ -215,7 +211,9 @@ func responData2Map(responseData ResponseData) map[string]interface{} {
 	return result
 }
 
-func hStatic(relativePath, root string) {
+var pathHandlerMap sync.Map
+
+func hStaticFS(relativePath, root string) {
 	basePath := funcBasePath()
 	filePath := ""
 	if basePath == "/" || basePath == "" { //默认值
@@ -225,15 +223,41 @@ func hStatic(relativePath, root string) {
 	} else {
 		filePath = root + relativePath
 	}
-	h.StaticFS(relativePath, &app.FS{
+
+	if strings.Contains(relativePath, ":") || strings.Contains(relativePath, "*") {
+		panic("URL parameters can not be used when serving a static folder")
+	}
+
+	appFS := &app.FS{
 		Root: filePath,
 		PathRewrite: func(c *app.RequestContext) []byte {
 			path := "/" + c.Param("filepath")
 			//path := c.Param("filepath")
 			return []byte(path)
 		},
-	},
-	)
+	}
+	handler := appFS.NewRequestHandler()
+	_, ok := pathHandlerMap.Load(relativePath)
+
+	//无论是否已经存在,都先更新到map里
+	pathHandlerMap.Store(relativePath, handler)
+
+	if ok { //已经存在这个路由注册,只替换值,不添加路由
+		return
+	}
+	// 未添加的路由,添加到路由表里
+	urlPattern := path.Join(relativePath, "/*filepath")
+
+	//套壳实现动态替换路由,实际就是记录路径和hander的对应关系,然后通过套壳hander调用实际的hander
+	handlerFunc := func(c context.Context, ctx *app.RequestContext) {
+		pathHandler, ok := pathHandlerMap.Load(relativePath)
+		if !ok || pathHandler == nil {
+			return
+		}
+		pathHandler.(app.HandlerFunc)(c, ctx)
+	}
+	h.GET(urlPattern, handlerFunc)
+	h.HEAD(urlPattern, handlerFunc)
 }
 
 func cRedirecURI(uri string) []byte {
