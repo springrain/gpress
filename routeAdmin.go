@@ -127,7 +127,7 @@ func init() {
 	})
 	// 后台管理员首页
 	adminGroup.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
-		err := loadTemplate(true)
+		err := loadTemplate()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 			return
