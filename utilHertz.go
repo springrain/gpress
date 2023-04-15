@@ -248,7 +248,7 @@ func hStaticFS(relativePath, root string) {
 	// 未添加的路由,添加到路由表里
 	urlPattern := path.Join(relativePath, "/*filepath")
 
-	//套壳实现动态替换路由,实际就是记录路径和hander的对应关系,然后通过套壳hander调用实际的hander
+	//套壳实现动态替换路由,实际就是记录路径和handler的对应关系,然后通过套壳handler调用实际的hander
 	handlerFunc := func(c context.Context, ctx *app.RequestContext) {
 		realHandlerFunc, ok := realHandlerFuncMap.Load(relativePath)
 		if !ok || realHandlerFunc == nil {
