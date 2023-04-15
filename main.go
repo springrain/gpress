@@ -7,7 +7,7 @@ import (
 // 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init函数!!!
 
 // 检查表状态
-var sqliteStatus = checkSQLliteStatus()
+var sqliteStatus = checkSQLiteStatus()
 
 // 是否已经安装过了
 var installed = isInstalled()
@@ -36,7 +36,7 @@ func main() {
 	// 初始化admin路由,使用init实现
 	//initAdminRoute()
 
-	//注册navMenu和context的herf路由
+	//注册navMenu和context的href路由
 	err := registerHrefRoute()
 	if err != nil {
 		FuncLogError(err)
