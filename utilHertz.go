@@ -211,7 +211,7 @@ func responData2Map(responseData ResponseData) map[string]interface{} {
 	return result
 }
 
-var pathHandlerMap sync.Map
+var realHandlerFuncMap sync.Map
 
 func hStaticFS(relativePath, root string) {
 	basePath := funcBasePath()
@@ -237,10 +237,10 @@ func hStaticFS(relativePath, root string) {
 		},
 	}
 	handler := appFS.NewRequestHandler()
-	_, ok := pathHandlerMap.Load(relativePath)
+	_, ok := realHandlerFuncMap.Load(relativePath)
 
 	//无论是否已经存在,都先更新到map里
-	pathHandlerMap.Store(relativePath, handler)
+	realHandlerFuncMap.Store(relativePath, handler)
 
 	if ok { //已经存在这个路由注册,只替换值,不添加路由
 		return
@@ -250,11 +250,11 @@ func hStaticFS(relativePath, root string) {
 
 	//套壳实现动态替换路由,实际就是记录路径和hander的对应关系,然后通过套壳hander调用实际的hander
 	handlerFunc := func(c context.Context, ctx *app.RequestContext) {
-		pathHandler, ok := pathHandlerMap.Load(relativePath)
-		if !ok || pathHandler == nil {
+		realHandlerFunc, ok := realHandlerFuncMap.Load(relativePath)
+		if !ok || realHandlerFunc == nil {
 			return
 		}
-		pathHandler.(app.HandlerFunc)(c, ctx)
+		realHandlerFunc.(app.HandlerFunc)(c, ctx)
 	}
 	h.GET(urlPattern, handlerFunc)
 	h.HEAD(urlPattern, handlerFunc)
