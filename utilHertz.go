@@ -237,20 +237,21 @@ func hStaticFS(relativePath, root string) {
 		},
 	}
 	handler := appFS.NewRequestHandler()
-	_, ok := realHandlerFuncMap.Load(relativePath)
 
+	urlPattern := path.Join(relativePath, "/*filepath")
+
+	_, ok := realHandlerFuncMap.Load(urlPattern)
 	//无论是否已经存在,都先更新到map里
-	realHandlerFuncMap.Store(relativePath, handler)
+	realHandlerFuncMap.Store(urlPattern, handler)
 
 	if ok { //已经存在这个路由注册,只替换值,不添加路由
 		return
 	}
 	// 未添加的路由,添加到路由表里
-	urlPattern := path.Join(relativePath, "/*filepath")
 
-	//套壳实现动态替换路由,实际就是记录路径和handler的对应关系,然后通过套壳handler调用实际的handler
+	//套壳实现动态替换路由,记录路径和handler的对应关系,然后通过套壳handler调用实际的handler
 	handlerFunc := func(c context.Context, ctx *app.RequestContext) {
-		realHandlerFunc, ok := realHandlerFuncMap.Load(relativePath)
+		realHandlerFunc, ok := realHandlerFuncMap.Load(urlPattern)
 		if !ok || realHandlerFunc == nil {
 			return
 		}
