@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"runtime"
 
 	"gitee.com/chunanyong/zorm"
 
@@ -29,11 +30,21 @@ var dbDaoConfig = zorm.DataSourceConfig{
 
 // 初始化 sqlite数据库
 func checkSQLiteStatus() bool {
+
+	defaultFtsFile := datadir + "fts5/libsimple"
+
+	//CPU架构
+	goarch := runtime.GOARCH
+
+	ftsFile := defaultFtsFile + "-" + goarch
+	if !pathExist(ftsFile) { //文件不存在,使用默认的地址
+		ftsFile = defaultFtsFile
+	}
 	//注册fts5的simple分词器,建议使用jieba分词
 	//需要  --tags "fts5"
 	sql.Register("sqlite3_simple", &sqlite3.SQLiteDriver{
 		Extensions: []string{
-			datadir + "fts5/libsimple", //不要加后缀,它会自己处理,这样代码也统一
+			ftsFile, //不要加后缀,它会自己处理,这样代码也统一
 		},
 	})
 
