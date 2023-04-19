@@ -1,7 +1,13 @@
 {{ $site:=site }}
-
 <!-- 查询 content 列表 -->
 {{ $selectList := selectList .q .pageNo "id,title,hrefURL,navMenuID,navMenuName,summary,updateTime FROM content WHERE status=1 order by sortNo desc"  }}
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <title>{{ $site.title }}</title>
+  <meta name="description" content="{{ $site.description }}" />
+  <meta name="keyword" content="{{ $site.keyword }}" />
 
 {{template "bodystart.html" }}
 

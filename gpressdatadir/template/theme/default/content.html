@@ -4,6 +4,13 @@
 {{ $prevContent := selectOne "id,title FROM content WHERE status=1 and sortNo < ? order by sortNo desc " $content.sortNo  }}
 {{ $nextContent := selectOne "id,title FROM content WHERE status=1 and sortNo > ? order by sortNo desc " $content.sortNo  }}
 
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <title>{{ $content.title }}</title>
+  <meta name="description" content="{{ $content.description }}" />
+  <meta name="keyword" content="{{ $content.keyword }}" />
+
 {{template "bodystart.html"  }}
 
 
