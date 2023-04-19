@@ -1,6 +1,14 @@
 <!-- 查询 content 列表 -->
 {{ $selectList := selectList .q .pageNo  "id,title,hrefURL,updateTime FROM content WHERE status=1 and tag=? order by sortNo desc" .urlPathParam }}
 
+{{ $site:=site }}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <title>{{ .urlPathParam }}</title>
+  <meta name="description" content="{{ $site.description }}" />
+  <meta name="keyword" content="{{ $site.keyword }}" />
+
 {{template "bodystart.html"  }}
 
 <section id="archive" class="archive">

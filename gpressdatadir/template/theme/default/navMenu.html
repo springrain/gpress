@@ -1,6 +1,13 @@
 <!-- 查询 content 列表 -->
 {{ $selectList := selectList .q .pageNo "id,title,hrefURL,updateTime FROM content WHERE status=1 and navMenuID=? order by sortNo desc" .urlPathParam }}
 {{ $nav := selectOne "menuName FROM navMenu WHERE id=?" .urlPathParam }}
+{{ $site:=site }}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <title>{{ $nav.menuName }}</title>
+  <meta name="description" content="{{ $site.description }}" />
+  <meta name="keyword" content="{{ $site.keyword }}" />
 
 {{template "bodystart.html"  }}
 
