@@ -8,19 +8,21 @@
 <section class="section">
 	<div class="container">
 		<div class="table-content">
+			<!-- is-6-desktop is-6-tablet -->
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/save" method="POST">
 					{{ $data := . }}
 					{{ range $tableFiled }}
 					{{ if ne .FieldCode "id" }}
 					<div class="field is-horizontal flex-center">
-						<div class="field-left" style="width: 100px;">
+						<div class="field-left" style="width: 150px;">
 							<label class="label">{{.FieldName}}</label>
 							<input type="hidden" id="fieldType_{{.FieldCode}}" value="{{.FieldType}}" />
 						</div>
 						<div class="field-right" style="width: 340px;">
 							<div class="field">
 								<div class="control">
+
 									{{if eq .FieldCode "fieldType"}}
 									<select name="{{.FieldCode}}" class="input">
 										{{ range $key,$value := $fieldType }}
