@@ -10,8 +10,9 @@
 }
 .gpress-menu .menu-list a {
   border-radius: 0;
-  padding: 0.5em 0.85em;
-  color: #999;
+  padding: 0.8em 0.85em 0.8em 1.2em;
+  color: #fff;
+	font-size: 15px;
 }
 .gpress-menu .menu-list a:hover {
   background: #333;

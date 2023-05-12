@@ -1,0 +1,106 @@
+{{template "admin/header.html"}}
+  <title>update - GPRESS</title>
+{{template "admin/bodystart.html"}}
+{{ $tableFiled := tableFiled .urlPathParam }}
+{{$analyzer := analyzer}}
+{{$fieldType := fieldType}}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-9-desktop is-9-tablet">
+        <form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/update" method="POST">
+          {{ $data := . }}
+          {{ range $tableFiled }}
+
+            <div class="field is-horizontal">
+              <div class="field-label">
+                <label class="label">{{.FieldName}}</label>
+                <input type="hidden" id="fieldType_{{.FieldCode}}" value="{{.FieldType}}" />
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    {{if eq .FieldCode "fieldType"}}
+                    <select  name="{{.FieldCode}}" class="input" >
+                      {{ range $key,$value := $fieldType }}
+                        <option value={{$key}}>{{$value}}</option>
+                      {{end}}
+                    </select>
+                    {{else if eq .FieldCode "analyzerName"}}
+                    <select name="{{.FieldCode}}" class="input" >
+                      {{ range $key,$value := $analyzer }}
+                        <option value={{$key}}>{{$value}}</option>
+                      {{end}}
+                    </select>
+                    {{else if eq .FieldCode "id"}}
+                      <input class="input" readonly="readonly" type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
+                    {{else}}
+                      <input class="input"  type="text" name="{{.FieldCode}}"  id ="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
+                    {{end}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          {{end}}
+
+        <div class="field is-grouped is-grouped-centered">
+          <div class="control">
+            <button type="submit" class="button is-primary">Submitsss</button>
+          </div>
+          <div class="control">
+            <button type="reset" class="button is-info is-light">Clear</button>
+          </div>
+        </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <script>
+      const form = document.getElementById("gpress-form");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        const jsonObject = {};
+        for (const [key, value] of formData.entries()) {
+          const fieldType = document.querySelector("#fieldType_"+key).value;
+          if(!!fieldType&&fieldType==1){
+            jsonObject[key] = parseInt(value);
+          }
+          //if (key == "sortNo" ||key == "status"||key == "fieldType"||key == "required"){
+          //  jsonObject[key] = parseInt(value);
+          //}
+          else{
+            jsonObject[key] =  value;
+          }
+          //jsonObject[key] = value;
+        }
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: JSON.stringify(jsonObject),
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+
+        let res= await response.json();
+        if (res.statusCode== 1){
+          alert("修改成功");
+          window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list';
+        }
+        //console.log();
+      });
+
+    </script>
+
+
+
+
+        
+{{template "admin/bodyend.html"}}
+     
