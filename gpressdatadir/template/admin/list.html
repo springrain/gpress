@@ -1,13 +1,13 @@
 {{template "admin/header.html"}}
-<title>tableInfo - GPRESS</title>
+<title>{{.urlPathParam}} - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
 {{ $tableFiled := tableFiled .urlPathParam }}
 {{$path := .urlPathParam}}
 <section class="section">
 	<!-- 分页隐藏域 -->
-	<input type="hidden" id="TotalCount" value="{{.page.TotalCount}}">
-	<input type="hidden" id="PageCount" value="{{.page.PageCount}}">
+	<input type="hidden" id="totalCount" value="{{.page.TotalCount}}">
+	<input type="hidden" id="pageCount" value="{{.page.PageCount}}">
 	
 	
 	<div class="container">
@@ -17,7 +17,7 @@
 				<div class="field">
 					<div class="control">
 						<input class="input" type="text" name="q" placeholder="输入搜索内容...">
-						<input type="hidden" id="PageNo" name="pageNo" value="{{.page.PageNo}}">
+						<input type="hidden" id="pageNo" name="pageNo" value="{{.page.PageNo}}">
 					</div>
 				</div>
 				<div class="field">
@@ -70,13 +70,13 @@
 console.log($('#PageCount').val())
 	$.pageInit({
 		container: '.page', //容器：默认page
-		countPage: $('#PageCount').val(), //一共有多少页
-		showPageCount: $('#PageCount').val(), //显示多少个分页按钮
-		nowPage: $('#PageNo').val(), //当前是第几页
-		count: $('#TotalCount').val(), //数据总数
+		countPage: $('#pageCount').val(), //一共有多少页
+		showPageCount: $('#pageCount').val(), //显示多少个分页按钮
+		nowPage: $('#pageNo').val(), //当前是第几页
+		count: $('#totalCount').val(), //数据总数
 		callBack: function(data) {
 			//当前的页码
-			$('#PageNo').val(data)
+			$('#pageNo').val(data)
 			$('#listForm').submit()
 			console.log('当前的页码为：' + data)
 		}
@@ -84,6 +84,7 @@ console.log($('#PageCount').val())
 
 function deleteFunc(id) {
 		$.confirm({
+			useBootstrap: false,
 			title: '提示',
 			content: '确认删除？',
 			type: 'red',
