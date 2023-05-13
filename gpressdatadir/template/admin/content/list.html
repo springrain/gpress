@@ -1,22 +1,23 @@
 {{template "admin/header.html"}}
-<title>tableInfo222 - GPRESS</title>
+<title>{{.urlPathParam}} - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
 {{ $tableFiled := tableFiled .urlPathParam }}
 {{$path := .urlPathParam}}
 <section class="section">
 	<!-- 分页隐藏域 -->
-	<input type="hidden" id="all" value="{{.page}}">
-	<input type="hidden" id="TotalCount" value="{{.page.TotalCount}}">
-	<input type="hidden" id="PageCount" value="{{.page.PageCount}}">
-	<input type="hidden" id="PageNo" value="{{.page.PageNo}}">
+	<input type="hidden" id="totalCount" value="{{.page.TotalCount}}">
+	<input type="hidden" id="pageCount" value="{{.page.PageCount}}">
+	
+	
 	<div class="container">
 		<!-- 搜索表单 -->
-		<form class="field is-horizontal" action="{{basePath}}admin/{{.urlPathParam}}/list" method="GET">
+		<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.urlPathParam}}/list" method="GET">
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
 						<input class="input" type="text" name="q" placeholder="输入搜索内容...">
+						<input type="hidden" id="pageNo" name="pageNo" value="{{.page.PageNo}}">
 					</div>
 				</div>
 				<div class="field">
@@ -31,7 +32,7 @@
 
 		<!-- 列表 -->
 		<div class="table-content">
-			<table class="table is-fullwidth">
+			<table class="table is-hoverable is-fullwidth">
 				<thead>
 					<tr>
 						<!-- 循环表头 -->
@@ -58,7 +59,6 @@
 						</td>
 					</tr>
 					{{end }}
-
 				</tbody>
 			</table>
 		</div>
@@ -67,20 +67,24 @@
 	<div class="page"></div>
 </section>
 <script>
+console.log($('#PageCount').val())
 	$.pageInit({
 		container: '.page', //容器：默认page
-		countPage: $('#PageCount').val(), //一共有多少页
-		showPageCount: $('#PageCount').val(), //显示多少个分页按钮
-		nowPage: $('#PageNo').val(), //当前是第几页
-		count: $('#TotalCount').val(), //数据总数
+		countPage: $('#pageCount').val(), //一共有多少页
+		showPageCount: $('#pageCount').val(), //显示多少个分页按钮
+		nowPage: $('#pageNo').val(), //当前是第几页
+		count: $('#totalCount').val(), //数据总数
 		callBack: function(data) {
 			//当前的页码
+			$('#pageNo').val(data)
+			$('#listForm').submit()
 			console.log('当前的页码为：' + data)
 		}
 	})
 
-	function deleteFunc(id) {
+function deleteFunc(id) {
 		$.confirm({
+			useBootstrap: false,
 			title: '提示',
 			content: '确认删除？',
 			type: 'red',
@@ -89,9 +93,7 @@
 					$.ajax({
 						type: 'Post',
 						url: '{{basePath}}admin/{{$path}}/delete',
-						data: {
-							id: id
-						},
+						data: { id: id },
 						success: function(res) {
 							if (res.statusCode === 1) {
 								alert('删除成功')
@@ -103,6 +105,7 @@
 				'取消': function() {}
 			}
 		})
+
 	}
 </script>
 
