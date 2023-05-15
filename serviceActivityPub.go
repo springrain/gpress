@@ -17,7 +17,9 @@ type activityJSONRender struct {
 	contentType string
 }
 
-var activityJsonContentType = "application/activity+json; charset=utf-8"
+const activityPubAccept = "application/activity+json"
+
+var activityPubContentType = "application/activity+json; charset=utf-8"
 
 // Render (JSON) writes data with custom ContentType.
 func (r activityJSONRender) Render(resp *protocol.Response) error {
@@ -33,7 +35,7 @@ func (r activityJSONRender) Render(resp *protocol.Response) error {
 // WriteContentType (JSON) writes JSON ContentType.
 func (r activityJSONRender) WriteContentType(resp *protocol.Response) {
 	if r.contentType == "" {
-		writeContentType(resp, activityJsonContentType)
+		writeContentType(resp, activityPubContentType)
 	} else {
 		writeContentType(resp, r.contentType)
 	}
@@ -95,7 +97,7 @@ func funcActivityPubUserInfo(ctx context.Context, c *app.RequestContext) {
 	accept := string(c.GetHeader("Accept"))
 	fmt.Println(accept)
 	data := funcActivityPubUserInfoJson()
-	if accept == "application/activity+json" { //json类型
+	if accept == activityPubAccept { //json类型
 		c.Render(http.StatusOK, activityJSONRender{data: data})
 		c.Abort() // 终止后续调用
 		return
