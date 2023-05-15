@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -58,6 +59,11 @@ func funcWebFinger(ctx context.Context, c *app.RequestContext) {
 	username := acctParts[0]
 	domain := acctParts[1]
 
+	// todo
+	// 需要查一下数据库,是否有这个用户的数据
+
+	//如果没有 就返回nil
+
 	// 构造 WebFinger JSON 对象
 	data := map[string]interface{}{
 		"subject": "acct:" + username + "@" + domain,
@@ -83,4 +89,46 @@ func funcWebFinger(ctx context.Context, c *app.RequestContext) {
 		},
 	}
 	c.Render(http.StatusOK, activityJSONRender{data: data, contentType: "application/jrd+json; charset=utf-8"})
+}
+
+func funcActivityPubUserInfo(ctx context.Context, c *app.RequestContext) {
+	accept := string(c.GetHeader("Accept"))
+	fmt.Println(accept)
+	data := funcActivityPubUserInfoJson()
+	if accept == "application/activity+json" { //json类型
+		c.Render(http.StatusOK, activityJSONRender{data: data})
+		c.Abort() // 终止后续调用
+		return
+	}
+	//返回页面
+	c.HTML(http.StatusOK, "activitypub/user.html", data)
+}
+func funcActivityPubUserInfoJson() map[string]interface{} {
+	// 构造 activityPubUser JSON 对象
+	data := map[string]interface{}{
+		"@context": []string{
+			"https://www.w3.org/ns/activitystreams",
+			"https://w3id.org/security/v1",
+		},
+		"id":                "https://lawrenceli.me/api/activitypub/actor",
+		"type":              "Person",
+		"name":              "Lawrence Li",
+		"preferredUsername": "lawrence",
+		"summary":           "Blog",
+		"inbox":             "https://lawrenceli.me/api/activitypub/inbox",
+		"outbox":            "https://lawrenceli.me/api/activitypub/outbox",
+		"followers":         "https://lawrenceli.me/api/activitypub/followers",
+		"icon": map[string]string{
+			"type":      "Image",
+			"mediaType": "image/png",
+			"url":       "https://lawrenceli.me/icon.png",
+		},
+		"publicKey": map[string]string{
+			"id":           "https://lawrenceli.me/api/activitypub/actor#main-key",
+			"owner":        "https://lawrenceli.me/api/activitypub/actor",
+			"publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0RHqCKo3Zl+ZmwsyJUFe\niUBYdiWQe6C3W+d89DEzAEtigH8bI5lDWW0Q7rT60eppaSnoN3ykaWFFOrtUiVJT\nNqyMBz3aPbs6BpAE5lId9aPu6s9MFyZrK5QtuWfAGwv9VZPwUHrEJCFiY1G5IgK/\n+ZErSKYUTUYw2xSAZnLkalMFTRmLbmj8SlWp/5fryQd4jyRX/tBlsyFs/qvuwBtw\nuGSkWgTIMAYV71Wny9ns+Nwr4HYfF5eo2zInpwIYTCEbil79HcikUUTTO/vMMoqx\n46IiHcMj0SPlzDXxelZgqm0ojK2Z7BGudjvwSbWq/GtLoaXHeMUVpcOCtpyvtLr2\nYwIDAQAB\n-----END PUBLIC KEY-----",
+		},
+	}
+
+	return data
 }
