@@ -86,8 +86,18 @@
 		})
 		let res = await response.json()
 		if (res.statusCode == 200) {
-			alert('保存成功')
-			window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '400px',
+				title: '提示',
+				content: '保存成功！',
+				type: 'green',
+				buttons: {
+					'确定': function() {
+						window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
+					}
+				}
+			})
 		}
 	})
 </script>

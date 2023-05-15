@@ -74,6 +74,8 @@ Page.prototype = {
 			var inputText = $('.page_input').val() - 0
 			if (inputText < 1 || inputText > _this.settings.countPage) {
 				$.confirm({
+					useBootstrap:false,
+					boxWidth: '400px',
 					title: '提示',
 					content: '请输入正确的页码！',
 					type: 'red',
