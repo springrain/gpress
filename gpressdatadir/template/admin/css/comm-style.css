@@ -16,7 +16,7 @@ html,body{
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	padding: 20px !important;
+	padding: 20px 10px 10px 20px !important;
 	box-sizing: border-box;
 }
 #main .section .container{
@@ -26,8 +26,8 @@ html,body{
 	background: white;
 	box-shadow: 2px 2px 5px #ededed;
 	box-sizing: border-box;
-	padding: 20px;
-	margin-bottom: 30px;
+	padding: 20px 20px 10px 20px;
+	margin-bottom: 10px;
 	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
@@ -49,9 +49,12 @@ html,body{
 }
 .container table th,.container table td{
 	width: fit-content;
+	overflow: hidden;
 	white-space:nowrap;
+	text-overflow: ellipsis; 
 	word-break: break-all;
 	vertical-align: unset !important;
+	max-width: 300px;
 }
 .display-flex{
 	display: flex;
