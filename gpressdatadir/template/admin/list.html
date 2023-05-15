@@ -95,7 +95,6 @@ function deleteFunc(id) {
 						data: { id: id },
 						success: function(res) {
 							if (res.statusCode === 1) {
-								alert('删除成功')
 								location.reload()
 							}
 						}
