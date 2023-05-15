@@ -52,6 +52,8 @@
 						<td> {{ index $v .FieldCode }}</td>
 						{{end }}
 						<td>
+							<a class="button is-success is-light is-small"
+								href="{{basePath}}admin/{{$path}}/update?id={{$v.id}}">编辑</a>
 							<a class="button is-link is-light is-small"
 								href="{{basePath}}admin/{{$path}}/look?id={{$v.id}}">查看</a>
 							<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id)"
