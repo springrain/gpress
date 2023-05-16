@@ -53,7 +53,7 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 			"id":        uri,
 			"type":      "Note",
 			"published": "Thu, 20 Feb 2020 00:00:00 GMT",
-			//"attributedTo": "https://" + host + "/acititypub/api/user/test3",
+			//"attributedTo": "https://" + host + "/activitypub/api/user/test3",
 			"content": "<a href=\"" + uri + "\">" + uri + "</a>",
 			"url":     uri,
 			"to":      []string{"https://www.w3.org/ns/activitystreams#Public"},
