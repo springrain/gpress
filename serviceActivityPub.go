@@ -145,28 +145,75 @@ func funcActivityPubOutBox(ctx context.Context, c *app.RequestContext) {
 		"id":         "https://" + host + "/activitypub/api/outbox/" + userName,
 		"summary":    "一个简单的测试",
 		"type":       "OrderedCollection",
-		"totalItems": 100,
+		"totalItems": 2,
+		"first":      "https://" + host + "/activitypub/api/outbox_page/" + userName + "/0",
+		"last":       "https://" + host + "/activitypub/api/outbox_page/" + userName + "/2",
+	}
+	if strings.Contains(accept, activityPubAccept) { //json类型
+		c.Render(http.StatusOK, activityJSONRender{data: data})
+		c.Abort() // 终止后续调用
+		return
+	}
+	//返回页面
+	c.HTML(http.StatusOK, "activitypub/outbox.html", data)
+}
+
+func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
+	accept := string(c.GetHeader("Accept"))
+	host := string(c.Host())
+	userName := c.Param("userName")
+	pageNo := c.Param("pageNo")
+	if pageNo == "2" {
+		//c.Render(http.StatusOK, activityJSONRender{data: data})
+		c.Abort() // 终止后续调用
+	}
+	// 构造 activityPubUser JSON 对象
+	data := map[string]interface{}{
+
+		"@context":   "https://www.w3.org/ns/activitystreams",
+		"id":         "https://" + host + "/activitypub/api/outbox_page/" + userName + "/" + pageNo,
+		"summary":    "一个简单的测试" + pageNo,
+		"type":       "OrderedCollectionPage",
+		"totalItems": 2,
+		"prev":       "https://" + host + "/activitypub/api/outbox_page/" + userName + "/2",
+		"partOf":     "https://" + host + "/activitypub/api/outbox/" + userName,
 		"orderedItems": []map[string]interface{}{
 			{
-				"@context":     "https://www.w3.org/ns/activitystreams",
-				"id":           "https://" + host + "/post/78-k8snodocker",
-				"type":         "Note",
-				"published":    time.Now(),
-				"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
-				"content":      "<a href=\"https://" + host + "/post/78-k8snodocker\">K8S不使用Docker</a>",
-				"url":          "https://" + host + "/post/78-k8snodocker",
-				"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
-				//"cc":           []string{"https://" + host + "/activitypub/api/followers/" + userName},
+				"@context":  "https://www.w3.org/ns/activitystreams",
+				"type":      "Create",
+				"id":        "https://" + host + "/post/78-k8snodocker",
+				"actor":     "https://" + host + "/activitypub/api/user/" + userName,
+				"published": time.Now(),
+				"to":        []string{"https://www.w3.org/ns/activitystreams#Public"},
+				"object": map[string]interface{}{
+					"@context":     "https://www.w3.org/ns/activitystreams",
+					"id":           "https://" + host + "/post/78-k8snodocker",
+					"type":         "Note",
+					"published":    time.Now(),
+					"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
+					"content":      "<a href=\"https://" + host + "/post/78-k8snodocker\">K8S不使用Docker</a>",
+					"url":          "https://" + host + "/post/78-k8snodocker",
+					"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
+					//"cc":           []string{"https://" + host + "/activitypub/api/followers/" + userName},
+				},
 			}, {
-				"@context":     "https://www.w3.org/ns/activitystreams",
-				"id":           "https://" + host + "/post/77-nftonxuperchain",
-				"type":         "Note",
-				"published":    time.Now(),
-				"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
-				"content":      "<a href=\"https://" + host + "/post/77-nftonxuperchain\">百度开放网络发行数字藏品</a>",
-				"url":          "https://" + host + "/post/77-nftonxuperchain",
-				"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
-				//"cc":           []string{"https://" + host + "/activitypub/api/followers/" + userName},
+				"@context":  "https://www.w3.org/ns/activitystreams",
+				"type":      "Create",
+				"id":        "https://" + host + "/post/77-nftonxuperchain",
+				"actor":     "https://" + host + "/activitypub/api/user/" + userName,
+				"published": time.Now(),
+				"to":        []string{"https://www.w3.org/ns/activitystreams#Public"},
+				"object": map[string]interface{}{
+					"@context":     "https://www.w3.org/ns/activitystreams",
+					"id":           "https://" + host + "/post/77-nftonxuperchain",
+					"type":         "Note",
+					"published":    time.Now(),
+					"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
+					"content":      "<a href=\"https://" + host + "/post/77-nftonxuperchain\">百度开放网络发行数字藏品</a>",
+					"url":          "https://" + host + "/post/77-nftonxuperchain",
+					"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
+					//"cc":           []string{"https://" + host + "/activitypub/api/followers/" + userName},
+				},
 			},
 		},
 	}
