@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
+	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol"
 )
@@ -138,6 +140,8 @@ func funcActivityPubOutBox(ctx context.Context, c *app.RequestContext) {
 	accept := string(c.GetHeader("Accept"))
 	host := string(c.Host())
 	userName := c.Param("userName")
+	page := zorm.NewPage()
+	page.TotalCount = 2
 	// 构造 activityPubUser JSON 对象
 	data := map[string]interface{}{
 
@@ -145,9 +149,9 @@ func funcActivityPubOutBox(ctx context.Context, c *app.RequestContext) {
 		"id":         "https://" + host + "/activitypub/api/outbox/" + userName,
 		"summary":    "一个简单的测试",
 		"type":       "OrderedCollection",
-		"totalItems": 2,
-		"first":      "https://" + host + "/activitypub/api/outbox_page/" + userName + "/0",
-		"last":       "https://" + host + "/activitypub/api/outbox_page/" + userName + "/2",
+		"totalItems": page.TotalCount,
+		"first":      "https://" + host + "/activitypub/api/outbox_page/" + userName + "/1",
+		"last":       "https://" + host + "/activitypub/api/outbox_page/" + userName + "/" + strconv.Itoa(page.PageCount),
 	}
 	if strings.Contains(accept, activityPubAccept) { //json类型
 		c.Render(http.StatusOK, activityJSONRender{data: data})
@@ -162,8 +166,11 @@ func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
 	accept := string(c.GetHeader("Accept"))
 	host := string(c.Host())
 	userName := c.Param("userName")
-	pageNo := c.Param("pageNo")
-	if pageNo == "2" {
+	pageNo := c.GetInt("pageNo")
+	if pageNo < 1 {
+		pageNo = 1
+	}
+	if pageNo >= 2 {
 		//c.Render(http.StatusOK, activityJSONRender{data: data})
 		c.Abort() // 终止后续调用
 	}
@@ -171,11 +178,12 @@ func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
 	data := map[string]interface{}{
 
 		"@context":   "https://www.w3.org/ns/activitystreams",
-		"id":         "https://" + host + "/activitypub/api/outbox_page/" + userName + "/" + pageNo,
-		"summary":    "一个简单的测试" + pageNo,
+		"id":         "https://" + host + "/activitypub/api/outbox_page/" + userName + "/" + strconv.Itoa(pageNo),
+		"summary":    "一个简单的测试",
 		"type":       "OrderedCollectionPage",
 		"totalItems": 2,
-		"prev":       "https://" + host + "/activitypub/api/outbox_page/" + userName + "/2",
+		"prev":       "https://" + host + "/activitypub/api/outbox_page/" + userName + "/" + strconv.Itoa(pageNo-1),
+		"next":       "https://" + host + "/activitypub/api/outbox_page/" + userName + "/" + strconv.Itoa(pageNo+1),
 		"partOf":     "https://" + host + "/activitypub/api/outbox/" + userName,
 		"orderedItems": []map[string]interface{}{
 			{
