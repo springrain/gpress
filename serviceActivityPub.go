@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol"
@@ -70,34 +70,62 @@ func funcWebFinger(ctx context.Context, c *app.RequestContext) {
 	data := map[string]interface{}{
 		"subject": "acct:" + username + "@" + domain,
 		"aliases": []string{
-			"https://" + domain + "/@" + username,
-			"https://" + domain + "/users/" + username,
+			"https://" + domain + "/acititypub/user/@" + username,
+			"https://" + domain + "/acititypub/api/user/" + username,
 		},
 		"links": []map[string]interface{}{
 			{
 				"rel":  "http://webfinger.net/rel/profile-page",
 				"type": "text/html",
-				"href": "https://" + domain + "/@" + username,
+				"href": "https://" + domain + "/acititypub/user/@" + username,
 			},
 			{
 				"rel":  "self",
 				"type": "application/activity+json",
-				"href": "https://" + domain + "/users/" + username,
+				"href": "https://" + domain + "/acititypub/api/user/" + username,
 			},
 			{
 				"rel":      "http://ostatus.org/schema/1.0/subscribe",
-				"template": "https://" + domain + "/authorize_interaction?uri={uri}",
+				"template": "https://" + domain + "/acititypub/authorize_interaction?uri={uri}",
 			},
 		},
 	}
 	c.Render(http.StatusOK, activityJSONRender{data: data, contentType: "application/jrd+json; charset=utf-8"})
 }
 
-func funcActivityPubUserInfo(ctx context.Context, c *app.RequestContext) {
+func funcActivityPubUsers(ctx context.Context, c *app.RequestContext) {
 	accept := string(c.GetHeader("Accept"))
-	fmt.Println(accept)
-	data := funcActivityPubUserInfoJson()
-	if accept == activityPubAccept { //json类型
+	host := string(c.Host())
+	userName := c.Param("userName")
+	// 构造 activityPubUser JSON 对象
+	data := map[string]interface{}{
+		"@context": []string{
+			"https://www.w3.org/ns/activitystreams",
+			"https://w3id.org/security/v1",
+		},
+		"id":                "https://" + host + "/acititypub/api/user/" + userName,
+		"type":              "Person",
+		"name":              userName,
+		"preferredUsername": userName,
+		"summary":           "Blog",
+		"inbox":             "https://" + host + "/acititypub/api/inbox/" + userName,
+		"outbox":            "https://" + host + "/acititypub/api/outbox/" + userName,
+		"followers":         "https://" + host + "/acititypub/api/followers/" + userName,
+		"icon": map[string]string{
+			"type":      "Image",
+			"mediaType": "image/png",
+			"url":       "https://" + host + "/acititypub/images/" + userName + "/icon.png",
+		},
+		/*
+			"publicKey": map[string]string{
+				"id":            "https://" + host + "/acititypub/api/user/" + userName + "/actor#main-key",
+				"owner":       "https://" + host + "/acititypub/api/user/" + userName + "/actor",
+				"publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0RHqCKo3Zl+ZmwsyJUFe\niUBYdiWQe6C3W+d89DEzAEtigH8bI5lDWW0Q7rT60eppaSnoN3ykaWFFOrtUiVJT\nNqyMBz3aPbs6BpAE5lId9aPu6s9MFyZrK5QtuWfAGwv9VZPwUHrEJCFiY1G5IgK/\n+ZErSKYUTUYw2xSAZnLkalMFTRmLbmj8SlWp/5fryQd4jyRX/tBlsyFs/qvuwBtw\nuGSkWgTIMAYV71Wny9ns+Nwr4HYfF5eo2zInpwIYTCEbil79HcikUUTTO/vMMoqx\n46IiHcMj0SPlzDXxelZgqm0ojK2Z7BGudjvwSbWq/GtLoaXHeMUVpcOCtpyvtLr2\nYwIDAQAB\n-----END PUBLIC KEY-----",
+			},
+		*/
+	}
+
+	if strings.Contains(accept, activityPubAccept) { //json类型
 		c.Render(http.StatusOK, activityJSONRender{data: data})
 		c.Abort() // 终止后续调用
 		return
@@ -105,32 +133,48 @@ func funcActivityPubUserInfo(ctx context.Context, c *app.RequestContext) {
 	//返回页面
 	c.HTML(http.StatusOK, "activitypub/user.html", data)
 }
-func funcActivityPubUserInfoJson() map[string]interface{} {
+
+func funcActivityPubOutBox(ctx context.Context, c *app.RequestContext) {
+	accept := string(c.GetHeader("Accept"))
+	host := string(c.Host())
+	userName := c.Param("userName")
 	// 构造 activityPubUser JSON 对象
 	data := map[string]interface{}{
-		"@context": []string{
-			"https://www.w3.org/ns/activitystreams",
-			"https://w3id.org/security/v1",
-		},
-		"id":                "https://lawrenceli.me/api/activitypub/actor",
-		"type":              "Person",
-		"name":              "Lawrence Li",
-		"preferredUsername": "lawrence",
-		"summary":           "Blog",
-		"inbox":             "https://lawrenceli.me/api/activitypub/inbox",
-		"outbox":            "https://lawrenceli.me/api/activitypub/outbox",
-		"followers":         "https://lawrenceli.me/api/activitypub/followers",
-		"icon": map[string]string{
-			"type":      "Image",
-			"mediaType": "image/png",
-			"url":       "https://lawrenceli.me/icon.png",
-		},
-		"publicKey": map[string]string{
-			"id":           "https://lawrenceli.me/api/activitypub/actor#main-key",
-			"owner":        "https://lawrenceli.me/api/activitypub/actor",
-			"publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0RHqCKo3Zl+ZmwsyJUFe\niUBYdiWQe6C3W+d89DEzAEtigH8bI5lDWW0Q7rT60eppaSnoN3ykaWFFOrtUiVJT\nNqyMBz3aPbs6BpAE5lId9aPu6s9MFyZrK5QtuWfAGwv9VZPwUHrEJCFiY1G5IgK/\n+ZErSKYUTUYw2xSAZnLkalMFTRmLbmj8SlWp/5fryQd4jyRX/tBlsyFs/qvuwBtw\nuGSkWgTIMAYV71Wny9ns+Nwr4HYfF5eo2zInpwIYTCEbil79HcikUUTTO/vMMoqx\n46IiHcMj0SPlzDXxelZgqm0ojK2Z7BGudjvwSbWq/GtLoaXHeMUVpcOCtpyvtLr2\nYwIDAQAB\n-----END PUBLIC KEY-----",
+
+		"@context":   "https://www.w3.org/ns/activitystreams",
+		"id":         "https://" + host + "/acititypub/api/outbox/" + userName,
+		"summary":    "一个简单的测试",
+		"type":       "OrderedCollection",
+		"totalItems": 100,
+		"orderedItems": []map[string]interface{}{
+			{
+				"@context":     "https://www.w3.org/ns/activitystreams",
+				"id":           "https://" + host + "/post/78-k8snodocker",
+				"type":         "Note",
+				"published":    time.Now(),
+				"attributedTo": "https://" + host + "/acititypub/api/user/" + userName,
+				"content":      "<a href=\"https://" + host + "/post/78-k8snodocker\">K8S不使用Docker</a>",
+				"url":          "https://" + host + "/post/78-k8snodocker",
+				"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
+				//"cc":           []string{"https://" + host + "/acititypub/api/followers/" + userName},
+			}, {
+				"@context":     "https://www.w3.org/ns/activitystreams",
+				"id":           "https://" + host + "/post/77-nftonxuperchain",
+				"type":         "Note",
+				"published":    time.Now(),
+				"attributedTo": "https://" + host + "/acititypub/api/user/" + userName,
+				"content":      "<a href=\"https://" + host + "/post/77-nftonxuperchain\">百度开放网络发行数字藏品</a>",
+				"url":          "https://" + host + "/post/77-nftonxuperchain",
+				"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
+				//"cc":           []string{"https://" + host + "/acititypub/api/followers/" + userName},
+			},
 		},
 	}
-
-	return data
+	if strings.Contains(accept, activityPubAccept) { //json类型
+		c.Render(http.StatusOK, activityJSONRender{data: data})
+		c.Abort() // 终止后续调用
+		return
+	}
+	//返回页面
+	c.HTML(http.StatusOK, "activitypub/outbox.html", data)
 }
