@@ -42,6 +42,27 @@ func funcListTags(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, "tag.html", data)
 }
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
+	accept := string(c.GetHeader("Accept"))
+	if strings.Contains(accept, activityPubAccept) { //json类型
+		uri := c.URI().String()
+		uri = strings.Replace(uri, "http://", "https://", 1)
+		//host := string(c.Host())
+
+		apData := map[string]interface{}{
+			"@context":  "https://www.w3.org/ns/activitystreams",
+			"id":        uri,
+			"type":      "Note",
+			"published": "Thu, 20 Feb 2020 00:00:00 GMT",
+			//"attributedTo": "https://" + host + "/acititypub/api/user/test3",
+			"content": "<a href=\"" + uri + "\">" + uri + "</a>",
+			"url":     uri,
+			"to":      []string{"https://www.w3.org/ns/activitystreams#Public"},
+		}
+
+		c.Render(http.StatusOK, activityJSONRender{data: apData})
+		c.Abort() // 终止后续调用
+		return
+	}
 	data := warpRequestMap(c)
 	data["urlPathParam"] = c.Param("urlPathParam")
 	c.HTML(http.StatusOK, "content.html", data)
