@@ -70,23 +70,23 @@ func funcWebFinger(ctx context.Context, c *app.RequestContext) {
 	data := map[string]interface{}{
 		"subject": "acct:" + username + "@" + domain,
 		"aliases": []string{
-			"https://" + domain + "/acititypub/user/@" + username,
-			"https://" + domain + "/acititypub/api/user/" + username,
+			"https://" + domain + "/activitypub/user/@" + username,
+			"https://" + domain + "/activitypub/api/user/" + username,
 		},
 		"links": []map[string]interface{}{
 			{
 				"rel":  "http://webfinger.net/rel/profile-page",
 				"type": "text/html",
-				"href": "https://" + domain + "/acititypub/user/@" + username,
+				"href": "https://" + domain + "/activitypub/user/@" + username,
 			},
 			{
 				"rel":  "self",
 				"type": "application/activity+json",
-				"href": "https://" + domain + "/acititypub/api/user/" + username,
+				"href": "https://" + domain + "/activitypub/api/user/" + username,
 			},
 			{
 				"rel":      "http://ostatus.org/schema/1.0/subscribe",
-				"template": "https://" + domain + "/acititypub/authorize_interaction?uri={uri}",
+				"template": "https://" + domain + "/activitypub/authorize_interaction?uri={uri}",
 			},
 		},
 	}
@@ -103,23 +103,23 @@ func funcActivityPubUsers(ctx context.Context, c *app.RequestContext) {
 			"https://www.w3.org/ns/activitystreams",
 			"https://w3id.org/security/v1",
 		},
-		"id":                "https://" + host + "/acititypub/api/user/" + userName,
+		"id":                "https://" + host + "/activitypub/api/user/" + userName,
 		"type":              "Person",
 		"name":              userName,
 		"preferredUsername": userName,
 		"summary":           "Blog",
-		"inbox":             "https://" + host + "/acititypub/api/inbox/" + userName,
-		"outbox":            "https://" + host + "/acititypub/api/outbox/" + userName,
-		"followers":         "https://" + host + "/acititypub/api/followers/" + userName,
+		"inbox":             "https://" + host + "/activitypub/api/inbox/" + userName,
+		"outbox":            "https://" + host + "/activitypub/api/outbox/" + userName,
+		"followers":         "https://" + host + "/activitypub/api/followers/" + userName,
 		"icon": map[string]string{
 			"type":      "Image",
 			"mediaType": "image/png",
-			"url":       "https://" + host + "/acititypub/images/" + userName + "/icon.png",
+			"url":       "https://" + host + "/activitypub/images/" + userName + "/icon.png",
 		},
 		/*
 			"publicKey": map[string]string{
-				"id":            "https://" + host + "/acititypub/api/user/" + userName + "/actor#main-key",
-				"owner":       "https://" + host + "/acititypub/api/user/" + userName + "/actor",
+				"id":            "https://" + host + "/activitypub/api/user/" + userName + "/actor#main-key",
+				"owner":       "https://" + host + "/activitypub/api/user/" + userName + "/actor",
 				"publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0RHqCKo3Zl+ZmwsyJUFe\niUBYdiWQe6C3W+d89DEzAEtigH8bI5lDWW0Q7rT60eppaSnoN3ykaWFFOrtUiVJT\nNqyMBz3aPbs6BpAE5lId9aPu6s9MFyZrK5QtuWfAGwv9VZPwUHrEJCFiY1G5IgK/\n+ZErSKYUTUYw2xSAZnLkalMFTRmLbmj8SlWp/5fryQd4jyRX/tBlsyFs/qvuwBtw\nuGSkWgTIMAYV71Wny9ns+Nwr4HYfF5eo2zInpwIYTCEbil79HcikUUTTO/vMMoqx\n46IiHcMj0SPlzDXxelZgqm0ojK2Z7BGudjvwSbWq/GtLoaXHeMUVpcOCtpyvtLr2\nYwIDAQAB\n-----END PUBLIC KEY-----",
 			},
 		*/
@@ -142,7 +142,7 @@ func funcActivityPubOutBox(ctx context.Context, c *app.RequestContext) {
 	data := map[string]interface{}{
 
 		"@context":   "https://www.w3.org/ns/activitystreams",
-		"id":         "https://" + host + "/acititypub/api/outbox/" + userName,
+		"id":         "https://" + host + "/activitypub/api/outbox/" + userName,
 		"summary":    "一个简单的测试",
 		"type":       "OrderedCollection",
 		"totalItems": 100,
@@ -152,21 +152,21 @@ func funcActivityPubOutBox(ctx context.Context, c *app.RequestContext) {
 				"id":           "https://" + host + "/post/78-k8snodocker",
 				"type":         "Note",
 				"published":    time.Now(),
-				"attributedTo": "https://" + host + "/acititypub/api/user/" + userName,
+				"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
 				"content":      "<a href=\"https://" + host + "/post/78-k8snodocker\">K8S不使用Docker</a>",
 				"url":          "https://" + host + "/post/78-k8snodocker",
 				"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
-				//"cc":           []string{"https://" + host + "/acititypub/api/followers/" + userName},
+				//"cc":           []string{"https://" + host + "/activitypub/api/followers/" + userName},
 			}, {
 				"@context":     "https://www.w3.org/ns/activitystreams",
 				"id":           "https://" + host + "/post/77-nftonxuperchain",
 				"type":         "Note",
 				"published":    time.Now(),
-				"attributedTo": "https://" + host + "/acititypub/api/user/" + userName,
+				"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
 				"content":      "<a href=\"https://" + host + "/post/77-nftonxuperchain\">百度开放网络发行数字藏品</a>",
 				"url":          "https://" + host + "/post/77-nftonxuperchain",
 				"to":           []string{"https://www.w3.org/ns/activitystreams#Public"},
-				//"cc":           []string{"https://" + host + "/acititypub/api/followers/" + userName},
+				//"cc":           []string{"https://" + host + "/activitypub/api/followers/" + userName},
 			},
 		},
 	}
