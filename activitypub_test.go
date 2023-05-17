@@ -108,3 +108,13 @@ func TestSignActivity(t *testing.T) {
 		return
 	}
 }
+
+func TestPublicKey(t *testing.T) {
+	// 获取公钥
+	publicKey, err := getPublicKey("https://lawrenceli.me/api/activitypub/actor")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(publicKey)
+
+}

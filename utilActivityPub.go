@@ -117,7 +117,7 @@ func requestJsonValue(httpurl string, key string) (interface{}, error) {
 	// 解析 URL 字符串
 	parsedURL, err := url.Parse(httpurl)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to parse URL:%w", err)
+		return nil, fmt.Errorf("failed to parse URL:%w", err)
 	}
 	// 获取域名或 IP 地址
 	host := parsedURL.Hostname()
@@ -146,7 +146,7 @@ func requestJsonValue(httpurl string, key string) (interface{}, error) {
 	var value interface{}
 	for i, k := range keys {
 		value = bodyMap[k]
-		if i+1 < len(key) {
+		if i+1 < len(keys) {
 			bodyMap = bodyMap[k].(map[string]interface{})
 		}
 
