@@ -126,20 +126,32 @@ func requestJsonValue(httpurl string, key string) (interface{}, error) {
 		return nil, err
 	}
 
-	res := &protocol.Response{}
-	req := &protocol.Request{}
-	req.SetMethod(consts.MethodGet)
-	//req.Header.SetContentTypeBytes([]byte(activityPubContentType))
-	req.SetHeader("Accept", activityPubAccept)
-	req.SetHeader("Host", host)
-	req.SetRequestURI(httpurl)
-	err = c.Do(context.Background(), req, res)
+	//设置翻墙代理
+	c.SetProxy(protocol.ProxyURI(protocol.ParseURI("http://127.0.0.1:49864/")))
+
+	response := &protocol.Response{}
+	request := &protocol.Request{}
+	request.SetMethod(consts.MethodGet)
+	request.Header.SetContentTypeBytes([]byte(activityPubContentType))
+	request.SetHeader("Accept", activityPubAccept)
+	request.SetHeader("Host", host)
+	request.SetRequestURI(httpurl)
+	err = c.Do(context.Background(), request, response)
 	if err != nil {
 		return nil, err
 	}
 
+	if response.StatusCode() == 301 || response.StatusCode() == 302 { //重定向
+		location := response.Header.Get("location")
+		request.SetRequestURI(location)
+		err = c.Do(context.Background(), request, response)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	bodyMap := make(map[string]interface{})
-	json.Unmarshal(res.Body(), &bodyMap)
+	json.Unmarshal(response.Body(), &bodyMap)
 
 	keys := strings.Split(key, ".")
 
