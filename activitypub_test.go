@@ -111,7 +111,7 @@ func TestSignActivity(t *testing.T) {
 
 func TestPublicKey(t *testing.T) {
 	// 获取公钥
-	publicKey, err := getPublicKey("https://lawrenceli.me/api/activitypub/actor")
+	publicKey, err := getPublicKey("https://mastodon.social/users/9iuorg#main-key")
 	if err != nil {
 		t.Error(err)
 	}
