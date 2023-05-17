@@ -2,7 +2,11 @@ package main
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -21,7 +25,7 @@ type activityJSONRender struct {
 
 const activityPubAccept = "application/activity+json"
 
-var activityPubContentType = "application/activity+json; charset=utf-8"
+const activityPubContentType = "application/activity+json; charset=utf-8"
 
 // Render (JSON) writes data with custom ContentType.
 func (r activityJSONRender) Render(resp *protocol.Response) error {
@@ -112,19 +116,26 @@ func funcActivityPubUsers(ctx context.Context, c *app.RequestContext) {
 		"summary":           "Blog",
 		"inbox":             "https://" + host + "/activitypub/api/inbox/" + userName,
 		"outbox":            "https://" + host + "/activitypub/api/outbox/" + userName,
+		"following":         "https://" + host + "/activitypub/api/following/" + userName,
 		"followers":         "https://" + host + "/activitypub/api/followers/" + userName,
 		"icon": map[string]string{
 			"type":      "Image",
 			"mediaType": "image/png",
 			"url":       "https://" + host + "/activitypub/images/" + userName + "/icon.png",
 		},
-		/*
-			"publicKey": map[string]string{
-				"id":            "https://" + host + "/activitypub/api/user/" + userName + "/actor#main-key",
-				"owner":       "https://" + host + "/activitypub/api/user/" + userName + "/actor",
-				"publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0RHqCKo3Zl+ZmwsyJUFe\niUBYdiWQe6C3W+d89DEzAEtigH8bI5lDWW0Q7rT60eppaSnoN3ykaWFFOrtUiVJT\nNqyMBz3aPbs6BpAE5lId9aPu6s9MFyZrK5QtuWfAGwv9VZPwUHrEJCFiY1G5IgK/\n+ZErSKYUTUYw2xSAZnLkalMFTRmLbmj8SlWp/5fryQd4jyRX/tBlsyFs/qvuwBtw\nuGSkWgTIMAYV71Wny9ns+Nwr4HYfF5eo2zInpwIYTCEbil79HcikUUTTO/vMMoqx\n46IiHcMj0SPlzDXxelZgqm0ojK2Z7BGudjvwSbWq/GtLoaXHeMUVpcOCtpyvtLr2\nYwIDAQAB\n-----END PUBLIC KEY-----",
-			},
-		*/
+		"publicKey": map[string]string{
+			"id":    "https://" + host + "/activitypub/api/user/" + userName + "#main-key",
+			"owner": "https://" + host + "/activitypub/api/user/" + userName,
+			"publicKeyPem": `-----BEGIN PUBLIC KEY-----
+			MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAot4y1T8UffW+nQwYnAhh
+			fIRVaTCf92FeAOtPQ+S1/bVxAlhE9O+17Qd3C9mLOImVPq55HAV0MHzW/eByIB2B
+			FDzOfeiq/arxsaCziwEL9GDOF6PiHVsD/a8kGjG0a8RiwUv/ek0n5XzA+nTIXNVZ
+			bVWRikRYDHiXZYeX78ex5d2gSvuKUuQMcsMgsFYBHTVP/kL/tv5vsi1Pf5sWkaQM
+			p0kiQH1Nph/vBN8Wmhl2qsjSqO3Zp7otcFQSn6L8Dvmx1dIWhpgffgagxfztTje5
+			QSg6TSdRJhsBJQboMAvvlzzSsM6QdomBDB//0kiRyakPeZasNf/BkFMm+gkHHc15
+			wQIDAQAB
+			-----END PUBLIC KEY-----`,
+		},
 	}
 
 	if strings.Contains(accept, activityPubAccept) { //json类型
@@ -232,4 +243,64 @@ func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
 	}
 	//返回页面
 	c.HTML(http.StatusOK, "activitypub/outbox.html", data)
+}
+
+func funcActivityPubInBox(ctx context.Context, c *app.RequestContext) {
+	bodyByte, _ := c.Body()
+	body := make(map[string]interface{}, 0)
+	json.Unmarshal(bodyByte, &body)
+	c.Render(http.StatusOK, activityJSONRender{data: "success"})
+	go funcSendAcceptMessage(body["id"].(string))
+
+}
+
+// inbox交互是通过事件异步返回给对方的inbox
+func funcSendAcceptMessage(id string) {
+	fmt.Println(id)
+}
+
+// activitySignatureHandler 验签拦截器
+func activitySignatureHandler(ctx context.Context, c *app.RequestContext) {
+	//if !strings.Contains(string(c.URI().Path()), "/test11") {
+	//	return
+	//}
+
+	bodyByte, _ := c.Body()
+	hash := sha256.Sum256(bodyByte)
+	digest := "SHA-256=" + base64.StdEncoding.EncodeToString(hash[:])
+
+	if digest != string(c.GetHeader("Digest")) {
+		c.Abort() // 终止后续调用
+		FuncLogError(errors.New("内容签名解析失败,digest=" + digest + ",Digest=" + string(c.GetHeader("Digest"))))
+		return
+	}
+
+	// 从请求头部获取签名数据
+	signatureString := string(c.GetHeader("Signature"))
+
+	// 解析签名数据，获取相关信息
+	signature, err := parseSignature(signatureString)
+	if err != nil {
+		c.Abort() // 终止后续调用
+		FuncLogError(fmt.Errorf("签名解析失败：%w", err))
+		return
+	}
+
+	// 获取公钥
+	publicKey, err := getPublicKey(signature.KeyID)
+	if err != nil {
+		c.Abort() // 终止后续调用
+		FuncLogError(fmt.Errorf("公钥获取失败：%w", err))
+		return
+	}
+	// 构建签名字符串
+	signatureData := buildSignatureData(c, signature.Headers)
+
+	// 验证签名
+	if !verifySignature(publicKey, signatureData, signature.Value) {
+		c.Abort() // 终止后续调用
+		FuncLogError(errors.New("签名验证失败"))
+		return
+	}
+
 }
