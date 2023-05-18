@@ -18,7 +18,7 @@ import (
 const (
 	activityPubAccept      = "application/activity+json"
 	activityPubContentType = "application/activity+json; charset=utf-8"
-	keyId                  = "https://testmakerone.shengjian.net/activitypub/api/user/test11#main-key"
+	keyId                  = "https://activitypub.jpress.cn/activitypub/api/user/test11#main-key"
 )
 
 // responseJsonValue 发送GET请求,把返回值的json获取指定的key,例如
