@@ -174,6 +174,8 @@ func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
 		//c.Render(http.StatusOK, activityJSONRender{data: data})
 		c.Abort() // 终止后续调用
 	}
+	// mastodon 的日期格式为RFC2616 -- time.RFC1123
+	date := time.Now().UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
 	// 构造 activityPubUser JSON 对象
 	data := map[string]interface{}{
 
@@ -191,13 +193,13 @@ func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
 				"type":      "Create",
 				"id":        "https://" + host + "/post/78-k8snodocker",
 				"actor":     "https://" + host + "/activitypub/api/user/" + userName,
-				"published": time.Now(),
+				"published": date,
 				"to":        []string{"https://www.w3.org/ns/activitystreams#Public"},
 				"object": map[string]interface{}{
 					"@context":     "https://www.w3.org/ns/activitystreams",
 					"id":           "https://" + host + "/post/78-k8snodocker",
 					"type":         "Note",
-					"published":    time.Now(),
+					"published":    date,
 					"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
 					"content":      "<a href=\"https://" + host + "/post/78-k8snodocker\">K8S不使用Docker</a>",
 					"url":          "https://" + host + "/post/78-k8snodocker",
@@ -209,13 +211,13 @@ func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
 				"type":      "Create",
 				"id":        "https://" + host + "/post/77-nftonxuperchain",
 				"actor":     "https://" + host + "/activitypub/api/user/" + userName,
-				"published": time.Now(),
+				"published": date,
 				"to":        []string{"https://www.w3.org/ns/activitystreams#Public"},
 				"object": map[string]interface{}{
 					"@context":     "https://www.w3.org/ns/activitystreams",
 					"id":           "https://" + host + "/post/77-nftonxuperchain",
 					"type":         "Note",
-					"published":    time.Now(),
+					"published":    date,
 					"attributedTo": "https://" + host + "/activitypub/api/user/" + userName,
 					"content":      "<a href=\"https://" + host + "/post/77-nftonxuperchain\">百度开放网络发行数字藏品</a>",
 					"url":          "https://" + host + "/post/77-nftonxuperchain",
