@@ -16,9 +16,10 @@ import (
 )
 
 const (
-	activityPubAccept      = "application/activity+json"
-	activityPubContentType = "application/activity+json; charset=utf-8"
-	keyId                  = "https://activitypub.jpress.cn/activitypub/api/user/test11#main-key"
+	activityPubAccept        = "application/activity+json"
+	activityPubContentType   = "application/activity+json; charset=utf-8"
+	activityPubDefaultDomain = "activitypub.gpress.cn"
+	keyId                    = "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11#main-key"
 )
 
 // responseJsonValue 发送GET请求,把返回值的json获取指定的key,例如
@@ -103,7 +104,7 @@ func sendRequest(httpurl string, method string, body map[string]interface{}, isS
 		}
 		// 构建 signature
 		signature := fmt.Sprintf(`keyId="%s",algorithm="rsa-sha256",headers="%s",signature="%s"`, keyId, headers, signatureBase64)
-		fmt.Println("-----signature:" + signature)
+		//fmt.Println("-----signature:" + signature)
 		request.SetHeader("Signature", signature)
 	}
 	response := &protocol.Response{}
