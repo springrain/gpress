@@ -15,7 +15,12 @@ import (
 https://lawrenceli.me/blog/activitypub
 https://wangqiao.me/posts/activitypub-from-decentralized-to-distributed-social-networks/
 https://blog.joinmastodon.org/2018/06/how-to-implement-a-basic-activitypub-server/
+https://tinysubversions.com/notes/reading-activitypub/#a-note-on-json-ld
+
+https://docs.joinmastodon.org/
+https://www.w3.org/TR/activitypub/
 https://www.w3.org/TR/activitystreams-vocabulary/
+
 **/
 
 func TestExpand(t *testing.T) {
@@ -51,7 +56,7 @@ func TestSendActivity(t *testing.T) {
 		"to": []string{
 			"https://mastodon.social/users/9iuorg",
 		},
-		"actor": "https://activitypub.jpress.cn/activitypub/api/user/test11",
+		"actor": "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11",
 		"object": map[string]interface{}{
 			"type":      "Note",
 			"content":   "Hello ActivityPub!",
@@ -135,27 +140,32 @@ func TestRFC2616(t *testing.T) {
 }
 
 func TestSend11(t *testing.T) {
+	//date := time.Now().Unix()
 	data := map[string]interface{}{
 		"@context": "https://www.w3.org/ns/activitystreams",
-		//操作自身的ID
-		"id":    "https://activitypub.jpress.cn/post/78-k8snodocker#Create",
-		"type":  "Create",
-		"to":    []string{"https://mastodon.social/users/9iuorg"},
-		"actor": "https://activitypub.jpress.cn/activitypub/api/user/test11",
+		//操作自身的ID. 和actor同一个域名下的uri !!!
+		"id": "https://" + activityPubDefaultDomain + "/post/86#Create",
+		//"id":   date,
+		"type": "Create",
+		//"to":   []string{"https://mastodon.social/users/9iuorg"},
+		"to":    []string{"https://www.w3.org/ns/activitystreams#Public"},
+		"actor": "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11",
 		"object": map[string]interface{}{
-			// 业务Object 的ID,Update和Delete依据这个ID
-			"id":      "https://activitypub.jpress.cn/post/78-k8snodocker",
-			"type":    "Note",
-			"url":     "https://jiagou.com/post/78-k8snodocker",
-			"content": "<a href=\"https://jiagou.com/post/78-k8snodocker\">K8S不使用Docker</a>",
+			// 业务Object 的ID,Update和Delete依据这个ID. 和actor同一个域名下的uri !!!
+			"id":   "https://" + activityPubDefaultDomain + "/post/86",
+			"type": "Note",
+			//"url":     "https://"+activityPubDefaultDomain+"/post/78-k8snodocker",
+			"content": "一个简单的测试",
 			//"cc":      []string{"https://mastodon.social/users/9iuorg"},
 		},
 	}
-	reponseMap, err := sendRequest("https://mastodon.social/users/9iuorg/inbox", "POST", data, true)
+	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, true)
+	//reponseMap, err := sendRequest("https://mastodon.social/users/9iuorg/inbox", "POST", data, true)
 	if err != nil {
 		t.Error(err)
 	}
 	body, _ := json.Marshal(reponseMap)
+	//这里需要debug暂停一下,等待mastodon服务请求账户的公钥,一般很快
 	fmt.Println(string(body))
 
 }
