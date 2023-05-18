@@ -16,6 +16,7 @@ https://lawrenceli.me/blog/activitypub
 https://wangqiao.me/posts/activitypub-from-decentralized-to-distributed-social-networks/
 https://blog.joinmastodon.org/2018/06/how-to-implement-a-basic-activitypub-server/
 https://tinysubversions.com/notes/reading-activitypub/#a-note-on-json-ld
+https://emptystack.top/activitypub-for-static-blog/
 
 https://docs.joinmastodon.org/
 https://www.w3.org/TR/activitypub/
@@ -159,7 +160,7 @@ func TestSend11(t *testing.T) {
 			//"cc":      []string{"https://mastodon.social/users/9iuorg"},
 		},
 	}
-	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, true)
+	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
 	//reponseMap, err := sendRequest("https://mastodon.social/users/9iuorg/inbox", "POST", data, true)
 	if err != nil {
 		t.Error(err)
