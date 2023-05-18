@@ -15,6 +15,7 @@ import (
 	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 // activityJSONRender JSON contains the given interface object.
@@ -22,10 +23,6 @@ type activityJSONRender struct {
 	data        interface{}
 	contentType string
 }
-
-const activityPubAccept = "application/activity+json"
-
-const activityPubContentType = "application/activity+json; charset=utf-8"
 
 // Render (JSON) writes data with custom ContentType.
 func (r activityJSONRender) Render(resp *protocol.Response) error {
@@ -124,17 +121,9 @@ func funcActivityPubUsers(ctx context.Context, c *app.RequestContext) {
 			"url":       "https://" + host + "/activitypub/images/" + userName + "/icon.png",
 		},
 		"publicKey": map[string]string{
-			"id":    "https://" + host + "/activitypub/api/user/" + userName + "#main-key",
-			"owner": "https://" + host + "/activitypub/api/user/" + userName,
-			"publicKeyPem": `-----BEGIN PUBLIC KEY-----
-			MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAot4y1T8UffW+nQwYnAhh
-			fIRVaTCf92FeAOtPQ+S1/bVxAlhE9O+17Qd3C9mLOImVPq55HAV0MHzW/eByIB2B
-			FDzOfeiq/arxsaCziwEL9GDOF6PiHVsD/a8kGjG0a8RiwUv/ek0n5XzA+nTIXNVZ
-			bVWRikRYDHiXZYeX78ex5d2gSvuKUuQMcsMgsFYBHTVP/kL/tv5vsi1Pf5sWkaQM
-			p0kiQH1Nph/vBN8Wmhl2qsjSqO3Zp7otcFQSn6L8Dvmx1dIWhpgffgagxfztTje5
-			QSg6TSdRJhsBJQboMAvvlzzSsM6QdomBDB//0kiRyakPeZasNf/BkFMm+gkHHc15
-			wQIDAQAB
-			-----END PUBLIC KEY-----`,
+			"id":           "https://" + host + "/activitypub/api/user/" + userName + "#main-key",
+			"owner":        "https://" + host + "/activitypub/api/user/" + userName,
+			"publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAot4y1T8UffW+nQwYnAhh\nfIRVaTCf92FeAOtPQ+S1/bVxAlhE9O+17Qd3C9mLOImVPq55HAV0MHzW/eByIB2B\nFDzOfeiq/arxsaCziwEL9GDOF6PiHVsD/a8kGjG0a8RiwUv/ek0n5XzA+nTIXNVZ\nbVWRikRYDHiXZYeX78ex5d2gSvuKUuQMcsMgsFYBHTVP/kL/tv5vsi1Pf5sWkaQM\np0kiQH1Nph/vBN8Wmhl2qsjSqO3Zp7otcFQSn6L8Dvmx1dIWhpgffgagxfztTje5\nQSg6TSdRJhsBJQboMAvvlzzSsM6QdomBDB//0kiRyakPeZasNf/BkFMm+gkHHc15\nwQIDAQAB\n-----END PUBLIC KEY-----",
 		},
 	}
 
@@ -247,16 +236,38 @@ func funcActivityPubOutBoxPage(ctx context.Context, c *app.RequestContext) {
 
 func funcActivityPubInBox(ctx context.Context, c *app.RequestContext) {
 	bodyByte, _ := c.Body()
-	body := make(map[string]interface{}, 0)
+	body := make(map[string]interface{})
 	json.Unmarshal(bodyByte, &body)
 	c.Render(http.StatusOK, activityJSONRender{data: "success"})
-	go funcSendAcceptMessage(body["id"].(string))
+	aType := body["type"].(string)
+
+	if aType == "Follow" { //处理关注事件
+		go funcSendAcceptMessage(body)
+	}
 
 }
 
 // inbox交互是通过事件异步返回给对方的inbox
-func funcSendAcceptMessage(id string) {
-	fmt.Println(id)
+func funcSendAcceptMessage(activity map[string]interface{}) {
+	bodyMap := make(map[string]interface{})
+	bodyMap["@context"] = activity["@context"]
+	bodyMap["id"] = activity["id"]
+	bodyMap["actor"] = activity["object"]
+	bodyMap["type"] = "Accept"
+	//object 是Follow事件发送的对象
+	bodyMap["object"] = activity
+
+	//获取用户的inbox地址
+
+	b, _ := json.Marshal(bodyMap)
+	fmt.Println("body:" + string(b))
+	inbox, _ := responseJsonValue(activity["actor"].(string), "inbox")
+	fmt.Println("inbox:" + inbox.(string))
+	responseMap, err := sendRequest(inbox.(string), consts.MethodPost, bodyMap, true)
+	j, _ := json.Marshal(responseMap)
+	fmt.Println("responseMap:" + string(j))
+	fmt.Println(err)
+
 }
 
 // activitySignatureHandler 验签拦截器
@@ -266,6 +277,10 @@ func activitySignatureHandler(ctx context.Context, c *app.RequestContext) {
 	//}
 
 	bodyByte, _ := c.Body()
+
+	fmt.Println("header:" + c.Request.Header.String())
+	fmt.Println("body:" + string(bodyByte))
+
 	hash := sha256.Sum256(bodyByte)
 	digest := "SHA-256=" + base64.StdEncoding.EncodeToString(hash[:])
 
