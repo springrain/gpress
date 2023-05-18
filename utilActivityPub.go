@@ -48,7 +48,7 @@ func getPublicKey(publicKeyID string) (*rsa.PublicKey, error) {
 	// 根据公钥 ID 获取对应的公钥
 	// 这里使用假数据，实际使用时需要替换为真实的公钥获取逻辑
 	//publicKeyPEM := "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr9HicDyHYlpGVYVHrm7j\nU7Nq4z9SeynK8UUi+JoBWuotChg2oSDQtWuj+zdQSKM3g27+sqNNw/BuZp85BVT6\n8PRyamTHjVrZPj6JIC+A/EGeJTqycODoMTDTTdz3evxBUbPAH7By91VrMNE5i8zl\nJ40IqAYYNLjmUdvQliGmGpX/xmPAfIeJ/mMQ3kCq/2uSICrL1ORicAB/qqXgyPsB\nWZCTYOOdJsV9bbbhAQUqRjevZrRIdaVcrIObxTDY0VgtBJgsElGNxbnb/g4vfPgy\nWdi/E0qLSRyayml8lGZhPccgY3PnqGO765X/j0tra/I4JIjLC0AOV0nLs0fLmH72\nEwIDAQAB\n-----END PUBLIC KEY-----\n"
-	publicKeyPEM, err := responseJsonValue(publicKeyID, "publicKey.publicKeyPem")
+	publicKeyPEM, err := responseJsonValue(publicKeyID, "publicKey.publicKeyPem", publicKeyID)
 	if err != nil {
 		return nil, err
 	}
