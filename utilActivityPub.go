@@ -1,8 +1,8 @@
 package main
 
 import (
-	"context"
 	"crypto"
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
@@ -11,13 +11,10 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"net/url"
+	"os"
 	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/app/client"
-	"github.com/cloudwego/hertz/pkg/protocol"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 type Signature struct {
@@ -51,9 +48,13 @@ func getPublicKey(publicKeyID string) (*rsa.PublicKey, error) {
 	// 根据公钥 ID 获取对应的公钥
 	// 这里使用假数据，实际使用时需要替换为真实的公钥获取逻辑
 	//publicKeyPEM := "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr9HicDyHYlpGVYVHrm7j\nU7Nq4z9SeynK8UUi+JoBWuotChg2oSDQtWuj+zdQSKM3g27+sqNNw/BuZp85BVT6\n8PRyamTHjVrZPj6JIC+A/EGeJTqycODoMTDTTdz3evxBUbPAH7By91VrMNE5i8zl\nJ40IqAYYNLjmUdvQliGmGpX/xmPAfIeJ/mMQ3kCq/2uSICrL1ORicAB/qqXgyPsB\nWZCTYOOdJsV9bbbhAQUqRjevZrRIdaVcrIObxTDY0VgtBJgsElGNxbnb/g4vfPgy\nWdi/E0qLSRyayml8lGZhPccgY3PnqGO765X/j0tra/I4JIjLC0AOV0nLs0fLmH72\nEwIDAQAB\n-----END PUBLIC KEY-----\n"
-	publicKeyPEM, err := requestJsonValue(publicKeyID, "publicKey.publicKeyPem")
+	publicKeyPEM, err := responseJsonValue(publicKeyID, "publicKey.publicKeyPem")
 	if err != nil {
 		return nil, err
+	}
+
+	if publicKeyPEM == nil {
+		return nil, errors.New("获取公钥值为nil")
 	}
 
 	// 解析公钥 PEM 格式
@@ -112,56 +113,30 @@ func verifySignature(publicKey *rsa.PublicKey, data string, signatureValue strin
 	return true
 }
 
-func requestJsonValue(httpurl string, key string) (interface{}, error) {
-
-	// 解析 URL 字符串
-	parsedURL, err := url.Parse(httpurl)
+// makeSignature 对字符串签名,并将签名结果进行 Base64 编码
+func makeSignature(signingString string) (string, error) {
+	// 读取私钥文件
+	privateKeyFile := datadir + "pem/private.pem"
+	privateKeyPEM, err := os.ReadFile(privateKeyFile)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse URL:%w", err)
+		return "", fmt.Errorf("读取私钥文件失败:%w", err)
 	}
-	// 获取域名或 IP 地址
-	host := parsedURL.Hostname()
-	c, err := client.NewClient()
+
+	// 解析私钥
+	privateKeyBlock, _ := pem.Decode(privateKeyPEM)
+	privateKey, err := x509.ParsePKCS1PrivateKey(privateKeyBlock.Bytes)
 	if err != nil {
-		return nil, err
+		return "", fmt.Errorf("解析私钥失败:%w", err)
 	}
 
-	//设置翻墙代理
-	c.SetProxy(protocol.ProxyURI(protocol.ParseURI("http://127.0.0.1:49864/")))
-
-	response := &protocol.Response{}
-	request := &protocol.Request{}
-	request.SetMethod(consts.MethodGet)
-	request.Header.SetContentTypeBytes([]byte(activityPubContentType))
-	request.SetHeader("Accept", activityPubAccept)
-	request.SetHeader("Host", host)
-	request.SetRequestURI(httpurl)
-	err = c.Do(context.Background(), request, response)
+	// 对签名前的字符串进行签名
+	hashed := sha256.Sum256([]byte(signingString))
+	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hashed[:])
 	if err != nil {
-		return nil, err
+		return "", fmt.Errorf("签名失败:%w", err)
 	}
 
-	if response.StatusCode() == 301 || response.StatusCode() == 302 { //重定向
-		location := response.Header.Get("location")
-		request.SetRequestURI(location)
-		err = c.Do(context.Background(), request, response)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	bodyMap := make(map[string]interface{})
-	json.Unmarshal(response.Body(), &bodyMap)
-
-	keys := strings.Split(key, ".")
-
-	var value interface{}
-	for i, k := range keys {
-		value = bodyMap[k]
-		if i+1 < len(keys) {
-			bodyMap = bodyMap[k].(map[string]interface{})
-		}
-
-	}
-	return value, nil
+	// 将签名结果进行 Base64 编码
+	signatureBase64 := base64.StdEncoding.EncodeToString(signature)
+	return signatureBase64, nil
 }

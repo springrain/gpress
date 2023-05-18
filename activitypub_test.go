@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/piprate/json-gold/ld"
 )
@@ -117,4 +118,18 @@ func TestPublicKey(t *testing.T) {
 	}
 	fmt.Println(publicKey)
 
+}
+
+func TestMakeSign(t *testing.T) {
+	s, err := makeSignature("123")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(s)
+}
+
+func TestRFC2616(t *testing.T) {
+	// mastodon 的日期格式为RFC2616 -- time.RFC1123
+	date := time.Now().UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
+	fmt.Println(date)
 }
