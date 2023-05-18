@@ -261,9 +261,13 @@ func funcSendAcceptMessage(activity map[string]interface{}) {
 
 	//b, _ := json.Marshal(bodyMap)
 	//fmt.Println("body:" + string(b))
-	inbox, _ := responseJsonValue(activity["actor"].(string), "inbox")
+	actorInfo, _ := responseJsonValue(activity["actor"].(string), "", "")
+	actorMap := actorInfo.(map[string]interface{})
+	inboxUrl := actorMap["inbox"].(string)
+	publicKey := actorMap["publicKey"].(map[string]interface{})
+	keyId := publicKey["id"].(string)
 	//fmt.Println("inbox:" + inbox.(string))
-	_, err := sendRequest(inbox.(string), consts.MethodPost, bodyMap, true)
+	_, err := sendRequest(inboxUrl, consts.MethodPost, bodyMap, keyId, true)
 	if err != nil {
 		FuncLogError(fmt.Errorf("获取内容错误:%w", err))
 	}
