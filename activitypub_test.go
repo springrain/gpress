@@ -143,7 +143,7 @@ func TestSend11(t *testing.T) {
 		"to":    []string{"https://mastodon.social/users/9iuorg"},
 		"actor": "https://activitypub.jpress.cn/activitypub/api/user/test11",
 		"object": map[string]interface{}{
-			// 业务Object 的ID
+			// 业务Object 的ID,Update和Delete依据这个ID
 			"id":      "https://activitypub.jpress.cn/post/78-k8snodocker",
 			"type":    "Note",
 			"url":     "https://jiagou.com/post/78-k8snodocker",
