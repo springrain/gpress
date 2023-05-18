@@ -137,11 +137,13 @@ func TestRFC2616(t *testing.T) {
 func TestSend11(t *testing.T) {
 	data := map[string]interface{}{
 		"@context": "https://www.w3.org/ns/activitystreams",
-		"id":       "https://activitypub.jpress.cn/post/78-k8snodocker",
-		"type":     "Update",
-		"to":       []string{"https://mastodon.social/users/9iuorg"},
-		"actor":    "https://activitypub.jpress.cn/activitypub/api/user/test11",
+		//操作自身的ID
+		"id":    "https://activitypub.jpress.cn/post/78-k8snodocker#Create",
+		"type":  "Create",
+		"to":    []string{"https://mastodon.social/users/9iuorg"},
+		"actor": "https://activitypub.jpress.cn/activitypub/api/user/test11",
 		"object": map[string]interface{}{
+			// 业务Object 的ID
 			"id":      "https://activitypub.jpress.cn/post/78-k8snodocker",
 			"type":    "Note",
 			"url":     "https://jiagou.com/post/78-k8snodocker",
