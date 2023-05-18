@@ -51,7 +51,7 @@ func TestSendActivity(t *testing.T) {
 		"to": []string{
 			"https://mastodon.social/users/9iuorg",
 		},
-		"actor": "https://testmakerone.shengjian.net/activitypub/api/user/test11",
+		"actor": "https://activitypub.jpress.cn/activitypub/api/user/test11",
 		"object": map[string]interface{}{
 			"type":      "Note",
 			"content":   "Hello ActivityPub!",
@@ -100,7 +100,7 @@ func TestSignActivity(t *testing.T) {
 		return
 	}
 	// 构建签名字符串
-	signatureData := "(request-target): post /activitypub/api/inbox/test11\nhost: testmakerone.shengjian.net\ndate: Wed, 17 May 2023 05:54:54 GMT\ndigest: SHA-256=Nr8ii7EV6Jg6is4Y+QZqPaK3COz8lRTIxOFSoM42c3Y=\ncontent-type: application/activity+json"
+	signatureData := "(request-target): post /activitypub/api/inbox/test11\nhost: jpress.cn\ndate: Wed, 17 May 2023 05:54:54 GMT\ndigest: SHA-256=Nr8ii7EV6Jg6is4Y+QZqPaK3COz8lRTIxOFSoM42c3Y=\ncontent-type: application/activity+json"
 
 	signValue := "kW0n+1xIWBcW60uV6KUxFsJHO3BBF5DZcQUv70KJX6R4iWsKdjJqLluNgxaUKPjh33/1puE8Cg4GDnL5VcXp68VSpwdmcPoyaWRo5yAZXKIjC5LboI678+o2QsJHcm3+iP7jTqJJbp2Sj2LqQcfcA3FZB9Bd0U/35yXfaLOzmsm3dSEfvHr3JdgS8ZwlAXIj8/7+TYXLYUUkQ0XQodRZyHBj61spHsEz35wCIE7pWDM8N8l2qdFYN57u7tpr8+6kFIjINFoGhL+VQ7viIhoqy7rudVs5ozDcqF6/xRVCOk5Qvkd62aZb86vrm6H1AXGg5T9GTtPXGWAuiNsRxrjxFw=="
 	// 验证签名
@@ -132,4 +132,28 @@ func TestRFC2616(t *testing.T) {
 	// mastodon 的日期格式为RFC2616 -- time.RFC1123
 	date := time.Now().UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
 	fmt.Println(date)
+}
+
+func TestSend11(t *testing.T) {
+	data := map[string]interface{}{
+		"@context": "https://www.w3.org/ns/activitystreams",
+		"id":       "https://activitypub.jpress.cn/post/78-k8snodocker",
+		"type":     "Update",
+		"to":       []string{"https://mastodon.social/users/9iuorg"},
+		"actor":    "https://activitypub.jpress.cn/activitypub/api/user/test11",
+		"object": map[string]interface{}{
+			"id":      "https://activitypub.jpress.cn/post/78-k8snodocker",
+			"type":    "Note",
+			"url":     "https://jiagou.com/post/78-k8snodocker",
+			"content": "<a href=\"https://jiagou.com/post/78-k8snodocker\">K8S不使用Docker</a>",
+			//"cc":      []string{"https://mastodon.social/users/9iuorg"},
+		},
+	}
+	reponseMap, err := sendRequest("https://mastodon.social/users/9iuorg/inbox", "POST", data, true)
+	if err != nil {
+		t.Error(err)
+	}
+	body, _ := json.Marshal(reponseMap)
+	fmt.Println(string(body))
+
 }
