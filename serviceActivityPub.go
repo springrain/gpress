@@ -256,19 +256,20 @@ func funcSendAcceptMessage(activity map[string]interface{}) {
 	bodyMap["id"] = activity["id"]
 	bodyMap["actor"] = activity["object"]
 	bodyMap["type"] = "Accept"
-	//object 是Follow事件发送的对象
+	//object 是Follow事件发送的原始数据对象!!!
 	bodyMap["object"] = activity
 
-	//获取用户的inbox地址
-
-	b, _ := json.Marshal(bodyMap)
-	fmt.Println("body:" + string(b))
+	//b, _ := json.Marshal(bodyMap)
+	//fmt.Println("body:" + string(b))
 	inbox, _ := responseJsonValue(activity["actor"].(string), "inbox")
-	fmt.Println("inbox:" + inbox.(string))
-	responseMap, err := sendRequest(inbox.(string), consts.MethodPost, bodyMap, true)
-	j, _ := json.Marshal(responseMap)
-	fmt.Println("responseMap:" + string(j))
-	fmt.Println(err)
+	//fmt.Println("inbox:" + inbox.(string))
+	_, err := sendRequest(inbox.(string), consts.MethodPost, bodyMap, true)
+	if err != nil {
+		FuncLogError(fmt.Errorf("获取内容错误:%w", err))
+	}
+	//j, _ := json.Marshal(responseMap)
+	//fmt.Println("responseMap:" + string(j))
+	//fmt.Println(err)
 
 }
 
