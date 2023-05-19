@@ -142,18 +142,20 @@ func TestRFC2616(t *testing.T) {
 
 func TestSend11(t *testing.T) {
 	//date := time.Now().Unix()
+	id := "https://" + activityPubDefaultDomain + "/post/88"
 	data := map[string]interface{}{
 		"@context": "https://www.w3.org/ns/activitystreams",
 		//操作自身的ID. 和actor同一个域名下的uri !!!
-		"id": "https://" + activityPubDefaultDomain + "/post/86#Create",
+		"id": id + "#Create",
 		//"id":   date,
 		"type": "Create",
+		//"type": "Delete", //不同的操作类型
 		//"to":   []string{"https://mastodon.social/users/9iuorg"},
 		"to":    []string{"https://www.w3.org/ns/activitystreams#Public"},
 		"actor": "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11",
 		"object": map[string]interface{}{
 			// 业务Object 的ID,Update和Delete依据这个ID. 和actor同一个域名下的uri !!!
-			"id":   "https://" + activityPubDefaultDomain + "/post/86",
+			"id":   id,
 			"type": "Note",
 			//"url":     "https://"+activityPubDefaultDomain+"/post/78-k8snodocker",
 			"content": "一个简单的测试",
@@ -162,6 +164,41 @@ func TestSend11(t *testing.T) {
 	}
 	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
 	//reponseMap, err := sendRequest("https://mastodon.social/users/9iuorg/inbox", "POST", data, true)
+	if err != nil {
+		t.Error(err)
+	}
+	body, _ := json.Marshal(reponseMap)
+	//这里需要debug暂停一下,等待mastodon服务请求账户的公钥,一般很快
+	fmt.Println(string(body))
+
+}
+
+// 测试发表评论
+func TestSendReply(t *testing.T) {
+	//date := time.Now().Unix()
+	id := "https://" + activityPubDefaultDomain + "/reply/89"
+	data := map[string]interface{}{
+		"@context": "https://www.w3.org/ns/activitystreams",
+		//操作自身的ID. 和actor同一个域名下的uri !!!
+		"id":   id + "#Create",
+		"type": "Create",
+		//"type": "Delete", //不同的操作类型
+		//"to":   []string{"https://mastodon.social/users/9iuorg"},
+		"to":    []string{"https://www.w3.org/ns/activitystreams#Public"},
+		"actor": "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11",
+		//转发关注
+		"cc": []string{"https://mastodon.social/users/9iuorg/followers"},
+		"object": map[string]interface{}{
+			// 业务Object 的ID,Update和Delete依据这个ID. 和actor同一个域名下的uri !!!
+			"id":   id,
+			"type": "Note",
+			//给谁回复,一般是资源URL
+			"inReplyTo": "https://mastodon.social/@9iuorg/110354226839707746",
+			//回复的内容
+			"content": "简单的回复",
+		},
+	}
+	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
 	if err != nil {
 		t.Error(err)
 	}
