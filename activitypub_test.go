@@ -139,7 +139,33 @@ func TestRFC2616(t *testing.T) {
 	date := time.Now().UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
 	fmt.Println(date)
 }
+func TestCrateNote(t *testing.T) {
+	//date := time.Now().Unix()
+	id := "https://" + activityPubDefaultDomain + "/note/88"
+	data := map[string]interface{}{
+		"@context": "https://www.w3.org/ns/activitystreams",
+		//操作自身的ID. 和actor同一个域名下的uri !!!
+		"id":   id + "#Create",
+		"type": "Create",
+		//"type": "Delete", //不同的操作类型
+		"to":    []string{"https://www.w3.org/ns/activitystreams#Public"},
+		"actor": "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11",
+		"object": map[string]interface{}{
+			// 业务Object 的ID,Update和Delete依据这个ID. 和actor同一个域名下的uri !!!
+			"id":      id,
+			"type":    "Note",
+			"content": "发表一个Note",
+		},
+	}
+	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	if err != nil {
+		t.Error(err)
+	}
+	body, _ := json.Marshal(reponseMap)
+	//这里需要debug暂停一下,等待mastodon服务请求账户的公钥,一般很快
+	fmt.Println(string(body))
 
+}
 func TestSend11(t *testing.T) {
 	//date := time.Now().Unix()
 	id := "https://" + activityPubDefaultDomain + "/post/88"
