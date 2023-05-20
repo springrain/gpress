@@ -7,12 +7,11 @@ import (
 	"net/http"
 	"testing"
 	"time"
-
-	"github.com/piprate/json-gold/ld"
 )
 
 /**
 https://lawrenceli.me/blog/activitypub
+https://s3lph.me/activitypub-static-site.html
 https://wangqiao.me/posts/activitypub-from-decentralized-to-distributed-social-networks/
 https://blog.joinmastodon.org/2018/06/how-to-implement-a-basic-activitypub-server/
 https://tinysubversions.com/notes/reading-activitypub/#a-note-on-json-ld
@@ -23,7 +22,7 @@ https://www.w3.org/TR/activitypub/
 https://www.w3.org/TR/activitystreams-vocabulary/
 
 **/
-
+/*
 func TestExpand(t *testing.T) {
 	proc := ld.NewJsonLdProcessor()
 	options := ld.NewJsonLdOptions("")
@@ -48,7 +47,7 @@ func TestExpand(t *testing.T) {
 	}
 	fmt.Println(expanded)
 }
-
+*/
 func TestSendActivity(t *testing.T) {
 	// 构建Activity对象
 	activity := map[string]interface{}{
