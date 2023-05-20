@@ -8,7 +8,6 @@ require (
 	github.com/cloudwego/hertz v0.6.3
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/mattn/go-sqlite3 v1.14.16
-	github.com/piprate/json-gold v0.5.0
 	github.com/yuin/goldmark v1.5.4
 	github.com/yuin/goldmark-emoji v1.0.1
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20220924101305-151362477c87
@@ -29,7 +28,6 @@ require (
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/nyaruka/phonenumbers v1.0.55 // indirect
-	github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
 	github.com/tidwall/gjson v1.13.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
