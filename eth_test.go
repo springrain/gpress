@@ -10,6 +10,8 @@ import (
 	"log"
 	"math/big"
 	"testing"
+
+	"golang.org/x/crypto/sha3"
 )
 
 func TestEth(t *testing.T) {
@@ -19,7 +21,8 @@ func TestEth(t *testing.T) {
 	if err != nil {
 		log.Fatal("生成以太坊私钥失败:", err)
 	}
-
+	privateKeyHex := hex.EncodeToString(privateKey.D.Bytes())
+	fmt.Println("以太坊私钥:", privateKeyHex)
 	publicKey := privateKey.Public().(*ecdsa.PublicKey)
 
 	/*
@@ -170,4 +173,36 @@ func generateAddress(publicKey *ecdsa.PublicKey) string {
 	address := hash[12:]
 
 	return fmt.Sprintf("0x%x", address)
+}
+
+// https://segmentfault.com/a/1190000018359512
+func TestEthBTCPrivateKey(t *testing.T) {
+	// 生成私钥
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		fmt.Println("生成私钥出错：", err)
+		return
+	}
+
+	// 根据私钥生成公钥
+	publicKey := privateKey.PublicKey
+
+	// 计算公钥的keccak256哈希
+	keccak := sha3.NewLegacyKeccak256()
+	keccak.Write(publicKey.X.Bytes())
+	keccak.Write(publicKey.Y.Bytes())
+	ethHash := keccak.Sum(nil)
+
+	// 从哈希中提取最后的20个字节（40个十六进制字符）
+	ethAddress := hex.EncodeToString(ethHash[12:])
+
+	// 将私钥和公钥转换为十六进制字符串
+	privateKeyHex := hex.EncodeToString(privateKey.D.Bytes())
+	publicKeyHex := hex.EncodeToString(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))
+
+	// 打印结果
+	fmt.Println("私钥：", privateKeyHex)
+	fmt.Println("公钥：", publicKeyHex)
+	fmt.Println("以太坊地址：", "0x"+ethAddress)
+
 }
