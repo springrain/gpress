@@ -13,6 +13,7 @@ require (
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20220924101305-151362477c87
 	github.com/yuin/goldmark-meta v1.1.0
 	go.abhg.dev/goldmark/toc v0.4.0
+	golang.org/x/crypto v0.1.0
 )
 
 require (
