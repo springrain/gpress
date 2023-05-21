@@ -11,6 +11,7 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/ethereum/go-ethereum/crypto"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -178,7 +179,10 @@ func generateAddress(publicKey *ecdsa.PublicKey) string {
 // https://segmentfault.com/a/1190000018359512
 func TestEthBTCPrivateKey(t *testing.T) {
 	// 生成私钥
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	//privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	privateKey, err := crypto.HexToECDSA("3e5adb36d7975cfb4af7fd7adcba310d915ec529400806516a2a92df6a6010c5")
+	//privateKey, err := crypto.GenerateKey()
+
 	if err != nil {
 		fmt.Println("生成私钥出错：", err)
 		return
@@ -205,4 +209,32 @@ func TestEthBTCPrivateKey(t *testing.T) {
 	fmt.Println("公钥：", publicKeyHex)
 	fmt.Println("以太坊地址：", "0x"+ethAddress)
 
+}
+func TestEth2(t *testing.T) {
+	// 生成以太坊私钥
+	privateKey, err := crypto.GenerateKey()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 将私钥转换为字节切片
+	privateKeyBytes := crypto.FromECDSA(privateKey)
+
+	// 生成以太坊公钥
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		log.Fatal("无法获取公钥")
+	}
+
+	// 将公钥转换为字节切片
+	publicKeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
+
+	// 生成以太坊地址
+	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
+
+	// 将私钥、公钥和地址打印出来
+	fmt.Println("私钥:", hex.EncodeToString(privateKeyBytes))
+	fmt.Println("公钥:", hex.EncodeToString(publicKeyBytes))
+	fmt.Println("地址:", address)
 }
