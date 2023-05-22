@@ -27,7 +27,7 @@ const (
 // responseJsonValue 发送GET请求,把返回值的json获取指定的key,例如
 func responseJsonValue(httpurl string, jsonKey string, keyId string) (interface{}, error) {
 
-	bodyMap, err := sendRequest(httpurl, consts.MethodGet, nil, keyId, false)
+	bodyMap, err := sendActivityPubRequest(httpurl, consts.MethodGet, nil, keyId, false)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +51,8 @@ func responseJsonValue(httpurl string, jsonKey string, keyId string) (interface{
 	return value, nil
 }
 
-// funcSendPostAndSignature 返送post请求,并签名
-func sendRequest(httpurl string, method string, body map[string]interface{}, keyId string, isSign bool) (map[string]interface{}, error) {
+// sendActivityPubRequest 返送activityPub
+func sendActivityPubRequest(httpurl string, method string, body map[string]interface{}, keyId string, isSign bool) (map[string]interface{}, error) {
 	// 解析 URL 字符串
 	parsedURL, err := url.Parse(httpurl)
 	if err != nil {
@@ -102,7 +102,7 @@ func sendRequest(httpurl string, method string, body map[string]interface{}, key
 		signatureString := strings.Join(comparisonStrings, "\n")
 
 		//生成签名数据
-		signatureBase64, err := makeSignature(signatureString)
+		signatureBase64, err := generateRSASignature(signatureString)
 		if err != nil {
 			return nil, err
 		}

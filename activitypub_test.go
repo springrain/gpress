@@ -97,27 +97,9 @@ func TestSendActivity(t *testing.T) {
 	}
 }
 
-func TestSignActivity(t *testing.T) {
-	// 获取公钥
-	publicKey, err := getPublicKey("")
-	if err != nil {
-		fmt.Println("公钥获取失败：", err)
-		return
-	}
-	// 构建签名字符串
-	signatureData := "(request-target): post /activitypub/api/inbox/test11\nhost: jpress.cn\ndate: Wed, 17 May 2023 05:54:54 GMT\ndigest: SHA-256=Nr8ii7EV6Jg6is4Y+QZqPaK3COz8lRTIxOFSoM42c3Y=\ncontent-type: application/activity+json"
-
-	signValue := "kW0n+1xIWBcW60uV6KUxFsJHO3BBF5DZcQUv70KJX6R4iWsKdjJqLluNgxaUKPjh33/1puE8Cg4GDnL5VcXp68VSpwdmcPoyaWRo5yAZXKIjC5LboI678+o2QsJHcm3+iP7jTqJJbp2Sj2LqQcfcA3FZB9Bd0U/35yXfaLOzmsm3dSEfvHr3JdgS8ZwlAXIj8/7+TYXLYUUkQ0XQodRZyHBj61spHsEz35wCIE7pWDM8N8l2qdFYN57u7tpr8+6kFIjINFoGhL+VQ7viIhoqy7rudVs5ozDcqF6/xRVCOk5Qvkd62aZb86vrm6H1AXGg5T9GTtPXGWAuiNsRxrjxFw=="
-	// 验证签名
-	if !verifySignature(publicKey, signatureData, signValue) {
-		fmt.Println("签名验证失败")
-		return
-	}
-}
-
 func TestPublicKey(t *testing.T) {
 	// 获取公钥
-	publicKey, err := getPublicKey("https://mastodon.social/users/9iuorg#main-key")
+	publicKey, err := getRSAPublicKey("https://mastodon.social/users/9iuorg#main-key")
 	if err != nil {
 		t.Error(err)
 	}
@@ -126,7 +108,7 @@ func TestPublicKey(t *testing.T) {
 }
 
 func TestMakeSign(t *testing.T) {
-	s, err := makeSignature("123")
+	s, err := generateRSASignature("123")
 	if err != nil {
 		t.Error(err)
 	}
@@ -156,7 +138,7 @@ func TestCrateNote(t *testing.T) {
 			"content": "发表一个Note",
 		},
 	}
-	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
 	if err != nil {
 		t.Error(err)
 	}
@@ -187,7 +169,7 @@ func TestSend11(t *testing.T) {
 			//"cc":      []string{"https://mastodon.social/users/9iuorg"},
 		},
 	}
-	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
 	//reponseMap, err := sendRequest("https://mastodon.social/users/9iuorg/inbox", "POST", data, true)
 	if err != nil {
 		t.Error(err)
@@ -223,7 +205,7 @@ func TestSendReply(t *testing.T) {
 			"content": "简单的回复",
 		},
 	}
-	reponseMap, err := sendRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
 	if err != nil {
 		t.Error(err)
 	}
