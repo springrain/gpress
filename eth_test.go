@@ -242,3 +242,14 @@ func TestEth2(t *testing.T) {
 	fmt.Println("公钥:", hex.EncodeToString(publicKeyBytes))
 	fmt.Println("地址:", address)
 }
+func TestEth3(t *testing.T) {
+	// MetaMask 签名数据
+	signature := "0x4acafcdd5ee478e14453a36c074dee7d142dca7ead7a2029a0c6b7a3e547ee46379018cd8fc661450c84fd90bcca34e2e0008a02b27eab7944a97947c0d8bfa71b"
+	// 消息字符串
+	message := "20230522151922392009508861"
+	// 发送者地址
+	senderAddress := "0xD530eC9517C20DE518345A7210338dFB6279f454"
+	verify, err := verifySecp256k1Signature(senderAddress, message, signature)
+	fmt.Println(verify)
+	fmt.Println(err)
+}
