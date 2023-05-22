@@ -1,0 +1,23 @@
+{
+  "id": "4079714",
+  "name": "gpress",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "21703365",
+      "name": "删除3",
+      "font_class": "shanchu",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "17833644",
+      "name": "上传",
+      "font_class": "shangchuan",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    }
+  ]
+}
