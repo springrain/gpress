@@ -176,6 +176,10 @@ func generateAddress(publicKey *ecdsa.PublicKey) string {
 	return fmt.Sprintf("0x%x", address)
 }
 
+// https://www.jianshu.com/p/71a4454c74da
+// https://github.com/wenweih/bitcoin_address_protocol
+// https://studygolang.com/articles/25128
+
 // https://segmentfault.com/a/1190000018359512
 func TestEthBTCPrivateKey(t *testing.T) {
 	// 生成私钥
