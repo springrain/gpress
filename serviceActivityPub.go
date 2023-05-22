@@ -267,7 +267,7 @@ func funcSendAcceptMessage(activity map[string]interface{}) {
 	publicKey := actorMap["publicKey"].(map[string]interface{})
 	keyId := publicKey["id"].(string)
 	//fmt.Println("inbox:" + inbox.(string))
-	_, err := sendRequest(inboxUrl, consts.MethodPost, bodyMap, keyId, true)
+	_, err := sendActivityPubRequest(inboxUrl, consts.MethodPost, bodyMap, keyId, true)
 	if err != nil {
 		FuncLogError(fmt.Errorf("获取内容错误:%w", err))
 	}
@@ -309,19 +309,14 @@ func activitySignatureHandler(ctx context.Context, c *app.RequestContext) {
 	}
 
 	// 获取公钥
-	publicKey, err := getPublicKey(signature.KeyID)
-	if err != nil {
-		c.Abort() // 终止后续调用
-		FuncLogError(fmt.Errorf("公钥获取失败：%w", err))
-		return
-	}
+	//rsaPublicKey, err := getPublicKey(signature)
 	// 构建签名字符串
 	signatureData := buildSignatureData(c, signature.Headers)
 
-	// 验证签名
-	if !verifySignature(publicKey, signatureData, signature.Value) {
+	verify, err := verifySignature(signature, signatureData)
+	if err != nil || !verify {
 		c.Abort() // 终止后续调用
-		FuncLogError(errors.New("签名验证失败"))
+		FuncLogError(fmt.Errorf("验证签名失败：%w", err))
 		return
 	}
 

@@ -15,6 +15,8 @@ import (
 	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/ethereum/go-ethereum/common"
+	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 )
 
 type Signature struct {
@@ -44,7 +46,34 @@ func parseSignature(signatureString string) (*Signature, error) {
 	}
 	return signature, nil
 }
-func getPublicKey(publicKeyID string) (*rsa.PublicKey, error) {
+
+func verifySignature(signature *Signature, data string) (bool, error) {
+	switch signature.Algorithm {
+	case "rsa-sha256":
+		publicKey, err := getRSAPublicKey(signature.KeyID)
+		if err != nil {
+			return false, err
+		}
+		// 验证签名
+		hashed := sha256.Sum256([]byte(data))
+		signatureBytes, err := base64.StdEncoding.DecodeString(signature.Value)
+		if err != nil {
+			return false, err
+		}
+
+		err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, hashed[:], signatureBytes)
+		if err != nil {
+			return false, err
+		}
+	case "secp256k1": //以太坊账号的签名算法
+		//KeyID应为 chain://域名[address],合约地址,链ID    域名下的 publicKey 值
+		// KeyID应为 address,用于和签名数据里获取的address进行比较
+		return verifySecp256k1Signature(signature.KeyID, data, signature.Value)
+	}
+	return true, nil
+}
+
+func getRSAPublicKey(publicKeyID string) (*rsa.PublicKey, error) {
 	// 根据公钥 ID 获取对应的公钥
 	// 这里使用假数据，实际使用时需要替换为真实的公钥获取逻辑
 	//publicKeyPEM := "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr9HicDyHYlpGVYVHrm7j\nU7Nq4z9SeynK8UUi+JoBWuotChg2oSDQtWuj+zdQSKM3g27+sqNNw/BuZp85BVT6\n8PRyamTHjVrZPj6JIC+A/EGeJTqycODoMTDTTdz3evxBUbPAH7By91VrMNE5i8zl\nJ40IqAYYNLjmUdvQliGmGpX/xmPAfIeJ/mMQ3kCq/2uSICrL1ORicAB/qqXgyPsB\nWZCTYOOdJsV9bbbhAQUqRjevZrRIdaVcrIObxTDY0VgtBJgsElGNxbnb/g4vfPgy\nWdi/E0qLSRyayml8lGZhPccgY3PnqGO765X/j0tra/I4JIjLC0AOV0nLs0fLmH72\nEwIDAQAB\n-----END PUBLIC KEY-----\n"
@@ -97,24 +126,8 @@ func buildSignatureData(c *app.RequestContext, headers string) string {
 	return strings.Join(comparisonStrings, "\n")
 }
 
-func verifySignature(publicKey *rsa.PublicKey, data string, signatureValue string) bool {
-	// 验证签名
-	hashed := sha256.Sum256([]byte(data))
-	signatureBytes, err := base64.StdEncoding.DecodeString(signatureValue)
-	if err != nil {
-		return false
-	}
-
-	err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, hashed[:], signatureBytes)
-	if err != nil {
-		return false
-	}
-
-	return true
-}
-
-// makeSignature 对字符串签名,并将签名结果进行 Base64 编码
-func makeSignature(signingString string) (string, error) {
+// generateRSASignature 对字符串签名,并将签名结果进行 Base64 编码
+func generateRSASignature(signingString string) (string, error) {
 	// 读取私钥文件
 	privateKeyFile := datadir + "pem/private.pem"
 	privateKeyPEM, err := os.ReadFile(privateKeyFile)
@@ -139,4 +152,43 @@ func makeSignature(signingString string) (string, error) {
 	// 将签名结果进行 Base64 编码
 	signatureBase64 := base64.StdEncoding.EncodeToString(signature)
 	return signatureBase64, nil
+}
+
+func verifySecp256k1Signature(senderAddress string, signatureData string, signature string) (bool, error) {
+	// 将签名数据解码为字节数组
+	signatureBytes := common.FromHex(signature)
+
+	// 将发送者地址解码为以太坊地址类型
+	sender := common.HexToAddress(senderAddress)
+
+	// 计算消息的哈希，包括 MetaMask 的消息前缀
+	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(signatureData), signatureData)
+	messageBytes := []byte(prefix)
+	messageHash := ethcrypto.Keccak256Hash(messageBytes)
+
+	// 提取恢复 ID
+	recoveryID := signatureBytes[64]
+	if recoveryID != 27 && recoveryID != 28 {
+		return false, errors.New("invalid recovery ID")
+	}
+
+	// 修复恢复 ID 的值
+	if recoveryID == 27 {
+		signatureBytes[64] = 0
+	} else {
+		signatureBytes[64] = 1
+	}
+
+	// 使用签名数据验证消息哈希
+	signaturePublicKey, err := ethcrypto.SigToPub(messageHash.Bytes(), signatureBytes)
+	if err != nil {
+		return false, err
+	}
+
+	signerAddress := ethcrypto.PubkeyToAddress(*signaturePublicKey)
+	if signerAddress != sender {
+		return false, errors.New("signature verification failed")
+	}
+	return true, nil
+
 }
