@@ -240,8 +240,6 @@ func funcActivityPubInBox(ctx context.Context, c *app.RequestContext) {
 	bodyByte, _ := c.Body()
 	body := make(map[string]interface{})
 	json.Unmarshal(bodyByte, &body)
-	c.Render(http.StatusOK, activityJSONRender{data: "success"})
-	aType := body["type"].(string)
 
 	bodyMap := make(map[string]interface{})
 	bodyMap["@context"] = body["@context"]
@@ -267,11 +265,14 @@ func funcActivityPubInBox(ctx context.Context, c *app.RequestContext) {
 	keyId := publicKey["id"].(string)
 	headerMap, _ := wrapRequestHeader(inboxUrl, consts.MethodPost, bodyMap, keyId, true)
 
+	//事件类型
+	aType := body["type"].(string)
 	if aType == "Follow" { //处理关注事件
 		//这里演示异步处理了,实际需要用户签名,等待钱包签名发送消息
 		go sendActivityPubRequest(inboxUrl, consts.MethodPost, bodyMap, headerMap)
 	}
 
+	c.Render(http.StatusOK, activityJSONRender{data: "success"})
 }
 
 // activitySignatureHandler 验签拦截器
