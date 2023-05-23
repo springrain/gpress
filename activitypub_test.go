@@ -99,7 +99,7 @@ func TestSendActivity(t *testing.T) {
 
 func TestPublicKey(t *testing.T) {
 	// 获取公钥
-	publicKey, err := getRSAPublicKey("https://mastodon.social/users/9iuorg#main-key")
+	publicKey, err := getRSAPublicKeyPem("https://mastodon.social/users/9iuorg#main-key")
 	if err != nil {
 		t.Error(err)
 	}
@@ -122,12 +122,13 @@ func TestRFC2616(t *testing.T) {
 }
 func TestCrateNote(t *testing.T) {
 	//date := time.Now().Unix()
-	id := "https://" + activityPubDefaultDomain + "/note/88"
+	id := "https://" + activityPubDefaultDomain + "/note/90"
 	data := map[string]interface{}{
 		"@context": "https://www.w3.org/ns/activitystreams",
 		//操作自身的ID. 和actor同一个域名下的uri !!!
 		"id":   id + "#Create",
-		"type": "Create",
+		"txId": id + "#Create",
+		"type": "Delete",
 		//"type": "Delete", //不同的操作类型
 		"to":    []string{"https://www.w3.org/ns/activitystreams#Public"},
 		"actor": "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11",
@@ -138,7 +139,8 @@ func TestCrateNote(t *testing.T) {
 			"content": "发表一个Note",
 		},
 	}
-	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	headerMap, _ := wrapRequestHeader("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, headerMap)
 	if err != nil {
 		t.Error(err)
 	}
@@ -155,7 +157,7 @@ func TestSend11(t *testing.T) {
 		//操作自身的ID. 和actor同一个域名下的uri !!!
 		"id": id + "#Create",
 		//"id":   date,
-		"type": "Create",
+		"type": "Delete",
 		//"type": "Delete", //不同的操作类型
 		//"to":   []string{"https://mastodon.social/users/9iuorg"},
 		"to":    []string{"https://www.w3.org/ns/activitystreams#Public"},
@@ -169,7 +171,8 @@ func TestSend11(t *testing.T) {
 			//"cc":      []string{"https://mastodon.social/users/9iuorg"},
 		},
 	}
-	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	headerMap, _ := wrapRequestHeader("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, headerMap)
 	//reponseMap, err := sendRequest("https://mastodon.social/users/9iuorg/inbox", "POST", data, true)
 	if err != nil {
 		t.Error(err)
@@ -205,7 +208,9 @@ func TestSendReply(t *testing.T) {
 			"content": "简单的回复",
 		},
 	}
-	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+
+	headerMap, _ := wrapRequestHeader("https://mastodon.social/inbox", "POST", data, "https://"+activityPubDefaultDomain+"/activitypub/api/user/test11#main-key", true)
+	reponseMap, err := sendActivityPubRequest("https://mastodon.social/inbox", "POST", data, headerMap)
 	if err != nil {
 		t.Error(err)
 	}
