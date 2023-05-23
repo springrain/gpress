@@ -39,7 +39,7 @@
 						{{ range $tableFiled }}
 						<th>{{.FieldName}}</th>
 						{{end }}
-						<th>操作</th>
+						<th class="pos-sticky">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -51,7 +51,7 @@
 						<!-- 获取每一列的值 -->
 						<td> {{ index $v .FieldCode }}</td>
 						{{end }}
-						<td>
+						<td class="pos-sticky">
 							<a class="button is-success is-light is-small"
 								href="{{basePath}}admin/{{$path}}/update?id={{$v.id}}">编辑</a>
 							<a class="button is-link is-light is-small"

@@ -8,7 +8,8 @@
 	<input type="hidden" id="content" value="{{.content}}">
 	<input type="hidden" id="markdown" value="{{.markdown}}">
 	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
-	
+	<input type="hidden" id="updateId" value="{{.id}}">
+
 	<div class="container">
 		<div class="table-content">
 			<div class="column">
@@ -37,6 +38,24 @@
 							</div>
 							<div class="right">
 								<input class="input" type="text" value="{{.keyword}}" id="keyword">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								导航路径
+							</div>
+							<div class="right">
+								<div class="dropdown-box">
+									<div class="dropdown-val button">
+										<span id="chosed-val">请选择</span>
+										<input type="hidden" id="currval" />
+										<i class="iconfont icon-tubiao-"></i>
+									</div>
+									<ul class="dropdown-list" id="dropdown-list">
+
+									</ul>
+								</div>
+								<!-- <input class="input" type="text" disabled value="{{.hrefURL}}"> -->
 							</div>
 						</li>
 						<li>
@@ -142,6 +161,59 @@
 <script>
 	let content = ''
 	let thumbnail = ''
+	let show = false
+	
+	const list = [{
+			id: 1,
+			name: '选项01'
+		},
+		{
+			id: 2,
+			name: '选项02'
+		},
+		{
+			id: 3,
+			name: '选项03'
+		},
+		{
+			id: 4,
+			name: '选项04'
+		},
+		{
+			id: 5,
+			name: '选项05'
+		},
+	]
+	// 下拉数据渲染
+	$('.dropdown-val').click(function(){
+		let liHtml = ''
+		let curr = $('#currval').val()
+		$('#dropdown-list li').remove()
+		$.each(list, function(i, item) {
+			if (curr == item.id) {
+				liHtml += `<li id="${item.id}" name="${item.name}" class="aa active">${item.name}</li>`
+			} else {
+				liHtml += `<li id="${item.id}" name="${item.name}" class="aa">${item.name}</li>`
+			}
+		})
+		$('#dropdown-list').append(liHtml)
+		if(show){
+			$('#dropdown-list').hide()
+			show = false
+		}else{
+			$('#dropdown-list').show()
+			show = true
+		}
+	})
+	
+	$('#dropdown-list').on('click', 'li', function() {
+		let curr = $(this).attr('id') - 0
+		$('#currval').val(curr)
+		$('#chosed-val').html($(this).attr('name'))
+		$('#dropdown-list').hide()
+		show = false
+	})
+	
 	// 图片上传
 	$('#fileInput').change(function(e) {
 		let file = e.target.files[0]
@@ -179,9 +251,9 @@
 
 	// markdown编辑器
 	$(document).ready(function() {
-		window.cherryObj = new Cherry({ 
+		window.cherryObj = new Cherry({
 			id: 'markdown-container',
-			value: $('#markdown').val(), 
+			value: $('#markdown').val(),
 		})
 	})
 
@@ -221,12 +293,14 @@
 		config: {},
 		mode: 'default', // or 'simple'
 	})
-	
+
+	// 保存提交
 	const form = document.getElementById('gpress-form')
 	form.addEventListener('submit', async event => {
 		event.preventDefault()
 		const formData = new FormData(form)
 		const jsonObject = {
+			id: $('#updateId').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
@@ -256,6 +330,15 @@
 						window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
 					}
 				}
+			})
+		} else {
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '400px',
+				title: '提示',
+				content: res.message,
+				type: 'red',
+				buttons: { '确定': function() {} }
 			})
 		}
 	})
