@@ -6,6 +6,7 @@
 	<input type="hidden" id="content" value="{{.content}}">
 	<input type="hidden" id="markdown" value="{{.markdown}}">
 	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
+	<input type="hidden" id="navurl" value="{{.}}">
 	
 	<div class="container">
 		<div class="table-content">
@@ -35,6 +36,14 @@
 							</div>
 							<div class="right">
 								<input class="input" type="text" disabled value="{{.keyword}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								导航路径
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.hrefURL}}">
 							</div>
 						</li>
 						<li>
@@ -141,6 +150,7 @@
 </section>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
+console.log($('#navurl').val(),'*****')
 	let content = ''
 	let imgUrl = $('#thumbnail').val()
 	
