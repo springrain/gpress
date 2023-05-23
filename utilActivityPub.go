@@ -50,7 +50,7 @@ func parseSignature(signatureString string) (*Signature, error) {
 func verifySignature(signature *Signature, data string) (bool, error) {
 	switch signature.Algorithm {
 	case "rsa-sha256":
-		publicKey, err := getRSAPublicKey(signature.KeyID)
+		publicKey, err := getRSAPublicKeyPem(signature.KeyID)
 		if err != nil {
 			return false, err
 		}
@@ -66,14 +66,16 @@ func verifySignature(signature *Signature, data string) (bool, error) {
 			return false, err
 		}
 	case "secp256k1": //以太坊账号的签名算法
-		//KeyID应为 chain://域名[address],合约地址,链ID    域名下的 publicKey 值
+		// KeyID应为 chain://域名[address],合约地址,链ID    域名下的 publicKey 值
+		// 主要就是要解析IP地址,备选  #域名[address]#合约地址#链ID,通过#后缀跟上信息,前端点击时,使用js ajax获取需要处理的数据
 		// KeyID应为 address,用于和签名数据里获取的address进行比较
+		// 这里KeyID暂时定为address,实际应该为区块链域名,从域名反查合约获取address.这里比较简单
 		return verifySecp256k1Signature(signature.KeyID, data, signature.Value)
 	}
 	return true, nil
 }
 
-func getRSAPublicKey(publicKeyID string) (*rsa.PublicKey, error) {
+func getRSAPublicKeyPem(publicKeyID string) (*rsa.PublicKey, error) {
 	// 根据公钥 ID 获取对应的公钥
 	// 这里使用假数据，实际使用时需要替换为真实的公钥获取逻辑
 	//publicKeyPEM := "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr9HicDyHYlpGVYVHrm7j\nU7Nq4z9SeynK8UUi+JoBWuotChg2oSDQtWuj+zdQSKM3g27+sqNNw/BuZp85BVT6\n8PRyamTHjVrZPj6JIC+A/EGeJTqycODoMTDTTdz3evxBUbPAH7By91VrMNE5i8zl\nJ40IqAYYNLjmUdvQliGmGpX/xmPAfIeJ/mMQ3kCq/2uSICrL1ORicAB/qqXgyPsB\nWZCTYOOdJsV9bbbhAQUqRjevZrRIdaVcrIObxTDY0VgtBJgsElGNxbnb/g4vfPgy\nWdi/E0qLSRyayml8lGZhPccgY3PnqGO765X/j0tra/I4JIjLC0AOV0nLs0fLmH72\nEwIDAQAB\n-----END PUBLIC KEY-----\n"
