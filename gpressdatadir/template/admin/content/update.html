@@ -5,48 +5,127 @@
 {{$analyzer := analyzer}}
 {{$fieldType := fieldType}}
 <section class="section">
+	<input type="hidden" id="content" value="{{.content}}">
+	<input type="hidden" id="markdown" value="{{.markdown}}">
+	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
+	
 	<div class="container">
 		<div class="table-content">
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/update" method="POST">
 					{{ $data := . }}
-					{{ range $tableFiled }}
-
-					<div class="field is-horizontal flex-center">
-						<div class="field-left" style="width: 150px;">
-							<label class="label">{{.FieldName}}</label>
-							<input type="hidden" id="fieldType_{{.FieldCode}}" value="{{.FieldType}}" />
-						</div>
-						<div class="field-right" style="width: 340px;">
-							<div class="field">
-								<div class="control">
-									{{if eq .FieldCode "fieldType"}}
-									<select name="{{.FieldCode}}" class="input">
-										{{ range $key,$value := $fieldType }}
-										<option value={{$key}}>{{$value}}</option>
-										{{end}}
-									</select>
-									{{else if eq .FieldCode "analyzerName"}}
-										<select name="{{.FieldCode}}" class="input">
-											{{ range $key,$value := $analyzer }}
-											<option value={{$key}}>{{$value}}</option>
-											{{end}}
-										</select>
-										{{else if eq .FieldCode "id"}}
-											<input class="input" readonly="readonly" type="text" name="{{.FieldCode}}"
-												id="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
-											{{else}}
-												<input class="input" type="text" name="{{.FieldCode}}"
-													id="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
-												{{end}}
+					<ul class="save-ul">
+						<li>
+							<div class="left">
+								文章标题
+							</div>
+							<div class="right">
+								<input class="input" type="text" value="{{.title}}" id="title" />
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								副标题
+							</div>
+							<div class="right">
+								<input class="input" type="text" value="{{.subtitle}}" id="subtitle">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								关键字
+							</div>
+							<div class="right">
+								<input class="input" type="text" value="{{.keyword}}" id="keyword">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								站点描述
+							</div>
+							<div class="right">
+								<input class="input" type="text" value="{{.description}}" id="description">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								作者
+							</div>
+							<div class="right">
+								<input class="input" type="text" value="{{.author}}" id="author">
+							</div>
+						</li>
+						<li style="align-items: flex-start;">
+							<div class="left">
+								封面图
+							</div>
+							<div class="right">
+								<div class="upload-modlue">
+									<div class="upload-box">
+										<i class="iconfont icon-shangchuan"></i>
+										<p>上传图片</p>
+										<input class="input" type="file" id="fileInput">
+									</div>
+									<div class="img-box">
+										<div class="img-preview">
+											<img src="" id="img">
+											<div class="delete-btn">
+												<i class="iconfont icon-shanchu"></i>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
+						</li>
+						<li>
+							<div class="left">
+								排序
+							</div>
+							<div class="right">
+								<input class="input" type="number" value="{{.sortNo}}" id="sortNo">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								文章内容
+							</div>
+							<div class="right">
+								<div class="control">
+									<label class="radio">
+										<input type="radio" value="0" name="foobar" checked>
+										富文本
+									</label>
+									<label class="radio">
+										<input type="radio" value="1" name="foobar">
+										Markdown
+									</label>
+								</div>
+							</div>
+						</li>
+						<li id="editor-show" style="align-items: flex-start;">
+							<div class="left">
+							</div>
+							<div class="right" style="width: 800px;">
+								<div id="editor—wrapper">
+									<div id="toolbar-container">
+										<!-- 工具栏 -->
+									</div>
+									<div id="editor-container" style="height: 400px;">
+										<!-- 编辑器 -->
+									</div>
+								</div>
+							</div>
+						</li>
+						<li id="markdown-show" style="align-items: flex-start;display: none;">
+							<div class="left">
+							</div>
+							<div class="right" style="width: 800px;height: 500px;">
+								<div id="markdown-container"></div>
+							</div>
+						</li>
+					</ul>
 
-					{{end}}
-
-					<div class="field is-grouped" style="padding-left: 110px;">
+					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
 							<button type="submit" class="button is-primary">提交</button>
 						</div>
@@ -54,44 +133,120 @@
 							<button type="reset" class="button is-info is-light">重置</button>
 						</div>
 					</div>
-
 				</form>
 			</div>
 		</div>
 	</div>
 </section>
-
+<script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
-	const form = document.getElementById('gpress-form')
+	let content = ''
+	let thumbnail = ''
+	// 图片上传
+	$('#fileInput').change(function(e) {
+		let file = e.target.files[0]
+		if (!/image\/\w+/.test(file.type)) {
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '300px',
+				title: '提示',
+				content: '请上传图片格式！',
+				type: 'red',
+				buttons: { '确定': function() {} }
+			})
+			return false
+		}
+		let reader = new FileReader()
+		reader.readAsDataURL(file)
+		reader.onload = function() {
+			console.log(this.result)
+			thumbnail = this.result
+			let imgs = document.createElement('img') //创建img标签
+			$('#img').attr('src', thumbnail) //将img的src属性的值赋值
+			$('.upload-box').hide()
+			$('.img-box').show()
+		}
+	})
 
+	// 删除图片
+	$('.delete-btn').click(function() {
+		thumbnail = ''
+		$('#fileInput').val('')
+		$('#img').attr('src', '')
+		$('.upload-box').show()
+		$('.img-box').hide()
+	})
+
+	// markdown编辑器
+	$(document).ready(function() {
+		window.cherryObj = new Cherry({ 
+			id: 'markdown-container',
+			value: $('#markdown').val(), 
+		})
+	})
+
+	// 单选切换
+	$('input[name=\'foobar\']').click(function(e) {
+		let current = $('input[name=\'foobar\']:checked').val()
+		if (current == 0) {
+			$('#editor-show').show()
+			$('#markdown-show').hide()
+		} else {
+			$('#markdown-show').show()
+			$('#editor-show').hide()
+		}
+	})
+
+	// 富文本编辑器
+	const {
+		createEditor,
+		createToolbar
+	} = window.wangEditor
+	const editorConfig = {
+		placeholder: '请输入内容...',
+		onChange(editor) {
+			content = editor.getHtml()
+			// 也可以同步到 <textarea>
+		}
+	}
+	const editor = createEditor({
+		selector: '#editor-container',
+		html: $('#content').val(),
+		config: editorConfig,
+		mode: 'default', // or 'simple'
+	})
+	const toolbar = createToolbar({
+		editor,
+		selector: '#toolbar-container',
+		config: {},
+		mode: 'default', // or 'simple'
+	})
+	
+	const form = document.getElementById('gpress-form')
 	form.addEventListener('submit', async event => {
 		event.preventDefault()
 		const formData = new FormData(form)
-
-		const jsonObject = {}
-		for (const [key, value] of formData.entries()) {
-			const fieldType = document.querySelector('#fieldType_' + key).value
-			if (!!fieldType && fieldType == 1) {
-				jsonObject[key] = parseInt(value)
-			}
-			//if (key == "sortNo" ||key == "status"||key == "fieldType"||key == "required"){
-			//  jsonObject[key] = parseInt(value);
-			//}
-			else {
-				jsonObject[key] = value
-			}
-			//jsonObject[key] = value;
+		const jsonObject = {
+			title: $('#title').val(),
+			subtitle: $('#subtitle').val(),
+			keyword: $('#keyword').val(),
+			description: $('#description').val(),
+			author: $('#author').val(),
+			thumbnail: $('#thumbnail').val(),
+			sortNo: $('#sortNo').val(),
+			content: content,
+			markdown: cherryObj.getMarkdown(),
 		}
+		console.log(jsonObject)
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
-			headers: { 'Content-Type': 'application/json', }
+			headers: { 'Content-Type': 'application/json' }
 		})
-
 		let res = await response.json()
 		if (res.statusCode == 1) {
 			$.confirm({
-				useBootstrap:false,
+				useBootstrap: false,
 				boxWidth: '400px',
 				title: '提示',
 				content: '修改成功！',
@@ -105,9 +260,5 @@
 		}
 	})
 </script>
-
-
-
-
 
 {{template "admin/bodyend.html"}}

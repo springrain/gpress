@@ -3,34 +3,135 @@
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
 <section class="section">
+	<input type="hidden" id="content" value="{{.content}}">
+	<input type="hidden" id="markdown" value="{{.markdown}}">
+	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
+	
 	<div class="container">
 		<div class="table-content">
 			<div class="column">
 				<form id="gpress-form" action="/" method="POST">
 					{{ $data := . }}
-					{{ range $tableFiled }}
-					<div class="field is-horizontal flex-center">
-						<div class="field-left" style="width: 150px;">
-							<label class="label">{{.FieldName}}</label>
-						</div>
-						<div class="field-right" style="width: 340px;">
-							<div class="field">
-								<div class="control">
-									<input class="input" type="text" id="{{.FieldCode}}"
-										value="{{ index $data .FieldCode }}" disabled="disabled">
+					<ul class="save-ul">
+						<li>
+							<div class="left">
+								文章标题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.title}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								副标题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.subtitle}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								关键字
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.keyword}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								站点描述
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.description}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								作者
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.author}}">
+							</div>
+						</li>
+						<li style="align-items: flex-start;">
+							<div class="left">
+								封面图
+							</div>
+							<div class="right">
+								<div class="upload-modlue">
+									<div class="upload-box">
+										<i class="iconfont icon-shangchuan"></i>
+										<p>上传图片</p>
+										<input class="input" type="file" id="fileInput">
+									</div>
+									<div class="img-box">
+										<div class="img-preview">
+											<img src="" id="img">
+											<div class="delete-btn">
+												<i class="iconfont icon-shanchu"></i>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					{{end}}
+						</li>
+						<li>
+							<div class="left">
+								排序
+								<input type="hidden" id="fieldType_{{.FieldCode}}" disabled value="{{.FieldType}}" />
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.sortNo}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								文章内容
+							</div>
+							<div class="right">
+								<div class="control">
+									<label class="radio">
+										<input type="radio" value="0" name="foobar" checked>
+										富文本
+									</label>
+									<label class="radio">
+										<input type="radio" value="1" name="foobar">
+										Markdown
+									</label>
+								</div>
+							</div>
+						</li>
+						<li id="editor-show" style="align-items: flex-start;">
+							<div class="left">
+							</div>
+							<div class="right" style="width: 800px;">
+								<div id="editor—wrapper">
+									<div id="toolbar-container">
+										<!-- 工具栏 -->
+									</div>
+									<div id="editor-container" style="height: 400px;">
+										<!-- 编辑器 -->
+									</div>
+								</div>
+							</div>
+						</li>
+						<li id="markdown-show" style="align-items: flex-start;display: none;">
+							<div class="left">
+							</div>
+							<div class="right" style="width: 800px;height: 500px;">
+								<div id="markdown-container"></div>
+							</div>
+						</li>
+					</ul>
 
-					<div class="field is-grouped" style="padding-left: 110px;">
+					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
 							<a href="{{basePath}}admin/{{.urlPathParam}}/update?id={{$data.id}}"
 								class="button is-primary">编辑</a>
 						</div>
 						<div class="control">
-							<button type="reset" class="button is-info is-light">重置</button>
+							<a href="{{basePath}}admin/{{.urlPathParam}}/list"
+								class="button is-info is-light">返回</a>
 						</div>
 					</div>
 				</form>
@@ -38,6 +139,72 @@
 		</div>
 	</div>
 </section>
+<script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
+<script>
+	let content = ''
+	let imgUrl = $('#thumbnail').val()
+	
+	// 判断是否有封面图显示
+	if(imgUrl){
+		$('#img').attr('src', thumbnail)
+		$('.upload-box').hide()
+		$('.img-box').show()
+		$('#fileInput').show()
+	}else{
+		$('.upload-box').show()
+		$('.img-box').hide()
+		$('#fileInput').hide()
+	}
+	
+	const {
+		createEditor,
+		createToolbar
+	} = window.wangEditor
+
+	const editorConfig = {
+		placeholder: '请输入内容...',
+		onChange(editor) {
+			content = content = editor.getHtml()
+			console.log('editor content', content)
+			// 也可以同步到 <textarea>
+		}
+	}
+
+	const editor = createEditor({
+		selector: '#editor-container',
+		html: $('#content').val(),
+		config: editorConfig,
+		mode: 'default', // or 'simple'
+	})
+	editor.disable() // 禁用编辑器
+
+	const toolbarConfig = {}
+	const toolbar = createToolbar({
+		editor,
+		selector: '#toolbar-container',
+		config: toolbarConfig,
+		mode: 'default', // or 'simple'
+	})
+	
+	// markdown编辑器.
+	$('input[name=\'foobar\']').click(function(e) {
+		let current = $('input[name=\'foobar\']:checked').val()
+		if (current == 0) {
+			$('#editor-show').show()
+			$('#markdown-show').hide()
+		} else {
+			$('#markdown-show').show()
+			$('#editor-show').hide()
+		}
+	})
+	$(document).ready(function() {
+		window.cherryObj = new Cherry({ 
+			id: 'markdown-container', 
+			value: $('#markdown').val(),
+		})
+		cherryObj.switchModel('previewOnly') // 只读模式
+})
+</script>
 
 
 {{template "admin/bodyend.html"}}
