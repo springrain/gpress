@@ -240,41 +240,39 @@ func funcActivityPubInBox(ctx context.Context, c *app.RequestContext) {
 	bodyByte, _ := c.Body()
 	body := make(map[string]interface{})
 	json.Unmarshal(bodyByte, &body)
-	c.Render(http.StatusOK, activityJSONRender{data: "success"})
-	aType := body["type"].(string)
 
-	if aType == "Follow" { //处理关注事件
-		go funcSendAcceptMessage(body)
-	}
-
-}
-
-// inbox交互是通过事件异步返回给对方的inbox
-func funcSendAcceptMessage(activity map[string]interface{}) {
 	bodyMap := make(map[string]interface{})
-	bodyMap["@context"] = activity["@context"]
-	bodyMap["id"] = activity["id"]
-	bodyMap["actor"] = activity["object"]
+	bodyMap["@context"] = body["@context"]
+	bodyMap["id"] = body["id"]
+	bodyMap["actor"] = body["object"]
 	bodyMap["type"] = "Accept"
 	//object 是Follow事件发送的原始数据对象!!!
-	bodyMap["object"] = activity
+	bodyMap["object"] = body
 
-	//b, _ := json.Marshal(bodyMap)
-	//fmt.Println("body:" + string(b))
-	actorInfo, _ := responseJsonValue(activity["actor"].(string), "", "")
+	// 发送人的地址 chain://域名[address],合约地址,链ID
+	actorURL := body["actor"].(string)
+	var actorInfo interface{}
+	//chain://域名[address],合约地址,链ID    域名下的 inbox 值
+	if strings.HasPrefix(actorURL, "http") { //http域名格式
+		actorInfo, _ = responseJsonValue(actorURL, "", "")
+	} else if strings.HasPrefix(actorURL, "chain") { //区块链格式
+		//解析这个域名下的 inbox text,获取资源路径
+		//主要就是要解析IP地址,备选  #域名[address]#合约地址#链ID,通过#后缀跟上信息,前端点击时,使用js ajax获取需要处理的数据
+	}
 	actorMap := actorInfo.(map[string]interface{})
 	inboxUrl := actorMap["inbox"].(string)
 	publicKey := actorMap["publicKey"].(map[string]interface{})
 	keyId := publicKey["id"].(string)
-	//fmt.Println("inbox:" + inbox.(string))
-	_, err := sendActivityPubRequest(inboxUrl, consts.MethodPost, bodyMap, keyId, true)
-	if err != nil {
-		FuncLogError(fmt.Errorf("获取内容错误:%w", err))
-	}
-	//j, _ := json.Marshal(responseMap)
-	//fmt.Println("responseMap:" + string(j))
-	//fmt.Println(err)
+	headerMap, _ := wrapRequestHeader(inboxUrl, consts.MethodPost, bodyMap, keyId, true)
 
+	//事件类型
+	aType := body["type"].(string)
+	if aType == "Follow" { //处理关注事件
+		//这里演示异步处理了,实际需要用户签名,等待钱包签名发送消息
+		go sendActivityPubRequest(inboxUrl, consts.MethodPost, bodyMap, headerMap)
+	}
+
+	c.Render(http.StatusOK, activityJSONRender{data: "success"})
 }
 
 // activitySignatureHandler 验签拦截器
