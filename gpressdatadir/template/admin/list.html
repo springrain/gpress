@@ -9,7 +9,6 @@
 	<input type="hidden" id="totalCount" value="{{.page.TotalCount}}">
 	<input type="hidden" id="pageCount" value="{{.page.PageCount}}">
 	
-	
 	<div class="container">
 		<!-- 搜索表单 -->
 		<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.urlPathParam}}/list" method="GET">
@@ -39,7 +38,7 @@
 						{{ range $tableFiled }}
 						<th>{{.FieldName}}</th>
 						{{end }}
-						<th>操作</th>
+						<th class="pos-sticky">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -51,7 +50,7 @@
 						<!-- 获取每一列的值 -->
 						<td> {{ index $v .FieldCode }}</td>
 						{{end }}
-						<td>
+						<td class="pos-sticky">
 							<a class="button is-success is-light is-small"
 								href="{{basePath}}admin/{{$path}}/update?id={{$v.id}}">编辑</a>
 							<a class="button is-link is-light is-small"
@@ -89,6 +88,7 @@ function deleteFunc(id) {
 			useBootstrap: false,
 			title: '提示',
 			content: '确认删除？',
+			boxWidth: '400px',
 			type: 'red',
 			buttons: {
 				'确定': function() {
