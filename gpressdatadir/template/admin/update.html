@@ -13,7 +13,7 @@
 					{{ range $tableFiled }}
 
 					<div class="field is-horizontal flex-center">
-						<div class="field-left" style="width: 100px;">
+						<div class="field-left" style="width: 180px;">
 							<label class="label">{{.FieldName}}</label>
 							<input type="hidden" id="fieldType_{{.FieldCode}}" value="{{.FieldType}}" />
 						</div>
@@ -46,7 +46,7 @@
 
 					{{end}}
 
-					<div class="field is-grouped" style="padding-left: 110px;">
+					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
 							<button type="submit" class="button is-primary">提交</button>
 						</div>
@@ -90,10 +90,19 @@
 
 		let res = await response.json()
 		if (res.statusCode == 1) {
-			alert('修改成功')
-			window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
+			$.confirm({
+				useBootstrap:false,
+				boxWidth: '400px',
+				title: '提示',
+				content: '修改成功！',
+				type: 'green',
+				buttons: {
+					'确定': function() {
+						window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
+					}
+				}
+			})
 		}
-		//console.log();
 	})
 </script>
 
