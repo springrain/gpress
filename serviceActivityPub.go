@@ -329,9 +329,14 @@ func funcProxyPost(ctx context.Context, c *app.RequestContext) {
 	bodyMap := make(map[string]interface{})
 	json.Unmarshal(bodyByte, &bodyMap)
 	//获取header
-	header := bodyMap["header"].(map[string]string)
+	headerMap := bodyMap["header"].(map[string]interface{})
 	bodyStr := bodyMap["body"].(string)
 	posturl := bodyMap["posturl"].(string)
+
+	header := make(map[string]string)
+	for k, v := range headerMap {
+		header[k] = v.(string)
+	}
 
 	hash := sha256.Sum256([]byte(bodyStr))
 	digest := "SHA-256=" + base64.StdEncoding.EncodeToString(hash[:])
@@ -377,7 +382,18 @@ func funcProxyPost(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(fmt.Errorf("验证签名失败：%w", err))
 		return
 	}
+	if signature.Algorithm == "secp256k1" {
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: "success"})
+		return
+	}
 
-	sendActivityPubRequest(posturl, consts.MethodPost, []byte(bodyStr), header)
-
+	reponseMap, err := sendActivityPubRequest(posturl, consts.MethodPost, []byte(bodyStr), header)
+	if err != nil {
+		c.Abort() // 终止后续调用
+		FuncLogError(fmt.Errorf("签名解析失败：%w", err))
+		return
+	}
+	if len(reponseMap) == 0 {
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: "success"})
+	}
 }
