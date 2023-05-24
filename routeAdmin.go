@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -125,7 +126,7 @@ func init() {
 
 		c.HTML(http.StatusOK, "admin/index.html", nil)
 	})
-	// 后台管理员首页
+	// 重新加载资源包含模板和对应的静态文件
 	adminGroup.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
 		err := loadTemplate()
 		if err != nil {
@@ -136,6 +137,23 @@ func init() {
 		//c.HTMLRender = render.HTMLProduction{Template: tmpl}
 		//c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
+	})
+
+	//上传文件
+	adminGroup.POST("/upload", func(ctx context.Context, c *app.RequestContext) {
+		fileHeader, err := c.FormFile("file")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			return
+		}
+		path := "public/" + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
+		newFileName := datadir + path
+		err = c.SaveUploadedFile(fileHeader, newFileName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			return
+		}
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
 
 	// 通用list列表,先都使用get方法
