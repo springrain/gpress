@@ -18,4 +18,7 @@ func init() {
 	//粉丝
 	h.GET("/activitypub/api/followers/:userName", funcActivityPubOutBox)
 
+	//代理转发post请求,js无法设置header的Host和Date,把数据统一发给后台进行转发,后台进行验签
+	h.POST("/activitypub/api/proxy/post", funcProxyPost)
+
 }

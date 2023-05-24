@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"html/template"
 	"strings"
@@ -11,19 +12,20 @@ import (
 
 var funcMap = template.FuncMap{
 
-	"basePath":   funcBasePath,
-	"addInt":     funcAddInt,
-	"addFloat":   funcAddFloat,
-	"T":          funcT,
-	"safeHTML":   funcSafeHTML,
-	"relURL":     funcRelURL,
-	"tableFiled": funcTableFiled,
-	"site":       funcSite,
-	"navMenu":    funcNavMenu,
-	"selectList": funcSelectList,
-	"selectOne":  funcSelectOne,
-	"analyzer":   funcAnalyzer,
-	"fieldType":  funcFieldType,
+	"basePath":    funcBasePath,
+	"addInt":      funcAddInt,
+	"addFloat":    funcAddFloat,
+	"T":           funcT,
+	"safeHTML":    funcSafeHTML,
+	"relURL":      funcRelURL,
+	"tableFiled":  funcTableFiled,
+	"site":        funcSite,
+	"navMenu":     funcNavMenu,
+	"selectList":  funcSelectList,
+	"selectOne":   funcSelectOne,
+	"analyzer":    funcAnalyzer,
+	"fieldType":   funcFieldType,
+	"jsonMarshal": funcJsonMarshal,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
@@ -162,6 +164,11 @@ func funcSelectOne(sql string, values ...interface{}) (map[string]interface{}, e
 	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": tableName}
 	resultMap["statusCode"] = 1
 	return resultMap, err
+}
+
+func funcJsonMarshal(obj interface{}) (string, error) {
+	jsonByte, err := json.Marshal(obj)
+	return string(jsonByte), err
 }
 
 /*
