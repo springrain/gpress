@@ -263,13 +263,16 @@ func funcActivityPubInBox(ctx context.Context, c *app.RequestContext) {
 	inboxUrl := actorMap["inbox"].(string)
 	publicKey := actorMap["publicKey"].(map[string]interface{})
 	keyId := publicKey["id"].(string)
-	headerMap, _ := wrapRequestHeader(inboxUrl, consts.MethodPost, bodyMap, keyId, true)
+
+	inBoxBodyByte, _ := json.Marshal(bodyMap)
+
+	headerMap, _ := wrapRequestHeader(inboxUrl, consts.MethodPost, inBoxBodyByte, keyId, true)
 
 	//事件类型
 	aType := body["type"].(string)
 	if aType == "Follow" { //处理关注事件
 		//这里演示异步处理了,实际需要用户签名,等待钱包签名发送消息
-		go sendActivityPubRequest(inboxUrl, consts.MethodPost, bodyMap, headerMap)
+		go sendActivityPubRequest(inboxUrl, consts.MethodPost, inBoxBodyByte, headerMap)
 	}
 
 	c.Render(http.StatusOK, activityJSONRender{data: "success"})
@@ -318,4 +321,79 @@ func activitySignatureHandler(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+}
+
+// funcProxyPost 代理转发inbox
+func funcProxyPost(ctx context.Context, c *app.RequestContext) {
+	bodyByte, _ := c.Body()
+	bodyMap := make(map[string]interface{})
+	json.Unmarshal(bodyByte, &bodyMap)
+	//获取header
+	headerMap := bodyMap["header"].(map[string]interface{})
+	bodyStr := bodyMap["body"].(string)
+	posturl := bodyMap["posturl"].(string)
+
+	header := make(map[string]string)
+	for k, v := range headerMap {
+		header[k] = v.(string)
+	}
+
+	hash := sha256.Sum256([]byte(bodyStr))
+	digest := "SHA-256=" + base64.StdEncoding.EncodeToString(hash[:])
+	hdigest, _ := header["Digest"]
+	if hdigest != digest {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "Digest校验错误"})
+		c.Abort() // 终止后续调用
+		return
+	}
+
+	// 从请求头部获取签名数据
+	signatureString := header["Signature"]
+
+	// 解析签名数据，获取相关信息
+	signature, err := parseSignature(signatureString)
+	if err != nil {
+		c.Abort() // 终止后续调用
+		FuncLogError(fmt.Errorf("签名解析失败：%w", err))
+		return
+	}
+
+	// 构建签名字符串
+	var comparisonStrings []string
+	signedHeaders := strings.Split(signature.Headers, " ")
+	for _, header := range signedHeaders {
+		value := ""
+		header = strings.TrimSpace(header)
+		if header == "(request-target)" {
+			method := string(c.Method())
+			method = strings.ToLower(method)
+			uri := string(c.Request.URI().Path())
+			value = fmt.Sprintf("%s %s", method, uri)
+		} else {
+			value = string(c.GetHeader(header))
+		}
+		comparisonStrings = append(comparisonStrings, header+": "+value)
+	}
+	signatureData := strings.Join(comparisonStrings, "\n")
+
+	verify, err := verifySignature(signature, signatureData)
+	if err != nil || !verify {
+		c.Abort() // 终止后续调用
+		FuncLogError(fmt.Errorf("验证签名失败：%w", err))
+		return
+	}
+	if signature.Algorithm == "secp256k1" {
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: "success"})
+		return
+	}
+
+	reponseMap, err := sendActivityPubRequest(posturl, consts.MethodPost, []byte(bodyStr), header)
+	if err != nil {
+		c.Abort() // 终止后续调用
+		FuncLogError(fmt.Errorf("签名解析失败：%w", err))
+		return
+	}
+	if len(reponseMap) == 0 {
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: "success"})
+	}
 }
