@@ -2,13 +2,15 @@
 <title>update - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
-{{$analyzer := analyzer}}
-{{$fieldType := fieldType}}
+{{ $navMenu := navMenu }} <!-- 导航数据 -->
+
 <section class="section">
 	<input type="hidden" id="content" value="{{.content}}">
 	<input type="hidden" id="markdown" value="{{.markdown}}">
 	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
 	<input type="hidden" id="updateId" value="{{.id}}">
+	<input type="hidden" id="navMenuName" value="{{.navMenuName}}">
+	<input type="hidden" id="navMenuID" value="{{.navMenuID}}">
 
 	<div class="container">
 		<div class="table-content">
@@ -42,20 +44,10 @@
 						</li>
 						<li>
 							<div class="left">
-								导航路径
+								导航名称
 							</div>
-							<div class="right">
-								<div class="dropdown-box">
-									<div class="dropdown-val button">
-										<span id="chosed-val">请选择</span>
-										<input type="hidden" id="currval" />
-										<i class="iconfont icon-tubiao-"></i>
-									</div>
-									<ul class="dropdown-list" id="dropdown-list">
-
-									</ul>
-								</div>
-								<!-- <input class="input" type="text" disabled value="{{.hrefURL}}"> -->
+							<div class="right dropdown">
+								<!-- 下拉菜单 -->
 							</div>
 						</li>
 						<li>
@@ -87,7 +79,7 @@
 									</div>
 									<div class="img-box">
 										<div class="img-preview">
-											<img src="" id="img">
+											<img src="{{.thumbnail}}" id="img">
 											<div class="delete-btn">
 												<i class="iconfont icon-shanchu"></i>
 											</div>
@@ -157,64 +149,32 @@
 		</div>
 	</div>
 </section>
+<link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet">
+<script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
+	let navMenuID = $('#navMenuID').val()
+	let navMenuName = $('#navMenuName').val()
 	let content = ''
-	let thumbnail = ''
-	let show = false
-	
-	const list = [{
-			id: 1,
-			name: '选项01'
-		},
-		{
-			id: 2,
-			name: '选项02'
-		},
-		{
-			id: 3,
-			name: '选项03'
-		},
-		{
-			id: 4,
-			name: '选项04'
-		},
-		{
-			id: 5,
-			name: '选项05'
-		},
-	]
+	let thumbnail = $('#thumbnail').val()
 	// 下拉数据渲染
-	$('.dropdown-val').click(function(){
-		let liHtml = ''
-		let curr = $('#currval').val()
-		$('#dropdown-list li').remove()
-		$.each(list, function(i, item) {
-			if (curr == item.id) {
-				liHtml += `<li id="${item.id}" name="${item.name}" class="aa active">${item.name}</li>`
-			} else {
-				liHtml += `<li id="${item.id}" name="${item.name}" class="aa">${item.name}</li>`
-			}
-		})
-		$('#dropdown-list').append(liHtml)
-		if(show){
-			$('#dropdown-list').hide()
-			show = false
-		}else{
-			$('#dropdown-list').show()
-			show = true
+	const list = JSON.parse('{{ jsonMarshal $navMenu }}')
+	$.dropDownInit({
+		container: '.dropdown', //容器：默认page
+		default: navMenuName,
+		id: navMenuID,
+		data: list,
+		callBack: function(data) {
+			navMenuID = data.id
+			navMenuName = data.name
 		}
 	})
-	
-	$('#dropdown-list').on('click', 'li', function() {
-		let curr = $(this).attr('id') - 0
-		$('#currval').val(curr)
-		$('#chosed-val').html($(this).attr('name'))
-		$('#dropdown-list').hide()
-		show = false
-	})
-	
+
 	// 图片上传
+	if(thumbnail){
+		$('.upload-box').hide()
+		$('.img-box').show()
+	}
 	$('#fileInput').change(function(e) {
 		let file = e.target.files[0]
 		if (!/image\/\w+/.test(file.type)) {
@@ -228,16 +188,31 @@
 			})
 			return false
 		}
-		let reader = new FileReader()
-		reader.readAsDataURL(file)
-		reader.onload = function() {
-			console.log(this.result)
-			thumbnail = this.result
-			let imgs = document.createElement('img') //创建img标签
-			$('#img').attr('src', thumbnail) //将img的src属性的值赋值
-			$('.upload-box').hide()
-			$('.img-box').show()
-		}
+		var formdata = new FormData() // FormData对象，来发送二进制文件。
+		formdata.append('file', e.currentTarget.files[0]) // 将文件追加到 formdata对象中
+		$.ajax({
+			type: 'post',
+			url: '/admin/upload',
+			data: formdata,
+			processData: false,
+			contentType: false,
+			success(res) {
+				thumbnail = res.data
+				$('#img').attr('src', thumbnail) //将img的src属性的值赋值
+				$('.upload-box').hide()
+				$('.img-box').show()
+			},
+			error(err) {
+				$.confirm({
+					useBootstrap: false,
+					boxWidth: '400px',
+					title: '提示',
+					content: '上传失败！',
+					type: 'red',
+					buttons: { '确定': function() {} }
+				})
+			}
+		})
 	})
 
 	// 删除图片
@@ -304,9 +279,11 @@
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
+			navMenuID: navMenuID,
+			navMenuName: navMenuName, 
 			description: $('#description').val(),
 			author: $('#author').val(),
-			thumbnail: $('#thumbnail').val(),
+			thumbnail: thumbnail,
 			sortNo: $('#sortNo').val(),
 			content: content,
 			markdown: cherryObj.getMarkdown(),
