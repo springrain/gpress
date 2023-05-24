@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -148,13 +147,12 @@ func init() {
 			return
 		}
 		path := "public/" + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
-		newFileName := datadir + "public/" + path
-		err = os.Rename(fileHeader.Filename, newFileName)
+		newFileName := datadir + path
+		err = c.SaveUploadedFile(fileHeader, newFileName)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 			return
 		}
-
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
 

@@ -236,3 +236,8 @@ func TestRSASign(t *testing.T) {
 	hash, _ := generateRSASignature(`(request-target): post /inbox\ndate: \ndigest: SHA-256=0ZTIAj4jAwvy1F/vOlDKril4qo2xfWZKPcTzxnuUOVA=\ncontent-type: application/activity+json; charset=UTF-8`)
 	fmt.Println(hash)
 }
+
+func TestDate(t *testing.T) {
+	date := time.Now().UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
+	fmt.Println(date)
+}
