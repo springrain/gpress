@@ -2,13 +2,15 @@
 <title>update - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
-{{$analyzer := analyzer}}
-{{$fieldType := fieldType}}
+{{ $navMenu := navMenu }} <!-- 导航数据 -->
+
 <section class="section">
 	<input type="hidden" id="content" value="{{.content}}">
 	<input type="hidden" id="markdown" value="{{.markdown}}">
 	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
 	<input type="hidden" id="updateId" value="{{.id}}">
+	<input type="hidden" id="navMenuName" value="{{.navMenuName}}">
+	<input type="hidden" id="navMenuID" value="{{.navMenuID}}">
 
 	<div class="container">
 		<div class="table-content">
@@ -42,20 +44,10 @@
 						</li>
 						<li>
 							<div class="left">
-								导航路径
+								导航名称
 							</div>
-							<div class="right">
-								<div class="dropdown-box">
-									<div class="dropdown-val button">
-										<span id="chosed-val">请选择</span>
-										<input type="hidden" id="currval" />
-										<i class="iconfont icon-tubiao-"></i>
-									</div>
-									<ul class="dropdown-list" id="dropdown-list">
-
-									</ul>
-								</div>
-								<!-- <input class="input" type="text" disabled value="{{.hrefURL}}"> -->
+							<div class="right dropdown">
+								<!-- 下拉菜单 -->
 							</div>
 						</li>
 						<li>
@@ -157,63 +149,28 @@
 		</div>
 	</div>
 </section>
+<link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet">
+<script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
+	let navMenuID = ''
+	let navMenuName = ''
 	let content = ''
 	let thumbnail = ''
-	let show = false
-	
-	const list = [{
-			id: 1,
-			name: '选项01'
-		},
-		{
-			id: 2,
-			name: '选项02'
-		},
-		{
-			id: 3,
-			name: '选项03'
-		},
-		{
-			id: 4,
-			name: '选项04'
-		},
-		{
-			id: 5,
-			name: '选项05'
-		},
-	]
+
 	// 下拉数据渲染
-	$('.dropdown-val').click(function(){
-		let liHtml = ''
-		let curr = $('#currval').val()
-		$('#dropdown-list li').remove()
-		$.each(list, function(i, item) {
-			if (curr == item.id) {
-				liHtml += `<li id="${item.id}" name="${item.name}" class="aa active">${item.name}</li>`
-			} else {
-				liHtml += `<li id="${item.id}" name="${item.name}" class="aa">${item.name}</li>`
-			}
-		})
-		$('#dropdown-list').append(liHtml)
-		if(show){
-			$('#dropdown-list').hide()
-			show = false
-		}else{
-			$('#dropdown-list').show()
-			show = true
+	const list = JSON.parse('{{ jsonMarshal $navMenu }}')
+	$.dropDownInit({
+		container: '.dropdown', //容器：默认page
+		default: $('#navMenuName').val(),
+		id: $('#navMenuID').val(),
+		data: list,
+		callBack: function(data) {
+			navMenuID = data.id
+			navMenuName = data.name
 		}
 	})
-	
-	$('#dropdown-list').on('click', 'li', function() {
-		let curr = $(this).attr('id') - 0
-		$('#currval').val(curr)
-		$('#chosed-val').html($(this).attr('name'))
-		$('#dropdown-list').hide()
-		show = false
-	})
-	
+
 	// 图片上传
 	$('#fileInput').change(function(e) {
 		let file = e.target.files[0]
@@ -304,6 +261,8 @@
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
+			navMenuID: navMenuID,
+			navMenuName: navMenuName, 
 			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: $('#thumbnail').val(),
