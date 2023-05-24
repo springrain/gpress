@@ -4,8 +4,12 @@
 {{ $tableFiled := tableFiled .urlPathParam }}
 {{$analyzer := analyzer}}
 {{$fieldType := fieldType}}
+{{ $navMenu := navMenu }} <!-- 导航数据 -->
 
 <section class="section">
+	<input type="hidden" id="navMenuName" value="{{.navMenuName}}">
+	<input type="hidden" id="navMenuID" value="{{.navMenuID}}">
+	<input type="hidden" id="basePath" value="{{basePath}}">
 	<div class="container">
 		<div class="table-content">
 			<!-- is-6-desktop is-6-tablet -->
@@ -38,6 +42,14 @@
 						</li>
 						<li>
 							<div class="left">
+								导航名称
+							</div>
+							<div class="right dropdown">
+								<!-- 下拉菜单 -->
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								站点描述
 							</div>
 							<div class="right">
@@ -61,7 +73,9 @@
 									<div class="upload-box">
 										<i class="iconfont icon-shangchuan"></i>
 										<p>上传图片</p>
-										<input class="input" type="file" id="fileInput">
+										<form method="get" enctype="multipart/form-data">
+											<input class="input" name="file" type="file" id="fileInput">
+										</form>
 									</div>
 									<div class="img-box">
 										<div class="img-preview">
@@ -134,12 +148,31 @@
 		</div>
 	</div>
 </section>
+<link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet">
+<script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
 	let content = ''
 	let thumbnail = ''
+	let navMenuID = ''
+	let navMenuName = ''
+	
+	// 下拉菜单组件
+	const list = JSON.parse('{{ jsonMarshal $navMenu }}')
+	$.dropDownInit({
+		container: '.dropdown', //容器：默认page
+		default: $('#navMenuName').val(),
+		id: $('#navMenuID').val(),
+		data: list,
+		callBack: function(data) {
+			navMenuID = data.id
+			navMenuName = data.name
+		}
+	})
+
 	// 图片上传
 	$('#fileInput').change(function(e) {
+		console.log(e, '***e****')
 		let file = e.target.files[0]
 		if (!/image\/\w+/.test(file.type)) {
 			$.confirm({
@@ -152,16 +185,31 @@
 			})
 			return false
 		}
-		let reader = new FileReader()
-		reader.readAsDataURL(file)
-		reader.onload = function() {
-			console.log(this.result)
-			thumbnail = this.result
-			let imgs = document.createElement('img') //创建img标签
-			$('#img').attr('src', thumbnail) //将img的src属性的值赋值
-			$('.upload-box').hide()
-			$('.img-box').show()
-		}
+		var formdata = new FormData() // FormData对象，来发送二进制文件。
+		formdata.append('file', e.currentTarget.files[0]) // 将文件追加到 formdata对象中
+		$.ajax({
+			type: 'post',
+			url: '/admin/upload',
+			data: formdata,
+			processData: false,
+			contentType: false,
+			success(res) {
+				thumbnail = res.data
+				$('#img').attr('src', thumbnail) //将img的src属性的值赋值
+				$('.upload-box').hide()
+				$('.img-box').show()
+			},
+			error(err) {
+				$.confirm({
+					useBootstrap: false,
+					boxWidth: '400px',
+					title: '提示',
+					content: '上传失败！',
+					type: 'red',
+					buttons: { '确定': function() {} }
+				})
+			}
+		})
 	})
 
 	// 删除图片
@@ -212,9 +260,10 @@
 	const toolbar = createToolbar({
 		editor,
 		selector: '#toolbar-container',
-		config: {},
+		config: { excludeKeys: 'group-video' },
 		mode: 'default', // or 'simple'
 	})
+	console.log(toolbar.getConfig(), '***99****')
 
 	// 保存提交
 	const form = document.querySelector('#gpress-form')
@@ -225,9 +274,11 @@
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
+			navMenuName: navMenuName,
+			navMenuID: navMenuID,
 			description: $('#description').val(),
 			author: $('#author').val(),
-			thumbnail: $('#thumbnail').val(),
+			thumbnail: thumbnail,
 			sortNo: $('#sortNo').val(),
 			content: content,
 			markdown: cherryObj.getMarkdown(),

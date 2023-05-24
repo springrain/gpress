@@ -8,8 +8,8 @@
 	<!-- 分页隐藏域 -->
 	<input type="hidden" id="totalCount" value="{{.page.TotalCount}}">
 	<input type="hidden" id="pageCount" value="{{.page.PageCount}}">
-	
-	
+
+
 	<div class="container">
 		<!-- 搜索表单 -->
 		<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.urlPathParam}}/list" method="GET">
@@ -69,7 +69,7 @@
 	<div class="page"></div>
 </section>
 <script>
-console.log($('#PageCount').val())
+	console.log($('#PageCount').val())
 	$.pageInit({
 		container: '.page', //容器：默认page
 		countPage: $('#pageCount').val(), //一共有多少页
@@ -84,11 +84,12 @@ console.log($('#PageCount').val())
 		}
 	})
 
-function deleteFunc(id) {
+	function deleteFunc(id) {
 		$.confirm({
 			useBootstrap: false,
 			title: '提示',
 			content: '确认删除？',
+			boxWidth: '400px',
 			type: 'red',
 			buttons: {
 				'确定': function() {
