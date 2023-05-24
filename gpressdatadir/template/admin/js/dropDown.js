@@ -36,9 +36,9 @@ DropDown.prototype = {
 			$.each(list, function(i, item) {
 				if (curr == item.id) {
 					liHtml +=
-						`<li id="${item.id}" name="${item.menuName}" class="aa active">${item.menuName}</li>`
+						`<li id="${item.id}" name="${item.menuName}" class="active">${item.menuName}</li>`
 				} else {
-					liHtml += `<li id="${item.id}" name="${item.menuName}" class="aa">${item.menuName}</li>`
+					liHtml += `<li id="${item.id}" name="${item.menuName}">${item.menuName}</li>`
 				}
 			})
 			$('#dropdown-list').append(liHtml)

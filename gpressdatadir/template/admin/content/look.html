@@ -75,7 +75,7 @@
 									</div>
 									<div class="img-box">
 										<div class="img-preview">
-											<img src="" id="img">
+											<img src="{{.thumbnail}}" id="img">
 											<div class="delete-btn">
 												<i class="iconfont icon-shanchu"></i>
 											</div>
@@ -152,11 +152,10 @@
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
 	let content = ''
-	let imgUrl = $('#thumbnail').val()
+	let thumbnail = $('#thumbnail').val()
 
 	// 判断是否有封面图显示
-	if (imgUrl) {
-		$('#img').attr('src', thumbnail)
+	if (thumbnail) {
 		$('.upload-box').hide()
 		$('.img-box').show()
 		$('#fileInput').show()
