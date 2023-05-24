@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -333,15 +334,25 @@ func funcProxyPost(ctx context.Context, c *app.RequestContext) {
 	bodyStr := bodyMap["body"].(string)
 	posturl := bodyMap["posturl"].(string)
 
+	// 解析 URL 字符串
+	parsedURL, err := url.Parse(posturl)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "failed to parse URL"})
+		c.Abort() // 终止后续调用
+		return
+	}
+
 	header := make(map[string]string)
+	headerLower := make(map[string]string)
 	for k, v := range headerMap {
 		header[k] = v.(string)
+		headerLower[strings.ToLower(k)] = v.(string)
 	}
 
 	hash := sha256.Sum256([]byte(bodyStr))
 	digest := "SHA-256=" + base64.StdEncoding.EncodeToString(hash[:])
-	hdigest, _ := header["Digest"]
-	if hdigest != digest {
+	hDigest, _ := header["Digest"]
+	if hDigest != digest {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "Digest校验错误"})
 		c.Abort() // 终止后续调用
 		return
@@ -361,18 +372,15 @@ func funcProxyPost(ctx context.Context, c *app.RequestContext) {
 	// 构建签名字符串
 	var comparisonStrings []string
 	signedHeaders := strings.Split(signature.Headers, " ")
-	for _, header := range signedHeaders {
+	for _, headerString := range signedHeaders {
 		value := ""
-		header = strings.TrimSpace(header)
-		if header == "(request-target)" {
-			method := string(c.Method())
-			method = strings.ToLower(method)
-			uri := string(c.Request.URI().Path())
-			value = fmt.Sprintf("%s %s", method, uri)
+		headerString = strings.TrimSpace(headerString)
+		if headerString == "(request-target)" {
+			value = fmt.Sprintf("%s %s", "post", parsedURL.Path)
 		} else {
-			value = string(c.GetHeader(header))
+			value = headerLower[headerString]
 		}
-		comparisonStrings = append(comparisonStrings, header+": "+value)
+		comparisonStrings = append(comparisonStrings, headerString+": "+value)
 	}
 	signatureData := strings.Join(comparisonStrings, "\n")
 
