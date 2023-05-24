@@ -52,7 +52,7 @@ func responseJsonValue(httpurl string, jsonKey string, keyId string) (interface{
 }
 
 // sendActivityPubRequest 发送activityPub请求
-func sendActivityPubRequest(httpurl string, method string, body map[string]interface{}, headerMap map[string]string) (map[string]interface{}, error) {
+func sendActivityPubRequest(httpurl string, method string, bodyByte []byte, headerMap map[string]string) (map[string]interface{}, error) {
 	// 解析 URL 字符串
 	parsedURL, err := url.Parse(httpurl)
 	if err != nil {
@@ -69,11 +69,6 @@ func sendActivityPubRequest(httpurl string, method string, body map[string]inter
 	//设置翻墙代理
 	if proxyAddress != "" {
 		c.SetProxy(protocol.ProxyURI(protocol.ParseURI(proxyAddress)))
-	}
-
-	bodyByte := []byte("")
-	if body != nil {
-		bodyByte, _ = json.Marshal(body)
 	}
 
 	request := &protocol.Request{}
@@ -110,7 +105,7 @@ func sendActivityPubRequest(httpurl string, method string, body map[string]inter
 
 }
 
-func wrapRequestHeader(httpurl string, method string, body map[string]interface{}, keyId string, isSign bool) (map[string]string, error) {
+func wrapRequestHeader(httpurl string, method string, bodyByte []byte, keyId string, isSign bool) (map[string]string, error) {
 	headerMap := make(map[string]string)
 	// 解析 URL 字符串
 	parsedURL, err := url.Parse(httpurl)
@@ -121,10 +116,6 @@ func wrapRequestHeader(httpurl string, method string, body map[string]interface{
 	// mastodon 的日期格式为RFC2616 -- time.RFC1123
 	date := time.Now().UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
 
-	bodyByte := []byte("")
-	if body != nil {
-		bodyByte, _ = json.Marshal(body)
-	}
 	hash := sha256.Sum256(bodyByte)
 	digest := "SHA-256=" + base64.StdEncoding.EncodeToString(hash[:])
 
