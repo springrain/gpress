@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4079714 */
-  src: url('iconfont.woff2?t=1685001558865') format('woff2'),
-       url('iconfont.woff?t=1685001558865') format('woff'),
-       url('iconfont.ttf?t=1685001558865') format('truetype');
+  src: url('iconfont.woff2?t=1685008453959') format('woff2'),
+       url('iconfont.woff?t=1685008453959') format('woff'),
+       url('iconfont.ttf?t=1685008453959') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-shuaxin:before {
+  content: "\e61d";
+}
+
+.icon-tuichu:before {
+  content: "\e634";
 }
 
 .icon-fabiaowenzhang:before {
