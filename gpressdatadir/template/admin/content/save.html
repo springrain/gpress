@@ -73,9 +73,7 @@
 									<div class="upload-box">
 										<i class="iconfont icon-shangchuan"></i>
 										<p>上传图片</p>
-										<form method="get" enctype="multipart/form-data">
-											<input class="input" name="file" type="file" id="fileInput">
-										</form>
+										<input class="input" name="file" type="file" id="fileInput">
 									</div>
 									<div class="img-box">
 										<div class="img-preview">
@@ -156,7 +154,7 @@
 	let thumbnail = ''
 	let navMenuID = ''
 	let navMenuName = ''
-	
+
 	// 下拉菜单组件
 	const list = JSON.parse('{{ jsonMarshal $navMenu }}')
 	$.dropDownInit({
@@ -223,7 +221,31 @@
 
 	// markdown编辑器
 	$(document).ready(function() {
-		window.cherryObj = new Cherry({ id: 'markdown-container', })
+		window.cherryObj = new Cherry({
+			id: 'markdown-container',
+			toolbars: {
+				toolbar: ['bold', 'italic', 'strikethrough', '|', 'color', 'header', '|', 'list', {
+					insert: ['image', 'link', 'hr', 'br', 'code', 'formula',
+						'toc', 'table', 'line-table', 'bar-table', 'pdf', 'word',
+					],
+				}],
+			},
+			fileUpload(file, callback) {
+				var formdata = new FormData() // FormData对象，来发送二进制文件。
+				formdata.append('file', file) // 将文件追加到 formdata对象中
+				$.ajax({
+					type: 'post',
+					url: '/admin/upload',
+					data: formdata,
+					processData: false,
+					contentType: false,
+					success(res) {
+						callback(res.data)
+					},
+					error(err) {}
+				})
+			},
+		})
 	})
 
 	// 单选切换
@@ -246,10 +268,32 @@
 	} = window.wangEditor
 	const editorConfig = {
 		placeholder: '请输入内容...',
+		MENU_CONF: {},
 		onChange(editor) {
 			content = editor.getHtml()
 			// 也可以同步到 <textarea>
 		}
+	}
+	editorConfig.MENU_CONF['uploadImage'] = {
+		server: '/admin/upload',
+		fieldName: 'file',
+		customInsert(res, insertFn) { // 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
+			insertFn(res.data)
+		},
+		onSuccess(file, res) {
+			console.log(res, '--上传成功---')
+		},
+		onFailed(file, res) {
+			$.dialog({
+				title: '提示',
+				useBootstrap: false,
+				boxWidth: '400px',
+				content: '上传失败',
+			})
+		},
+		onError(file, err, res) {
+			console.log('--上传错误---')
+		},
 	}
 	const editor = createEditor({
 		selector: '#editor-container',
@@ -263,7 +307,6 @@
 		config: { excludeKeys: 'group-video' },
 		mode: 'default', // or 'simple'
 	})
-	console.log(toolbar.getConfig(), '***99****')
 
 	// 保存提交
 	const form = document.querySelector('#gpress-form')
@@ -271,6 +314,7 @@
 		event.preventDefault()
 		const formData = new FormData(form)
 		const jsonObject = {
+			state: 0,
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
