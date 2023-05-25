@@ -10,7 +10,6 @@
 </head>
 <body>
 	<div id="layout" class="is-gapless">
-
 		<a id="menuLink" role="button" class="navbar-burger burger menu-link" aria-label="menu" aria-expanded="false"
 			data-target="navbarMenu">
 			<span aria-hidden="true"></span>
@@ -33,13 +32,13 @@
 						</ul>
 						<ul class="menu-list">
 							<li>
-								<a href="{{basePath}}admin/tableInfo/list">
-									<i class="iconfont icon-kebiaoxinxi"></i>表信息
+								<a href="{{basePath}}admin/content/list">
+									<i class="iconfont icon-fabiaowenzhang"></i>内容文章
 								</a>
 							</li>
 							<li>
-								<a href="{{basePath}}admin/tableField/list">
-									<i class="iconfont icon-ziduankongzhi"></i>表字段
+								<a href="{{basePath}}admin/navMenu/list">
+									<i class="iconfont icon-caidan1"></i>导航菜单
 								</a>
 							</li>
 						</ul>
@@ -55,13 +54,13 @@
 								</a>
 							</li>
 							<li>
-								<a href="{{basePath}}admin/navMenu/list">
-									<i class="iconfont icon-caidan1"></i>导航菜单
+								<a href="{{basePath}}admin/tableInfo/list">
+									<i class="iconfont icon-kebiaoxinxi"></i>表信息
 								</a>
 							</li>
 							<li>
-								<a href="{{basePath}}admin/content/list">
-									<i class="iconfont icon-fabiaowenzhang"></i>内容文章
+								<a href="{{basePath}}admin/tableField/list">
+									<i class="iconfont icon-ziduankongzhi"></i>表字段
 								</a>
 							</li>
 							<!-- <li><a>Tables</a></li> -->
@@ -69,8 +68,18 @@
 						</ul>
 						<ul class="menu-list">
 							<li>
-								<a href="{{basePath}}admin/index">
+								<a href="{{basePath}}admin/config/list">
 									<i class="iconfont icon-shezhi"></i>设置
+								</a>
+							</li>
+							<li>
+								<a class="refresh">
+									<i class="iconfont icon-shuaxin"></i>刷新
+								</a>
+							</li>
+							<li>
+								<a class="quit">
+									<i class="iconfont icon-tuichu"></i>退出
 								</a>
 							</li>
 						</ul>
@@ -87,3 +96,19 @@
 
 		<!-- 右侧内容 -->
 		<div id="main">
+			<script type="text/javascript">
+				$('.refresh').click(function() {
+					$.get('{{basePath}}admin/reload', function(result) {
+						$.dialog({
+							title: '提示',
+							useBootstrap: false,
+							boxWidth: '400px',
+							content: '刷新成功',
+						})
+						location.reload()
+					})
+				})
+				$('.quit').click(function() {
+					window.location.href = '{{basePath}}admin/login'
+				})
+			</script>
