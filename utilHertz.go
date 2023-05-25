@@ -141,7 +141,7 @@ func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string
 
 // isInstalled 是否已经安装过了
 func isInstalled() bool {
-	// 依赖sqliteStatus变量,确保bleve在isInstalled之前初始化
+	// 依赖sqliteStatus变量,确保sqlite在isInstalled之前初始化
 	if !sqliteStatus {
 		FuncLogError(errors.New("sqliteStatus状态为false"))
 	}
