@@ -229,6 +229,28 @@
 		window.cherryObj = new Cherry({
 			id: 'markdown-container',
 			value: $('#markdown').val(),
+			toolbars: {
+				toolbar: ['bold', 'italic', 'strikethrough', '|', 'color', 'header', '|', 'list', {
+					insert: ['image', 'link', 'hr', 'br', 'code', 'formula',
+						'toc', 'table', 'line-table', 'bar-table', 'pdf', 'word',
+					],
+				}],
+			},
+			fileUpload(file, callback) {
+				var formdata = new FormData() // FormData对象，来发送二进制文件。
+				formdata.append('file', file) // 将文件追加到 formdata对象中
+				$.ajax({
+					type: 'post',
+					url: '/admin/upload',
+					data: formdata,
+					processData: false,
+					contentType: false,
+					success(res) {
+						callback(res.data)
+					},
+					error(err) {}
+				})
+			},
 		})
 	})
 
@@ -251,10 +273,32 @@
 	} = window.wangEditor
 	const editorConfig = {
 		placeholder: '请输入内容...',
+		MENU_CONF: {},
 		onChange(editor) {
 			content = editor.getHtml()
 			// 也可以同步到 <textarea>
 		}
+	}
+	editorConfig.MENU_CONF['uploadImage'] = {
+		server: '/admin/upload',
+		fieldName: 'file',
+		customInsert(res, insertFn) { // 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
+			insertFn(res.data)
+		},
+		onSuccess(file, res) {
+			console.log(res, '--上传成功---')
+		},
+		onFailed(file, res) {
+			$.dialog({
+				title: '提示',
+				useBootstrap: false,
+				boxWidth: '400px',
+				content: '上传失败',
+			})
+		},
+		onError(file, err, res) {
+			console.log('--上传错误---')
+		},
 	}
 	const editor = createEditor({
 		selector: '#editor-container',
