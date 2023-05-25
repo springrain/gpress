@@ -245,7 +245,7 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 
 	newMap := make(map[string]interface{}, 0)
 	err := c.Bind(&newMap)
-	if err != nil { //没有id,认为是新增
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
@@ -269,17 +269,12 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-	markdown, ok := newMap["markdown"]
-	// markdown转html
-	if ok {
-		mkstring := markdown.(string)
-		if mkstring != "" {
-			_, _, html, _ := conver2Html([]byte(mkstring))
-			if html != nil && *html != "" {
-				newMap["content"] = *html
-			}
-		}
-
+	err = setMarkdownHtml(&newMap)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
 	}
 
 	entityMap := zorm.NewEntityMap(urlPathParam)
@@ -324,25 +319,19 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 
 	//err = json.Unmarshal(jsonBody, &newMap)
 	err := c.Bind(&newMap)
-	if err != nil { //没有id,认为是新增
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 		return
 	}
-	markdown, ok := newMap["markdown"]
-	// markdown转html
-	if ok {
-		mkstring := markdown.(string)
-		if mkstring != "" {
-			_, _, html, _ := conver2Html([]byte(mkstring))
-			if html != nil && *html != "" {
-				newMap["content"] = *html
-			}
-		}
-
+	err = setMarkdownHtml(&newMap)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
 	}
-
 	entityMap := zorm.NewEntityMap(urlPathParam)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
@@ -351,7 +340,7 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 	entityMap.Set("createTime", now)
 	entityMap.Set("updateTime", now)
 	responseData, err := saveEntityMap(ctx, entityMap)
-	if err != nil { //没有id,认为是新增
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
@@ -420,4 +409,25 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 		lookFile = "admin/" + htmlfile
 	}
 	c.HTML(http.StatusOK, lookFile, responseData)
+}
+
+func setMarkdownHtml(newMap *map[string]interface{}) error {
+	markdown, ok := (*newMap)["markdown"]
+	// markdown转html
+	if ok {
+		mkstring := markdown.(string)
+		if mkstring != "" {
+			_, tocHtml, html, err := conver2Html([]byte(mkstring))
+			if err != nil {
+				return err
+			}
+
+			if html != nil && *html != "" {
+				(*newMap)["content"] = *html
+				(*newMap)["toc"] = *tocHtml
+			}
+		}
+
+	}
+	return nil
 }
