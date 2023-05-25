@@ -269,6 +269,19 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
+	markdown, ok := newMap["markdown"]
+	// markdown转html
+	if ok {
+		mkstring := markdown.(string)
+		if mkstring != "" {
+			_, _, html, _ := conver2Html([]byte(mkstring))
+			if html != nil && *html != "" {
+				newMap["content"] = *html
+			}
+		}
+
+	}
+
 	entityMap := zorm.NewEntityMap(urlPathParam)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
@@ -317,6 +330,19 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
+	markdown, ok := newMap["markdown"]
+	// markdown转html
+	if ok {
+		mkstring := markdown.(string)
+		if mkstring != "" {
+			_, _, html, _ := conver2Html([]byte(mkstring))
+			if html != nil && *html != "" {
+				newMap["content"] = *html
+			}
+		}
+
+	}
+
 	entityMap := zorm.NewEntityMap(urlPathParam)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
