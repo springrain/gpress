@@ -5,6 +5,7 @@
 {{ $tableFiled := tableFiled .urlPathParam }}
 {{$path := .urlPathParam}}
 <section class="section">
+	<input type="hidden" id="data" value="{{.data}}">
 	<!-- 分页隐藏域 -->
 	<input type="hidden" id="totalCount" value="{{.page.TotalCount}}">
 	<input type="hidden" id="pageCount" value="{{.page.PageCount}}">
@@ -31,14 +32,25 @@
 		</form>
 
 		<!-- 列表 -->
+
 		<div class="table-content">
 			<table class="table is-hoverable is-fullwidth">
 				<thead>
 					<tr>
-						<!-- 循环表头 -->
-						{{ range $tableFiled }}
-						<th>{{.FieldName}}</th>
-						{{end }}
+						<th>文章内容ID</th>
+						<th>标题</th>
+						<th>副标题</th>
+						<th>关键字</th>
+						<th>站点描述</th>
+						<th>导航ID</th>
+						<th>导航名称</th>
+						<th>作者</th>
+						<th>文章摘要</th>
+						<th>封面图</th>
+						<th>创建时间</th>
+						<th>更新时间</th>
+						<th>排序</th>
+						<th>是否有效</th>
 						<th class="pos-sticky">操作</th>
 					</tr>
 				</thead>
@@ -46,11 +58,21 @@
 					<!-- 循环所有的数据 -->
 					{{ range $i,$v := .data }}
 					<tr>
-						<!-- 循环表头,需要和表格的表头对应 -->
-						{{ range $tableFiled }}
 						<!-- 获取每一列的值 -->
-						<td> {{ index $v .FieldCode }}</td>
-						{{end }}
+						<td> {{ index $v "id" }}</td>
+						<td> {{ index $v "title" }}</td>
+						<td> {{ index $v "subtitle" }}</td>
+						<td> {{ index $v "keyword" }}</td>
+						<td> {{ index $v "description" }}</td>
+						<td> {{ index $v "navMenuID" }}</td>
+						<td> {{ index $v "navMenuName" }}</td>
+						<td> {{ index $v "author" }}</td>
+						<td> {{ index $v "summary" }}</td>
+						<td><img src='{{index $v "thumbnail"}}' /></td>
+						<td> {{ index $v "createTime" }}</td>
+						<td> {{ index $v "updateTime" }}</td>
+						<td> {{ index $v "sortNo" }}</td>
+						<td> {{ index $v "status" }}</td>
 						<td class="pos-sticky">
 							<a class="button is-success is-light is-small"
 								href="{{basePath}}admin/{{$path}}/update?id={{$v.id}}">编辑</a>
@@ -69,7 +91,8 @@
 	<div class="page"></div>
 </section>
 <script>
-	console.log($('#PageCount').val())
+	console.log($('#data').val())
+
 	$.pageInit({
 		container: '.page', //容器：默认page
 		countPage: $('#pageCount').val(), //一共有多少页
@@ -107,7 +130,6 @@
 				'取消': function() {}
 			}
 		})
-
 	}
 </script>
 

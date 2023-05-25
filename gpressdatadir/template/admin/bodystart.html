@@ -9,42 +9,81 @@
 
 </head>
 <body>
-    <div id="layout" class="is-gapless">
+	<div id="layout" class="is-gapless">
 
-      <a id="menuLink" role="button" class="navbar-burger burger menu-link" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-      <div id="menu">
-        <nav role="navigation" aria-label="main navigation">
-          <div>
-            <div class="gpress-menu">
-              <ul class="menu-list">
-                <li><a href="{{basePath}}admin/index" class="menu-heading">GPRESS</a></li>
-              </ul>
-              <ul class="menu-list">
-                <li><a href="{{basePath}}admin/tableInfo/list">表信息</a></li>
-                <li><a href="{{basePath}}admin/tableField/list">表字段</a></li>
-              </ul>
-              <ul class="menu-list">
-                <li><a href="{{basePath}}admin/site/list">站点信息</a></li>
-                <li><a href="{{basePath}}admin/user/list">用户信息</a></li>
-                <li><a href="{{basePath}}admin/navMenu/list">导航菜单</a></li>
-                <li><a href="{{basePath}}admin/content/list">内容文章</a></li>
-                <li><a>Tables</a></li>
-                <li><a>Menus</a></li>
-              </ul>
-              <ul class="menu-list">
+		<a id="menuLink" role="button" class="navbar-burger burger menu-link" aria-label="menu" aria-expanded="false"
+			data-target="navbarMenu">
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+		</a>
+		<div id="menu">
+			<nav role="navigation" aria-label="main navigation">
+				<div>
+					<div class="gpress-menu">
+						<ul class="menu-list">
+							<li><a href="" class="menu-heading">GPRESS</a></li>
+						</ul>
+						<ul class="menu-list">
+							<li>
+								<a href="{{basePath}}admin/index">
+									<i class="iconfont icon-shouye"></i>首页
+								</a>
+							</li>
+						</ul>
+						<ul class="menu-list">
+							<li>
+								<a href="{{basePath}}admin/tableInfo/list">
+									<i class="iconfont icon-kebiaoxinxi"></i>表信息
+								</a>
+							</li>
+							<li>
+								<a href="{{basePath}}admin/tableField/list">
+									<i class="iconfont icon-ziduankongzhi"></i>表字段
+								</a>
+							</li>
+						</ul>
+						<ul class="menu-list">
+							<li>
+								<a href="{{basePath}}admin/site/list">
+									<i class="iconfont icon-zhandianguanli"></i>站点信息
+								</a>
+							</li>
+							<li>
+								<a href="{{basePath}}admin/user/list">
+									<i class="iconfont icon-yonghuxinxi"></i>用户信息
+								</a>
+							</li>
+							<li>
+								<a href="{{basePath}}admin/navMenu/list">
+									<i class="iconfont icon-caidan1"></i>导航菜单
+								</a>
+							</li>
+							<li>
+								<a href="{{basePath}}admin/content/list">
+									<i class="iconfont icon-fabiaowenzhang"></i>内容文章
+								</a>
+							</li>
+							<!-- <li><a>Tables</a></li> -->
+							<!-- <li><a>Menus</a></li> -->
+						</ul>
+						<ul class="menu-list">
+							<li>
+								<a href="{{basePath}}admin/index">
+									<i class="iconfont icon-shezhi"></i>设置
+								</a>
+							</li>
+						</ul>
+						<!-- <ul class="menu-list">
                 <li><a>Tools</a></li>
                 <li><a>Customize</a></li>
                 <li><a>Extend</a></li>
                 <li><a>Releases</a></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </div>
+              </ul> -->
+					</div>
+				</div>
+			</nav>
+		</div>
 
-      <!-- 右侧内容 -->
-      <div id="main">
+		<!-- 右侧内容 -->
+		<div id="main">

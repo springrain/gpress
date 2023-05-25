@@ -6,6 +6,83 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6268307",
+      "name": "发表文章",
+      "font_class": "fabiaowenzhang",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "629333",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "855549",
+      "name": "课表信息",
+      "font_class": "kebiaoxinxi",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
+      "icon_id": "5385901",
+      "name": "用户信息",
+      "font_class": "yonghuxinxi",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "7587933",
+      "name": "菜单",
+      "font_class": "caidan",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "13872294",
+      "name": "文章管理",
+      "font_class": "wenzhangguanli",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "17003194",
+      "name": "菜单",
+      "font_class": "caidan1",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "17736144",
+      "name": "字段控制",
+      "font_class": "ziduankongzhi",
+      "unicode": "e6bb",
+      "unicode_decimal": 59067
+    },
+    {
+      "icon_id": "17859797",
+      "name": "表格",
+      "font_class": "biaoge",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "21763799",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "22236036",
+      "name": "站点管理",
+      "font_class": "zhandianguanli",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
       "icon_id": "2407259",
       "name": "下拉",
       "font_class": "tubiao-",

@@ -15,6 +15,9 @@ body {
 	max-width: 100% !important;
 	width: 100% !important;
 }
+.flex1{
+	flex: 1 !important;
+}
 
 #main,
 #layout {
@@ -72,7 +75,7 @@ body {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	word-break: break-all;
-	vertical-align: unset !important;
+	vertical-align: middle !important;
 	max-width: 300px;
 }
 
@@ -112,10 +115,13 @@ body {
 	font-weight: bold;
 	letter-spacing: 20px;
 }
-
+#markdown-container{
+	width: 90%;
+}
 #editor—wrapper {
 	border: 1px solid #ccc;
 	z-index: 100;
+	width: 90%;
 	/* 按需定义 */
 }
 
@@ -261,3 +267,4 @@ body {
 	background-color: #eff1fa;
 	color: #3850b7;
 }
+

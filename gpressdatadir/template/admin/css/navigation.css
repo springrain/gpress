@@ -4,6 +4,7 @@
   height: 100vh;
   font-family: Helvetica,Arial,sans-serif;
   overflow-y: auto;
+	position: relative;
 }
 .gpress-menu .menu-list {
   line-height: 1.75;
@@ -13,9 +14,15 @@
   padding: 0.8em 0.85em 0.8em 1.2em;
   color: #fff;
 	font-size: 15px;
+	display: flex;
+	align-items: center;
 }
 .gpress-menu .menu-list a:hover {
   background: #333;
+}
+.gpress-menu .menu-list a i{
+	font-size: 20px;
+	margin-right: 10px;
 }
 .gpress-menu .menu-list .menu-heading {
   color: #fff;
