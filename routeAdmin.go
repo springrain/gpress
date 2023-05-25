@@ -86,6 +86,7 @@ func init() {
 			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
 			return
 		}
+		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 		c.HTML(http.StatusOK, "admin/login.html", nil)
 	})
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
@@ -356,13 +357,14 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 // permissionHandler 权限拦截器
 func permissionHandler() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-		jwttoken := c.Cookie(config.JwttokenKey)
-		userId, err := userIdByToken(string(jwttoken))
+		jwttoken := string(c.Cookie(config.JwttokenKey))
+		userId, err := userIdByToken(jwttoken)
 		if err != nil || userId == "" {
 			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
 			c.Abort() // 终止后续调用
 			return
 		}
+		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 		// 传递从jwttoken获取的userId
 		c.Set(tokenUserId, userId)
 	}
