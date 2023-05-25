@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	//"github.com/bytedance/go-tagexpr/v2/binding"
 	"gitee.com/chunanyong/zorm"
@@ -207,7 +208,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	if where != "" {
 		sql += " WHERE " + where
 	}
-
+	sql += " order by sortNo desc "
 	responseData, err := funcSelectList(q, pageNo, sql)
 	responseData["urlPathParam"] = urlPathParam
 	if err != nil { //表不存在
@@ -272,6 +273,7 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		entityMap.Set(k, v)
 	}
 	entityMap.PkColumnName = "id"
+	entityMap.Set("updateTime", time.Now().Format("2006-01-02 15:04:05"))
 	err = updateTable(ctx, entityMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
@@ -318,6 +320,9 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
+	now := time.Now().Format("2006-01-02 15:04:05")
+	entityMap.Set("createTime", now)
+	entityMap.Set("updateTime", now)
 	responseData, err := saveEntityMap(ctx, entityMap)
 	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
