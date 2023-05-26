@@ -221,14 +221,20 @@
 
 	// markdown编辑器
 	$(document).ready(function() {
+		let fullScreen = Cherry.createMenuHook('全屏', 'full') 
 		window.cherryObj = new Cherry({
 			id: 'markdown-container',
 			toolbars: {
 				toolbar: ['bold', 'italic', 'strikethrough', '|', 'color', 'header', '|', 'list', {
 					insert: ['image', 'link', 'hr', 'br', 'code', 'formula',
-						'toc', 'table', 'line-table', 'bar-table', 'pdf', 'word',
-					],
-				}],
+						'toc', 'table', 'line-table', 'bar-table',
+					]
+				}, '|', 'full'],
+				customMenu: {
+					// 注入编辑器的菜单中
+					// 对象 key 可以作为菜单项的名字（需要保证唯一），在上方的配置中使用
+					'full': fullScreen,
+				},
 			},
 			fileUpload(file, callback) {
 				var formdata = new FormData() // FormData对象，来发送二进制文件。
@@ -244,7 +250,16 @@
 					},
 					error(err) {}
 				})
-			},
+			}
+		})
+		$('.cherry-toolbar-全屏').click(function(e){
+			if($('#markdown-container').hasClass('full-screen')){
+				$('.cherry-toolbar-全屏').html('全屏')
+				$('#markdown-container').removeClass('full-screen')
+			}else{
+				$('.cherry-toolbar-全屏').html('退出全屏')
+				$('#markdown-container').addClass('full-screen')
+			}
 		})
 	})
 

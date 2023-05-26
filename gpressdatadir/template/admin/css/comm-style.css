@@ -18,6 +18,17 @@ body {
 .flex1{
 	flex: 1 !important;
 }
+.w-e-full-screen-container{
+	position: absolute !important;
+}
+.full-screen{
+	position: absolute;
+	width: 100% !important;
+	height: 100%;
+	left: 0;
+	top: 0;
+	z-index: 99;
+}
 
 #main,
 #layout {
