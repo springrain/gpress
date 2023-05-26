@@ -1,12 +1,15 @@
 package main
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"log"
 	"math/big"
 	"testing"
@@ -252,4 +255,82 @@ func TestEth3(t *testing.T) {
 	verify, err := verifySecp256k1Signature(senderAddress, message, signature)
 	fmt.Println(verify)
 	fmt.Println(err)
+}
+
+func TestECDH(t *testing.T) {
+	// 生成ECDH私钥
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		fmt.Println("私钥生成失败:", err)
+		return
+	}
+
+	// 生成对应的ECDH公钥
+	publicKey := privateKey.PublicKey
+
+	// 生成对方的ECDH公钥
+	otherPublicKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		fmt.Println("对方公钥生成失败:", err)
+		return
+	}
+
+	// ECDH密钥交换
+	x, _ := publicKey.Curve.ScalarMult(otherPublicKey.X, otherPublicKey.Y, privateKey.D.Bytes())
+
+	// 计算共享密钥
+	sharedKey := sha256.Sum256(x.Bytes())
+
+	// 加密数据
+	plaintext := []byte("Hello, world!")
+	ciphertext, err := encryptAES(sharedKey[:], plaintext)
+	if err != nil {
+		fmt.Println("加密失败:", err)
+		return
+	}
+
+	// 解密数据
+	decryptedText, err := decryptAES(sharedKey[:], ciphertext)
+	if err != nil {
+		fmt.Println("解密失败:", err)
+		return
+	}
+
+	fmt.Printf("加密前的数据: %s\n", plaintext)
+	fmt.Printf("解密后的数据: %s\n", decryptedText)
+}
+
+// 使用AES-CBC模式加密数据
+func encryptAES(key, plaintext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
+	mode := cipher.NewCBCEncrypter(block, iv)
+	mode.CryptBlocks(ciphertext[aes.BlockSize:], plaintext)
+
+	return ciphertext, nil
+}
+
+// 使用AES-CBC模式解密数据
+func decryptAES(key, ciphertext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+
+	plaintext := make([]byte, len(ciphertext))
+	mode := cipher.NewCBCDecrypter(block, iv)
+	mode.CryptBlocks(plaintext, ciphertext)
+
+	return plaintext, nil
 }
