@@ -280,6 +280,13 @@
 			$('#editor-show').hide()
 		}
 	})
+	
+	// 判断markdown是否有值，有值优先显示markdown编辑器
+	if($('#markdown').val()){
+		$('#markdown-show').show()
+		$('#editor-show').hide()
+		$('input:radio[value=1]').attr('checked','true')
+}
 
 	// 富文本编辑器
 	const {
