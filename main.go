@@ -36,7 +36,7 @@ func main() {
 	// 初始化admin路由,使用init实现
 	//initAdminRoute()
 
-	//注册navMenu和context的href路由
+	//注册category和context的href路由
 	err := registerHrefRoute()
 	if err != nil {
 		FuncLogError(err)

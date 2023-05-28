@@ -17,7 +17,7 @@ func init() {
 	// 默认首页
 	h.GET("/", funcIndex)
 	// 导航菜单列表
-	h.GET("/navMenu/:urlPathParam", funcListNavMenu)
+	h.GET("/category/:urlPathParam", funcListCategory)
 	// 查看标签
 	h.GET("/tag/:urlPathParam", funcListTags)
 	// 查看内容
@@ -31,10 +31,10 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, "index.html", data)
 }
 
-func funcListNavMenu(ctx context.Context, c *app.RequestContext) {
+func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	data["urlPathParam"] = c.Param("urlPathParam")
-	c.HTML(http.StatusOK, "navMenu.html", data)
+	c.HTML(http.StatusOK, "category.html", data)
 }
 func funcListTags(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
@@ -92,7 +92,7 @@ func hrefURLRoute(realURL string, hrefURL string) error {
 		})
 		return nil
 	}
-	//内部跳转, 跳转到内部路由,例如 navMenu/about 跳转到 content/about
+	//内部跳转, 跳转到内部路由,例如 category/about 跳转到 content/about
 	h.GET("/"+realURL, func(ctx context.Context, c *app.RequestContext) {
 		//https://github.com/cloudwego/hertz/issues/724
 		c.Redirect(http.StatusOK, cRedirecURI(hrefURL))

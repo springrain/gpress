@@ -1,6 +1,6 @@
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList .q .pageNo "id,title,hrefURL,updateTime FROM content WHERE status=1 and navMenuID=? order by sortNo desc" .urlPathParam }}
-{{ $nav := selectOne "menuName FROM navMenu WHERE id=?" .urlPathParam }}
+{{ $selectList := selectList .q .pageNo "id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" .urlPathParam }}
+{{ $nav := selectOne "menuName FROM category WHERE id=?" .urlPathParam }}
 {{ $site:=site }}
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -33,13 +33,13 @@
   
 <nav class="pagination">
   {{ if $selectList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}navMenu/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo -1 }}&q={{.q}}">
+  <a class="prev" href="{{basePath}}category/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo -1 }}&q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
   {{ if $selectList.page.HasNext }}
-  <a class="next" href="{{basePath}}navMenu/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo 1 }}&q={{.q}}">
+  <a class="next" href="{{basePath}}category/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo 1 }}&q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>

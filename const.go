@@ -20,7 +20,7 @@ const (
 	// 页面模板
 	tablePageTemplateName = "pageTemplate"
 	// 导航菜单
-	tableNavMenuName = "navMenu"
+	tableCategoryName = "category"
 
 	// 默认模型
 	tableModuleDefaultName = "module_default"

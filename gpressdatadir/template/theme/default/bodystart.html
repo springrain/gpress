@@ -1,5 +1,5 @@
 {{ $site := site }}
-{{ $navMenu := navMenu}}
+{{ $category := category}}
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -60,8 +60,8 @@
 				<li class="mobile-menu-item">Home</li>
 			</a>
 
-			{{ range $k,$v := $navMenu }}
-			<a href="{{basePath}}navMenu/{{ $v.id }}">
+			{{ range $k,$v := $category }}
+			<a href="{{basePath}}category/{{ $v.id }}">
 				<li class="mobile-menu-item">{{ $v.menuName }}</li>
 			</a>
 			{{ end }}
@@ -79,9 +79,9 @@
 					<li class="menu-item">
 						<a class="menu-item-link" href="{{basePath}}">Home</a>
 					</li>
-					{{ range $k,$v := $navMenu }}
+					{{ range $k,$v := $category }}
 					<li class="menu-item">
-						<a class="menu-item-link" href="{{basePath}}navMenu/{{ $v.id }}">{{ $v.menuName }}</a>
+						<a class="menu-item-link" href="{{basePath}}category/{{ $v.id }}">{{ $v.menuName }}</a>
 					</li>
 					{{ end }}
 				</ul>

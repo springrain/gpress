@@ -46,7 +46,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | id          | string      | 主键        | 否       |    -  |
-| tableCode   | string      | 表代码     | 否       |  类似表名 user,site,pageTemplate,navMenu,module,content  |
+| tableCode   | string      | 表代码     | 否       |  类似表名 user,site,pageTemplate,category,module,content  |
 | tableName   | string      | 表名称     | 否       |  类似表名中文说明  |
 | businessID  | string      | 业务ID       | 否       | 处理业务记录临时增加的字段,意外情况  |
 | fieldCode   | string      | 字段代码     |否       |    -  |
@@ -99,7 +99,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | sortNo      | int         | 排序        | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
-### 导航菜单(表名:navMenu)
+### 导航菜单(表名:category)
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | id          | string      | 主键        | 否       |    -  |
@@ -135,8 +135,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | tag         | string      | 标签       | 是      |      使用 jieba 分词器  |
 | toc         | string      | 目录       | 是      |      使用 jieba 分词器  |
 | summary     | string      | 摘要       | 是      |      使用 jieba 分词器  |
-| navMenuName | string      | 导航名称,逗号(,)隔开     | 是      | 使用 jieba 分词器.  |
-| navMenuID   | string      | 导航ID       | 否      | -    |
+| categoryName | string      | 导航名称,逗号(,)隔开     | 是      | 使用 jieba 分词器.  |
+| categoryID   | string      | 导航ID       | 否      | -    |
 | templateID  | string      | 模板Id       | 否      | 模板  |
 | content     | string      | 文章内容     | 是      |       |
 | createTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
