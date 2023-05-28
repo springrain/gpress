@@ -315,13 +315,13 @@ func registerHrefRoute() error {
 	page.PageNo = 1
 	page.PageSize = 500
 	finder1 := zorm.NewSelectFinder(tableCategoryName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
-	navMaps, err := zorm.QueryMap(ctx, finder1, page)
+	categoryMaps, err := zorm.QueryMap(ctx, finder1, page)
 	if err != nil {
 		return err
 	}
-	for _, navMap := range navMaps {
-		id := navMap["id"].(string)
-		hrefURL := navMap["hrefURL"].(string)
+	for _, categoryMap := range categoryMaps {
+		id := categoryMap["id"].(string)
+		hrefURL := categoryMap["hrefURL"].(string)
 		err := hrefURLRoute("category/"+id, hrefURL)
 		if err != nil {
 			return err
