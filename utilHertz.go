@@ -349,8 +349,17 @@ func findPageTemplate(ctx context.Context, tableName string, urlPathParam string
 	finder := zorm.NewFinder().Append("select p.templatePath from pageTemplate p, "+tableName+" t WHERE t.templateID=p.id and t.id=?", urlPathParam)
 	templatePath := ""
 	flag, err := zorm.QueryRow(ctx, finder, &templatePath)
-	if flag {
-		return templatePath, err
+	if err != nil {
+		FuncLogError(err)
+		return "", err
+
 	}
-	return "", err
+	if !flag {
+		return "", err
+	}
+	t := tmpl.Lookup(templatePath)
+	if t == nil { //模板不存在
+		templatePath = ""
+	}
+	return templatePath, err
 }
