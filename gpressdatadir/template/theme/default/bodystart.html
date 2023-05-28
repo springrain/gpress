@@ -50,7 +50,7 @@
 				<a href="{{basePath}}" class="logo">{{ $site.name }}</a>
 			</div>
 			<div class="search-box">
-				<input type="text" placeholder="输入内容..." />
+				<input type="text" placeholder="输入内容..." id="input-phone" />
 			</div>
 		</div>
 	</div>
@@ -101,6 +101,13 @@
 		if(e.which == 13){
 			// 回车键开始执行搜索查询
 			let key = $('#input-enter').val()
+			window.location.href="{{basePath}}?q="+key
+		}
+	})
+	$('#input-phone').keypress(function(e){
+		if(e.which == 13){
+			// 回车键开始执行搜索查询
+			let key = $('#input-phone').val()
 			window.location.href="{{basePath}}?q="+key
 		}
 	})
