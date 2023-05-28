@@ -45,7 +45,7 @@ func initAdminGroup() *route.RouterGroup {
 func init() {
 
 	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
-		result, _ := getNavMenu("0")
+		result, _ := getCategory("0")
 		c.JSON(http.StatusOK, result)
 	})
 

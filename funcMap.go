@@ -20,7 +20,7 @@ var funcMap = template.FuncMap{
 	"relURL":      funcRelURL,
 	"tableFiled":  funcTableFiled,
 	"site":        funcSite,
-	"navMenu":     funcNavMenu,
+	"category":    funcCategory,
 	"selectList":  funcSelectList,
 	"selectOne":   funcSelectOne,
 	"analyzer":    funcAnalyzer,
@@ -72,8 +72,8 @@ func funcSite() (map[string]interface{}, error) {
 }
 
 // 菜单信息
-func funcNavMenu() ([]map[string]interface{}, error) {
-	finder := zorm.NewSelectFinder(tableNavMenuName)
+func funcCategory() ([]map[string]interface{}, error) {
+	finder := zorm.NewSelectFinder(tableCategoryName)
 	finder.Append(" order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 200

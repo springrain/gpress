@@ -11,8 +11,8 @@ import (
 	"gitee.com/chunanyong/zorm"
 )
 
-func TestNavMenu(t *testing.T) {
-	deleteAll(context.Background(), tableNavMenuName)
+func TestCategory(t *testing.T) {
+	deleteAll(context.Background(), tableCategoryName)
 	// 获取当前时间
 	now := time.Now().Format("2006-01-02 15:04:05")
 
@@ -20,7 +20,7 @@ func TestNavMenu(t *testing.T) {
 
 	for i := 0; i < len(navs); i++ {
 		nav := navs[i]
-		menu := zorm.NewEntityMap(tableNavMenuName)
+		menu := zorm.NewEntityMap(tableCategoryName)
 		menu.Set("id", strings.ToLower(nav))
 		menu.Set("menuName", nav)
 		menu.Set("status", 1)
@@ -86,15 +86,15 @@ func TestReadmks(t *testing.T) {
 		dateStr := metaData["date"].(string)
 		date, _ := time.Parse("2006-01-02T15:04:05+08:00", dateStr)
 		categories := metaData["categories"].([]interface{})
-		navMenu := slice2string(categories)
+		category := slice2string(categories)
 		tags := metaData["tags"].([]interface{})
 		tag := slice2string(tags)
 		cMap.Set("title", metaData["title"])
 		cMap.Set("author", metaData["author"])
 		cMap.Set("updateTime", date)
 		cMap.Set("createTime", date)
-		cMap.Set("navMenuName", navMenu)
-		cMap.Set("navMenuID", navMenu)
+		cMap.Set("categoryName", category)
+		cMap.Set("categoryID", category)
 		cMap.Set("tag", tag)
 
 		cMap.Set("content", html)
@@ -156,8 +156,8 @@ func TestAbout(t *testing.T) {
 	cMap.Set("author", "springrain")
 	cMap.Set("updateTime", date)
 	cMap.Set("createTime", date)
-	cMap.Set("navMenuName", "about")
-	cMap.Set("navMenuID", "about")
+	cMap.Set("categoryName", "about")
+	cMap.Set("categoryID", "about")
 	cMap.Set("content", html)
 	cMap.Set("toc", tocHtml)
 	cMap.Set("summary", `本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......
@@ -169,7 +169,7 @@ func TestAbout(t *testing.T) {
 	}
 
 	//更新about的hrefURL
-	finder := zorm.NewUpdateFinder(tableNavMenuName).Append("hrefURL=? WHERE id=?", "post/about", "about")
+	finder := zorm.NewUpdateFinder(tableCategoryName).Append("hrefURL=? WHERE id=?", "post/about", "about")
 	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.UpdateFinder(ctx, finder)
 	})

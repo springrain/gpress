@@ -19,8 +19,8 @@ func init() {
 		description           TEXT,
 		hrefURL           TEXT,
 		subtitle           TEXT,
-		navMenuID           TEXT,
-		navMenuName           TEXT,
+		categoryID           TEXT,
+		categoryName           TEXT,
 		templateID           TEXT,
 		author           TEXT,
 		tag           TEXT,
@@ -48,7 +48,7 @@ func init() {
 		keyword, 
 		description,
 		subtitle,
-		navMenuName,
+		categoryName,
 		summary,
 		toc,
 		tag,
@@ -65,22 +65,22 @@ func init() {
 	//创建触发器
 	triggerContentSQL := `CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
 		BEGIN
-			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES (new.rowid,  new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
+			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
+			VALUES (new.rowid,  new.title, new.keyword, new.description,new.subtitle,new.categoryName,new.summary,new.toc,new.tag,new.author);
 		END;
 	
 	CREATE TRIGGER IF NOT EXISTS trigger_content_delete AFTER DELETE ON content
 		BEGIN
-			INSERT INTO fts_content (fts_content,  title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES ('delete',  old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
+			INSERT INTO fts_content (fts_content,  title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
+			VALUES ('delete',  old.title, old.keyword, old.description,old.subtitle,old.categoryName,old.summary,old.toc,old.tag,old.author);
 		END;
 	
 	CREATE TRIGGER IF NOT EXISTS trigger_content_update AFTER UPDATE ON content
 		BEGIN
-			INSERT INTO fts_content (fts_content, rowid, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES ('delete', old.rowid,  old.title, old.keyword, old.description,old.subtitle,old.navMenuName,old.summary,old.toc,old.tag,old.author);
-			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,navMenuName,summary,toc,tag,author)
-			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.navMenuName,new.summary,new.toc,new.tag,new.author);
+			INSERT INTO fts_content (fts_content, rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
+			VALUES ('delete', old.rowid,  old.title, old.keyword, old.description,old.subtitle,old.categoryName,old.summary,old.toc,old.tag,old.author);
+			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
+			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.categoryName,new.summary,new.toc,new.tag,new.author);
 		END;`
 	_, err = crateTable(ctx, triggerContentSQL)
 	if err != nil {
@@ -230,10 +230,10 @@ func init() {
 	// subtitle 字段使用 中文分词器的mapping gseAnalyzerMapping
 	//mapping.DefaultMapping.AddFieldMappingsAt("subtitle", gseAnalyzerMapping)
 
-	contentNavMenuId := TableFieldStruct{
+	contentCategoryId := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
 		TableCode:    tableContentName,
-		FieldCode:    "navMenuID",
+		FieldCode:    "categoryID",
 		FieldName:    "导航ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: commaAnalyzerName,
@@ -246,14 +246,14 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(ctx, contentNavMenuId)
-	// navMenuId 字段使用 逗号分词器的mapping commaAnalyzerMapping
-	// //mapping.DefaultMapping.AddFieldMappingsAt("navMenuId", commaAnalyzerMapping)
+	saveTableField(ctx, contentCategoryId)
+	// categoryId 字段使用 逗号分词器的mapping commaAnalyzerMapping
+	// //mapping.DefaultMapping.AddFieldMappingsAt("categoryId", commaAnalyzerMapping)
 
-	contentNavMenuNames := TableFieldStruct{
+	contentCategoryNames := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
 		TableCode:    tableContentName,
-		FieldCode:    "navMenuName",
+		FieldCode:    "categoryName",
 		FieldName:    "导航名称,逗号(,)隔开",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: gseAnalyzerName,
@@ -266,9 +266,9 @@ func init() {
 		Status:       3,
 	}
 	sortNo++
-	saveTableField(ctx, contentNavMenuNames)
-	// navMenuNames 字段使用 中文分词器的mapping gseAnalyzerMapping
-	//mapping.DefaultMapping.AddFieldMappingsAt("navMenuNames", gseAnalyzerMapping)
+	saveTableField(ctx, contentCategoryNames)
+	// categoryNames 字段使用 中文分词器的mapping gseAnalyzerMapping
+	//mapping.DefaultMapping.AddFieldMappingsAt("categoryNames", gseAnalyzerMapping)
 
 	contentTemplateID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
