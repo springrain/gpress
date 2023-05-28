@@ -1,11 +1,11 @@
 {{ $site := site }}
 {{ $navMenu := navMenu}}
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
- 
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
 <meta http-equiv="Cache-Control" content="no-transform" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -39,50 +39,69 @@
 
 </head>
 <body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="{{basePath}}" class="logo">{{ $site.name }}</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="{{basePath}}">
-        <li class="mobile-menu-item">Home</li>
-    </a>
+	<div id="mobile-navbar" class="mobile-navbar">
+		<div class="mobile-header">
+			<div class="mobile-navbar-icon">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div class="mobile-header-logo">
+				<a href="{{basePath}}" class="logo">{{ $site.name }}</a>
+			</div>
+			<div class="search-box">
+				<input type="text" placeholder="输入内容..." />
+			</div>
+		</div>
+	</div>
+	<nav id="mobile-menu" class="mobile-menu slideout-menu">
+		<ul class="mobile-menu-list">
+			<a href="{{basePath}}">
+				<li class="mobile-menu-item">Home</li>
+			</a>
 
-    {{ range $k,$v := $navMenu }}
-    <a href="{{basePath}}navMenu/{{ $v.id }}">
-        <li class="mobile-menu-item">{{ $v.menuName }}</li>
-    </a>
-    {{ end }}
+			{{ range $k,$v := $navMenu }}
+			<a href="{{basePath}}navMenu/{{ $v.id }}">
+				<li class="mobile-menu-item">{{ $v.menuName }}</li>
+			</a>
+			{{ end }}
 
-  </ul>
-</nav>
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="{{basePath}}" class="logo">{{ $site.name }}</a>
-</div>
+		</ul>
+	</nav>
+	<div class="container" id="mobile-panel">
+		<header id="header" class="header">
+			<div class="logo-wrapper">
+				<a href="{{basePath}}" class="logo">{{ $site.name }}</a>
+			</div>
 
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="{{basePath}}">Home</a>
-      </li>
-      {{ range $k,$v := $navMenu }}
-      <li class="menu-item">
-        <a class="menu-item-link" href="{{basePath}}navMenu/{{ $v.id }}">{{ $v.menuName }}</a>
-      </li>
-      {{ end }}
-  </ul>
-</nav>
-    </header>
+			<nav class="site-navbar">
+				<ul id="menu" class="menu">
+					<li class="menu-item">
+						<a class="menu-item-link" href="{{basePath}}">Home</a>
+					</li>
+					{{ range $k,$v := $navMenu }}
+					<li class="menu-item">
+						<a class="menu-item-link" href="{{basePath}}navMenu/{{ $v.id }}">{{ $v.menuName }}</a>
+					</li>
+					{{ end }}
+				</ul>
+			</nav>
+			<div class="search-box">
+				<input type="text" placeholder="输入内容..." id="input-enter" />
+			</div>
+		</header>
 
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
+		<main id="main" class="main">
+			<div class="content-wrapper">
+				<div id="content" class="content">
+
+<script type="text/javascript" src="https://cdn.staticfile.org/jquery/3.7.0/jquery.min.js"></script>
+<script type="text/javascript">
+	$('#input-enter').keypress(function(e){
+		if(e.which == 13){
+			// 回车键开始执行搜索查询
+			let key = $('#input-enter').val()
+			window.location.href="{{basePath}}?q="+key
+		}
+	})
+</script>
