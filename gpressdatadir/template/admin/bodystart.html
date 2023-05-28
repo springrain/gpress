@@ -99,12 +99,6 @@
 			<script type="text/javascript">
 				$('.refresh').click(function() {
 					$.get('{{basePath}}admin/reload', function(result) {
-						$.dialog({
-							title: '提示',
-							useBootstrap: false,
-							boxWidth: '400px',
-							content: '刷新成功',
-						})
 						location.reload()
 					})
 				})
