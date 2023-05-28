@@ -3,7 +3,14 @@
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
 {{ $navMenu := navMenu }} <!-- 导航数据 -->
-
+<style>
+	.code-line .number{
+		background-color: transparent;
+		font-size: 12px;
+		padding: 0;
+		vertical-align: unset;
+	}
+</style>
 <section class="section">
 	<input type="hidden" id="content" value="{{.content}}">
 	<input type="hidden" id="markdown" value="{{.markdown}}">
@@ -23,7 +30,7 @@
 								文章标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" value="{{.title}}" id="title" />
+								<input class="input" type="text" name="title" value="{{.title}}" id="title" />
 							</div>
 						</li>
 						<li>
@@ -31,7 +38,15 @@
 								副标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" value="{{.subtitle}}" id="subtitle">
+								<input class="input" type="text" name="subtitle" value="{{.subtitle}}" id="subtitle">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								文章ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="id" value="{{.id}}" id="id">
 							</div>
 						</li>
 						<li>
@@ -39,7 +54,7 @@
 								关键字
 							</div>
 							<div class="right">
-								<input class="input" type="text" value="{{.keyword}}" id="keyword">
+								<input class="input" type="text" name=keyword value="{{.keyword}}" id="keyword">
 							</div>
 						</li>
 						<li>
@@ -52,10 +67,10 @@
 						</li>
 						<li>
 							<div class="left">
-								站点描述
+								tag标签
 							</div>
 							<div class="right">
-								<input class="input" type="text" value="{{.description}}" id="description">
+								<input class="input" type="text" name="tag" value="{{.tag}}" id="tag">
 							</div>
 						</li>
 						<li>
@@ -63,7 +78,7 @@
 								作者
 							</div>
 							<div class="right">
-								<input class="input" type="text" value="{{.author}}" id="author">
+								<input class="input" type="text" name="author" value="{{.author}}" id="author">
 							</div>
 						</li>
 						<li style="align-items: flex-start;">
@@ -93,7 +108,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" value="{{.sortNo}}" id="sortNo">
+								<input class="input" type="number" name="sortNo" value="{{.sortNo}}" id="sortNo">
 							</div>
 						</li>
 						<li>
@@ -171,7 +186,7 @@
 	})
 
 	// 图片上传
-	if(thumbnail){
+	if (thumbnail) {
 		$('.upload-box').hide()
 		$('.img-box').show()
 	}
@@ -184,7 +199,9 @@
 				title: '提示',
 				content: '请上传图片格式！',
 				type: 'red',
-				buttons: { '确定': function() {} }
+				buttons: {
+					'确定': function() {}
+				}
 			})
 			return false
 		}
@@ -209,7 +226,9 @@
 					title: '提示',
 					content: '上传失败！',
 					type: 'red',
-					buttons: { '确定': function() {} }
+					buttons: {
+						'确定': function() {}
+					}
 				})
 			}
 		})
@@ -226,7 +245,7 @@
 
 	// markdown编辑器
 	$(document).ready(function() {
-		let fullScreen = Cherry.createMenuHook('全屏', 'full') 
+		let fullScreen = Cherry.createMenuHook('全屏', 'full')
 		window.cherryObj = new Cherry({
 			id: 'markdown-container',
 			value: $('#markdown').val(),
@@ -258,11 +277,11 @@
 				})
 			},
 		})
-		$('.cherry-toolbar-全屏').click(function(e){
-			if($('#markdown-container').hasClass('full-screen')){
+		$('.cherry-toolbar-全屏').click(function(e) {
+			if ($('#markdown-container').hasClass('full-screen')) {
 				$('.cherry-toolbar-全屏').html('全屏')
 				$('#markdown-container').removeClass('full-screen')
-			}else{
+			} else {
 				$('.cherry-toolbar-全屏').html('退出全屏')
 				$('#markdown-container').addClass('full-screen')
 			}
@@ -280,13 +299,13 @@
 			$('#editor-show').hide()
 		}
 	})
-	
+
 	// 判断markdown是否有值，有值优先显示markdown编辑器
-	if($('#markdown').val()){
+	if ($('#markdown').val()) {
 		$('#markdown-show').show()
 		$('#editor-show').hide()
-		$('input:radio[value=1]').attr('checked','true')
-}
+		$('input:radio[value=1]').attr('checked', 'true')
+	}
 
 	// 富文本编辑器
 	const {
@@ -346,7 +365,7 @@
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
 			navMenuID: navMenuID,
-			navMenuName: navMenuName, 
+			navMenuName: navMenuName,
 			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
@@ -358,7 +377,9 @@
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
-			headers: { 'Content-Type': 'application/json' }
+			headers: {
+				'Content-Type': 'application/json'
+			}
 		})
 		let res = await response.json()
 		if (res.statusCode == 1) {
@@ -381,7 +402,9 @@
 				title: '提示',
 				content: res.message,
 				type: 'red',
-				buttons: { '确定': function() {} }
+				buttons: {
+					'确定': function() {}
+				}
 			})
 		}
 	})
