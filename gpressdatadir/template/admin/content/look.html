@@ -2,6 +2,14 @@
 <title>look - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
+<style>
+	.code-line .number{
+		background-color: transparent;
+		font-size: 12px;
+		padding: 0;
+		vertical-align: unset;
+	}
+</style>
 <section class="section">
 	<input type="hidden" id="content" value="{{.content}}">
 	<input type="hidden" id="markdown" value="{{.markdown}}">
@@ -32,6 +40,14 @@
 						</li>
 						<li>
 							<div class="left">
+								文章ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled name="id" value="{{.id}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								关键字
 							</div>
 							<div class="right">
@@ -48,10 +64,10 @@
 						</li>
 						<li>
 							<div class="left">
-								站点描述
+								tag标签
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.description}}">
+								<input class="input" type="text" disabled value="{{.tag}}">
 							</div>
 						</li>
 						<li>
@@ -206,6 +222,14 @@
 			$('#editor-show').hide()
 		}
 	})
+	
+	// 判断markdown是否有值，有值优先显示markdown编辑器
+	if ($('#markdown').val()) {
+		$('#markdown-show').show()
+		$('#editor-show').hide()
+		$('input:radio[value=1]').attr('checked', 'true')
+	}
+	
 	$(document).ready(function() {
 		window.cherryObj = new Cherry({
 			id: 'markdown-container',

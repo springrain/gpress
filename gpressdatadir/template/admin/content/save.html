@@ -21,7 +21,7 @@
 								文章标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="{{.FieldCode}}" id="title">
+								<input class="input" type="text" name="title" id="title">
 							</div>
 						</li>
 						<li>
@@ -29,7 +29,15 @@
 								副标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="{{.FieldCode}}" id="subtitle">
+								<input class="input" type="text" name="subtitle" id="subtitle">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								文章ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="id" id="id">
 							</div>
 						</li>
 						<li>
@@ -37,7 +45,7 @@
 								关键字
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="{{.FieldCode}}" id="keyword">
+								<input class="input" type="text" name="keyword" id="keyword">
 							</div>
 						</li>
 						<li>
@@ -50,10 +58,10 @@
 						</li>
 						<li>
 							<div class="left">
-								站点描述
+								tag标签
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="{{.FieldCode}}" id="description">
+								<input class="input" type="text" name="tag" id="tag">
 							</div>
 						</li>
 						<li>
@@ -61,7 +69,7 @@
 								作者
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="{{.FieldCode}}" id="author">
+								<input class="input" type="text" name="author" id="author">
 							</div>
 						</li>
 						<li style="align-items: flex-start;">
@@ -91,7 +99,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="{{.FieldCode}}" id="sortNo">
+								<input class="input" type="number" name="sortNo" id="sortNo">
 							</div>
 						</li>
 						<li>
@@ -183,7 +191,7 @@
 			})
 			return false
 		}
-		var formdata = new FormData() // FormData对象，来发送二进制文件。
+		let formdata = new FormData() // FormData对象，来发送二进制文件。
 		formdata.append('file', e.currentTarget.files[0]) // 将文件追加到 formdata对象中
 		$.ajax({
 			type: 'post',
@@ -330,12 +338,13 @@
 		const formData = new FormData(form)
 		const jsonObject = {
 			status: 0,
+			id: $('#id').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
 			navMenuName: navMenuName,
 			navMenuID: navMenuID,
-			description: $('#description').val(),
+			tag: $('#tag').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
 			sortNo: $('#sortNo').val(),
