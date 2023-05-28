@@ -44,11 +44,6 @@ func initAdminGroup() *route.RouterGroup {
 // 初始化函数
 func init() {
 
-	h.GET("/getnav", func(ctx context.Context, c *app.RequestContext) {
-		result, _ := getCategory("0")
-		c.JSON(http.StatusOK, result)
-	})
-
 	// 异常页面
 	h.GET("/admin/error", func(ctx context.Context, c *app.RequestContext) {
 		c.HTML(http.StatusOK, "admin/error.html", nil)
