@@ -12,20 +12,21 @@ import (
 
 var funcMap = template.FuncMap{
 
-	"basePath":    funcBasePath,
-	"addInt":      funcAddInt,
-	"addFloat":    funcAddFloat,
-	"T":           funcT,
-	"safeHTML":    funcSafeHTML,
-	"relURL":      funcRelURL,
-	"tableFiled":  funcTableFiled,
-	"site":        funcSite,
-	"category":    funcCategory,
-	"selectList":  funcSelectList,
-	"selectOne":   funcSelectOne,
-	"analyzer":    funcAnalyzer,
-	"fieldType":   funcFieldType,
-	"jsonMarshal": funcJsonMarshal,
+	"basePath":     funcBasePath,
+	"addInt":       funcAddInt,
+	"addFloat":     funcAddFloat,
+	"T":            funcT,
+	"safeHTML":     funcSafeHTML,
+	"relURL":       funcRelURL,
+	"tableFiled":   funcTableFiled,
+	"site":         funcSite,
+	"category":     funcCategory,
+	"pageTemplate": funcPageTemplate,
+	"selectList":   funcSelectList,
+	"selectOne":    funcSelectOne,
+	"analyzer":     funcAnalyzer,
+	"fieldType":    funcFieldType,
+	"jsonMarshal":  funcJsonMarshal,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
@@ -74,6 +75,15 @@ func funcSite() (map[string]interface{}, error) {
 // 菜单信息
 func funcCategory() ([]map[string]interface{}, error) {
 	finder := zorm.NewSelectFinder(tableCategoryName)
+	finder.Append(" order by sortNo desc")
+	page := zorm.NewPage()
+	page.PageSize = 200
+	return zorm.QueryMap(context.Background(), finder, page)
+}
+
+// 页面模板
+func funcPageTemplate() ([]map[string]interface{}, error) {
+	finder := zorm.NewSelectFinder(tablePageTemplateName)
 	finder.Append(" order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 200
