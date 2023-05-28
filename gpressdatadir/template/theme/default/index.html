@@ -11,6 +11,8 @@
 
 {{template "bodystart.html" }}
 
+<input type="hidden" id="search-q" value="{{.q}}" />
+
 <section id="posts" class="posts">
 
 {{ range $k,$v := $selectList.data }}
