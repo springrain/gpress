@@ -15,7 +15,7 @@ type TableFieldStruct struct {
 	zorm.EntityStruct
 	// ID 主键
 	ID string `column:"id" json:"id"`
-	// TableCode 表代码,类似表名 User,Site,PageTemplate,NavMenu,Module,Content
+	// TableCode 表代码,类似表名 User,Site,PageTemplate,Category,Module,Content
 	TableCode string `column:"tableCode" json:"tableCode,omitempty"`
 	// TableName 表表中文名
 	TableName string `column:"tableName" json:"tableName,omitempty"`

@@ -7,14 +7,14 @@ import (
 
 // 导航菜单
 func init() {
-	if tableExist(tableNavMenuName) {
+	if tableExist(tableCategoryName) {
 		return
 	}
 
 	// 获取当前时间
 	now := time.Now().Format("2006-01-02 15:04:05")
 	// 创建用户表的表
-	createTableSQL := `CREATE TABLE IF NOT EXISTS navMenu (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS category (
 		id TEXT PRIMARY KEY     NOT NULL,
 		menuName          TEXT  NOT NULL,
 		hrefURL           TEXT,
@@ -39,9 +39,9 @@ func init() {
 
 	sortNo := 1
 	// 初始化各个字段
-	navMenuId := TableFieldStruct{
+	categoryId := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "id",
 		FieldName:    "导航菜单ID",
 		FieldType:    fieldType_文本框,
@@ -57,11 +57,11 @@ func init() {
 	}
 	// 放入文件中
 	sortNo++
-	saveTableField(ctx, navMenuId)
+	saveTableField(ctx, categoryId)
 
-	navMenuMenuName := TableFieldStruct{
+	categoryMenuName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "menuName",
 		FieldName:    "菜单名称",
 		FieldType:    fieldType_文本框,
@@ -76,11 +76,11 @@ func init() {
 		Required:     1,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuMenuName)
+	saveTableField(ctx, categoryMenuName)
 
-	navMenuHrefURL := TableFieldStruct{
+	categoryHrefURL := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "hrefURL",
 		FieldName:    "跳转路径",
 		FieldType:    fieldType_文本框,
@@ -95,11 +95,11 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuHrefURL)
+	saveTableField(ctx, categoryHrefURL)
 
-	navMenuHrefTarget := TableFieldStruct{
+	categoryHrefTarget := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "hrefTarget",
 		FieldName:    "跳转方式",
 		FieldType:    fieldType_文本框,
@@ -114,11 +114,11 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuHrefTarget)
+	saveTableField(ctx, categoryHrefTarget)
 
-	navMenuPID := TableFieldStruct{
+	categoryPID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "pid",
 		FieldName:    "父菜单ID",
 		FieldType:    fieldType_文本框,
@@ -133,11 +133,11 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuPID)
+	saveTableField(ctx, categoryPID)
 
-	navMenuThemePC := TableFieldStruct{
+	categoryThemePC := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "themePC",
 		FieldName:    "PC主题",
 		FieldType:    fieldType_文本框,
@@ -152,11 +152,11 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuThemePC)
+	saveTableField(ctx, categoryThemePC)
 
-	navMenuModuleID := TableFieldStruct{
+	categoryModuleID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "moduleID",
 		FieldName:    "模型ID",
 		FieldType:    fieldType_文本框,
@@ -171,11 +171,11 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuModuleID)
+	saveTableField(ctx, categoryModuleID)
 
-	navMenuComCode := TableFieldStruct{
+	categoryComCode := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "comCode",
 		FieldName:    "逗号隔开的全路径",
 		FieldType:    fieldType_文本框,
@@ -190,11 +190,11 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuComCode)
+	saveTableField(ctx, categoryComCode)
 
-	navMenuTemplateID := TableFieldStruct{
+	categoryTemplateID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "templateID",
 		FieldName:    "模板Id",
 		FieldType:    fieldType_文本框,
@@ -209,11 +209,11 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuTemplateID)
+	saveTableField(ctx, categoryTemplateID)
 
-	navMenuChildTemplateID := TableFieldStruct{
+	categoryChildTemplateID := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
-		TableCode:    tableNavMenuName,
+		TableCode:    tableCategoryName,
 		FieldCode:    "childTemplateID",
 		FieldName:    "子页面模板Id",
 		FieldType:    fieldType_文本框,
@@ -228,16 +228,16 @@ func init() {
 		Required:     0,
 	}
 	sortNo++
-	saveTableField(ctx, navMenuChildTemplateID)
+	saveTableField(ctx, categoryChildTemplateID)
 
 	// 添加公共字段
-	indexCommonField(ctx, tableNavMenuName, "导航菜单", sortNo, now)
+	indexCommonField(ctx, tableCategoryName, "导航菜单", sortNo, now)
 
 	//保存表信息
 	saveTableInfo(ctx, TableInfoStruct{
-		ID:         tableNavMenuName,
+		ID:         tableCategoryName,
 		Name:       "导航菜单",
-		Code:       "navMenu",
+		Code:       "category",
 		TableType:  "table",
 		CreateTime: now,
 		UpdateTime: now,

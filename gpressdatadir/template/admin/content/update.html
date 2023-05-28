@@ -2,7 +2,7 @@
 <title>update - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
-{{ $navMenu := navMenu }} <!-- 导航数据 -->
+{{ $category := category }} <!-- 导航数据 -->
 <style>
 	.code-line .number{
 		background-color: transparent;
@@ -16,8 +16,8 @@
 	<input type="hidden" id="markdown" value="{{.markdown}}">
 	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
 	<input type="hidden" id="updateId" value="{{.id}}">
-	<input type="hidden" id="navMenuName" value="{{.navMenuName}}">
-	<input type="hidden" id="navMenuID" value="{{.navMenuID}}">
+	<input type="hidden" id="categoryName" value="{{.categoryName}}">
+	<input type="hidden" id="categoryID" value="{{.categoryID}}">
 
 	<div class="container">
 		<div class="table-content">
@@ -168,20 +168,20 @@
 <script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
-	let navMenuID = $('#navMenuID').val()
-	let navMenuName = $('#navMenuName').val()
+	let categoryID = $('#categoryID').val()
+	let categoryName = $('#categoryName').val()
 	let content = ''
 	let thumbnail = $('#thumbnail').val()
 	// 下拉数据渲染
-	const list = JSON.parse('{{ jsonMarshal $navMenu }}')
+	const list = JSON.parse('{{ jsonMarshal $category }}')
 	$.dropDownInit({
 		container: '.dropdown', //容器：默认page
-		default: navMenuName,
-		id: navMenuID,
+		default: categoryName,
+		id: categoryID,
 		data: list,
 		callBack: function(data) {
-			navMenuID = data.id
-			navMenuName = data.name
+			categoryID = data.id
+			categoryName = data.name
 		}
 	})
 
@@ -364,8 +364,8 @@
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
-			navMenuID: navMenuID,
-			navMenuName: navMenuName,
+			categoryID: categoryID,
+			categoryName: categoryName,
 			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,

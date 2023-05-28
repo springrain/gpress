@@ -4,11 +4,11 @@
 {{ $tableFiled := tableFiled .urlPathParam }}
 {{$analyzer := analyzer}}
 {{$fieldType := fieldType}}
-{{ $navMenu := navMenu }} <!-- 导航数据 -->
+{{ $category := category }} <!-- 导航数据 -->
 
 <section class="section">
-	<input type="hidden" id="navMenuName" value="{{.navMenuName}}">
-	<input type="hidden" id="navMenuID" value="{{.navMenuID}}">
+	<input type="hidden" id="categoryName" value="{{.categoryName}}">
+	<input type="hidden" id="categoryID" value="{{.categoryID}}">
 	<input type="hidden" id="basePath" value="{{basePath}}">
 	<div class="container">
 		<div class="table-content">
@@ -160,19 +160,19 @@
 <script>
 	let content = ''
 	let thumbnail = ''
-	let navMenuID = ''
-	let navMenuName = ''
+	let categoryID = ''
+	let categoryName = ''
 
 	// 下拉菜单组件
-	const list = JSON.parse('{{ jsonMarshal $navMenu }}')
+	const list = JSON.parse('{{ jsonMarshal $category }}')
 	$.dropDownInit({
 		container: '.dropdown', //容器：默认page
-		default: $('#navMenuName').val(),
-		id: $('#navMenuID').val(),
+		default: $('#categoryName').val(),
+		id: $('#categoryID').val(),
 		data: list,
 		callBack: function(data) {
-			navMenuID = data.id
-			navMenuName = data.name
+			categoryID = data.id
+			categoryName = data.name
 		}
 	})
 
@@ -342,8 +342,8 @@
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
-			navMenuName: navMenuName,
-			navMenuID: navMenuID,
+			categoryName: categoryName,
+			categoryID: categoryID,
 			tag: $('#tag').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,

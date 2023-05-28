@@ -1,6 +1,6 @@
 {{ $site:=site }}
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList .q .pageNo "id,title,hrefURL,navMenuID,navMenuName,summary,updateTime FROM content WHERE status=1 order by sortNo desc"  }}
+{{ $selectList := selectList .q .pageNo "id,title,hrefURL,categoryID,categoryName,summary,updateTime FROM content WHERE status=1 order by sortNo desc"  }}
 
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -22,7 +22,7 @@
     <div class="post-meta">
       <span class="post-time">{{ slice $v.updateTime 0 10 }}</span>
       <div class="post-category">
-          <a href="{{basePath}}navMenu/{{ $v.navMenuID }}">{{ $v.navMenuName }}</a>
+          <a href="{{basePath}}category/{{ $v.categoryID }}">{{ $v.categoryName }}</a>
           </div>
     </div>
   </header>
