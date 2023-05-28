@@ -32,14 +32,12 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 }
 
 func funcListCategory(ctx context.Context, c *app.RequestContext) {
-	data := warpRequestMap(c)
-	data["urlPathParam"] = c.Param("urlPathParam")
-	c.HTML(http.StatusOK, "category.html", data)
+	data, templateFile := warpTemplateFile(c, "category")
+	c.HTML(http.StatusOK, templateFile, data)
 }
 func funcListTags(ctx context.Context, c *app.RequestContext) {
-	data := warpRequestMap(c)
-	data["urlPathParam"] = c.Param("urlPathParam")
-	c.HTML(http.StatusOK, "tag.html", data)
+	data, templateFile := warpTemplateFile(c, "tag")
+	c.HTML(http.StatusOK, templateFile, data)
 }
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	accept := string(c.GetHeader("Accept"))
@@ -63,9 +61,9 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-	data := warpRequestMap(c)
-	data["urlPathParam"] = c.Param("urlPathParam")
-	c.HTML(http.StatusOK, "content.html", data)
+
+	data, templateFile := warpTemplateFile(c, "content")
+	c.HTML(http.StatusOK, templateFile, data)
 }
 
 func warpRequestMap(c *app.RequestContext) map[string]interface{} {
@@ -77,6 +75,20 @@ func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 	data["pageNo"] = pageNo
 	data["q"] = q
 	return data
+}
+
+func warpTemplateFile(c *app.RequestContext, templateType string) (map[string]interface{}, string) {
+	data := warpRequestMap(c)
+	urlPathParam := c.Param("urlPathParam")
+	data["urlPathParam"] = urlPathParam
+
+	//优先使用自定义模板文件
+	templateFile := config.Theme + "/" + templateType + "/" + urlPathParam + ".html"
+	t := tmpl.Lookup(templateFile)
+	if t == nil { //不存在自定义模板,使用通用模板
+		templateFile = templateType + ".html"
+	}
+	return data, templateFile
 }
 
 // hrefURLRoute href 需要跳转的地址,hrefURL原地址
