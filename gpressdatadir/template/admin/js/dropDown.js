@@ -14,7 +14,7 @@ DropDown.prototype = {
 			<div class="dropdown-box">
 				<div class="dropdown-val button">
 					<input class="input-c input" type="text" value="${this.settings.default}" readonly
-						placeholder="请选择" id="navMenuName">
+						placeholder="请选择" id="categoryName">
 					<input type="hidden" id="currval" value="${this.settings.id}" />
 					<i class="iconfont icon-tubiao-"></i>
 				</div>

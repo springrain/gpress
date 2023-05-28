@@ -308,13 +308,13 @@ func pathExist(path string) bool {
 	return false
 }
 
-// registerHrefRoute 注册navMenu 和 content的自定义路由,最多500个
+// registerHrefRoute 注册category 和 content的自定义路由,最多500个
 func registerHrefRoute() error {
 	ctx := context.Background()
 	page := zorm.NewPage()
 	page.PageNo = 1
 	page.PageSize = 500
-	finder1 := zorm.NewSelectFinder(tableNavMenuName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
+	finder1 := zorm.NewSelectFinder(tableCategoryName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
 	navMaps, err := zorm.QueryMap(ctx, finder1, page)
 	if err != nil {
 		return err
@@ -322,7 +322,7 @@ func registerHrefRoute() error {
 	for _, navMap := range navMaps {
 		id := navMap["id"].(string)
 		hrefURL := navMap["hrefURL"].(string)
-		err := hrefURLRoute("navMenu/"+id, hrefURL)
+		err := hrefURLRoute("category/"+id, hrefURL)
 		if err != nil {
 			return err
 		}
