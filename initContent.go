@@ -36,7 +36,7 @@ func init() {
 		status            int NOT NULL
 	 ) strict ;`
 	ctx := context.Background()
-	_, err := crateTable(ctx, createTableSQL)
+	_, err := execNativeSQL(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
@@ -58,7 +58,7 @@ func init() {
 		content='content', 
 		content_rowid='rowid'
 	);`
-	_, err = crateTable(ctx, createFTSTableSQL)
+	_, err = execNativeSQL(ctx, createFTSTableSQL)
 	if err != nil {
 		return
 	}
@@ -82,7 +82,7 @@ func init() {
 			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
 			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.categoryName,new.summary,new.toc,new.tag,new.author);
 		END;`
-	_, err = crateTable(ctx, triggerContentSQL)
+	_, err = execNativeSQL(ctx, triggerContentSQL)
 	if err != nil {
 		return
 	}
