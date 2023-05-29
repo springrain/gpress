@@ -20,11 +20,14 @@ func init() {
 		account         TEXT  NOT NULL,
 		password         TEXT   NOT NULL,
 		userName         TEXT NOT NULL,
+		createTime        TEXT,
+		updateTime        TEXT,
+		createUser        TEXT,
 		sortNo            int,
 		status            int  
 	 ) strict ;`
 	ctx := context.Background()
-	_, err := crateTable(ctx, createTableSQL)
+	_, err := execNativeSQL(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
@@ -102,6 +105,9 @@ func init() {
 	}
 	sortNo++
 	saveTableField(ctx, userName)
+
+	// 添加公共字段
+	indexCommonField(ctx, tableUserName, "用户信息", sortNo, now)
 
 	//保存表信息
 	saveTableInfo(ctx, TableInfoStruct{

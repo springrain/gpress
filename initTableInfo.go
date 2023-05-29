@@ -63,7 +63,7 @@ func initTableInfo() (bool, error) {
 		status            int NOT NULL
 	 ) strict ;`
 	ctx := context.Background()
-	_, err := crateTable(ctx, createTableSQL)
+	_, err := execNativeSQL(ctx, createTableSQL)
 	if err != nil {
 		return false, err
 	}
@@ -77,7 +77,7 @@ func initTableInfo() (bool, error) {
 		ID:           FuncGenerateStringID(),
 		TableCode:    tableInfoName,
 		FieldCode:    "id",
-		FieldName:    "表表ID",
+		FieldName:    "表ID",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
 		TableName:    "表信息",

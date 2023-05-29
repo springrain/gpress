@@ -35,7 +35,7 @@ func init() {
 		status            int NOT NULL
 	 ) strict ;`
 	ctx := context.Background()
-	_, err := crateTable(ctx, createTableSQL)
+	_, err := execNativeSQL(ctx, createTableSQL)
 	if err != nil {
 		return
 	}
