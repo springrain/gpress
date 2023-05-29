@@ -41,12 +41,19 @@ func initTemplate() error {
 
 // loadTemplate 用于更新重复加载
 func loadTemplate() error {
+	var err error
+	//重新加载配置
+	config, err = findConfig()
+	if err != nil {
+		return err
+	}
+
 	//声明新的template
 	loadTmpl := template.New(defaultName).Delims("", "").Funcs(funcMap)
 
 	staticFileMap := make(map[string]string)
 	//遍历后台admin模板
-	err := walkTemplateDir(loadTmpl, templateDir+"admin/", templateDir, &staticFileMap)
+	err = walkTemplateDir(loadTmpl, templateDir+"admin/", templateDir, &staticFileMap)
 	if err != nil {
 		FuncLogError(err)
 		return err
