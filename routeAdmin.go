@@ -334,13 +334,35 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 		return
 	}
+
+	status, has := newMap["status"]
+	if !has || status == nil {
+		newMap["status"] = 1
+	}
+
+	sortNo, has := newMap["sortNo"]
+	if !has || sortNo == nil {
+		finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+		sortNo := 1
+		zorm.QueryRow(ctx, finder, &sortNo)
+		newMap["sortNo"] = sortNo
+	}
+
+	now := time.Now().Format("2006-01-02 15:04:05")
+	createTime, has := newMap["createTime"]
+	if !has || createTime == nil {
+		newMap["createTime"] = now
+	}
+	updateTime, has := newMap["updateTime"]
+	if !has || updateTime == nil {
+		newMap["updateTime"] = now
+	}
+
 	entityMap := zorm.NewEntityMap(urlPathParam)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
-	now := time.Now().Format("2006-01-02 15:04:05")
-	entityMap.Set("createTime", now)
-	entityMap.Set("updateTime", now)
+
 	responseData, err := saveEntityMap(ctx, entityMap)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
