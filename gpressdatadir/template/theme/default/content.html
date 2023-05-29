@@ -63,7 +63,7 @@
 </div>
 <footer class="post-footer">
 
-    {{if ne $content.tag "" }}
+    {{if $content.tag }}
     <div class="post-tags">
         <a href="{{basePath}}tag/{{$content.tag}}">{{$content.tag}}</a>
     </div>

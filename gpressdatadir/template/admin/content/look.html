@@ -2,6 +2,8 @@
 <title>look - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
+{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+
 <style>
 	.code-line .number{
 		background-color: transparent;
@@ -14,6 +16,7 @@
 	<input type="hidden" id="content" value="{{.content}}">
 	<input type="hidden" id="markdown" value="{{.markdown}}">
 	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
+	<input type="hidden" id="templateID" value="{{.templateID}}">
 	<input type="hidden" id="navurl" value="{{.}}">
 
 	<div class="container">
@@ -52,6 +55,19 @@
 							</div>
 							<div class="right">
 								<input class="input" type="text" disabled value="{{.keyword}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								页面模版
+							</div>
+							<div class="right">
+								<select class="input select-disabled" id="templateSelect">
+									<option value="">请选择</option>
+									{{ range $index,$obj := $pageTemplate }}
+									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									{{end}}
+								</select>
 							</div>
 						</li>
 						<li>
@@ -169,6 +185,8 @@
 <script>
 	let content = ''
 	let thumbnail = $('#thumbnail').val()
+	let templateID = $('#templateID').val()
+	$('#templateSelect').val(templateID)
 
 	// 判断是否有封面图显示
 	if (thumbnail) {

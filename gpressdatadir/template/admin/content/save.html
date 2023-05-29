@@ -5,11 +5,15 @@
 {{$analyzer := analyzer}}
 {{$fieldType := fieldType}}
 {{ $category := category }} <!-- 导航数据 -->
+{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <section class="section">
-	<input type="hidden" id="categoryName" value="{{.categoryName}}">
+	<!-- <input type="hidden" id="categoryName" value="{{.categoryName}}">
 	<input type="hidden" id="categoryID" value="{{.categoryID}}">
+	<input type="hidden" id="templateName" value="{{.templateName}}">
+	<input type="hidden" id="templateID" value="{{.templateID}}"> -->
 	<input type="hidden" id="basePath" value="{{basePath}}">
+
 	<div class="container">
 		<div class="table-content">
 			<!-- is-6-desktop is-6-tablet -->
@@ -50,10 +54,29 @@
 						</li>
 						<li>
 							<div class="left">
+								页面模版
+							</div>
+							<div class="right">
+								<select class="input" id="templateSelect">
+									<option value="">请选择</option>
+									{{ range $index,$obj := $pageTemplate }}
+									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									{{end}}
+								</select>
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								导航名称
 							</div>
-							<div class="right dropdown">
+							<div class="right">
 								<!-- 下拉菜单 -->
+								<select class="input" id="navSelect">
+									<option value="">请选择</option>
+									{{ range $index,$obj := $category }}
+									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									{{end}}
+								</select>
 							</div>
 						</li>
 						<li>
@@ -162,23 +185,20 @@
 	let thumbnail = ''
 	let categoryID = ''
 	let categoryName = ''
+	let templateID = ''
+	let templateName = ''
 
-	// 下拉菜单组件
-	const list = JSON.parse('{{ jsonMarshal $category }}')
-	$.dropDownInit({
-		container: '.dropdown', //容器：默认page
-		default: $('#categoryName').val(),
-		id: $('#categoryID').val(),
-		data: list,
-		callBack: function(data) {
-			categoryID = data.id
-			categoryName = data.name
-		}
+	$('#templateSelect').change(function(e) {
+		templateID = $('#templateSelect').val()
+		templateName = $('#templateSelect option:selected').text()
+	})
+	$('#navSelect').change(function(e) {
+		categoryID = $('#navSelect').val()
+		categoryName = $('#navSelect option:selected').text()
 	})
 
 	// 图片上传
 	$('#fileInput').change(function(e) {
-		console.log(e, '***e****')
 		let file = e.target.files[0]
 		if (!/image\/\w+/.test(file.type)) {
 			$.confirm({
@@ -229,7 +249,7 @@
 
 	// markdown编辑器
 	$(document).ready(function() {
-		let fullScreen = Cherry.createMenuHook('全屏', 'full') 
+		let fullScreen = Cherry.createMenuHook('全屏', 'full')
 		window.cherryObj = new Cherry({
 			id: 'markdown-container',
 			toolbars: {
@@ -260,11 +280,11 @@
 				})
 			}
 		})
-		$('.cherry-toolbar-全屏').click(function(e){
-			if($('#markdown-container').hasClass('full-screen')){
+		$('.cherry-toolbar-全屏').click(function(e) {
+			if ($('#markdown-container').hasClass('full-screen')) {
 				$('.cherry-toolbar-全屏').html('全屏')
 				$('#markdown-container').removeClass('full-screen')
-			}else{
+			} else {
 				$('.cherry-toolbar-全屏').html('退出全屏')
 				$('#markdown-container').addClass('full-screen')
 			}
@@ -344,6 +364,7 @@
 			keyword: $('#keyword').val(),
 			categoryName: categoryName,
 			categoryID: categoryID,
+			templateID: templateID,
 			tag: $('#tag').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
