@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
@@ -41,7 +44,14 @@ func main() {
 	if err != nil {
 		FuncLogError(err)
 	}
-
+	message := "请用浏览器访问: "
+	if strings.HasPrefix(config.ServerPort, ":") {
+		message += "http://127.0.0.1"
+	} else {
+		message += "http://"
+	}
+	message += config.ServerPort + config.BasePath
+	fmt.Println(message)
 	// 启动服务
 	h.Spin()
 }
