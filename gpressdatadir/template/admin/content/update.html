@@ -3,6 +3,8 @@
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
 {{ $category := category }} <!-- 导航数据 -->
+{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+
 <style>
 	.code-line .number{
 		background-color: transparent;
@@ -18,6 +20,8 @@
 	<input type="hidden" id="updateId" value="{{.id}}">
 	<input type="hidden" id="categoryName" value="{{.categoryName}}">
 	<input type="hidden" id="categoryID" value="{{.categoryID}}">
+	<input type="hidden" id="templateName" value="{{.templateName}}">
+	<input type="hidden" id="templateID" value="{{.templateID}}">
 
 	<div class="container">
 		<div class="table-content">
@@ -59,10 +63,28 @@
 						</li>
 						<li>
 							<div class="left">
+								页面模版
+							</div>
+							<div class="right">
+								<select class="input" id="templateSelect">
+									<option value="">请选择</option>
+									{{ range $index,$obj := $pageTemplate }}
+									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									{{end}}
+								</select>
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								导航名称
 							</div>
-							<div class="right dropdown">
-								<!-- 下拉菜单 -->
+							<div class="right">
+								<select class="input" id="navSelect">
+									<option value="">请选择</option>
+									{{ range $index,$obj := $category }}
+									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									{{end}}
+								</select>
 							</div>
 						</li>
 						<li>
@@ -170,19 +192,21 @@
 <script>
 	let categoryID = $('#categoryID').val()
 	let categoryName = $('#categoryName').val()
+	let templateID = $('#templateID').val()
+	let templateName = $('#templateName').val()
 	let content = ''
 	let thumbnail = $('#thumbnail').val()
-	// 下拉数据渲染
-	const list = JSON.parse('{{ jsonMarshal $category }}')
-	$.dropDownInit({
-		container: '.dropdown', //容器：默认page
-		default: categoryName,
-		id: categoryID,
-		data: list,
-		callBack: function(data) {
-			categoryID = data.id
-			categoryName = data.name
-		}
+	
+	$('#navSelect').val(categoryID)
+	$('#templateSelect').val(templateID)
+	
+	$('#templateSelect').change(function(e) {
+		templateID = $('#templateSelect').val()
+		templateName = $('#templateSelect option:selected').text()
+	})
+	$('#navSelect').change(function(e) {
+		categoryID = $('#navSelect').val()
+		categoryName = $('#navSelect option:selected').text()
 	})
 
 	// 图片上传
@@ -199,9 +223,7 @@
 				title: '提示',
 				content: '请上传图片格式！',
 				type: 'red',
-				buttons: {
-					'确定': function() {}
-				}
+				buttons: { '确定': function() {} }
 			})
 			return false
 		}
@@ -226,9 +248,7 @@
 					title: '提示',
 					content: '上传失败！',
 					type: 'red',
-					buttons: {
-						'确定': function() {}
-					}
+					buttons: { '确定': function() {} }
 				})
 			}
 		})
@@ -299,6 +319,13 @@
 			$('#editor-show').hide()
 		}
 	})
+	
+	// 判断markdown是否有值，有值优先显示markdown编辑器
+	if($('#markdown').val()){
+		$('#markdown-show').show()
+		$('#editor-show').hide()
+		$('input:radio[value=1]').attr('checked','true')
+}
 
 	// 判断markdown是否有值，有值优先显示markdown编辑器
 	if ($('#markdown').val()) {
@@ -366,6 +393,7 @@
 			keyword: $('#keyword').val(),
 			categoryID: categoryID,
 			categoryName: categoryName,
+			templateID: templateID,
 			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
@@ -377,9 +405,7 @@
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
-			headers: {
-				'Content-Type': 'application/json'
-			}
+			headers: { 'Content-Type': 'application/json' }
 		})
 		let res = await response.json()
 		if (res.statusCode == 1) {
@@ -402,9 +428,7 @@
 				title: '提示',
 				content: res.message,
 				type: 'red',
-				buttons: {
-					'确定': function() {}
-				}
+				buttons: { '确定': function() {} }
 			})
 		}
 	})

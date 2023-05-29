@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2733970",
+      "name": "模版",
+      "font_class": "moban",
+      "unicode": "e6ee",
+      "unicode_decimal": 59118
+    },
+    {
       "icon_id": "805370",
       "name": "刷新",
       "font_class": "shuaxin",

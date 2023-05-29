@@ -18,6 +18,14 @@ body {
 .flex1{
 	flex: 1 !important;
 }
+.select-disabled{
+	pointer-events: none;
+	border: none;
+	background-color: #f5f5f5;
+	box-shadow: none;
+	cursor: not-allowed;
+	color: #7a7a7a;
+}
 .w-e-full-screen-container{
 	position: absolute !important;
 }
