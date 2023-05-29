@@ -22,7 +22,7 @@ var adminGroup = initAdminGroup()
 
 func initAdminGroup() *route.RouterGroup {
 	// 设置日志级别
-	hlog.SetLevel(hlog.LevelInfo)
+	hlog.SetLevel(hlog.LevelError)
 	//设置json处理函数
 	//binding.ResetJSONUnmarshaler(json.Unmarshal)
 	/*
