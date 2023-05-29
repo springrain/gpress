@@ -94,7 +94,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | id          | string      | 主键        | 否       |    -  |
-| templateName| string      | 模板名称     | 否       |    -  |
+| name        | string      | 模板名称     | 否       |    -  |
 | templatePath| string      | 模板路径     | 否       |    -  |
 | sortNo      | int         | 排序        | -       |  正序  |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
@@ -103,8 +103,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | codeName    | 类型         | 中文名称    | 是否分词 |  备注       | 
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | id          | string      | 主键        | 否       |    -  |
-| menuName    | string      | 菜单名称     | 否       |    -  |
-| menuName    | string      | 菜单名称     | 否       |    -  |
+| name    | string      | 菜单名称     | 否       |    -  |
+| name    | string      | 菜单名称     | 否       |    -  |
 | hrefURL     | string      | 跳转路径     | 否       |    -  |
 | hrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | pid         | string      | 父菜单ID     | 否       | 父菜单ID  |
