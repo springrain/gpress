@@ -144,7 +144,7 @@ func init() {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 			return
 		}
-		path := "public/" + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
+		path := "public/upload/" + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
 		newFileName := datadir + path
 		err = c.SaveUploadedFile(fileHeader, newFileName)
 		if err != nil {
