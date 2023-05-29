@@ -16,7 +16,7 @@ func init() {
 	// 创建用户表的表
 	createTableSQL := `CREATE TABLE IF NOT EXISTS category (
 		id TEXT PRIMARY KEY     NOT NULL,
-		menuName          TEXT  NOT NULL,
+		name          TEXT  NOT NULL,
 		hrefURL           TEXT,
 		hrefTarget        TEXT,
 		pid        TEXT,
@@ -59,10 +59,10 @@ func init() {
 	sortNo++
 	saveTableField(ctx, categoryId)
 
-	categoryMenuName := TableFieldStruct{
+	categoryName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
 		TableCode:    tableCategoryName,
-		FieldCode:    "menuName",
+		FieldCode:    "name",
 		FieldName:    "菜单名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,
@@ -76,7 +76,7 @@ func init() {
 		Required:     1,
 	}
 	sortNo++
-	saveTableField(ctx, categoryMenuName)
+	saveTableField(ctx, categoryName)
 
 	categoryHrefURL := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
