@@ -16,7 +16,7 @@ func init() {
 	// 创建用户表的表
 	createTableSQL := `CREATE TABLE IF NOT EXISTS pageTemplate (
 		id TEXT PRIMARY KEY     NOT NULL,
-		templateName         TEXT  NOT NULL,
+		name         TEXT  NOT NULL,
 		templatePath         TEXT   NOT NULL,
 		createTime        TEXT,
 		updateTime        TEXT,
@@ -55,7 +55,7 @@ func init() {
 	pageTemplateNameName := TableFieldStruct{
 		ID:           FuncGenerateStringID(),
 		TableCode:    tablePageTemplateName,
-		FieldCode:    "templateName",
+		FieldCode:    "name",
 		FieldName:    "模板名称",
 		FieldType:    fieldType_文本框,
 		AnalyzerName: keywordAnalyzerName,

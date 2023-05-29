@@ -62,7 +62,7 @@
 
 			{{ range $k,$v := $category }}
 			<a href="{{basePath}}category/{{ $v.id }}">
-				<li class="mobile-menu-item">{{ $v.menuName }}</li>
+				<li class="mobile-menu-item">{{ $v.name }}</li>
 			</a>
 			{{ end }}
 
@@ -81,7 +81,7 @@
 					</li>
 					{{ range $k,$v := $category }}
 					<li class="menu-item">
-						<a class="menu-item-link" href="{{basePath}}category/{{ $v.id }}">{{ $v.menuName }}</a>
+						<a class="menu-item-link" href="{{basePath}}category/{{ $v.id }}">{{ $v.name }}</a>
 					</li>
 					{{ end }}
 				</ul>

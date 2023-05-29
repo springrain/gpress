@@ -1,11 +1,11 @@
 <!-- 查询 content 列表 -->
 {{ $selectList := selectList .q .pageNo "id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" .urlPathParam }}
-{{ $nav := selectOne "menuName FROM category WHERE id=?" .urlPathParam }}
+{{ $nav := selectOne "name FROM category WHERE id=?" .urlPathParam }}
 {{ $site:=site }}
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-  <title>{{ $nav.menuName }}</title>
+  <title>{{ $nav.name }}</title>
   <meta name="description" content="{{ $site.description }}" />
   <meta name="keyword" content="{{ $site.keyword }}" />
 
@@ -13,7 +13,7 @@
 
 <section id="archive" class="archive">
   <div class="archive-title category">
-        <h2 class="archive-name">{{$nav.menuName}}</h2>
+        <h2 class="archive-name">{{$nav.name}}</h2>
   </div>
   {{ range $k,$v := $selectList.data }}
   <div class="archive-post">

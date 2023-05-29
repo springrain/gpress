@@ -22,7 +22,7 @@ func TestCategory(t *testing.T) {
 		nav := navs[i]
 		menu := zorm.NewEntityMap(tableCategoryName)
 		menu.Set("id", strings.ToLower(nav))
-		menu.Set("menuName", nav)
+		menu.Set("name", nav)
 		menu.Set("status", 1)
 		menu.Set("sortNo", i+1)
 		menu.Set("createTime", now)
