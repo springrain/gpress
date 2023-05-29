@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -169,6 +170,12 @@ func init() {
 	adminGroup.GET("/:urlPathParam/save", funcSavePre)
 	//ajax POST提交JSON信息,返回方法JSON
 	adminGroup.POST("/:urlPathParam/save", funcSave)
+
+	//ajax POST提交新增表信息
+	adminGroup.POST("/tableInfo/save", funcTableInfoSave)
+
+	//ajax POST提交新增字段信息
+	adminGroup.POST("/tableField/save", funcTableFieldSave)
 
 	//ajax POST提交JSON信息,返回方法JSON
 	adminGroup.POST("/:urlPathParam/delete", funcDelete)
@@ -356,12 +363,92 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 	//tableName := bleveDataDir + urlPathParam
 	err := deleteById(ctx, urlPathParam, id)
-	if err != nil { //没有id,认为是新增
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 	}
 	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
+}
+
+// 保存表内容
+func funcTableInfoSave(ctx context.Context, c *app.RequestContext) {
+	newMap := make(map[string]interface{}, 0)
+	err := c.Bind(&newMap)
+	tableCode := newMap["code"]
+	if err != nil || tableCode == nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增表失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+	}
+	tableCodeString := tableCode.(string)
+	createTableSQL := `CREATE TABLE IF NOT EXISTS ` + tableCodeString + ` (
+		id TEXT PRIMARY KEY     NOT NULL
+	 ) strict ;`
+	_, err = execNativeSQL(ctx, createTableSQL)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增表失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+	}
+	entityMap := zorm.NewEntityMap(tableInfoName)
+	for k, v := range newMap {
+		entityMap.Set(k, v)
+	}
+	now := time.Now().Format("2006-01-02 15:04:05")
+	entityMap.Set("createTime", now)
+	entityMap.Set("updateTime", now)
+	responseData, err := saveEntityMap(ctx, entityMap)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	c.JSON(http.StatusOK, responData2Map(responseData))
+}
+
+// 保存字段内容
+func funcTableFieldSave(ctx context.Context, c *app.RequestContext) {
+	fieldStruct := TableFieldStruct{}
+	err := c.Bind(&fieldStruct)
+	if err != nil || fieldStruct.TableCode == "" || fieldStruct.FieldCode == "" {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增字段失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+	}
+
+	sqlType := "text"
+	if fieldStruct.FieldType == 1 { //数字
+		sqlType = "int"
+	}
+	// code
+	createTableSQL := "alter table " + fieldStruct.TableCode + "  add column " + fieldStruct.FieldCode + " " + sqlType
+	_, err = execNativeSQL(ctx, createTableSQL)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增表失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+	}
+	now := time.Now().Format("2006-01-02 15:04:05")
+	fieldStruct.CreateTime = now
+	fieldStruct.UpdateTime = now
+	entityMap := zorm.NewEntityMap(tableFieldName)
+
+	newMap := make(map[string]interface{}, 0)
+	jsonByte, _ := json.Marshal(fieldStruct)
+	json.Unmarshal(jsonByte, &newMap)
+	for k, v := range newMap {
+		entityMap.Set(k, v)
+	}
+	responseData, err := saveEntityMap(ctx, entityMap)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	c.JSON(http.StatusOK, responData2Map(responseData))
 }
 
 // permissionHandler 权限拦截器

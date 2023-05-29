@@ -198,8 +198,8 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return err
 }
 
-func crateTable(ctx context.Context, createTableSQL string) (bool, error) {
-	finder := zorm.NewFinder().Append(createTableSQL)
+func execNativeSQL(ctx context.Context, nativeSQL string) (bool, error) {
+	finder := zorm.NewFinder().Append(nativeSQL)
 	finder.InjectionCheck = false
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.UpdateFinder(ctx, finder)
