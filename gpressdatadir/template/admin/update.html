@@ -12,6 +12,14 @@
 					{{ $data := . }}
 					{{ range $tableFiled }}
 
+					{{if eq .FieldCode "createTime"}}
+					  {{continue}} 
+					{{end}}
+					
+					{{if eq .FieldCode "updateTime"}}
+					  {{continue}} 
+					{{end}}
+
 					<div class="field is-horizontal flex-center">
 						<div class="field-left" style="width: 180px;">
 							<label class="label">{{.FieldName}}</label>
@@ -32,13 +40,15 @@
 											<option value={{$key}}>{{$value}}</option>
 											{{end}}
 										</select>
+										
+
 										{{else if eq .FieldCode "id"}}
 											<input class="input" readonly="readonly" type="text" name="{{.FieldCode}}"
 												id="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
-											{{else}}
+										{{else}}
 												<input class="input" type="text" name="{{.FieldCode}}"
 													id="{{.FieldCode}}" value="{{ index $data .FieldCode }}">
-												{{end}}
+										{{end}}
 								</div>
 							</div>
 						</div>
