@@ -20,6 +20,8 @@ import (
 // adminGroup路由组,使用变量声明,优先级高于init函数
 var adminGroup = initAdminGroup()
 
+var chainRandStr string
+
 func initAdminGroup() *route.RouterGroup {
 	// 设置日志级别
 	hlog.SetLevel(hlog.LevelError)
@@ -66,9 +68,20 @@ func init() {
 			return
 		}
 		// 使用后端管理界面配置,jwtSecret也有后端随机产生
-		account := c.PostForm("account")
-		password := c.PostForm("password")
-		err := insertUser(ctx, account, password)
+		userMap := make(map[string]string, 0)
+		userMap["account"] = c.PostForm("account")
+		userMap["userName"] = c.PostForm("account")
+		userMap["password"] = c.PostForm("password")
+		userMap["chainType"] = c.PostForm("chainType")
+		userMap["chainAddress"] = c.PostForm("chainAddress")
+
+		loginHtml := "admin/login"
+		if c.PostForm("chainAddress") != "" && c.PostForm("chainType") != "" { //如果使用了address作为登录方式
+			userMap["account"] = ""
+			userMap["userName"] = ""
+			loginHtml = "admin/chainlogin"
+		}
+		err := insertUser(ctx, userMap)
 		if err != nil {
 			c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 			c.Abort() // 终止后续调用
@@ -76,7 +89,15 @@ func init() {
 		}
 		// 安装成功,更新安装状态
 		updateInstall(ctx)
-		c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
+		c.Redirect(http.StatusOK, cRedirecURI(loginHtml))
+	})
+
+	// 生成32位随机数,钱包签名随机校验
+	h.POST("/admin/random", func(ctx context.Context, c *app.RequestContext) {
+		//先记录到全局变量
+		chainRandStr = randStr(32)
+		//返回到前端
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: chainRandStr})
 	})
 
 	// 后台管理员登录
@@ -95,6 +116,7 @@ func init() {
 		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 		c.HTML(http.StatusOK, "admin/login.html", responseData)
 	})
+
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
 		if !installed { // 如果没有安装,跳转到安装
 			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
@@ -103,6 +125,11 @@ func init() {
 		}
 		account := c.PostForm("account")
 		password := c.PostForm("password")
+		if account == "" || password == "" { // 用户不存在或者异常
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码不能位空"))
+			c.Abort() // 终止后续调用
+			return
+		}
 		userId, err := findUserId(ctx, account, password)
 		if userId == "" || err != nil { // 用户不存在或者异常
 			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码错误"))
@@ -120,6 +147,57 @@ func init() {
 		jwttoken, _ := newJWTToken(userId, nil)
 
 		// c.HTML(http.StatusOK, "admin/index.html", nil)
+		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+
+		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
+	})
+
+	// 后台管理员使用区块链账号登录
+	h.GET("/admin/chainlogin", func(ctx context.Context, c *app.RequestContext) {
+		if !installed { // 如果没有安装,跳转到安装
+			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
+			c.Abort() // 终止后续调用
+			return
+		}
+		var responseData map[string]string = nil
+		message, ok := c.GetQuery("message")
+		if ok {
+			responseData = make(map[string]string, 0)
+			responseData["message"] = message
+		}
+		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.HTML(http.StatusOK, "admin/chainlogin.html", responseData)
+	})
+
+	h.POST("/admin/chainlogin", func(ctx context.Context, c *app.RequestContext) {
+		if !installed { // 如果没有安装,跳转到安装
+			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
+			c.Abort() // 终止后续调用
+			return
+		}
+		//获取签名
+		signature := c.PostForm("signature")
+		userId, chainType, chainAddress, err := findUserAddress(ctx)
+		if userId == "" || chainType == "" || chainAddress == "" || err != nil {
+			c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message=地址异常"))
+			c.Abort() // 终止后续调用
+			return
+		}
+		verify := false
+		switch chainType {
+		case "ETH":
+			verify, err = verifySecp256k1Signature(chainAddress, chainRandStr, signature)
+		case "XUPER":
+			//待处理
+		}
+
+		if !verify || err != nil {
+			c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message=签名校验失败"))
+			c.Abort() // 终止后续调用
+			return
+		}
+		jwttoken, _ := newJWTToken(userId, nil)
+
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
 
 		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
