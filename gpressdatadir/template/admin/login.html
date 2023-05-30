@@ -6,6 +6,9 @@
         function encrypt() {
             document.getElementById("password").value = sha3_512(document.getElementById("password").value)
         }
+        {{if .message}}
+        alert("{{.message}}");
+        {{end}}
     </script>
 
 </head>

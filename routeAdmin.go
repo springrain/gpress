@@ -54,6 +54,7 @@ func init() {
 	h.GET("/admin/install", func(ctx context.Context, c *app.RequestContext) {
 		if installed { // 如果已经安装过了,跳转到登录
 			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
+			c.Abort() // 终止后续调用
 			return
 		}
 		c.HTML(http.StatusOK, "admin/install.html", nil)
@@ -61,6 +62,7 @@ func init() {
 	h.POST("/admin/install", func(ctx context.Context, c *app.RequestContext) {
 		if installed { // 如果已经安装过了,跳转到登录
 			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
+			c.Abort() // 终止后续调用
 			return
 		}
 		// 使用后端管理界面配置,jwtSecret也有后端随机产生
@@ -69,6 +71,7 @@ func init() {
 		err := insertUser(ctx, account, password)
 		if err != nil {
 			c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
+			c.Abort() // 终止后续调用
 			return
 		}
 		// 安装成功,更新安装状态
@@ -80,21 +83,30 @@ func init() {
 	h.GET("/admin/login", func(ctx context.Context, c *app.RequestContext) {
 		if !installed { // 如果没有安装,跳转到安装
 			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
+			c.Abort() // 终止后续调用
 			return
 		}
+		var responseData map[string]string = nil
+		message, ok := c.GetQuery("message")
+		if ok {
+			responseData = make(map[string]string, 0)
+			responseData["message"] = message
+		}
 		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
-		c.HTML(http.StatusOK, "admin/login.html", nil)
+		c.HTML(http.StatusOK, "admin/login.html", responseData)
 	})
 	h.POST("/admin/login", func(ctx context.Context, c *app.RequestContext) {
 		if !installed { // 如果没有安装,跳转到安装
 			c.Redirect(http.StatusOK, cRedirecURI("admin/install"))
+			c.Abort() // 终止后续调用
 			return
 		}
 		account := c.PostForm("account")
 		password := c.PostForm("password")
 		userId, err := findUserId(ctx, account, password)
 		if userId == "" || err != nil { // 用户不存在或者异常
-			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码错误"))
+			c.Abort() // 终止后续调用
 			return
 		}
 		/*
@@ -119,6 +131,7 @@ func init() {
 		userId, ok := c.Get(tokenUserId)
 		if !ok || userId == "" {
 			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
+			c.Abort() // 终止后续调用
 			return
 		}
 
@@ -129,6 +142,7 @@ func init() {
 		err := loadTemplate()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
 			return
 		}
 		//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址
@@ -142,6 +156,7 @@ func init() {
 		fileHeader, err := c.FormFile("file")
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
 			return
 		}
 		path := "public/upload/" + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
@@ -149,6 +164,7 @@ func init() {
 		err = c.SaveUploadedFile(fileHeader, newFileName)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
 			return
 		}
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
@@ -335,6 +351,25 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	//设置默认值
+	funcSetDefaultMapValue(ctx, &newMap, urlPathParam)
+
+	entityMap := zorm.NewEntityMap(urlPathParam)
+	for k, v := range newMap {
+		entityMap.Set(k, v)
+	}
+
+	responseData, err := saveEntityMap(ctx, entityMap)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	c.JSON(http.StatusOK, responData2Map(responseData))
+}
+func funcSetDefaultMapValue(ctx context.Context, valueMap *map[string]interface{}, tableName string) {
+	newMap := *valueMap
 	status, has := newMap["status"]
 	if !has || status == nil {
 		newMap["status"] = 1
@@ -342,7 +377,7 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 
 	sortNo, has := newMap["sortNo"]
 	if !has || sortNo == nil {
-		finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+		finder := zorm.NewSelectFinder(tableName, "count(*)")
 		sortNo := 1
 		zorm.QueryRow(ctx, finder, &sortNo)
 		newMap["sortNo"] = sortNo
@@ -358,19 +393,6 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 		newMap["updateTime"] = now
 	}
 
-	entityMap := zorm.NewEntityMap(urlPathParam)
-	for k, v := range newMap {
-		entityMap.Set(k, v)
-	}
-
-	responseData, err := saveEntityMap(ctx, entityMap)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
-	c.JSON(http.StatusOK, responData2Map(responseData))
 }
 
 // 修改内容
@@ -413,13 +435,15 @@ func funcTableInfoSave(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 	}
+
+	//设置默认值
+	funcSetDefaultMapValue(ctx, &newMap, tableInfoName)
+
 	entityMap := zorm.NewEntityMap(tableInfoName)
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
-	now := time.Now().Format("2006-01-02 15:04:05")
-	entityMap.Set("createTime", now)
-	entityMap.Set("updateTime", now)
+
 	responseData, err := saveEntityMap(ctx, entityMap)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
@@ -452,14 +476,16 @@ func funcTableFieldSave(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 	}
-	now := time.Now().Format("2006-01-02 15:04:05")
-	fieldStruct.CreateTime = now
-	fieldStruct.UpdateTime = now
+
 	entityMap := zorm.NewEntityMap(tableFieldName)
 
 	newMap := make(map[string]interface{}, 0)
 	jsonByte, _ := json.Marshal(fieldStruct)
 	json.Unmarshal(jsonByte, &newMap)
+
+	//设置默认值
+	funcSetDefaultMapValue(ctx, &newMap, tableInfoName)
+
 	for k, v := range newMap {
 		entityMap.Set(k, v)
 	}
