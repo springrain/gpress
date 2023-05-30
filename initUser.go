@@ -20,6 +20,8 @@ func init() {
 		account         TEXT  NOT NULL,
 		password         TEXT   NOT NULL,
 		userName         TEXT NOT NULL,
+		chainType        TEXT,
+		chainAddress        TEXT,
 		createTime        TEXT,
 		updateTime        TEXT,
 		createUser        TEXT,
@@ -105,6 +107,44 @@ func init() {
 	}
 	sortNo++
 	saveTableField(ctx, userName)
+
+	// 用户表的 chainType 字段
+	chainType := TableFieldStruct{
+		ID:           FuncGenerateStringID(),
+		TableCode:    tableUserName,
+		FieldCode:    "chainType",
+		FieldName:    "用户名称",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		TableName:    "用户信息",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Status:       1,
+	}
+	sortNo++
+	saveTableField(ctx, chainType)
+
+	// 用户表的 UserName 字段
+	chainAddress := TableFieldStruct{
+		ID:           FuncGenerateStringID(),
+		TableCode:    tableUserName,
+		FieldCode:    "chainAddress",
+		FieldName:    "用户名称",
+		FieldType:    fieldType_文本框,
+		AnalyzerName: keywordAnalyzerName,
+		TableName:    "用户信息",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Status:       1,
+	}
+	sortNo++
+	saveTableField(ctx, chainAddress)
 
 	// 添加公共字段
 	indexCommonField(ctx, tableUserName, "用户信息", sortNo, now)
