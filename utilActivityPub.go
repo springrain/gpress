@@ -2,15 +2,19 @@ package main
 
 import (
 	"crypto"
+	"crypto/ecdsa"
+	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
+	"encoding/asn1"
 	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"math/big"
 	"os"
 	"strings"
 
@@ -193,4 +197,84 @@ func verifySecp256k1Signature(senderAddress string, signatureData string, signat
 	}
 	return true, nil
 
+}
+
+// XuperChain使用NIST标准的公钥
+func verifyXuperSignature(chainAddress string, sig, msg []byte) (valid bool, err error) {
+	k := &ecdsa.PublicKey{}
+	err = json.Unmarshal([]byte(chainAddress), k)
+	if err != nil {
+		return false, err //json有问题
+	}
+
+	k.Curve = elliptic.P256()
+
+	// 判断是否是NIST标准的公钥
+	isNistCurve := checkKeyCurve(k)
+	if isNistCurve == false {
+		return false, fmt.Errorf("this cryptography curve[%s] has not been supported yet.", k.Params().Name)
+	}
+
+	r, s, err := unmarshalECDSASignature(sig)
+	if err != nil {
+		return false, fmt.Errorf("failed to unmarshal the ecdsa signature [%s]", err)
+	}
+
+	return ecdsa.Verify(k, msg, r, s), nil
+}
+
+// 判断是否是NIST标准的公钥
+func checkKeyCurve(k *ecdsa.PublicKey) bool {
+	if k.X == nil || k.Y == nil {
+		return false
+	}
+	switch k.Params().Name {
+	case "P-256": // NIST
+		return true
+	default: // 不支持的密码学类型
+		return false
+	}
+}
+
+type ECDSASignature struct {
+	R, S *big.Int
+}
+
+/*
+// use DER-encoded ASN.1 octet standard to represent the signature
+// 与比特币算法一样，基于DER-encoded ASN.1 octet标准，来表达使用椭圆曲线签名算法返回的结果
+
+	func MarshalECDSASignature(r, s *big.Int) ([]byte, error) {
+		return asn1.Marshal(ECDSASignature{r, s})
+	}
+
+// 将公钥序列化成byte数组
+
+	func MarshalPublicKey(publicKey *ecdsa.PublicKey) []byte {
+		return elliptic.Marshal(publicKey.Curve, publicKey.X, publicKey.Y)
+	}
+*/
+func unmarshalECDSASignature(rawSig []byte) (*big.Int, *big.Int, error) {
+	sig := new(ECDSASignature)
+	_, err := asn1.Unmarshal(rawSig, sig)
+
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to unmashal the signature [%v] to R & S, and the error is [%s]", rawSig, err)
+	}
+
+	if sig.R == nil {
+		return nil, nil, errors.New("invalid signature, R is nil")
+	}
+	if sig.S == nil {
+		return nil, nil, errors.New("invalid signature, S is nil")
+	}
+
+	if sig.R.Sign() != 1 {
+		return nil, nil, errors.New("invalid signature, R must be larger than zero")
+	}
+	if sig.S.Sign() != 1 {
+		return nil, nil, errors.New("invalid signature, S must be larger than zero")
+	}
+
+	return sig.R, sig.S, nil
 }
