@@ -92,10 +92,10 @@ func init() {
 		c.Redirect(http.StatusOK, cRedirecURI(loginHtml))
 	})
 
-	// 生成32位随机数,钱包签名随机校验
+	// 生成30位随机数,钱包签名随机校验.如果32位metamask会解析成16进制字符串,可能是metamask的bug
 	h.POST("/admin/random", func(ctx context.Context, c *app.RequestContext) {
 		//先记录到全局变量
-		chainRandStr = randStr(32)
+		chainRandStr = randStr(30)
 		//返回到前端
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: chainRandStr})
 	})
