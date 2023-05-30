@@ -104,7 +104,6 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | ----------- | ----------- | ----------- | ------- | ----------- |
 | id          | string      | 主键        | 否       |    -  |
 | name    | string      | 菜单名称     | 否       |    -  |
-| name    | string      | 菜单名称     | 否       |    -  |
 | hrefURL     | string      | 跳转路径     | 否       |    -  |
 | hrefTarget  | string      | 跳转方式     | 否       | _self,_blank,_parent,_top|
 | pid         | string      | 父菜单ID     | 否       | 父菜单ID  |
