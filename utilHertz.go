@@ -53,13 +53,13 @@ func loadTemplate() error {
 
 	staticFileMap := make(map[string]string)
 	//遍历后台admin模板
-	err = walkTemplateDir(loadTmpl, templateDir+"admin/", templateDir, &staticFileMap)
+	err = walkTemplateDir(loadTmpl, templateDir+"admin/", templateDir, &staticFileMap, true)
 	if err != nil {
 		FuncLogError(err)
 		return err
 	}
 	//遍历用户配置的主题模板
-	err = walkTemplateDir(loadTmpl, templateDir+"theme/"+config.Theme+"/", templateDir+"theme/"+config.Theme+"/", &staticFileMap)
+	err = walkTemplateDir(loadTmpl, templateDir+"theme/"+config.Theme+"/", templateDir+"theme/"+config.Theme+"/", &staticFileMap, false)
 	if err != nil {
 		FuncLogError(err)
 		return err
@@ -97,12 +97,15 @@ func loadTemplate() error {
 	return nil
 }
 
-func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string, staticFileMap *map[string]string) error {
+func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string, staticFileMap *map[string]string, isAdmin bool) error {
 	//遍历模板文件夹
 	err := filepath.Walk(walkDir, func(path string, info os.FileInfo, err error) error {
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
-		// 相对路径
+
+		if !isAdmin && strings.Contains(path, "/admin/") { //如果用户主题,但是包含admin目录,不解析
+			return nil
+		}
 
 		// 如果是静态资源
 		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
