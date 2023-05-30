@@ -44,13 +44,13 @@ func main() {
 	if err != nil {
 		FuncLogError(err)
 	}
-	message := "请用浏览器访问: "
+	message := "浏览器打开前端: "
+	httpStr := "http://"
 	if strings.HasPrefix(config.ServerPort, ":") {
-		message += "http://127.0.0.1"
-	} else {
-		message += "http://"
+		httpStr += "127.0.0.1"
 	}
-	message += config.ServerPort + config.BasePath
+	message += httpStr + config.ServerPort + config.BasePath
+	message += "\n浏览器打开后台: " + httpStr + config.ServerPort + config.BasePath + "admin/login"
 	fmt.Println(message)
 	// 启动服务
 	h.Spin()

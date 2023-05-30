@@ -97,7 +97,7 @@ func init() {
 		//先记录到全局变量
 		chainRandStr = randStr(32)
 		//返回到前端
-		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: chainRandStr})
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: chainRandStr})
 	})
 
 	// 后台管理员登录
@@ -188,7 +188,11 @@ func init() {
 		case "ETH":
 			verify, err = verifySecp256k1Signature(chainAddress, chainRandStr, signature)
 		case "XUPER":
-			//待处理
+			verify, err = verifyXuperSignature(chainAddress, []byte(signature), []byte(chainRandStr))
+		default:
+			c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message=暂不支持此类型区块链账户"))
+			c.Abort() // 终止后续调用
+			return
 		}
 
 		if !verify || err != nil {
