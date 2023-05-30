@@ -1,0 +1,171 @@
+{{template "admin/header.html"}}
+<title>Login - gpress</title>
+<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/login.css">
+<script type="text/javascript" src="https://cdn.staticfile.org/js-sha3/0.8.0/sha3.min.js"></script>
+</head>
+
+<body>
+	<section class="hero is-success is-fullheight">
+		<input type="hidden" id="message" value="{{.message}}">
+		<div class="hero-body">
+			<div class="container has-text-centered">
+				<div class="column is-4 is-offset-4">
+					<h3 class="title has-text-black">登录</h3>
+					<hr class="login-hr">
+					<div class="box">
+
+						<figure class="avatar">
+							<img src="{{basePath}}public/logo.png">
+						</figure>
+
+						<div class="wallet">
+							<div>
+								<div onclick="getMetamask(window.ethereum)"><img src="{{basePath}}public/premit.png">
+									MetaMask</div>
+								<div onclick="getMetamask(window.xuper,'xuper')"><img class="xpocket"
+										src="{{basePath}}public/headerlogo.png">X-Pocket</div>
+
+							</div>
+							<div>
+								<div onclick="getMetamask(window.bitkeep.ethereum)"><img
+										src="{{basePath}}public/bitkeep.png">Bitkeep</div>
+								<div onclick="getMetamask(window.ethereum)"><img
+										src="{{basePath}}public/tokenproket.png">TokenPocket</div>
+
+
+							</div>
+							<div>
+								<div onclick="getMetamask(window.okxwallet)"><img
+										src="{{basePath}}public/okx.png">OkxWallet</div>
+								<div onclick="getMetamask(window.ethereum)"><img
+										src="{{basePath}}public/TrustWallet.png">TrustWallet</div>
+							</div>
+						</div>
+					</div>
+					<p class="has-text-grey">
+						<a href="{{basePath}}admin/login">账号密码登录</a> &nbsp;·&nbsp;
+						<a href="https://gitee.com/gpress/gpress" target="_blank">联系我们</a>
+					</p>
+				</div>
+				<form id="chainlogin" action="/admin/chainlogin" method="post" style="display: none;">
+					<input id="signature" type="text" name="signature" value="">
+				</form>
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript">
+	function encrypt() {
+		document.getElementById('password').value = sha3_512(document.getElementById('password').value)
+	}
+	$(function () {
+		let msg = $('#message').val()
+		if (msg) {
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '400px',
+				title: '提示',
+				content: msg,
+				type: 'red',
+				buttons: { '确定': function () { } }
+			})
+		}
+		console.log(window)
+})
+
+	function getMetamask(provider, type) {
+		if (provider) {
+			provider.request({
+				method: 'eth_requestAccounts',
+				params: [],
+			}).then(accounts => {
+				let account = typeof accounts !== 'object' ? accounts : accounts[0]
+				console.log(account)
+			personalSign(provider, account, type)
+		})
+		} else {
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '400px',
+				title: '提示',
+				content: '请安装对应Wallet',
+				type: 'red',
+				buttons: { '确定': function () { } }
+			})
+		}
+	}
+
+	async function personalSign(provider, accounts, type) {
+		let jsonObject = {}
+		const response = await fetch('/admin/random', {
+			method: 'post',
+			body: JSON.stringify(jsonObject),
+			headers: { 'Content-Type': 'application/json' }
+		})
+		let res = await response.json()
+		console.log(res)
+	if (res.statusCode == 1) {
+			let arrayboj
+		if (type == 'xuper') {
+				arrayboj = [{ message: res.data, accounts: accounts }]
+		} else {
+				arrayboj = [res.data, accounts]
+			}
+			console.log(arrayboj)
+		provider.request({
+				method: 'personal_sign',
+				params: arrayboj,
+			}).then(result => {
+				$('#signature').val(result)
+			$('#chainlogin').submit()
+		})
+		} else {
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '400px',
+				title: '提示',
+				content: res.message,
+				type: 'red',
+				buttons: { '确定': function () { } }
+			})
+		}
+	}
+
+
+	// async function login(result) {
+	// 	$('#signature').val(result);
+	// 	const form = document.querySelector('#chainlogin');
+	// 	const formData = new FormData(form);
+	// 	const jsonObject = {};
+	// 	for (const [key, value] of formData.entries()) {
+	// 		const fieldType = document.querySelector('#signature').value
+	// 		console.log(fieldType);
+	// 		jsonObject[key] = value
+	// 	}
+	// 	console.log(jsonObject);
+	// 	const response = await fetch(form.action, {
+	// 		method: form.method,
+	// 		body: JSON.stringify(jsonObject),
+	// 		headers: { 'Content-Type': 'application/json' }
+	// 	})
+	// 	let res = await response.json()
+	// 	console.log(res);
+	// 	if (res.statusCode == 1) {
+	// 	} else {
+	// 		$.confirm({
+	// 			useBootstrap: false,
+	// 			boxWidth: '400px',
+	// 			title: '提示',
+	// 			content: res.message,
+	// 			type: 'red',
+	// 			buttons: { '确定': function () { } }
+	// 		})
+	// 	}
+	// }
+
+
+
+
+</script>
+
+</html>
