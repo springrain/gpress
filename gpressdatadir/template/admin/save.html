@@ -12,6 +12,17 @@
 				<form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/save" method="POST">
 					{{ $data := . }}
 					{{ range $tableFiled }}
+
+
+					{{if eq .FieldCode "createTime"}}
+					    {{continue}} 
+				    {{end}}
+				  
+					{{if eq .FieldCode "updateTime"}}
+						{{continue}} 
+					{{end}}
+
+
 					{{ if ne .FieldCode "id" }}
 					<div class="field is-horizontal flex-center">
 						<div class="field-left" style="width: 100px;">
@@ -33,9 +44,9 @@
 											<option value={{$key}}>{{$value}} </option>
 											{{end}}
 										</select>
-										{{else }}
+									{{else }}
 											<input class="input" type="text" name="{{.FieldCode}}" id="{{.FieldCode}}">
-											{{end}}
+									{{end}}
 								</div>
 							</div>
 						</div>
