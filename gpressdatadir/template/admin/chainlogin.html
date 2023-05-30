@@ -27,7 +27,7 @@
 
 							</div>
 							<div>
-								<div onclick="getMetamask(window.bitkeep.ethereum)"><img
+								<div onclick="getMetamask(window.bitkeep && window.bitkeep.ethereum)"><img
 										src="{{basePath}}public/bitkeep.png">Bitkeep</div>
 								<div onclick="getMetamask(window.ethereum)"><img
 										src="{{basePath}}public/tokenproket.png">TokenPocket</div>
@@ -88,7 +88,7 @@
 				useBootstrap: false,
 				boxWidth: '400px',
 				title: '提示',
-				content: `请安装对应Wallet`,
+				content: `请安装对应钱包`,
 				type: 'red',
 				buttons: { '确定': function () { } }
 			})
