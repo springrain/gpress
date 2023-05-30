@@ -70,55 +70,63 @@
 				buttons: { '确定': function () { } }
 			})
 		}
-		console.log(window)
-})
+		//console.log(window);
+	})
 
 	function getMetamask(provider, type) {
 		if (provider) {
 			provider.request({
-				method: 'eth_requestAccounts',
+				method: "eth_requestAccounts",
 				params: [],
-			}).then(accounts => {
-				let account = typeof accounts !== 'object' ? accounts : accounts[0]
-				console.log(account)
-			personalSign(provider, account, type)
-		})
+			}).then((accounts) => {
+				let account = typeof accounts !== "object" ? accounts : accounts[0]
+				//console.log(account);
+				personalSign(provider, account, type);
+			})
 		} else {
 			$.confirm({
 				useBootstrap: false,
 				boxWidth: '400px',
 				title: '提示',
-				content: '请安装对应Wallet',
+				content: `请安装对应Wallet`,
 				type: 'red',
 				buttons: { '确定': function () { } }
 			})
 		}
 	}
+	function stringToHex(str) {
+		let hex = '';
+		for (let i = 0; i < str.length; i++) {
+			hex += str.charCodeAt(i).toString(16);
+		}
+		return hex;
+	}
 
 	async function personalSign(provider, accounts, type) {
 		let jsonObject = {}
 		const response = await fetch('/admin/random', {
-			method: 'post',
+			method: "post",
 			body: JSON.stringify(jsonObject),
 			headers: { 'Content-Type': 'application/json' }
 		})
 		let res = await response.json()
-		console.log(res)
-	if (res.statusCode == 1) {
-			let arrayboj
-		if (type == 'xuper') {
-				arrayboj = [{ message: res.data, accounts: accounts }]
-		} else {
-				arrayboj = [res.data, accounts]
+		//console.log(res);
+		if (res.statusCode == 1) {
+			let arrayboj;
+			const hexString = stringToHex(res.data);
+			if (type == 'xuper') {
+				arrayboj = [{ message: res.data, accounts: accounts }];
+			} else {
+				arrayboj = [`0x${hexString}`, accounts]
 			}
-			console.log(arrayboj)
-		provider.request({
-				method: 'personal_sign',
+			//console.log(arrayboj);
+			provider.request({
+				method: "personal_sign",
 				params: arrayboj,
-			}).then(result => {
-				$('#signature').val(result)
-			$('#chainlogin').submit()
-		})
+			}).then((result) => {
+				$('#signature').val(result);
+				$('#chainlogin').submit();
+			})
 		} else {
 			$.confirm({
 				useBootstrap: false,
@@ -139,17 +147,17 @@
 	// 	const jsonObject = {};
 	// 	for (const [key, value] of formData.entries()) {
 	// 		const fieldType = document.querySelector('#signature').value
-	// 		console.log(fieldType);
+	// 		//console.log(fieldType);
 	// 		jsonObject[key] = value
 	// 	}
-	// 	console.log(jsonObject);
+	// 	//console.log(jsonObject);
 	// 	const response = await fetch(form.action, {
 	// 		method: form.method,
 	// 		body: JSON.stringify(jsonObject),
 	// 		headers: { 'Content-Type': 'application/json' }
 	// 	})
 	// 	let res = await response.json()
-	// 	console.log(res);
+	// 	//console.log(res);
 	// 	if (res.statusCode == 1) {
 	// 	} else {
 	// 		$.confirm({
