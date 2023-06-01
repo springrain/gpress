@@ -74,12 +74,12 @@ func initTableInfo() (bool, error) {
 	// 初始化各个字段
 	// 主键 值为 TableName,也就是表名
 	infoId := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableInfoName,
-		FieldCode:    "id",
-		FieldName:    "表ID",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableInfoName,
+		FieldCode: "id",
+		FieldName: "表ID",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "表信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -92,12 +92,12 @@ func initTableInfo() (bool, error) {
 	saveTableField(ctx, infoId)
 	// 表名称,类似表名中文说明
 	infoName := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableInfoName,
-		FieldCode:    "name",
-		FieldName:    "表名称",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: gseAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableInfoName,
+		FieldCode: "name",
+		FieldName: "表名称",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: gse// AnalyzerName,
 		TableName:    "表信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -110,12 +110,12 @@ func initTableInfo() (bool, error) {
 	saveTableField(ctx, infoName)
 	//表代码
 	infoCode := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableInfoName,
-		FieldCode:    "code",
-		FieldName:    "表名",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableInfoName,
+		FieldCode: "code",
+		FieldName: "表名",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "表信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -128,15 +128,15 @@ func initTableInfo() (bool, error) {
 	saveTableField(ctx, infoCode)
 	// TableType index/module 表和模型,两种类型
 	infoType := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableInfoName,
-		FieldCode:    "tableType",
-		FieldName:    "表类型",
-		FieldType:    fieldType_下拉框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableInfoName,
+		FieldCode: "tableType",
+		FieldName: "表类型",
+		FieldType: fieldType_下拉框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "表信息",
 		DefaultValue: "table",
-		SelectOption: `{"table":"表表","module":"模型"]`,
+		SelectOption: `{"table":"表","module":"模型"]`,
 		FieldComment: "",
 		CreateTime:   now,
 		UpdateTime:   now,
