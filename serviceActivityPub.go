@@ -242,39 +242,51 @@ func funcActivityPubInBox(ctx context.Context, c *app.RequestContext) {
 	body := make(map[string]interface{})
 	json.Unmarshal(bodyByte, &body)
 
+	//事件类型
+	aType := body["type"].(string)
+
+	if aType != "Follow" { //处理关注事件
+		c.Render(http.StatusOK, activityJSONRender{data: "success"})
+		c.Abort() // 终止后续调用
+		return
+	}
+
 	bodyMap := make(map[string]interface{})
 	bodyMap["@context"] = body["@context"]
-	bodyMap["id"] = body["id"]
+	bodyMap["id"] = "https://" + activityPubDefaultDomain + "/post/inbox/" + randStr(32)
 	bodyMap["actor"] = body["object"]
 	bodyMap["type"] = "Accept"
 	//object 是Follow事件发送的原始数据对象!!!
 	bodyMap["object"] = body
 
 	// 发送人的地址 chain://域名[address],合约地址,链ID
-	actorURL := body["actor"].(string)
-	var actorInfo interface{}
+	to := body["actor"].(string)
+	var toInfo interface{}
 	//chain://域名[address],合约地址,链ID    域名下的 inbox 值
-	if strings.HasPrefix(actorURL, "http") { //http域名格式
-		actorInfo, _ = responseJsonValue(actorURL, "", "")
-	} else if strings.HasPrefix(actorURL, "chain") { //区块链格式
+	if strings.HasPrefix(to, "http") { //http域名格式
+		toInfo, _ = responseJsonValue(to, "", "")
+	} else if strings.HasPrefix(to, "chain") { //区块链格式
 		//解析这个域名下的 inbox text,获取资源路径
 		//主要就是要解析IP地址,备选  #域名[address]#合约地址#链ID,通过#后缀跟上信息,前端点击时,使用js ajax获取需要处理的数据
 	}
-	actorMap := actorInfo.(map[string]interface{})
-	inboxUrl := actorMap["inbox"].(string)
-	publicKey := actorMap["publicKey"].(map[string]interface{})
-	keyId := publicKey["id"].(string)
+	toMap := toInfo.(map[string]interface{})
+	inboxUrl := toMap["inbox"].(string)
+
+	actorURL := body["object"].(string)
+	publicKey, err := responseJsonValue(actorURL, "publicKey.id", "")
+	if err != nil {
+		FuncLogError(err)
+		return
+	}
+
+	keyId := publicKey.(string)
 
 	inBoxBodyByte, _ := json.Marshal(bodyMap)
 
 	headerMap, _ := wrapRequestHeader(inboxUrl, consts.MethodPost, inBoxBodyByte, keyId, true)
 
-	//事件类型
-	aType := body["type"].(string)
-	if aType == "Follow" { //处理关注事件
-		//这里演示异步处理了,实际需要用户签名,等待钱包签名发送消息
-		go sendActivityPubRequest(inboxUrl, consts.MethodPost, inBoxBodyByte, headerMap)
-	}
+	//这里演示异步处理了,实际需要用户签名,等待钱包签名发送消息
+	go sendActivityPubRequest(inboxUrl, consts.MethodPost, inBoxBodyByte, headerMap)
 
 	c.Render(http.StatusOK, activityJSONRender{data: "success"})
 }
