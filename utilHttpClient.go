@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/sha256"
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -61,7 +62,7 @@ func sendActivityPubRequest(httpurl string, method string, bodyByte []byte, head
 	// 获取域名或 IP 地址
 	host := parsedURL.Hostname()
 
-	c, err := client.NewClient()
+	c, err := client.NewClient(client.WithTLSConfig(&tls.Config{InsecureSkipVerify: true}))
 	if err != nil {
 		return nil, err
 	}
