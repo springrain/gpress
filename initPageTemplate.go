@@ -34,12 +34,12 @@ func init() {
 	sortNo := 1
 	// 初始化各个字段
 	pageId := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tablePageTemplateName,
-		FieldCode:    "id",
-		FieldName:    "页面模板id",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tablePageTemplateName,
+		FieldCode: "id",
+		FieldName: "页面模板id",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "页面模板",
 		FieldComment: "",
 		CreateTime:   now,
@@ -53,12 +53,12 @@ func init() {
 	saveTableField(ctx, pageId)
 
 	pageTemplateNameName := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tablePageTemplateName,
-		FieldCode:    "name",
-		FieldName:    "模板名称",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tablePageTemplateName,
+		FieldCode: "name",
+		FieldName: "模板名称",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "页面模板",
 		FieldComment: "",
 		CreateTime:   now,
@@ -71,12 +71,12 @@ func init() {
 	saveTableField(ctx, pageTemplateNameName)
 
 	pageTemplateNamePath := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tablePageTemplateName,
-		FieldCode:    "templatePath",
-		FieldName:    "模板路径",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tablePageTemplateName,
+		FieldCode: "templatePath",
+		FieldName: "模板路径",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "页面模板",
 		FieldComment: "",
 		CreateTime:   now,
