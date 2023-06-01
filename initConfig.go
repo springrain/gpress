@@ -37,12 +37,12 @@ func initConfig() (bool, error) {
 	sortNo := 1
 	// ID 字段
 	configId := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableConfigName,
-		FieldCode:    "id",
-		FieldName:    "配置ID",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "id",
+		FieldName: "配置ID",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "配置信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -57,12 +57,12 @@ func initConfig() (bool, error) {
 
 	// 配置 basePath 字段
 	basePath := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableConfigName,
-		FieldCode:    "basePath",
-		FieldName:    "基础路径",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "basePath",
+		FieldName: "基础路径",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "配置信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -76,12 +76,12 @@ func initConfig() (bool, error) {
 
 	// 配置 jwtSecret 字段
 	jwtSecret := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableConfigName,
-		FieldCode:    "jwtSecret",
-		FieldName:    "jwt加密字符串",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "jwtSecret",
+		FieldName: "jwt加密字符串",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "配置信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -95,12 +95,12 @@ func initConfig() (bool, error) {
 
 	// 配置 jwtSecret 字段
 	jwttokenKey := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableConfigName,
-		FieldCode:    "jwttokenKey",
-		FieldName:    "jwt的key",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "jwttokenKey",
+		FieldName: "jwt的key",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "配置信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -114,12 +114,12 @@ func initConfig() (bool, error) {
 
 	// 配置 serverPort 字段
 	serverPort := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableConfigName,
-		FieldCode:    "serverPort",
-		FieldName:    "服务器ip:端口",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "serverPort",
+		FieldName: "服务器ip:端口",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "配置信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -133,12 +133,12 @@ func initConfig() (bool, error) {
 
 	// 配置 theme 字段
 	theme := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableConfigName,
-		FieldCode:    "theme",
-		FieldName:    "主题",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "theme",
+		FieldName: "主题",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "配置信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -152,12 +152,12 @@ func initConfig() (bool, error) {
 
 	// 配置 timeout 字段
 	timeout := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableConfigName,
-		FieldCode:    "timeout",
-		FieldName:    "超时时间",
-		FieldType:    fieldType_数字,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "timeout",
+		FieldName: "超时时间",
+		FieldType: fieldType_数字,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "配置信息",
 		FieldComment: "",
 		CreateTime:   now,

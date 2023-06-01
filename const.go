@@ -5,7 +5,7 @@ const (
 	datadir = "gpressdatadir/"
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
 	sqliteDBfile = datadir + "gpress.db"
-	// 表表信息的名称
+	// 表信息的名称
 	tableInfoName = "tableInfo"
 	// 表字段的名称
 	tableFieldName = "tableField"
@@ -45,19 +45,19 @@ const (
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	// 逗号分词器名称
-	commaAnalyzerName = "comma"
+	comma // AnalyzerName = "comma"
 
 	// gse分词器名称
-	gseAnalyzerName = "gse"
+	gse // AnalyzerName = "gse"
 
 	// keyword 分词器名称,避免引入错误的包
 	//使用keywordMapping代替, //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
 	// "github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
-	//keywordAnalyzerName = keyword.Name
-	keywordAnalyzerName = "keywordlower"
+	//keyword// AnalyzerName = keyword.Name
+	keyword // AnalyzerName = "keywordlower"
 
-	datetimeAnalyzerName = "datetime"
-	numericAnalyzerName  = "numeric"
+	datetime // AnalyzerName = "datetime"
+	numeric  // AnalyzerName  = "numeric"
 )
 
 //var keywordMapping = bleve.NewKeywordFieldMapping()
