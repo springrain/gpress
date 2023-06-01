@@ -113,7 +113,7 @@ func init() {
 			responseData = make(map[string]string, 0)
 			responseData["message"] = message
 		}
-		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 		c.HTML(http.StatusOK, "admin/login.html", responseData)
 	})
 
@@ -147,7 +147,7 @@ func init() {
 		jwttoken, _ := newJWTToken(userId, nil)
 
 		// c.HTML(http.StatusOK, "admin/index.html", nil)
-		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 
 		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
 	})
@@ -165,7 +165,7 @@ func init() {
 			responseData = make(map[string]string, 0)
 			responseData["message"] = message
 		}
-		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 		c.HTML(http.StatusOK, "admin/chainlogin.html", responseData)
 	})
 
@@ -202,7 +202,7 @@ func init() {
 		}
 		jwttoken, _ := newJWTToken(userId, nil)
 
-		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 
 		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
 	})
@@ -591,7 +591,7 @@ func permissionHandler() app.HandlerFunc {
 			c.Abort() // 终止后续调用
 			return
 		}
-		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, true, true)
+		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 		// 传递从jwttoken获取的userId
 		c.Set(tokenUserId, userId)
 	}
