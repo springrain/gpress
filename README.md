@@ -54,7 +54,6 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | fieldType   | int         | 字段类型     | -       | 数字(1),日期(2),文本框(3),文本域(4),富文本(5),下拉框(6),单选(7),多选(8),上传图片(9),上传附件(10),轮播图(11),音频(12),视频(13)  |
 | fieldFormat | string      | 数据格式,用于日期或者数字| 否 |  -  |    
 | defaultValue| string      | 默认值       | 否      |       -  |
-| analyzerName| string      | 分词器名称    | -       | 为 '' 不设置  |
 | createTime  |string  | 创建时间     | -       |  2006-01-02 15:04:05  |
 | updateTime  |string  | 更新时间     | -       |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       | -       |  初始化 system  |

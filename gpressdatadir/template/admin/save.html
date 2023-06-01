@@ -2,7 +2,6 @@
 <title>save - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $tableFiled := tableFiled .urlPathParam }}
-{{$analyzer := analyzer}}
 {{$fieldType := fieldType}}
 
 <section class="section">
@@ -38,12 +37,7 @@
 										<option value={{$key}}>{{$value}}</option>
 										{{end}}
 									</select>
-									{{else if eq .FieldCode "analyzerName"}}
-										<select name="{{.FieldCode}}" class="input">
-											{{ range $key,$value := $analyzer }}
-											<option value={{$key}}>{{$value}} </option>
-											{{end}}
-										</select>
+									
 									{{else }}
 											<input class="input" type="text" name="{{.FieldCode}}" id="{{.FieldCode}}">
 									{{end}}

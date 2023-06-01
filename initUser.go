@@ -36,12 +36,12 @@ func init() {
 
 	// 用户表的 ID 字段
 	userId := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableUserName,
-		FieldCode:    "id",
-		FieldName:    "用户ID",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableUserName,
+		FieldCode: "id",
+		FieldName: "用户ID",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "用户信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -55,12 +55,12 @@ func init() {
 
 	// 用户表的 Account 字段
 	userAccount := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableUserName,
-		FieldCode:    "account",
-		FieldName:    "账号",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableUserName,
+		FieldCode: "account",
+		FieldName: "账号",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "用户信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -73,12 +73,12 @@ func init() {
 	saveTableField(ctx, userAccount)
 	// 用户表的 PassWord 字段
 	userPassWord := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableUserName,
-		FieldCode:    "password",
-		FieldName:    "密码",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableUserName,
+		FieldCode: "password",
+		FieldName: "密码",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "用户信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -91,12 +91,12 @@ func init() {
 	saveTableField(ctx, userPassWord)
 	// 用户表的 UserName 字段
 	userName := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableUserName,
-		FieldCode:    "userName",
-		FieldName:    "用户名称",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableUserName,
+		FieldCode: "userName",
+		FieldName: "用户名称",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "用户信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -110,12 +110,12 @@ func init() {
 
 	// 用户表的 chainType 字段
 	chainType := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableUserName,
-		FieldCode:    "chainType",
-		FieldName:    "区块链类型",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableUserName,
+		FieldCode: "chainType",
+		FieldName: "区块链类型",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "用户信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -129,12 +129,12 @@ func init() {
 
 	// 用户表的 UserName 字段
 	chainAddress := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableUserName,
-		FieldCode:    "chainAddress",
-		FieldName:    "区块链地址",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableUserName,
+		FieldCode: "chainAddress",
+		FieldName: "区块链地址",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "用户信息",
 		FieldComment: "",
 		CreateTime:   now,

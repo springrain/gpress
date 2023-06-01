@@ -46,12 +46,12 @@ func init() {
 	sortNo := 1
 	// 初始化各个字段
 	siteId := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "id",
-		FieldName:    "站点信息ID",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "id",
+		FieldName: "站点信息ID",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -65,12 +65,12 @@ func init() {
 	saveTableField(ctx, siteId)
 
 	siteTitle := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "title",
-		FieldName:    "标题",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "title",
+		FieldName: "标题",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -85,12 +85,12 @@ func init() {
 	//mapping.DefaultMapping.AddFieldMappingsAt("title", gseAnalyzerMapping)
 
 	siteName := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "name",
-		FieldName:    "名称",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: gseAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "name",
+		FieldName: "名称",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: gse// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -103,12 +103,12 @@ func init() {
 	saveTableField(ctx, siteName)
 
 	domain := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "domain",
-		FieldName:    "域名",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: gseAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "domain",
+		FieldName: "域名",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: gse// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -121,12 +121,12 @@ func init() {
 	saveTableField(ctx, domain)
 
 	siteKeyword := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "keyword",
-		FieldName:    "关键字",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: commaAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "keyword",
+		FieldName: "关键字",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: comma// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -142,12 +142,12 @@ func init() {
 	//mapping.DefaultMapping.AddFieldMappingsAt("keyword", commaAnalyzerMapping)
 
 	siteDescription := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "description",
-		FieldName:    "站点描述",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: gseAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "description",
+		FieldName: "站点描述",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: gse// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -163,12 +163,12 @@ func init() {
 	//mapping.DefaultMapping.AddFieldMappingsAt("description", gseAnalyzerMapping)
 
 	siteTheme := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "theme",
-		FieldName:    "默认主题",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "theme",
+		FieldName: "默认主题",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -181,12 +181,12 @@ func init() {
 	saveTableField(ctx, siteTheme)
 
 	siteThemePC := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "themePC",
-		FieldName:    "PC主题",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "themePC",
+		FieldName: "PC主题",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -199,12 +199,12 @@ func init() {
 	saveTableField(ctx, siteThemePC)
 
 	siteThemeWAP := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "themeWAP",
-		FieldName:    "手机主题",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "themeWAP",
+		FieldName: "手机主题",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -217,12 +217,12 @@ func init() {
 	saveTableField(ctx, siteThemeWAP)
 
 	siteThemeWEIXIN := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "siteThemeWEIXIN",
-		FieldName:    "微信主题",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "siteThemeWEIXIN",
+		FieldName: "微信主题",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -235,12 +235,12 @@ func init() {
 	saveTableField(ctx, siteThemeWEIXIN)
 
 	siteLogo := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "logo",
-		FieldName:    "Logo",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "logo",
+		FieldName: "Logo",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -253,12 +253,12 @@ func init() {
 	saveTableField(ctx, siteLogo)
 
 	siteFavicon := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "favicon",
-		FieldName:    "Favicon",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "favicon",
+		FieldName: "Favicon",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,
@@ -271,12 +271,12 @@ func init() {
 	saveTableField(ctx, siteFavicon)
 
 	siteFooter := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableSiteName,
-		FieldCode:    "footer",
-		FieldName:    "底部信息",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableSiteName,
+		FieldCode: "footer",
+		FieldName: "底部信息",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "站点信息",
 		FieldComment: "",
 		CreateTime:   now,

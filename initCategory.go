@@ -40,12 +40,12 @@ func init() {
 	sortNo := 1
 	// 初始化各个字段
 	categoryId := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "id",
-		FieldName:    "导航菜单ID",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "id",
+		FieldName: "导航菜单ID",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -60,12 +60,12 @@ func init() {
 	saveTableField(ctx, categoryId)
 
 	categoryName := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "name",
-		FieldName:    "菜单名称",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "name",
+		FieldName: "菜单名称",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -79,12 +79,12 @@ func init() {
 	saveTableField(ctx, categoryName)
 
 	categoryHrefURL := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "hrefURL",
-		FieldName:    "跳转路径",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "hrefURL",
+		FieldName: "跳转路径",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -98,12 +98,12 @@ func init() {
 	saveTableField(ctx, categoryHrefURL)
 
 	categoryHrefTarget := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "hrefTarget",
-		FieldName:    "跳转方式",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "hrefTarget",
+		FieldName: "跳转方式",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -117,12 +117,12 @@ func init() {
 	saveTableField(ctx, categoryHrefTarget)
 
 	categoryPID := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "pid",
-		FieldName:    "父菜单ID",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "pid",
+		FieldName: "父菜单ID",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -136,12 +136,12 @@ func init() {
 	saveTableField(ctx, categoryPID)
 
 	categoryThemePC := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "themePC",
-		FieldName:    "PC主题",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "themePC",
+		FieldName: "PC主题",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -155,12 +155,12 @@ func init() {
 	saveTableField(ctx, categoryThemePC)
 
 	categoryModuleID := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "moduleID",
-		FieldName:    "模型ID",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "moduleID",
+		FieldName: "模型ID",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -174,12 +174,12 @@ func init() {
 	saveTableField(ctx, categoryModuleID)
 
 	categoryComCode := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "comCode",
-		FieldName:    "逗号隔开的全路径",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: commaAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "comCode",
+		FieldName: "逗号隔开的全路径",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: comma// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -193,12 +193,12 @@ func init() {
 	saveTableField(ctx, categoryComCode)
 
 	categoryTemplateID := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "templateID",
-		FieldName:    "模板Id",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "templateID",
+		FieldName: "模板Id",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
@@ -212,12 +212,12 @@ func init() {
 	saveTableField(ctx, categoryTemplateID)
 
 	categoryChildTemplateID := TableFieldStruct{
-		ID:           FuncGenerateStringID(),
-		TableCode:    tableCategoryName,
-		FieldCode:    "childTemplateID",
-		FieldName:    "子页面模板Id",
-		FieldType:    fieldType_文本框,
-		AnalyzerName: keywordAnalyzerName,
+		ID:        FuncGenerateStringID(),
+		TableCode: tableCategoryName,
+		FieldCode: "childTemplateID",
+		FieldName: "子页面模板Id",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
 		TableName:    "导航菜单",
 		FieldComment: "",
 		CreateTime:   now,
