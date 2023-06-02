@@ -86,8 +86,10 @@
 	const form = document.getElementById('gpress-form')
 	form.addEventListener('submit', async event => {
 		event.preventDefault()
-		document.getElementById('password').value = sha3_512(document.getElementById('password').value)
-
+		let pwdValue=$('#password').val()
+		if(!!!pwdValue&&pwdValue!=""){
+			$('#password').val(sha3_512(pwdValue))
+		}
 		const formData = new FormData(form)
 		const jsonObject = {}
 		for (const [key, value] of formData.entries()) {
