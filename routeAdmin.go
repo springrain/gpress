@@ -349,7 +349,45 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 
 // 修改用户信息
 func funcUserUpdate(ctx context.Context, c *app.RequestContext) {
-	funcUpdateTable(ctx, c, "user")
+	urlPathParam := "user"
+	newMap := make(map[string]interface{}, 0)
+	err := c.Bind(&newMap)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+
+	id := ""
+	if newMap["id"] != nil {
+		id = newMap["id"].(string)
+	}
+	if id == "" { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
+		c.Abort() // 终止后续调用
+		return
+	}
+
+	entityMap := zorm.NewEntityMap(urlPathParam)
+	for k, v := range newMap {
+		if k == "password" {
+			if v.(string) == "" {
+				continue
+			}
+		}
+		entityMap.Set(k, v)
+	}
+	entityMap.PkColumnName = "id"
+	entityMap.Set("updateTime", time.Now().Format("2006-01-02 15:04:05"))
+	err = updateTable(ctx, entityMap)
+	if err != nil { //没有id,认为是新增
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
+		c.Abort() // 终止后续调用
+		FuncLogError(err)
+		return
+	}
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 }
 
 // 修改内容
