@@ -13,14 +13,7 @@
 				<form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/update" method="POST">
 					{{ $data := . }}
 					<ul class="save-ul">
-						<li>
-							<div class="left">
-								用户ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="id" value="{{.id}}" id="id" />
-							</div>
-						</li>
+						
 						<li>
 							<div class="left">
 								账号
@@ -34,7 +27,7 @@
 								密码
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="password" value="{{.password}}" id="password">
+								<input class="input" type="text" name="password" value="" id="password">
 							</div>
 						</li>
 						<li>

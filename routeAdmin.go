@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -263,6 +262,8 @@ func init() {
 	adminGroup.GET("/:urlPathParam/update", funcUpdatePre)
 	//ajax POST提交JSON信息,返回方法JSON
 	adminGroup.POST("/:urlPathParam/update", funcUpdate)
+	//ajax POST提交JSON信息,返回方法JSON
+	adminGroup.POST("/user/update", funcUserUpdate)
 
 	//跳转到保存页面
 	adminGroup.GET("/:urlPathParam/save", funcSavePre)
@@ -342,6 +343,17 @@ func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
 
 // 修改内容
 func funcUpdate(ctx context.Context, c *app.RequestContext) {
+	urlPathParam := c.Param("urlPathParam")
+	funcUpdateTable(ctx, c, urlPathParam)
+}
+
+// 修改用户信息
+func funcUserUpdate(ctx context.Context, c *app.RequestContext) {
+	funcUpdateTable(ctx, c, "user")
+}
+
+// 修改内容
+func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam string) {
 
 	newMap := make(map[string]interface{}, 0)
 	err := c.Bind(&newMap)
@@ -361,8 +373,6 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-	urlPathParam := c.Param("urlPathParam")
-	//tableName := bleveDataDir + urlPathParam
 
 	if !tableExist(urlPathParam) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
@@ -408,6 +418,11 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 // 保存内容
 func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
+	funcSaveTable(ctx, c, urlPathParam)
+}
+
+// 保存内容
+func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam string) {
 	//tableName := bleveDataDir + urlPathParam
 	if !tableExist(urlPathParam) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
@@ -450,6 +465,7 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 	}
 	c.JSON(http.StatusOK, responData2Map(responseData))
 }
+
 func funcSetDefaultMapValue(ctx context.Context, valueMap *map[string]interface{}, tableName string) {
 	newMap := *valueMap
 	status, has := newMap["status"]
@@ -518,22 +534,7 @@ func funcTableInfoSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 	}
 
-	//设置默认值
-	funcSetDefaultMapValue(ctx, &newMap, tableInfoName)
-
-	entityMap := zorm.NewEntityMap(tableInfoName)
-	for k, v := range newMap {
-		entityMap.Set(k, v)
-	}
-
-	responseData, err := saveEntityMap(ctx, entityMap)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
-	c.JSON(http.StatusOK, responData2Map(responseData))
+	funcSaveTable(ctx, c, "tableInfo")
 }
 
 // 保存字段内容
@@ -559,26 +560,7 @@ func funcTableFieldSave(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(err)
 	}
 
-	entityMap := zorm.NewEntityMap(tableFieldName)
-
-	newMap := make(map[string]interface{}, 0)
-	jsonByte, _ := json.Marshal(fieldStruct)
-	json.Unmarshal(jsonByte, &newMap)
-
-	//设置默认值
-	funcSetDefaultMapValue(ctx, &newMap, tableInfoName)
-
-	for k, v := range newMap {
-		entityMap.Set(k, v)
-	}
-	responseData, err := saveEntityMap(ctx, entityMap)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
-	c.JSON(http.StatusOK, responData2Map(responseData))
+	funcSaveTable(ctx, c, "tableField")
 }
 
 // permissionHandler 权限拦截器
