@@ -87,7 +87,7 @@
 	form.addEventListener('submit', async event => {
 		event.preventDefault()
 		let pwdValue=$('#password').val()
-		if(!!!pwdValue&&pwdValue!=""){
+		if(pwdValue){
 			$('#password').val(sha3_512(pwdValue))
 		}
 		const formData = new FormData(form)
