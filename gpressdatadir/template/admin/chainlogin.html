@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>Login - gpress</title>
+<title>Login - GPRESS</title>
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/login.css">
 <script type="text/javascript" src="https://cdn.staticfile.org/js-sha3/0.8.0/sha3.min.js"></script>
 </head>
@@ -22,7 +22,7 @@
 							<div>
 								<div onclick="getMetamask(window.ethereum)"><img src="{{basePath}}public/premit.png">
 									MetaMask</div>
-								<div onclick="getMetamask(window.xuper,'xuper')"><img class="xpocket"
+								<div onclick="getMetamask(window.ethereum,'xuper')"><img class="xpocket"
 										src="{{basePath}}public/headerlogo.png">X-Pocket</div>
 
 							</div>
@@ -58,7 +58,7 @@
 	function encrypt() {
 		document.getElementById('password').value = sha3_512(document.getElementById('password').value)
 	}
-	$(function () {
+	$(function() {
 		let msg = $('#message').val()
 		if (msg) {
 			$.confirm({
@@ -67,7 +67,7 @@
 				title: '提示',
 				content: msg,
 				type: 'red',
-				buttons: { '确定': function () { } }
+				buttons: { '确定': function() {} }
 			})
 		}
 		//console.log(window);
@@ -76,56 +76,54 @@
 	function getMetamask(provider, type) {
 		if (provider) {
 			provider.request({
-				method: "eth_requestAccounts",
+				method: 'eth_requestAccounts',
 				params: [],
-			}).then((accounts) => {
-				let account = typeof accounts !== "object" ? accounts : accounts[0]
-				//console.log(account);
-				personalSign(provider, account, type);
+			}).then(accounts => {
+			  let account = accounts[0]
+			  //console.log(account);
+			  //window.localStorage.setItem('address', account)
+			  personalSign(provider, account, type)
 			})
 		} else {
 			$.confirm({
 				useBootstrap: false,
 				boxWidth: '400px',
 				title: '提示',
-				content: `请安装对应钱包`,
+				content: '请安装对应钱包',
 				type: 'red',
-				buttons: { '确定': function () { } }
+				buttons: { '确定': function() {} }
 			})
 		}
 	}
+
 	function stringToHex(str) {
-		let hex = '';
+		let hex = ''
 		for (let i = 0; i < str.length; i++) {
-			hex += str.charCodeAt(i).toString(16);
+			hex += str.charCodeAt(i).toString(16)
 		}
-		return hex;
+		return hex
 	}
 
 	async function personalSign(provider, accounts, type) {
 		let jsonObject = {}
 		const response = await fetch('/admin/random', {
-			method: "post",
+			method: 'post',
 			body: JSON.stringify(jsonObject),
 			headers: { 'Content-Type': 'application/json' }
 		})
 		let res = await response.json()
 		//console.log(res);
 		if (res.statusCode == 1) {
-			let arrayboj;
-			const hexString = stringToHex(res.data);
-			if (type == 'xuper') {
-				arrayboj = [{ message: res.data, accounts: accounts }];
-			} else {
-				arrayboj = [`0x${hexString}`, accounts]
-			}
+			let arrayboj
+			const hexString = stringToHex(res.data)
+			arrayboj = [res.data, accounts]
 			//console.log(arrayboj);
 			provider.request({
-				method: "personal_sign",
+				method: 'personal_sign',
 				params: arrayboj,
-			}).then((result) => {
-				$('#signature').val(result);
-				$('#chainlogin').submit();
+			}).then(result => {
+				$('#signature').val(result)
+				$('#chainlogin').submit()
 			})
 		} else {
 			$.confirm({
@@ -134,7 +132,7 @@
 				title: '提示',
 				content: res.message,
 				type: 'red',
-				buttons: { '确定': function () { } }
+				buttons: { '确定': function() {} }
 			})
 		}
 	}
@@ -170,10 +168,6 @@
 	// 		})
 	// 	}
 	// }
-
-
-
-
 </script>
 
 </html>
