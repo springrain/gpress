@@ -17,11 +17,11 @@ import (
 )
 
 const (
-	activityPubAccept      = "application/activity+json"
-	activityPubContentType = "application/activity+json; charset=utf-8"
-	//activityPubDefaultDomain = "activitypub.gpress.cn"
-	activityPubDefaultDomain = "testmakerone.shengjian.net"
-	proxyAddress             = "http://127.0.0.1:49864/"
+	activityPubAccept        = "application/activity+json"
+	activityPubContentType   = "application/activity+json; charset=utf-8"
+	activityPubDefaultDomain = "activitypub.gpress.cn"
+	proxyAddress             = ""
+	//proxyAddress             = "http://127.0.0.1:54321"
 	//keyId                    = "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11#main-key"
 )
 
