@@ -3,7 +3,7 @@
 *.ipr
 *.iml
 *.iws
-gpressdatadir/public/*
+gpressdatadir/public/upload/*
 testTable/
 dict/
 *.db
