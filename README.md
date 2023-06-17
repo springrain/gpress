@@ -1,4 +1,4 @@
-<img src="gpressdatadir/public/gpress-logo.png" height="200px" />
+<img src="gpressdatadir/public/gpress-logo.png" height="150px" />
 
 ## 介绍  
 云原生高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需 200M 内存   
