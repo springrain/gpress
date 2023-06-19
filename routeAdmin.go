@@ -143,7 +143,7 @@ func init() {
 				fmt.Println(password)
 			}
 		*/
-		jwttoken, _ := newJWTToken(userId, nil)
+		jwttoken, _ := newJWTToken(userId)
 
 		// c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
@@ -199,7 +199,7 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
-		jwttoken, _ := newJWTToken(userId, nil)
+		jwttoken, _ := newJWTToken(userId)
 
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 
