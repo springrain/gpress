@@ -7,7 +7,6 @@ require (
 	github.com/alecthomas/chroma/v2 v2.7.0
 	github.com/cloudwego/hertz v0.6.4
 	github.com/ethereum/go-ethereum v1.12.0
-	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/tetratelabs/wazero v1.2.1
 	github.com/yuin/goldmark v1.5.4
