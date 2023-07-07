@@ -375,7 +375,6 @@
 		event.preventDefault()
 		const formData = new FormData(form)
 		const jsonObject = {
-			status: 0,
 			id: $('#id').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
@@ -388,9 +387,10 @@
 			thumbnail: thumbnail,
 			sortNo: $('#sortNo').val(),
 			content: content,
+			status: $('#status').val(),
 			markdown: cherryObj.getMarkdown(),
 		}
-		console.log(jsonObject)
+		//console.log(jsonObject)
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
