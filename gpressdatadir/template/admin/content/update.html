@@ -136,10 +136,10 @@
 						</li>
 						<li>
 							<div class="left">
-								排序
+								是否有效
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" id="sortNo">
+								<input class="input" type="number" name="status" id="status" value="1" >
 							</div>
 						</li>
 						<li>
@@ -408,6 +408,7 @@
 			thumbnail: thumbnail,
 			sortNo: $('#sortNo').val(),
 			content: content,
+			status: $('#status').val(),
 			markdown: cherryObj.getMarkdown(),
 		}
 		console.log(jsonObject)
