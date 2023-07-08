@@ -20,7 +20,7 @@ const (
 	activityPubAccept        = "application/activity+json"
 	activityPubContentType   = "application/activity+json; charset=utf-8"
 	activityPubDefaultDomain = "activitypub.gpress.cn"
-	proxyAddress             = ""
+	//proxyAddress             = ""
 	//proxyAddress             = "http://127.0.0.1:54321"
 	//keyId                    = "https://" + activityPubDefaultDomain + "/activitypub/api/user/test11#main-key"
 )
@@ -68,8 +68,8 @@ func sendActivityPubRequest(httpurl string, method string, bodyByte []byte, head
 	}
 
 	//设置翻墙代理
-	if proxyAddress != "" {
-		c.SetProxy(protocol.ProxyURI(protocol.ParseURI(proxyAddress)))
+	if config.Proxy != "" && !strings.HasPrefix(httpurl, "http://127.0.0.1") {
+		c.SetProxy(protocol.ProxyURI(protocol.ParseURI(config.Proxy)))
 	}
 
 	request := &protocol.Request{}

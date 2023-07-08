@@ -4,5 +4,6 @@
  "jwttokenKey":"jwttoken",
  "theme":"default",
  "jwtSecret":"",
- "basePath":"/"
+ "basePath":"/",
+ "proxy":""
 }
