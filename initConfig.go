@@ -16,18 +16,19 @@ func initConfig() (bool, error) {
 	now := time.Now().Format("2006-01-02 15:04:05")
 	// 创建配置表的表
 	createTableSQL := `CREATE TABLE IF NOT EXISTS config (
-		id TEXT PRIMARY KEY     NOT NULL,
-		basePath         TEXT  NOT NULL,
-		jwtSecret        TEXT   NOT NULL,
+		id TEXT PRIMARY KEY   NOT NULL,
+		basePath         TEXT NOT NULL,
+		jwtSecret        TEXT NOT NULL,
 		jwttokenKey      TEXT NOT NULL,
 		serverPort       TEXT NOT NULL,
 		theme            TEXT NOT NULL,
-		timeout          INT NOT NULL,
+		timeout          INT  NOT NULL,
+		proxy            TEXT NULL,
 		createTime       TEXT,
 		updateTime       TEXT,
 		createUser       TEXT,
-		sortNo           int NOT NULL,
-		status           int NOT NULL
+		sortNo           int  NOT NULL,
+		status           int  NOT NULL
 	 ) strict ;`
 	ctx := context.Background()
 	_, err := execNativeSQL(ctx, createTableSQL)
@@ -149,6 +150,25 @@ func initConfig() (bool, error) {
 	}
 	sortNo++
 	saveTableField(ctx, theme)
+
+	// 配置 proxy 字段
+	proxy := TableFieldStruct{
+		ID:        FuncGenerateStringID(),
+		TableCode: tableConfigName,
+		FieldCode: "proxy",
+		FieldName: "代理地址",
+		FieldType: fieldType_文本框,
+		// AnalyzerName: keyword// AnalyzerName,
+		TableName:    "配置信息",
+		FieldComment: "",
+		CreateTime:   now,
+		UpdateTime:   now,
+		CreateUser:   createUser,
+		SortNo:       sortNo,
+		Status:       1,
+	}
+	sortNo++
+	saveTableField(ctx, proxy)
 
 	// 配置 timeout 字段
 	timeout := TableFieldStruct{
