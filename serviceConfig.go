@@ -70,6 +70,7 @@ type configStruct struct {
 	Timeout     int    `json:"timeout"`
 	ServerPort  string `json:"serverPort"`
 	Theme       string `json:"theme"`
+	Proxy       string `json:"Proxy"`
 }
 
 // insertConfig 插入config
