@@ -8,7 +8,7 @@ require (
 	github.com/cloudwego/hertz v0.6.6
 	github.com/ethereum/go-ethereum v1.12.0
 	github.com/mattn/go-sqlite3 v1.14.17
-	github.com/tetratelabs/wazero v1.2.1
+	github.com/tetratelabs/wazero v1.3.0
 	github.com/yuin/goldmark v1.5.4
 	github.com/yuin/goldmark-emoji v1.0.2
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20220924101305-151362477c87
