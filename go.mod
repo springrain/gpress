@@ -3,13 +3,13 @@ module gitee.com/gpress/gpress
 go 1.20
 
 require (
-	gitee.com/chunanyong/zorm v1.7.0
+	gitee.com/chunanyong/zorm v1.7.1
 	github.com/alecthomas/chroma/v2 v2.8.0
 	github.com/cloudwego/hertz v0.6.7
-	github.com/ethereum/go-ethereum v1.12.1
+	github.com/ethereum/go-ethereum v1.12.2
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/tetratelabs/wazero v1.4.0
-	github.com/yuin/goldmark v1.5.5
+	github.com/yuin/goldmark v1.5.6
 	github.com/yuin/goldmark-emoji v1.0.2
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/yuin/goldmark-meta v1.1.0
