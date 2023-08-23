@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -28,7 +29,17 @@ func init() {
 	if !sqliteStatus { // 表状态检查失败
 		panic("表检查失败")
 	}
-
+	//初始化Nats服务
+	err := initNatsServer()
+	if err != nil {
+		panic(err)
+	}
+	h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {
+		// 停止 NATS Server 实例
+		if ns != nil {
+			ns.Shutdown()
+		}
+	})
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
 
@@ -36,6 +47,7 @@ func init() {
 }
 
 func main() {
+
 	// 初始化admin路由,使用init实现
 	//initAdminRoute()
 
@@ -54,4 +66,5 @@ func main() {
 	fmt.Println(message)
 	// 启动服务
 	h.Spin()
+
 }
