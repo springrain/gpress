@@ -64,13 +64,22 @@ var defaultConfig = configStruct{
 }
 
 type configStruct struct {
-	BasePath    string `json:"basePath"`
-	JwtSecret   string `json:"jwtSecret"`
+	//基本路径,类似ContextPath,默认 /
+	BasePath string `json:"basePath"`
+	//JWT的Secret
+	JwtSecret string `json:"jwtSecret"`
+	//JWT的token名称
 	JwttokenKey string `json:"jwttokenKey"`
-	Timeout     int    `json:"timeout"`
-	ServerPort  string `json:"serverPort"`
-	Theme       string `json:"theme"`
-	Proxy       string `json:"Proxy"`
+	//超时时间
+	Timeout int `json:"timeout"`
+	//服务器端口
+	ServerPort string `json:"serverPort"`
+	//使用的主题
+	Theme string `json:"theme"`
+	//翻墙代理
+	Proxy string `json:"proxy"`
+	//使用外部的Nats消息队列服务,默认false,默认使用内嵌的Nats服务
+	ExternalNats bool `json:"externalNats"`
 }
 
 // insertConfig 插入config

@@ -5,5 +5,6 @@
  "theme":"default",
  "jwtSecret":"",
  "basePath":"/",
- "proxy":""
+ "proxy":"",
+ "ExternalNats":false
 }
