@@ -51,6 +51,7 @@ func initNatsServer() error {
 	ns.Start()
 	// Connect to a server
 	nsUrl := fmt.Sprintf("nats://%s:%d", natsConfig.Host, natsConfig.Port)
+	//nc, err = nats.Connect(nsUrl, nats.TokenHandler(func() string { return "" }))
 	nc, err = nats.Connect(nsUrl)
 	if err != nil {
 		return fmt.Errorf("nats.Connect(nsUrl) error: %w", err)
@@ -72,7 +73,10 @@ func initNatsServer() error {
 	}
 
 	//emit的事件订阅使用Subscribe模式,不进行持久化.可以和订阅发布使用同一个Subject
-
+	//Queue Groups
+	nc.QueueSubscribe("gpress.hello", "queueGroups", func(m *nats.Msg) {
+		fmt.Printf("Received queueSubscribe message: %s\n", string(m.Data))
+	})
 	// Simple Async Subscriber
 	nc.Subscribe("gpress.hello", func(m *nats.Msg) {
 		fmt.Printf("Received a message: %s\n", string(m.Data))
