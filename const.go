@@ -1,6 +1,9 @@
 package main
 
 const (
+	// 默认名称
+	appName = "gpress"
+
 	// 基本目录
 	datadir = "gpressdatadir/"
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
@@ -33,9 +36,6 @@ const (
 
 	// 静态化文件目录,网站生成的静态html
 	//statichtmlDir = datadir + "statichtml/"
-
-	// 默认名称
-	defaultName = "gpress"
 
 	// 数据默认的创建用户
 	createUser = "system"
