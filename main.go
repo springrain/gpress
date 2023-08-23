@@ -36,9 +36,7 @@ func init() {
 	}
 	h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {
 		// 停止 NATS Server 实例
-		if ns != nil {
-			ns.Shutdown()
-		}
+		closeNatsServer()
 	})
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
