@@ -21,7 +21,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-var tmpl *template.Template = template.New(defaultName).Delims("", "").Funcs(funcMap)
+var tmpl *template.Template = template.New(appName).Delims("", "").Funcs(funcMap)
 
 // initTemplate 初始化模板
 func initTemplate() error {
@@ -49,7 +49,7 @@ func loadTemplate() error {
 	}
 
 	//声明新的template
-	loadTmpl := template.New(defaultName).Delims("", "").Funcs(funcMap)
+	loadTmpl := template.New(appName).Delims("", "").Funcs(funcMap)
 
 	staticFileMap := make(map[string]string)
 	//遍历后台admin模板

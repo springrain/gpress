@@ -64,7 +64,7 @@ func funcTableFiled(tableName string) ([]TableFieldStruct, error) {
 
 // 站点信息
 func funcSite() (map[string]interface{}, error) {
-	finder := zorm.NewSelectFinder(tableSiteName, "*").Append(" WHERE id=?", "gpress")
+	finder := zorm.NewSelectFinder(tableSiteName, "*").Append(" WHERE id=?", appName)
 	rowMap, err := zorm.QueryRowMap(context.Background(), finder)
 	if err != nil {
 		return make(map[string]interface{}, 0), err

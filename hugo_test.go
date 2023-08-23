@@ -36,7 +36,7 @@ func TestCategory(t *testing.T) {
 
 	siteMap := zorm.NewEntityMap(tableSiteName)
 	siteMap.PkColumnName = "id"
-	siteMap.Set("id", "gpress")
+	siteMap.Set("id", appName)
 	siteMap.Set("title", "jiagou")
 	siteMap.Set("name", "架构")
 	siteMap.Set("domain", "jiagou.com")
