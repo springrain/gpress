@@ -22,15 +22,26 @@ func initNatsServer() error {
 	var err error
 	// 创建一个 NATS Server 配置
 	natsConfig := &server.Options{
-		Host:               "127.0.0.1",
+		ServerName: appName, //MQTT协议必须指定
+		//Host:               "127.0.0.1",
 		Port:               4222,
 		JetStream:          true,
 		JetStreamMaxMemory: 1 * 1024 * 1024 * 1024,  // 1G
 		JetStreamMaxStore:  10 * 1024 * 1024 * 1024, // 10G
 		StoreDir:           datadir + "natsdata",    // 持久化数据目录
 		NoLog:              true,
-		NoSigs:             true,
-		MaxControlLine:     1024,
+		//Debug:              false,
+		NoSigs:         true,
+		MaxControlLine: 1024,
+		//mqtt.js只支持webscoket协议,默认的path是 /mqtt
+		Websocket: server.WebsocketOpts{
+			NoTLS: true, //默认不使用TLS
+			Port:  8083,
+		},
+		MQTT: server.MQTTOpts{ //启用MQTT协议,用于支持IOT/聊天等场景
+			//Host: "127.0.0.1",
+			Port: 1883,
+		},
 	}
 
 	if config.ExternalNats { //如果是使用外部独立的Nats服务
@@ -49,6 +60,7 @@ func initNatsServer() error {
 	// 启动 NATS Server 实例
 	//go func() {
 	ns.Start()
+
 	// Connect to a server
 	nsUrl := fmt.Sprintf("nats://%s:%d", natsConfig.Host, natsConfig.Port)
 	//nc, err = nats.Connect(nsUrl, nats.TokenHandler(func() string { return "" }))
@@ -96,6 +108,8 @@ func initNatsServer() error {
 
 	// Simple Publisher
 	nc.Publish("gpress.hello", []byte("hello gpress-->"+time.Now().Format("2006-01-02 15:04:05")))
+	// TODO 如何后台发送一个mqtt消息
+	//nc.Publish("/mqtt/hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
 
 	//}()
 	// 等待一段时间
