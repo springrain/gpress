@@ -85,7 +85,8 @@ func initNatsServer() error {
 	if err != nil {
 		return fmt.Errorf("jetstream.New(nc) error: %w", err)
 	}
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	//ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx := context.Background()
 
 	// get existing stream handle
 	stream, _ := js.Stream(ctx, appName)
@@ -123,13 +124,9 @@ func initNatsServer() error {
 	// Simple Publisher
 	nc.Publish("gpress.hello", []byte("hello gpress-->"+time.Now().Format("2006-01-02 15:04:05")))
 
-	// TODO 如何后台发送一个mqtt消息
 	//https://docs.nats.io/running-a-nats-service/configuration/mqtt
 	// http://127.0.0.1:8222/subsz?subs=1 查看对照 /mqtt/hello ==> /.mqtt.hello
 	nc.Publish("/.mqtt.hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
-
-	//用户权限控制,需要限制某个用户能够订阅或者发布某个主题
-	//https: //docs.nats.io/running-a-nats-service/configuration/securing_nats/authorization
 
 	// 等待一段时间
 	//time.Sleep(time.Second * 3)
@@ -151,7 +148,29 @@ func closeNatsServer() {
 type NatsClientAuthentication struct{}
 
 func (client *NatsClientAuthentication) Check(c server.ClientAuthentication) bool {
+
 	//fmt.Printf("server.ClientAuthentication:%v", c)
 	fmt.Printf("userName:%s,password:%s", c.GetOpts().Username, c.GetOpts().Password)
+
+	//可以把password作为加密签名,登录成功之后,也可以作为token
+
+	//用户权限控制,需要限制某个用户能够订阅或者发布某个主题
+	// https://docs.nats.io/running-a-nats-service/configuration/securing_nats/authorization
+	c.RegisterUser(&server.User{
+		Username: c.GetOpts().Username,
+		Permissions: &server.Permissions{
+			//订阅权限
+			Subscribe: &server.SubjectPermission{
+				//Allow: []string{},           //允许
+				Deny: []string{"/.mqtt.>"}, //拒绝
+			},
+			//发布权限
+			Publish: &server.SubjectPermission{
+				//Allow: []string{},           //允许
+				Deny: []string{"/.mqtt.>"}, //拒绝
+			},
+		},
+	})
+
 	return true
 }
