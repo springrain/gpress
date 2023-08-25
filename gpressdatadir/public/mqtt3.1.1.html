@@ -7,7 +7,10 @@ function MQTT_Connect() {
 			MQTT_Client = mqtt.connect(mqttURL
 			, {
 				//固定clientId
-				clientId :"test-mqtt-clientId"
+				//clientId :"test-mqtt-clientId",
+				username:"test",
+				password:"password"
+
                  //auth:false,
 				 //protocolId:"MQTT",
 				// defaultProtocol:"MQTT",
@@ -113,7 +116,7 @@ function MQTT_Connect() {
 	</div>		
  
 	<div style="margin-top: 20px;">
-		订阅消息<input id="MQTT_Subscribe_Msg">　
+		订阅消息<input id="MQTT_Subscribe_Msg"  value="/mqtt/hello">　
 		QoS<select id="MQTT_Subscribe_QoS">
 			<option>0_Almost_Once</option>
 			<option>1_Atleast_Once</option>
