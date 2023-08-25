@@ -24,8 +24,8 @@ func initNatsServer() error {
 	natsOptions := &server.Options{
 		ServerName: appName, //MQTT协议必须指定
 		//Host:               "127.0.0.1",
-		Port:               4222,
-		HTTPPort:           8222,
+		Port: 4222,
+		//HTTPPort:           8222, 默认不启用http监控页面
 		JetStream:          true,
 		JetStreamMaxMemory: 1 * 1024 * 1024 * 1024,  // 1G
 		JetStreamMaxStore:  10 * 1024 * 1024 * 1024, // 10G
@@ -127,19 +127,24 @@ func initNatsServer() error {
 	//https://docs.nats.io/running-a-nats-service/configuration/mqtt
 	// http://127.0.0.1:8222/subsz?subs=1 查看对照 /mqtt/hello ==> /.mqtt.hello
 	nc.Publish("/.mqtt.hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
-	//}()
+
+	//用户权限控制,需要限制某个用户能够订阅或者发布某个主题
+	//https: //docs.nats.io/running-a-nats-service/configuration/securing_nats/authorization
+
 	// 等待一段时间
 	//time.Sleep(time.Second * 3)
 	return err
 }
 
 func closeNatsServer() {
-	if ns != nil {
-		ns.Shutdown()
-	}
 	if nc != nil {
 		nc.Close()
 	}
+
+	if ns != nil {
+		ns.Shutdown()
+	}
+
 }
 
 // 自定义连接权限验证接口,可以用于验证私钥签名
