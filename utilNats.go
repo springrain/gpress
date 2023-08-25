@@ -107,6 +107,11 @@ func initNatsServer() error {
 		fmt.Printf("Received a message: %s\n", string(m.Data))
 	})
 
+	// 订阅mqtt消息,用于历史记录
+	nc.Subscribe("/.mqtt.hello", func(m *nats.Msg) {
+		fmt.Printf("/.mqtt.hello==>: %s\n", string(m.Data))
+	})
+
 	// retrieve consumer handle from a stream
 	cons, _ := stream.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
 		Durable:   appName + "-cons", //类似redis stream 组名称,同一个组内的消费者进行负载均衡
@@ -162,12 +167,12 @@ func (client *NatsClientAuthentication) Check(c server.ClientAuthentication) boo
 			//订阅权限
 			Subscribe: &server.SubjectPermission{
 				//Allow: []string{},           //允许
-				Deny: []string{"/.mqtt.>"}, //拒绝
+				//Deny: []string{"/.mqtt.>"}, //拒绝
 			},
 			//发布权限
 			Publish: &server.SubjectPermission{
 				//Allow: []string{},           //允许
-				Deny: []string{"/.mqtt.>"}, //拒绝
+				//Deny: []string{"/.mqtt.>"}, //拒绝
 			},
 		},
 	})
