@@ -21,7 +21,7 @@ var js jetstream.JetStream
 func initNatsServer() error {
 	var err error
 	// 创建一个 NATS Server 配置
-	natsConfig := &server.Options{
+	natsOptions := &server.Options{
 		ServerName: appName, //MQTT协议必须指定
 		//Host:               "127.0.0.1",
 		Port:               4222,
@@ -49,14 +49,14 @@ func initNatsServer() error {
 	}
 
 	if config.ExternalNats { //如果是使用外部独立的Nats服务
-		natsConfig, err = server.ProcessConfigFile(datadir + "nats.conf")
+		natsOptions, err = server.ProcessConfigFile(datadir + "nats.conf")
 		if err != nil {
 			return fmt.Errorf("server.ProcessConfigFile error: %w", err)
 		}
 	}
 
 	// 创建 NATS Server 实例
-	ns, err = server.NewServer(natsConfig)
+	ns, err = server.NewServer(natsOptions)
 	if err != nil {
 		return fmt.Errorf("server.NewServer error: %w", err)
 	}
@@ -65,10 +65,17 @@ func initNatsServer() error {
 	//go func() {
 	ns.Start()
 
+	//nc, err = ns.InProcessConn(ns)
 	// Connect to a server
-	nsUrl := fmt.Sprintf("nats://%s:%d", natsConfig.Host, natsConfig.Port)
+	nsUrl := fmt.Sprintf("nats://%s:%d", natsOptions.Host, natsOptions.Port)
 	//nc, err = nats.Connect(nsUrl, nats.TokenHandler(func() string { return "" }))
-	nc, err = nats.Connect(nsUrl)
+
+	if natsOptions.Host == "" || natsOptions.Host == "0.0.0.0" || natsOptions.Host == "127.0.0.1" || natsOptions.Host == "localhost" { //避免建立TCP连接
+		nc, err = nats.Connect(nsUrl, nats.InProcessServer(ns))
+	} else {
+		nc, err = nats.Connect(nsUrl)
+	}
+
 	if err != nil {
 		return fmt.Errorf("nats.Connect(nsUrl) error: %w", err)
 	}
@@ -120,7 +127,6 @@ func initNatsServer() error {
 	//https://docs.nats.io/running-a-nats-service/configuration/mqtt
 	// http://127.0.0.1:8222/subsz?subs=1 查看对照 /mqtt/hello ==> /.mqtt.hello
 	nc.Publish("/.mqtt.hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
-
 	//}()
 	// 等待一段时间
 	//time.Sleep(time.Second * 3)
