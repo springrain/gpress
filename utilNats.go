@@ -69,12 +69,13 @@ func initNatsServer() error {
 	// Connect to a server
 	nsUrl := fmt.Sprintf("nats://%s:%d", natsOptions.Host, natsOptions.Port)
 	//nc, err = nats.Connect(nsUrl, nats.TokenHandler(func() string { return "" }))
-
+	options := make([]nats.Option, 0)
+	//用户账号密码可以启动时随机产生,用于特殊权限判断
+	options = append(options, nats.UserInfo("user", "password"))
 	if natsOptions.Host == "" || natsOptions.Host == "0.0.0.0" || natsOptions.Host == "127.0.0.1" || natsOptions.Host == "localhost" { //避免建立TCP连接
-		nc, err = nats.Connect(nsUrl, nats.InProcessServer(ns))
-	} else {
-		nc, err = nats.Connect(nsUrl)
+		options = append(options, nats.InProcessServer(ns))
 	}
+	nc, err = nats.Connect(nsUrl, options...)
 
 	if err != nil {
 		return fmt.Errorf("nats.Connect(nsUrl) error: %w", err)
@@ -158,6 +159,8 @@ func (client *NatsClientAuthentication) Check(c server.ClientAuthentication) boo
 	fmt.Printf("userName:%s,password:%s", c.GetOpts().Username, c.GetOpts().Password)
 
 	//可以把password作为加密签名,登录成功之后,也可以作为token
+
+	//Subscribe 和 Publish 需要自定义函数,验证用户权限
 
 	//用户权限控制,需要限制某个用户能够订阅或者发布某个主题
 	// https://docs.nats.io/running-a-nats-service/configuration/securing_nats/authorization
