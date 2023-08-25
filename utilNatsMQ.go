@@ -42,6 +42,9 @@ func initNatsServer() error {
 			//Host: "127.0.0.1",
 			Port: 1883,
 		},
+
+		//自定义验证客户端连接权限
+		CustomClientAuthentication: &NatsClientAuthentication{},
 	}
 
 	if config.ExternalNats { //如果是使用外部独立的Nats服务
@@ -108,8 +111,10 @@ func initNatsServer() error {
 
 	// Simple Publisher
 	nc.Publish("gpress.hello", []byte("hello gpress-->"+time.Now().Format("2006-01-02 15:04:05")))
+
 	// TODO 如何后台发送一个mqtt消息
-	//nc.Publish("/mqtt/hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
+	//https://docs.nats.io/running-a-nats-service/configuration/mqtt
+	nc.Publish("mqtt.hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
 
 	//}()
 	// 等待一段时间
@@ -124,4 +129,13 @@ func closeNatsServer() {
 	if nc != nil {
 		nc.Close()
 	}
+}
+
+// 自定义连接权限验证接口,可以用于验证私钥签名
+type NatsClientAuthentication struct{}
+
+func (client *NatsClientAuthentication) Check(c server.ClientAuthentication) bool {
+	//fmt.Printf("server.ClientAuthentication:%v", c)
+	fmt.Printf("userName:%s,password:%s", c.GetOpts().Username, c.GetOpts().Password)
+	return true
 }
