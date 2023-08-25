@@ -25,6 +25,7 @@ func initNatsServer() error {
 		ServerName: appName, //MQTT协议必须指定
 		//Host:               "127.0.0.1",
 		Port:               4222,
+		HTTPPort:           8222,
 		JetStream:          true,
 		JetStreamMaxMemory: 1 * 1024 * 1024 * 1024,  // 1G
 		JetStreamMaxStore:  10 * 1024 * 1024 * 1024, // 10G
@@ -71,6 +72,7 @@ func initNatsServer() error {
 	if err != nil {
 		return fmt.Errorf("nats.Connect(nsUrl) error: %w", err)
 	}
+
 	// create jetstream context from nats connection
 	js, err = jetstream.New(nc)
 	if err != nil {
@@ -109,12 +111,15 @@ func initNatsServer() error {
 		msg.Ack()
 	})
 
+	// 发布需要在订阅之后,订阅是不持久化的,没有订阅者,这条消息就删除了.
+
 	// Simple Publisher
 	nc.Publish("gpress.hello", []byte("hello gpress-->"+time.Now().Format("2006-01-02 15:04:05")))
 
 	// TODO 如何后台发送一个mqtt消息
 	//https://docs.nats.io/running-a-nats-service/configuration/mqtt
-	nc.Publish("mqtt.hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
+	// http://127.0.0.1:8222/subsz?subs=1 查看对照 /mqtt/hello ==> /.mqtt.hello
+	nc.Publish("/.mqtt.hello", []byte("hello mqtt-->"+time.Now().Format("2006-01-02 15:04:05")))
 
 	//}()
 	// 等待一段时间
