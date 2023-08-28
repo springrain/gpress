@@ -79,7 +79,7 @@ type configStruct struct {
 	//翻墙代理
 	Proxy string `json:"proxy"`
 	//使用外部的Nats消息队列服务,默认false,默认使用内嵌的Nats服务
-	ExternalNats bool `json:"externalNats"`
+	//ExternalNats bool `json:"externalNats"`
 }
 
 // insertConfig 插入config
