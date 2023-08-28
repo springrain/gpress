@@ -19,42 +19,50 @@ var nc *nats.Conn
 var js jetstream.JetStream
 
 func initNatsServer() error {
-	var err error
-	// 创建一个 NATS Server 配置
-	natsOptions := &server.Options{
-		ServerName: appName, //MQTT协议必须指定
-		//Host:               "127.0.0.1",
-		Port: 4222,
-		//HTTPPort:           8222, 默认不启用http监控页面
-		JetStream:          true,
-		JetStreamMaxMemory: 1 * 1024 * 1024 * 1024,  // 1G
-		JetStreamMaxStore:  10 * 1024 * 1024 * 1024, // 10G
-		StoreDir:           datadir + "natsdata",    // 持久化数据目录
-		NoLog:              true,
-		//Debug:              false,
-		NoSigs:         true,
-		MaxControlLine: 1024,
-		//mqtt.js只支持webscoket协议,默认的path是 /mqtt
-		Websocket: server.WebsocketOpts{
-			NoTLS: true, //默认不使用TLS
-			Port:  8083,
-		},
-		MQTT: server.MQTTOpts{ //启用MQTT协议,用于支持IOT/聊天等场景
-			//Host: "127.0.0.1",
-			Port: 1883,
-		},
+	//使用配置文件
+	/*
+		var err error
+		// 创建一个 NATS Server 配置
+		natsOptions := &server.Options{
+			ServerName: appName, //MQTT协议必须指定
+			//Host:               "127.0.0.1",
+			Port: 4222,
+			//HTTPPort:           8222, 默认不启用http监控页面
+			JetStream:          true,
+			JetStreamMaxMemory: 1 * 1024 * 1024 * 1024,  // 1G
+			JetStreamMaxStore:  10 * 1024 * 1024 * 1024, // 10G
+			StoreDir:           datadir + "natsdata",    // 持久化数据目录
+			NoLog:              true,
+			//Debug:              false,
+			NoSigs:         true,
+			MaxControlLine: 1024,
+			//mqtt.js只支持webscoket协议,默认的path是 /mqtt
+			Websocket: server.WebsocketOpts{
+				NoTLS: true, //默认不使用TLS
+				Port:  8083,
+			},
+			MQTT: server.MQTTOpts{ //启用MQTT协议,用于支持IOT/聊天等场景
+				//Host: "127.0.0.1",
+				Port: 1883,
+			},
 
-		//自定义验证客户端连接权限
-		CustomClientAuthentication: &NatsClientAuthentication{},
-	}
-
-	if config.ExternalNats { //如果是使用外部独立的Nats服务
-		natsOptions, err = server.ProcessConfigFile(datadir + "nats.conf")
-		if err != nil {
-			return fmt.Errorf("server.ProcessConfigFile error: %w", err)
+			//自定义验证客户端连接权限
+			CustomClientAuthentication: &NatsClientAuthentication{},
 		}
-	}
 
+		if config.ExternalNats { //如果是使用外部独立的Nats服务
+			natsOptions, err = server.ProcessConfigFile(datadir + "nats.conf")
+			if err != nil {
+				return fmt.Errorf("server.ProcessConfigFile error: %w", err)
+			}
+		}
+	*/
+	natsOptions, err := server.ProcessConfigFile(datadir + "nats.conf")
+	if err != nil {
+		return fmt.Errorf("nats server.ProcessConfigFile error: %w", err)
+	}
+	//自定义验证客户端连接权限
+	natsOptions.CustomClientAuthentication = &NatsClientAuthentication{}
 	// 创建 NATS Server 实例
 	ns, err = server.NewServer(natsOptions)
 	if err != nil {
