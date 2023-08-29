@@ -3,7 +3,7 @@ module gitee.com/gpress/gpress
 go 1.20
 
 require (
-	gitee.com/chunanyong/zorm v1.7.1
+	gitee.com/chunanyong/zorm v1.7.2
 	github.com/alecthomas/chroma/v2 v2.8.0
 	github.com/cloudwego/hertz v0.6.7
 	github.com/ethereum/go-ethereum v1.12.2
