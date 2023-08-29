@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"html/template"
@@ -273,13 +271,6 @@ func hStaticFS(relativePath, root string) {
 
 func cRedirecURI(uri string) []byte {
 	return []byte(config.BasePath + uri)
-}
-
-// hashSha256 使用sha256计算hash值
-func hashSha256(str string) string {
-	hashByte := sha256.Sum256([]byte(str))
-	hashStr := hex.EncodeToString(hashByte[:])
-	return hashStr
 }
 
 // FuncGenerateStringID 默认生成字符串ID的函数.方便自定义扩展
