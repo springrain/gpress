@@ -28,17 +28,7 @@ func init() {
 	if !sqliteStatus { // 表状态检查失败
 		panic("表检查失败")
 	}
-	/*
-		//初始化Nats服务,暂时不使用
-		err := initNatsServer()
-		if err != nil {
-			panic(err)
-		}
-		h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {
-			// 停止 NATS Server 实例
-			closeNatsServer()
-		})
-	*/
+
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
 
