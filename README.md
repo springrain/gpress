@@ -3,8 +3,10 @@
 ## 介绍  
 云原生高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需 200M 内存   
 默认端口660  
-开发时需要先解压gpressdatadir/dict.zip      
-运行 go run --tags "fts5" .   
+需要先解压```gpressdatadir/dict.zip```      
+运行 ```go run --tags "fts5" .```   
+
+
 开发环境需要配置CGO编译,设置```set CGO_ENABLED=1```,下载mingw64和cmake,并把bin配置到环境变量,注意把```mingw64/bin/mingw32-make.exe``` 改名为 ```make.exe```  
 注意修改vscode的launch.json,增加 ``` ,"buildFlags": "--tags=fts5" ``` 用于调试fts5    
 test需要手动测试:``` go test -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress ```  
