@@ -3,9 +3,7 @@ package main
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"crypto/sha256"
 	"encoding/asn1"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -15,12 +13,6 @@ import (
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 )
 
-// hashSha256 使用sha256计算hash值
-func hashSha256(str string) string {
-	hashByte := sha256.Sum256([]byte(str))
-	hashStr := hex.EncodeToString(hashByte[:])
-	return hashStr
-}
 func verifySecp256k1Signature(senderAddress string, signatureData string, signature string) (bool, error) {
 	// 将签名数据解码为字节数组
 	signatureBytes := common.FromHex(signature)
@@ -102,6 +94,14 @@ type ECDSASignature struct {
 }
 
 /*
+// hashSha256 使用sha256计算hash值
+
+	func hashSha256(str string) string {
+		hashByte := sha256.Sum256([]byte(str))
+		hashStr := hex.EncodeToString(hashByte[:])
+		return hashStr
+	}
+
 // use DER-encoded ASN.1 octet standard to represent the signature
 // 与比特币算法一样，基于DER-encoded ASN.1 octet标准，来表达使用椭圆曲线签名算法返回的结果
 
