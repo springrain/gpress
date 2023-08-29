@@ -43,21 +43,6 @@ const (
 	tokenUserId = "userId"
 
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-	// 逗号分词器名称
-	comma // AnalyzerName = "comma"
-
-	// gse分词器名称
-	gse // AnalyzerName = "gse"
-
-	// keyword 分词器名称,避免引入错误的包
-	//使用keywordMapping代替, //mapping.DefaultMapping.AddFieldMappingsAt("*", keywordMapping)
-	// "github.com/blevesearch/bleve/v2/analysis/analyzer/keyword"
-	//keyword// AnalyzerName = keyword.Name
-	keyword // AnalyzerName = "keywordlower"
-
-	datetime // AnalyzerName = "datetime"
-	numeric  // AnalyzerName  = "numeric"
 )
 
 //var keywordMapping = bleve.NewKeywordFieldMapping()
