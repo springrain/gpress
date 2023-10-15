@@ -108,7 +108,7 @@ func init() {
 		if ok {
 			responseData["message"] = message
 		}
-		if errorLoginCount.Load() > errCount { //连续错误3次显示验证码
+		if errorLoginCount.Load() >= errCount { //连续错误3次显示验证码
 			responseData["showCaptcha"] = "1"
 			generateCaptcha()
 			responseData["captchaBase64"] = captchaBase64
@@ -124,7 +124,7 @@ func init() {
 			return
 		}
 
-		if errorLoginCount.Load() > errCount { //连续错误3次显示验证码
+		if errorLoginCount.Load() >= errCount { //连续错误3次显示验证码
 			answer := c.PostForm("answer")
 			if answer != captchaAnswer { //答案不对
 				c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=验证码错误"))
