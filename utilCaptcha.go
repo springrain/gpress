@@ -8,7 +8,7 @@ import (
 	"github.com/mojocn/base64Captcha"
 )
 
-const errCount = 2
+const errCount = 3
 
 // 配置验证码的参数
 var driverString = base64Captcha.DriverString{
