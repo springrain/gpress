@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>内容文章 - GPRESS</title>
+<title>设置 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
 {{$path := .UrlPathParam}}
@@ -36,18 +36,18 @@
 			<table class="table is-hoverable is-fullwidth">
 				<thead>
 					<tr>
-						<th>文章内容ID</th>
-						<th>标题</th>
-						<th>副标题</th>
-						<th>关键字</th>
-						<th>tag标签</th>
-						<th>导航ID</th>
-						<th>导航名称</th>
-						<th>作者</th>
-						<th>文章摘要</th>
-						<th>封面图</th>
+						<th>配置ID</th>
+						<th>基础路径</th>
+						<th>jwt加密字符串</th>
+						<th>jwt的key</th>
+						<th>服务器ip:端口</th>
+						<th>主题</th>
+						<th>超时时间</th>
+						<th>主服务器</th>
+						<th>代理地址</th>
 						<th>创建时间</th>
 						<th>更新时间</th>
+						<th>创建人</th>
 						<th>排序</th>
 						<th>是否有效</th>
 						<th class="pos-sticky">操作</th>
@@ -59,17 +59,17 @@
 					<tr>
 						<!-- 获取每一列的值 -->
 						<td> {{ .Id }}</td>
-						<td> {{ .Title }}</td>
-						<td> {{ .Subtitle }}</td>
-						<td> {{ .Keyword }}</td>
-						<td> {{ .Tag }}</td>
-						<td> {{ .CategoryID }}</td>
-						<td> {{ .CategoryName }}</td>
-						<td> {{ .Author }}</td>
-						<td> {{ .Summary }}</td>
-						<td><img src='{{.Thumbnail}}' /></td>
+						<td> {{ .BasePath }}</td>
+						<td> {{ .JwtSecret }}</td>
+						<td> {{ .JwttokenKey }} </td>
+						<td> {{ .ServerPort }} </td>
+						<td> {{ .Theme }} </td>
+						<td> {{ .Timeout }} </td>
+						<td> {{ .MainServer }} </td>
+						<td> {{ .Proxy }} </td>
 						<td> {{ .CreateTime }}</td>
 						<td> {{ .UpdateTime }}</td>
+						<td>{{ .CreateUser }}</td>
 						<td> {{ .SortNo }}</td>
 						<td> {{ .Status }}</td>
 						<td class="pos-sticky">
@@ -81,7 +81,6 @@
 								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$path}}/delete')"
 									id="{{.Id}}" value="删除"></input>
 							</div>
-							
 						</td>
 					</tr>
 					{{end }}
@@ -92,8 +91,7 @@
 	<!-- 分页条 -->
 	<div class="page"></div>
 </section>
-<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
-<script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
+
 <script>
 	// 加载分页
 	initPage()

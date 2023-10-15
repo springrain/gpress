@@ -214,7 +214,7 @@ func responData2Map(responseData ResponseData) map[string]interface{} {
 	result["extMap"] = responseData.ExtMap
 	result["page"] = responseData.Page
 	result["queryString"] = responseData.QueryString
-	result["urlPathParam"] = responseData.UrlPathParam
+	result["UrlPathParam"] = responseData.UrlPathParam
 	result["err"] = responseData.ERR
 	return result
 }

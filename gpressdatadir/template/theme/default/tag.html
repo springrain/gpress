@@ -1,28 +1,28 @@
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList .q .pageNo  "id,title,hrefURL,updateTime FROM content WHERE status=1 and tag=? order by sortNo desc" .urlPathParam }}
+{{ $selectList := selectList "content" .q .pageNo  "id,title,hrefURL,updateTime FROM content WHERE status=1 and tag=? order by sortNo desc" .UrlPathParam }}
 
 {{ $site:=site }}
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-  <title>{{ .urlPathParam }}</title>
-  <meta name="description" content="{{ $site.description }}" />
-  <meta name="keyword" content="{{ $site.keyword }}" />
+  <title>{{.UrlPathParam}}</title>
+  <meta name="description" content="{{ $site.Description }}" />
+  <meta name="keyword" content="{{ $site.Keyword }}" />
 
 {{template "bodystart.html"  }}
 
 <section id="archive" class="archive">
   <div class="archive-title category">
-        <h2 class="archive-name">{{ .urlPathParam }}</h2>
+        <h2 class="archive-name">{{.UrlPathParam}}</h2>
   </div>
-  {{ range $k,$v := $selectList.data }}
+  {{ range $k,$v := $selectList.Data }}
   <div class="archive-post">
       <span class="archive-post-time">
-        {{ slice $v.updateTime 0 10 }} 
+        {{ slice .UpdateTime 0 10 }} 
       </span>
       <span class="archive-post-title">
-        <a href="{{basePath}}post/{{$v.id}}" class="archive-post-link">
-          {{ $v.title }}
+        <a href="{{basePath}}post/{{.Id}}" class="archive-post-link">
+          {{ .Title }}
         </a>
       </span>
   </div>
@@ -32,14 +32,14 @@
 </section>
   
 <nav class="pagination">
-  {{ if $selectList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}tag/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo -1 }}&q={{.q}}">
+  {{ if $selectList.Page.HasPrev }}
+  <a class="prev" href="{{basePath}}tag/{{.UrlPathParam}}?pageNo={{ addInt $selectList.Page.PageNo -1 }}&q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
-  {{ if $selectList.page.HasPrev }}
-  <a class="next" href="{{basePath}}tag/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo 1 }}&q={{.q}}">
+  {{ if $selectList.Page.HasPrev }}
+  <a class="next" href="{{basePath}}tag/{{.UrlPathParam}}?pageNo={{ addInt $selectList.Page.PageNo 1 }}&q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>

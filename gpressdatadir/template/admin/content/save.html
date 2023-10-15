@@ -1,8 +1,8 @@
 {{template "admin/header.html"}}
-<title>save - gpress</title>
+<title>新增内容 - GPRESS</title>
 {{template "admin/bodystart.html"}}
-{{ $tableFiled := tableFiled .urlPathParam }}
-{{$fieldType := fieldType}}
+
+
 {{ $category := category }} <!-- 导航数据 -->
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
@@ -27,16 +27,8 @@
 		<div class="table-content">
 			<!-- is-6-desktop is-6-tablet -->
 			<div class="column">
-				<form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/save" method="POST">
+				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
 					<ul class="save-ul">
-						<li>
-							<div class="left">
-								文章ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="id" id="id">
-							</div>
-						</li>
 						<li>
 							<div class="left">
 								文章标题
@@ -53,7 +45,14 @@
 								<input class="input" type="text" name="subtitle" id="subtitle">
 							</div>
 						</li>
-
+						<li>
+							<div class="left">
+								文章ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="id" id="id">
+							</div>
+						</li>
 						<li>
 							<div class="left">
 								关键字
@@ -105,6 +104,14 @@
 								<input class="input" type="text" name="author" id="author">
 							</div>
 						</li>
+						<li>
+							<div class="left">
+								是否有效
+							</div>
+							<div class="right">
+								<input class="input" value="1" type="number" name="status" id="status">
+							</div>
+						</li>
 						<li style="align-items: flex-start;">
 							<div class="left">
 								封面图
@@ -132,15 +139,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" value="1" id="sortNo">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								是否有效
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="status"  value="1" id="status">
+								<input class="input" type="number" name="sortNo" id="sortNo">
 							</div>
 						</li>
 						<li>
@@ -375,6 +374,7 @@
 		event.preventDefault()
 		const formData = new FormData(form)
 		const jsonObject = {
+			status: $('#status').val()-0,
 			id: $('#id').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
@@ -385,19 +385,18 @@
 			tag: $('#tag').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
-			sortNo: $('#sortNo').val(),
+			sortNo: $('#sortNo').val()-0,
 			content: content,
-			status: $('#status').val(),
 			markdown: cherryObj.getMarkdown(),
 		}
-		//console.log(jsonObject)
+		console.log(jsonObject)
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
 			headers: { 'Content-Type': 'application/json' }
 		})
 		let res = await response.json()
-		if (res.statusCode == 200) {
+		if (res.statusCode == 1) {
 			$.confirm({
 				useBootstrap: false,
 				boxWidth: '400px',
@@ -406,7 +405,7 @@
 				type: 'green',
 				buttons: {
 					'确定': function() {
-						window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
+						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
 					}
 				}
 			})
