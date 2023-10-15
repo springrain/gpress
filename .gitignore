@@ -25,7 +25,6 @@ natsdata/
 *debug.test
 debug.test
 __debug_bin
-go.sum
 
 # system ignore
 .DS_Store

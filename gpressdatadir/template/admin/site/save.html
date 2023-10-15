@@ -1,0 +1,191 @@
+{{template "admin/header.html"}}
+<title>新增站点信息 - GPRESS</title>
+{{template "admin/bodystart.html"}}
+
+
+{{ $category := category }} <!-- 导航数据 -->
+{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+
+<section class="section">
+	<input type="hidden" id="basePath" value="{{basePath}}">
+
+	<div class="container">
+		<div class="table-content">
+			<!-- is-6-desktop is-6-tablet -->
+			<div class="column">
+				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
+					<ul class="save-ul">
+						<li>
+							<div class="left">
+								标题
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="title" id="title">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								名称
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="name" id="name">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								域名
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="domain" id="domain">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								关键字
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="keyword" id="keyword">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								站点描述
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="description" id="description">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								默认主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="theme" id="theme">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								PC主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="themePC" id="themePC">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								手机主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="themeWAP" id="themeWAP">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								微信主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="siteThemeWEIXIN" id="siteThemeWEIXIN">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Logo
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="logo" id="logo">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Favicon
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="favicon" id="favicon">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								底部信息
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="footer" id="footer">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								创建人
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="createUser" id="createUser">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								排序
+							</div>
+							<div class="right">
+								<input class="input" type="number" name="sortNo" id="sortNo">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								是否有效
+							</div>
+							<div class="right">
+								<input class="input" type="number" value="1" name="status" id="Status">
+							</div>
+						</li>
+					</ul>
+					<div class="field is-grouped" style="padding-left: 190px;">
+						<div class="control">
+							<button type="submit" class="button is-primary">提交</button>
+						</div>
+						<div class="control">
+							<button type="reset" class="button is-info is-light">重置</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	// 保存提交
+	const form = document.querySelector('#gpress-form')
+	form.addEventListener('submit', async event => {
+		event.preventDefault()
+		const formData = new FormData(form)
+		const jsonObject = {}
+		for (const [key, value] of formData.entries()) {
+			const fieldType = document.querySelector(key)
+							jsonObject[key] = value
+		}
+		jsonObject.sortNo = jsonObject.sortNo-0
+		jsonObject.status = jsonObject.status-0
+
+		const response = await fetch(form.action, {
+			method: form.method,
+			body: JSON.stringify(jsonObject),
+			headers: { 'Content-Type': 'application/json' }
+		})
+		let res = await response.json()
+		if (res.statusCode == 1) {
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '400px',
+				title: '提示',
+				content: '保存成功！',
+				type: 'green',
+				buttons: {
+					'确定': function() {
+						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
+					}
+				}
+			})
+		}
+	})
+</script>
+
+
+{{template "admin/bodyend.html"}}

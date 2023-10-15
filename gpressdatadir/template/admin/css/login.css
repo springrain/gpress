@@ -22,13 +22,12 @@ body {
 .avatar {
   margin-top: -70px;
   padding-bottom: 20px;
-  
 }
 
 .avatar img {
   padding: 5px;
-  max-height:150px;
   background: #fff;
+  height: 150px;
   border-radius: 50%;
   -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
   box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
@@ -82,11 +81,14 @@ p.subtitle {
   border: 1px solid #eeeeee;
   justify-content: left;
   margin-bottom: 10px;
+	padding-left: 10px;
+	box-sizing: border-box;
   cursor: pointer;
 }
 
 .wallet>div div img {
   width: 42px;
+	margin-right: 10px;
 }
 
 .wallet .xpocket {

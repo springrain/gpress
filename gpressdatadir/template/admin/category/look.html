@@ -1,0 +1,143 @@
+{{template "admin/header.html"}}
+<title>查看导航菜单 - GPRESS</title>
+{{template "admin/bodystart.html"}}
+
+{{ $category := category }} <!-- 导航数据 -->
+{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+
+<style>
+	.code-line .number{
+		background-color: transparent;
+		font-size: 12px;
+		padding: 0;
+		vertical-align: unset;
+	}
+</style>
+<section class="section">
+	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
+
+	<div class="container">
+		<div class="table-content">
+			<div class="column">
+				<form id="gpress-form" action="/" method="POST">
+					<ul class="save-ul">
+						<li>
+							<div class="left">
+								菜单名称
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Name}}" />
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								跳转路径
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.HrefURL}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								跳转方式
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.HrefTarget}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								父菜单ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Pid}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								PC主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.ThemePC}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								模型ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.ModuleID}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								页面模版
+							</div>
+							<div class="right">
+								<select class="input" id="templateSelect" disabled>
+									<option value="">请选择</option>
+									{{ range $index,$obj := $pageTemplate }}
+									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									{{end}}
+								</select>
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								子页面模版ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.ChildTemplateID}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								创建人
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.CreateUser}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								排序
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.Data.SortNo}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								是否有效
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.Data.Status}}">
+							</div>
+						</li>
+					</ul>
+
+					<div class="field is-grouped" style="padding-left: 190px;">
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/update?id={{.Data.Id}}"
+								class="button is-primary">编辑</a>
+						</div>
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/list" class="button is-info is-light">返回</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+<link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet">
+<script>
+	let templateID = $('#templateID').val()
+	$('#templateSelect').val(templateID)
+	
+	$('#templateSelect').change(function(e) {
+		templateID = $('#templateSelect').val()
+	})
+</script>
+
+{{template "admin/bodyend.html"}}

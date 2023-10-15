@@ -44,21 +44,3 @@ const (
 
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 )
-
-//var keywordMapping = bleve.NewKeywordFieldMapping()
-
-const (
-	fieldType_数字 = iota + 1
-	fieldType_日期
-	fieldType_文本框
-	fieldType_文本域
-	fieldType_富文本
-	fieldType_下拉框
-	fieldType_单选
-	fieldType_多选
-	fieldType_上传图片
-	fieldType_上传附件
-	fieldType_轮播图
-	fieldType_音频
-	fieldType_视频
-)
