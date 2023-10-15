@@ -1,0 +1,158 @@
+{{template "admin/header.html"}}
+<title>查看设置 - GPRESS</title>
+{{template "admin/bodystart.html"}}
+
+{{ $category := category }} <!-- 导航数据 -->
+{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+
+<style>
+	.code-line .number{
+		background-color: transparent;
+		font-size: 12px;
+		padding: 0;
+		vertical-align: unset;
+	}
+</style>
+<section class="section">
+	<input type="hidden" id="id" value="{{.Data.Id}}">
+
+	<div class="container">
+		<div class="table-content">
+			<div class="column">
+				<form id="gpress-form" action="/" method="POST">
+					<ul class="save-ul">
+						<li>
+							<div class="left">
+								配置ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Id}}" />
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								基础路径
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.BasePath}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								jwt加密字符串
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.JwtSecret}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								jwt的key
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.JwttokenKey}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								服务器ip:端口
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.ServerPort}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Theme}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								超时时间
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Timeout}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								主服务器
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.MainServer}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								代理地址
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Proxy}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								创建时间
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.CreateTime}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								更新时间
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.UpdateTime}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								创建人
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.CreateUser}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								排序
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.Data.SortNo}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								是否有效
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.Data.Status}}">
+							</div>
+						</li>
+					</ul>
+
+					<div class="field is-grouped" style="padding-left: 190px;">
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/update?id={{.Data.Id}}"
+								class="button is-primary">编辑</a>
+						</div>
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/list" class="button is-info is-light">返回</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<script>
+
+</script>
+
+{{template "admin/bodyend.html"}}

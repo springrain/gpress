@@ -1,7 +1,7 @@
 {{template "admin/header.html"}}
-<title>update - gpress</title>
+<title>更新内容 - GPRESS</title>
 {{template "admin/bodystart.html"}}
-{{ $tableFiled := tableFiled .urlPathParam }}
+
 {{ $category := category }} <!-- 导航数据 -->
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
@@ -15,27 +15,25 @@
 	}
 </style>
 <section class="section">
-	<input type="hidden" id="content" value="{{.content}}">
-	<input type="hidden" id="markdown" value="{{.markdown}}">
-	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
-	<input type="hidden" id="updateId" value="{{.id}}">
-	<input type="hidden" id="categoryName" value="{{.categoryName}}">
-	<input type="hidden" id="categoryID" value="{{.categoryID}}">
-	<input type="hidden" id="templateName" value="{{.templateName}}">
-	<input type="hidden" id="templateID" value="{{.templateID}}">
+	<input type="hidden" id="content" value="{{.Data.Content}}">
+	<input type="hidden" id="markdown" value="{{.Data.Markdown}}">
+	<input type="hidden" id="thumbnail" value="{{.Data.Thumbnail}}">
+	<input type="hidden" id="updateId" value="{{.Data.Id}}">
+	<input type="hidden" id="categoryName" value="{{.Data.CategoryName}}">
+	<input type="hidden" id="categoryID" value="{{.Data.CategoryID}}">
+	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
 
 	<div class="container">
 		<div class="table-content">
 			<div class="column">
-				<form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/update" method="POST">
-					{{ $data := . }}
+				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
 					<ul class="save-ul">
 						<li>
 							<div class="left">
 								文章标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="title" value="{{.title}}" id="title" />
+								<input class="input" type="text" name="title" value="{{.Data.Title}}" id="title" />
 							</div>
 						</li>
 						<li>
@@ -43,7 +41,7 @@
 								副标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="subtitle" value="{{.subtitle}}" id="subtitle">
+								<input class="input" type="text" name="subtitle" value="{{.Data.Subtitle}}" id="subtitle">
 							</div>
 						</li>
 						<li>
@@ -51,7 +49,7 @@
 								文章ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" value="{{.id}}" id="id">
+								<input class="input" type="text" name="id" value="{{.Data.Id}}" id="id">
 							</div>
 						</li>
 						<li>
@@ -59,7 +57,7 @@
 								关键字
 							</div>
 							<div class="right">
-								<input class="input" type="text" name=keyword value="{{.keyword}}" id="keyword">
+								<input class="input" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
 							</div>
 						</li>
 						<li>
@@ -93,7 +91,7 @@
 								tag标签
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="tag" value="{{.tag}}" id="tag">
+								<input class="input" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
 							</div>
 						</li>
 						<li>
@@ -101,7 +99,15 @@
 								作者
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="author" value="{{.author}}" id="author">
+								<input class="input" type="text" name="author" value="{{.Data.Author}}" id="author">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								是否有效
+							</div>
+							<div class="right">
+								<input class="input" type="number" name="status" value="{{.Data.Status}}" id="status">
 							</div>
 						</li>
 						<li style="align-items: flex-start;">
@@ -117,7 +123,7 @@
 									</div>
 									<div class="img-box">
 										<div class="img-preview">
-											<img src="{{.thumbnail}}" id="img">
+											<img src="{{.Data.Thumbnail}}" id="img">
 											<div class="delete-btn">
 												<i class="iconfont icon-shanchu"></i>
 											</div>
@@ -131,15 +137,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" value="{{.sortNo}}" id="sortNo">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								是否有效
-							</div>
-							<div class="right">
-								<input class="input" type="number" name="status" id="status" value="1" >
+								<input class="input" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
 							</div>
 						</li>
 						<li>
@@ -396,6 +394,7 @@
 		event.preventDefault()
 		const formData = new FormData(form)
 		const jsonObject = {
+			status: $('#status').val()-0,
 			id: $('#updateId').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
@@ -406,9 +405,8 @@
 			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
-			sortNo: $('#sortNo').val(),
+			sortNo: $('#sortNo').val()-0,
 			content: content,
-			status: $('#status').val(),
 			markdown: cherryObj.getMarkdown(),
 		}
 		console.log(jsonObject)
@@ -427,7 +425,7 @@
 				type: 'green',
 				buttons: {
 					'确定': function() {
-						window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
+						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
 					}
 				}
 			})

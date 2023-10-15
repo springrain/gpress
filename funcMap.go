@@ -17,16 +17,13 @@ var funcMap = template.FuncMap{
 	"addFloat":     funcAddFloat,
 	"T":            funcT,
 	"safeHTML":     funcSafeHTML,
+	"safeURL":      funcSafeURL,
 	"relURL":       funcRelURL,
-	"tableFiled":   funcTableFiled,
 	"site":         funcSite,
 	"category":     funcCategory,
 	"pageTemplate": funcPageTemplate,
 	"selectList":   funcSelectList,
 	"selectOne":    funcSelectOne,
-	//"analyzer":     funcAnalyzer,
-	"fieldType":   funcFieldType,
-	"jsonMarshal": funcJsonMarshal,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
@@ -50,26 +47,23 @@ func funcSafeHTML(html string) (template.HTML, error) {
 	return ss, nil
 }
 
+// funcSafeURL 转义URL字符串
+func funcSafeURL(html string) (template.URL, error) {
+	ss := template.URL(html)
+	return ss, nil
+}
+
 // funcRelURL 拼接url路径的
 func funcRelURL(url string) (template.HTML, error) {
 	return funcSafeHTML(themePath + url)
 }
 
-// funcTableFiled 根据indexName查找字段
-func funcTableFiled(tableName string) ([]TableFieldStruct, error) {
-	ctx := context.Background()
-	tableField, err := findTableFieldStruct(ctx, tableName, 0)
-	return tableField, err
-}
-
 // 站点信息
-func funcSite() (map[string]interface{}, error) {
-	finder := zorm.NewSelectFinder(tableSiteName, "*").Append(" WHERE id=?", appName)
-	rowMap, err := zorm.QueryRowMap(context.Background(), finder)
-	if err != nil {
-		return make(map[string]interface{}, 0), err
-	}
-	return rowMap, err
+func funcSite() (Site, error) {
+	finder := zorm.NewSelectFinder(tableSiteName).Append(" WHERE id=?", appName)
+	site := Site{}
+	_, err := zorm.QueryRow(context.Background(), finder, &site)
+	return site, err
 }
 
 // 菜单信息
@@ -97,11 +91,6 @@ var analyzerMap = map[string]string{commaAnalyzerName: "逗号分词器", gseAna
 		return analyzerMap
 	}
 */
-var fieldTypeMap = map[int]string{1: "数字", 2: "日期", 3: "文本框", 4: "文本域", 5: "富文本", 6: "下拉框", 7: "单选", 8: "多选", 9: "上传图片", 10: "上传附件", 11: "轮播图", 12: "音频", 13: "视频"}
-
-func funcFieldType() map[int]string {
-	return fieldTypeMap
-}
 
 func funcAddInt(x, y int) int {
 	return x + y
@@ -110,13 +99,14 @@ func funcAddFloat(x, y float64) float64 {
 	return x + y
 }
 
-func funcSelectList(q string, pageNo int, sql string, values ...interface{}) (map[string]interface{}, error) {
-	errMap := map[string]interface{}{"statusCode": 0}
+func funcSelectList(urlPathParam string, q string, pageNo int, sql string, values ...interface{}) (ResponseData, error) {
+	responseData := ResponseData{StatusCode: 0}
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
 		err := errors.New("sql语句错误")
-		errMap["err"] = err
-		return errMap, err
+		responseData.ERR = err
+		responseData.StatusCode = 0
+		return responseData, err
 	}
 
 	finder := zorm.NewFinder().Append("SELECT")
@@ -138,23 +128,49 @@ func funcSelectList(q string, pageNo int, sql string, values ...interface{}) (ma
 	//finder.Append("order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageNo = pageNo
-	data, err := zorm.QueryMap(context.Background(), finder, page)
-	if err != nil {
-		errMap["err"] = err
-		return errMap, err
+	switch urlPathParam {
+	case tableConfigName:
+		data := make([]Config, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		responseData.Data = data
+	case tableUserName:
+		data := make([]User, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		responseData.Data = data
+	case tableSiteName:
+		data := make([]Site, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		responseData.Data = data
+	case tablePageTemplateName:
+		data := make([]PageTemplate, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		responseData.Data = data
+	case tableCategoryName:
+		data := make([]Category, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		responseData.Data = data
+	case tableContentName:
+		data := make([]Content, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		responseData.Data = data
+	default:
+		err := errors.New(urlPathParam + "表不存在!")
+		responseData.ERR = err
+		responseData.StatusCode = 0
+		return responseData, err
 	}
-
-	resultMap := map[string]interface{}{"statusCode": 1, "data": data, "page": page}
-	return resultMap, err
+	responseData.Page = page
+	responseData.StatusCode = 1
+	return responseData, nil
 }
 
-func funcSelectOne(sql string, values ...interface{}) (map[string]interface{}, error) {
-	errMap := map[string]interface{}{"statusCode": 0}
+func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (ResponseData, error) {
+	responseData := ResponseData{StatusCode: 0}
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
 		err := errors.New("sql语句错误")
-		errMap["err"] = err
-		return errMap, err
+		responseData.ERR = err
+		return responseData, err
 	}
 	finder := zorm.NewFinder().Append("SELECT")
 	finder.Append(sql, values...)
@@ -162,81 +178,69 @@ func funcSelectOne(sql string, values ...interface{}) (map[string]interface{}, e
 	page := zorm.NewPage()
 	page.PageSize = 1
 	page.PageNo = 1
-	resultMaps, err := zorm.QueryMap(context.Background(), finder, page)
-
-	if err != nil {
-		errMap["err"] = err
-		return errMap, err
+	ctx := context.Background()
+	switch urlPathParam {
+	case tableConfigName:
+		data := make([]Config, 0)
+		zorm.Query(ctx, finder, &data, page)
+		if len(data) > 0 {
+			responseData.Data = data[0]
+		} else {
+			responseData.Data = Config{}
+		}
+	case tableUserName:
+		data := make([]User, 0)
+		zorm.Query(ctx, finder, &data, page)
+		if len(data) > 0 {
+			responseData.Data = data[0]
+		} else {
+			responseData.Data = User{}
+		}
+	case tableSiteName:
+		data := make([]Site, 0)
+		zorm.Query(ctx, finder, &data, page)
+		if len(data) > 0 {
+			responseData.Data = data[0]
+		} else {
+			responseData.Data = Site{}
+		}
+	case tablePageTemplateName:
+		data := make([]PageTemplate, 0)
+		zorm.Query(ctx, finder, &data, page)
+		if len(data) > 0 {
+			responseData.Data = data[0]
+		} else {
+			responseData.Data = PageTemplate{}
+		}
+	case tableCategoryName:
+		data := make([]Category, 0)
+		zorm.Query(ctx, finder, &data, page)
+		if len(data) > 0 {
+			responseData.Data = data[0]
+		} else {
+			responseData.Data = Category{}
+		}
+	case tableContentName:
+		data := make([]Content, 0)
+		zorm.Query(ctx, finder, &data, page)
+		if len(data) > 0 {
+			responseData.Data = data[0]
+		} else {
+			responseData.Data = Content{}
+		}
+	default:
+		err := errors.New(urlPathParam + "表不存在!")
+		responseData.ERR = err
+		responseData.StatusCode = 0
+		return responseData, err
 	}
-	if len(resultMaps) < 1 {
-		return errMap, err
-	}
-	resultMap := resultMaps[0]
 	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": tableName}
-	resultMap["statusCode"] = 1
-	return resultMap, err
+	responseData.StatusCode = 1
+	responseData.UrlPathParam = urlPathParam
+	return responseData, nil
 }
 
 func funcJsonMarshal(obj interface{}) (string, error) {
 	jsonByte, err := json.Marshal(obj)
 	return string(jsonByte), err
 }
-
-/*
-func funcThemePath() string {
-	return themePath
-}
-
-func funcThemeFile(file string) string {
-	return "/theme/" + config.Theme + "/" + file
-}
-
-// 测试自定义函数
-func funcMD5(in string) ([]string, error) {
-	list := make([]string, 2)
-
-	hash := md5.Sum([]byte(in))
-	list[0] = in
-	list[1] = hex.EncodeToString(hash[:])
-	return list, nil
-}
-
-// funcSass 编译sass,生成css
-func funcSass(sassFile string) (string, error) {
-	sassPath := templateDir + "theme/" + config.Theme + "/assets/" + sassFile
-	pathHash := hashSha256(sassPath)
-
-	//生成的css路径
-	filePath := templateDir + "theme/" + config.Theme + "/css/" + pathHash + ".css"
-	//filePath = filepath.FromSlash(filePath)
-
-	//url 访问路径
-	fileUrl := themePath + "css/" + pathHash + ".css"
-
-	if pathExists(filePath) { //如果文件已经存在了,直接返回
-		return funcSafeHTML(fileUrl)
-	}
-	var cmd *exec.Cmd
-	goos := runtime.GOOS
-	goarch := runtime.GOARCH
-
-	if goos == "windows" {
-		cmdStr := datadir + "dart-sass/" + goos + "-" + goarch + "/sass.bat --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
-		// 分隔符统一系统符号
-		cmdStr = filepath.FromSlash(cmdStr)
-		cmd = exec.Command("cmd", "/C", cmdStr) // windows
-	} else if goos == "linux" || goos == "darwin" {
-		cmdStr := datadir + "dart-sass/" + goos + "-" + goarch + "/sass --style=compressed --charset --no-source-map " + sassPath + ":" + filePath
-		cmd = exec.Command("bash", "-c", cmdStr) // mac or linux
-	}
-	err := cmd.Run()
-	if err != nil {
-		FuncLogError(err)
-		return fileUrl, err
-	}
-	fileUrl, err = funcSafeHTML(fileUrl)
-	//增加静态资源映射,使用了static文件夹,不需要再映射了
-	//h.StaticFile(fileUrl, filePath)
-	return fileUrl, err
-}
-*/

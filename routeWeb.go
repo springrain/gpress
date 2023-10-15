@@ -34,7 +34,7 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	data["urlPathParam"] = urlPathParam
+	data["UrlPathParam"] = urlPathParam
 
 	templateFile, err := findPageTemplate(ctx, "category", urlPathParam)
 	if err != nil || templateFile == "" {
@@ -46,14 +46,14 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 func funcListTags(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	data["urlPathParam"] = urlPathParam
+	data["UrlPathParam"] = urlPathParam
 
 	c.HTML(http.StatusOK, "tag.html", data)
 }
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	data["urlPathParam"] = urlPathParam
+	data["UrlPathParam"] = urlPathParam
 
 	templateFile, err := findPageTemplate(ctx, "content", urlPathParam)
 	if err != nil || templateFile == "" {

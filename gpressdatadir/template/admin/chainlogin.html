@@ -10,7 +10,7 @@
 		<div class="hero-body">
 			<div class="container has-text-centered">
 				<div class="column is-4 is-offset-4">
-					<h3 class="title has-text-black">登录</h3>
+					<h3 class="title has-text-black">区块链钱包登录</h3>
 					<hr class="login-hr">
 					<div class="box">
 
@@ -24,15 +24,12 @@
 									MetaMask</div>
 								<div onclick="getMetamask(window.ethereum,'xuper')"><img class="xpocket"
 										src="{{basePath}}public/headerlogo.png">X-Pocket</div>
-
 							</div>
 							<div>
 								<div onclick="getMetamask(window.bitkeep && window.bitkeep.ethereum)"><img
 										src="{{basePath}}public/bitkeep.png">Bitkeep</div>
 								<div onclick="getMetamask(window.ethereum)"><img
 										src="{{basePath}}public/tokenproket.png">TokenPocket</div>
-
-
 							</div>
 							<div>
 								<div onclick="getMetamask(window.okxwallet)"><img
@@ -79,10 +76,9 @@
 				method: 'eth_requestAccounts',
 				params: [],
 			}).then(accounts => {
-			  let account = accounts[0]
-			  //console.log(account);
-			  //window.localStorage.setItem('address', account)
-			  personalSign(provider, account, type)
+				let account = accounts[0]
+				//console.log(account);
+				personalSign(provider, account, type)
 			})
 		} else {
 			$.confirm({
