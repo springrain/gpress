@@ -324,10 +324,12 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 
 	//优先使用自定义模板文件
 	listFile := "admin/" + urlPathParam + "/list.html"
-	t := tmpl.Lookup(listFile)
-	if t == nil { //不存在自定义模板,使用通用模板
-		listFile = "admin/list.html"
-	}
+	/*
+		t := tmpl.Lookup(listFile)
+		if t == nil { //不存在自定义模板,使用通用模板
+			listFile = "admin/list.html"
+		}
+	*/
 	//queryString := c.Request.QueryString()
 	//responseData.QueryString = string(queryString)
 	//responseData.UrlPathParam = urlPathParam
@@ -440,10 +442,13 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 	//优先使用自定义模板文件
 	updateFile := "admin/" + urlPathParam + "/save.html"
-	t := tmpl.Lookup(updateFile)
-	if t == nil { //不存在自定义模板,使用通用模板
-		updateFile = "admin/save.html"
-	}
+	/*
+		t := tmpl.Lookup(updateFile)
+		if t == nil { //不存在自定义模板,使用通用模板
+			updateFile = "admin/save.html"
+		}
+	*/
+
 	c.HTML(http.StatusOK, updateFile, ResponseData{UrlPathParam: urlPathParam})
 }
 
@@ -720,10 +725,12 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	}
 	//优先使用自定义模板文件
 	lookFile := "admin/" + urlPathParam + "/" + htmlfile
-	t := tmpl.Lookup(lookFile)
-	if t == nil { //不存在自定义模板,使用通用模板
-		lookFile = "admin/" + htmlfile
-	}
+	/*
+		t := tmpl.Lookup(lookFile)
+		if t == nil { //不存在自定义模板,使用通用模板
+			lookFile = "admin/" + htmlfile
+		}
+	*/
 	responseData.StatusCode = 1
 	c.HTML(http.StatusOK, lookFile, responseData)
 }
