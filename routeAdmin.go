@@ -19,8 +19,6 @@ import (
 // adminGroup路由组,使用变量声明,优先级高于init函数
 var adminGroup = initAdminGroup()
 
-var chainRandStr string
-
 func initAdminGroup() *route.RouterGroup {
 	// 设置日志级别
 	hlog.SetLevel(hlog.LevelError)
@@ -93,8 +91,7 @@ func init() {
 
 	// 生成30位随机数,钱包签名随机校验.如果32位metamask会解析成16进制字符串,可能是metamask的bug
 	h.POST("/admin/random", func(ctx context.Context, c *app.RequestContext) {
-		//先记录到全局变量
-		chainRandStr = randStr(30)
+		generateChainRandStr()
 		//返回到前端
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: chainRandStr})
 	})
@@ -106,11 +103,15 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
-		var responseData map[string]string = nil
+		responseData := make(map[string]string, 0)
 		message, ok := c.GetQuery("message")
 		if ok {
-			responseData = make(map[string]string, 0)
 			responseData["message"] = message
+		}
+		if errorLoginCount.Load() > errCount { //连续错误3次显示验证码
+			responseData["showCaptcha"] = "1"
+			generateCaptcha()
+			responseData["captchaBase64"] = captchaBase64
 		}
 		c.SetCookie(config.JwttokenKey, "", config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 		c.HTML(http.StatusOK, "admin/login.html", responseData)
@@ -122,6 +123,16 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
+
+		if errorLoginCount.Load() > errCount { //连续错误3次显示验证码
+			answer := c.PostForm("answer")
+			if answer != captchaAnswer { //答案不对
+				c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=验证码错误"))
+				c.Abort() // 终止后续调用
+				return
+			}
+		}
+
 		account := c.PostForm("account")
 		password := c.PostForm("password")
 		if account == "" || password == "" { // 用户不存在或者异常
@@ -131,6 +142,7 @@ func init() {
 		}
 		userId, err := findUserId(ctx, account, password)
 		if userId == "" || err != nil { // 用户不存在或者异常
+			errorLoginCount.Add(1)
 			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码错误"))
 			c.Abort() // 终止后续调用
 			return
@@ -147,7 +159,7 @@ func init() {
 
 		// c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
-
+		errorLoginCount.Store(0)
 		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
 	})
 
@@ -262,19 +274,10 @@ func init() {
 	adminGroup.GET("/:urlPathParam/update", funcUpdatePre)
 	//ajax POST提交JSON信息,返回方法JSON
 	adminGroup.POST("/:urlPathParam/update", funcUpdate)
-	//ajax POST提交JSON信息,返回方法JSON
-	adminGroup.POST("/user/update", funcUserUpdate)
-
 	//跳转到保存页面
 	adminGroup.GET("/:urlPathParam/save", funcSavePre)
 	//ajax POST提交JSON信息,返回方法JSON
 	adminGroup.POST("/:urlPathParam/save", funcSave)
-
-	//ajax POST提交新增表信息
-	adminGroup.POST("/tableInfo/save", funcTableInfoSave)
-
-	//ajax POST提交新增字段信息
-	adminGroup.POST("/tableField/save", funcTableFieldSave)
 
 	//ajax POST提交JSON信息,返回方法JSON
 	adminGroup.POST("/:urlPathParam/delete", funcDelete)
@@ -311,8 +314,8 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 		sql += " WHERE " + where
 	}
 	sql += " order by sortNo desc "
-	responseData, err := funcSelectList(q, pageNo, sql)
-	responseData["urlPathParam"] = urlPathParam
+	responseData, err := funcSelectList(urlPathParam, q, pageNo, sql)
+	responseData.UrlPathParam = urlPathParam
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -347,92 +350,83 @@ func funcUpdate(ctx context.Context, c *app.RequestContext) {
 	funcUpdateTable(ctx, c, urlPathParam)
 }
 
-// 修改用户信息
-func funcUserUpdate(ctx context.Context, c *app.RequestContext) {
-	urlPathParam := "user"
-	newMap := make(map[string]interface{}, 0)
-	err := c.Bind(&newMap)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
-
-	id := ""
-	if newMap["id"] != nil {
-		id = newMap["id"].(string)
-	}
-	if id == "" { //没有id,认为是新增
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
-		c.Abort() // 终止后续调用
-		return
-	}
-
-	entityMap := zorm.NewEntityMap(urlPathParam)
-	for k, v := range newMap {
-		if k == "password" {
-			if v.(string) == "" {
-				continue
-			}
-		}
-		entityMap.Set(k, v)
-	}
-	entityMap.PkColumnName = "id"
-	entityMap.Set("updateTime", time.Now().Format("2006-01-02 15:04:05"))
-	err = updateTable(ctx, entityMap)
-	if err != nil { //没有id,认为是新增
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
-	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
-}
-
 // 修改内容
 func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam string) {
+	var entity zorm.IEntityStruct
+	var err error
+	var now = time.Now().Format("2006-01-02 15:04:05")
+	id := ""
+	switch urlPathParam {
+	case tableConfigName:
+		ptrObj := &Config{}
+		err = c.Bind(ptrObj)
+		id = ptrObj.Id
+		ptrObj.UpdateTime = now
+		entity = ptrObj
+	case tableUserName:
+		ptrObj := &User{}
+		err = c.Bind(ptrObj)
+		id = ptrObj.Id
+		ptrObj.UpdateTime = now
+		entity = ptrObj
+	case tableSiteName:
+		ptrObj := &Site{}
+		err = c.Bind(ptrObj)
+		id = ptrObj.Id
+		ptrObj.UpdateTime = now
+		entity = ptrObj
+	case tablePageTemplateName:
+		ptrObj := &PageTemplate{}
+		err = c.Bind(ptrObj)
+		id = ptrObj.Id
+		ptrObj.UpdateTime = now
+		entity = ptrObj
+	case tableCategoryName:
+		ptrObj := &Category{}
+		err = c.Bind(ptrObj)
+		id = ptrObj.Id
+		ptrObj.UpdateTime = now
+		entity = ptrObj
+	case tableContentName:
+		ptrObj := &Content{}
+		err = c.Bind(ptrObj)
+		id = ptrObj.Id
+		ptrObj.UpdateTime = now
+		var content string
+		var toc string
+		content, toc, err = setMarkdownHtml(ptrObj.Markdown)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+			c.Abort() // 终止后续调用
+			FuncLogError(err)
+			return
+		}
+		ptrObj.Content = content
+		ptrObj.Toc = toc
 
-	newMap := make(map[string]interface{}, 0)
-	err := c.Bind(&newMap)
+		entity = ptrObj
+	default:
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "表不存在!"})
+		c.Abort() // 终止后续调用
+		return
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 		return
 	}
-
-	id := ""
-	if newMap["id"] != nil {
-		id = newMap["id"].(string)
-	}
-	if id == "" { //没有id,认为是新增
+	if id == "" { //没有id,终止调用
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
 		c.Abort() // 终止后续调用
 		return
 	}
 
-	if !tableExist(urlPathParam) {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
-		c.Abort() // 终止后续调用
-		return
-	}
-	err = setMarkdownHtml(&newMap)
+	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		_, err = zorm.Update(ctx, entity)
+		return nil, err
+	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
-
-	entityMap := zorm.NewEntityMap(urlPathParam)
-	for k, v := range newMap {
-		entityMap.Set(k, v)
-	}
-	entityMap.PkColumnName = "id"
-	entityMap.Set("updateTime", time.Now().Format("2006-01-02 15:04:05"))
-	err = updateTable(ctx, entityMap)
-	if err != nil { //没有id,认为是新增
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
@@ -450,7 +444,7 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	if t == nil { //不存在自定义模板,使用通用模板
 		updateFile = "admin/save.html"
 	}
-	c.HTML(http.StatusOK, updateFile, responData2Map(ResponseData{UrlPathParam: urlPathParam}))
+	c.HTML(http.StatusOK, updateFile, ResponseData{UrlPathParam: urlPathParam})
 }
 
 // 保存内容
@@ -461,47 +455,157 @@ func funcSave(ctx context.Context, c *app.RequestContext) {
 
 // 保存内容
 func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam string) {
-	//tableName := bleveDataDir + urlPathParam
-	if !tableExist(urlPathParam) {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "数据不存在"})
+	var entity zorm.IEntityStruct
+	var err error
+	var now = time.Now().Format("2006-01-02 15:04:05")
+	switch urlPathParam {
+	case tableConfigName:
+		ptrObj := &Config{}
+		err = c.Bind(ptrObj)
+		if ptrObj.Id == "" {
+			ptrObj.Id = FuncGenerateStringID()
+		}
+		if ptrObj.SortNo == 0 {
+			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+			sortNo := 1
+			zorm.QueryRow(ctx, finder, &sortNo)
+			ptrObj.SortNo = sortNo
+		}
+		if ptrObj.CreateTime == "" {
+			ptrObj.CreateTime = now
+		}
+		if ptrObj.UpdateTime == "" {
+			ptrObj.UpdateTime = now
+		}
+		entity = ptrObj
+	case tableUserName:
+		ptrObj := &User{}
+		err = c.Bind(ptrObj)
+		if ptrObj.Id == "" {
+			ptrObj.Id = FuncGenerateStringID()
+		}
+		if ptrObj.SortNo == 0 {
+			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+			sortNo := 1
+			zorm.QueryRow(ctx, finder, &sortNo)
+			ptrObj.SortNo = sortNo
+		}
+		if ptrObj.CreateTime == "" {
+			ptrObj.CreateTime = now
+		}
+		if ptrObj.UpdateTime == "" {
+			ptrObj.UpdateTime = now
+		}
+		entity = ptrObj
+	case tableSiteName:
+		ptrObj := &Site{}
+		err = c.Bind(ptrObj)
+		if ptrObj.Id == "" {
+			ptrObj.Id = FuncGenerateStringID()
+		}
+		if ptrObj.SortNo == 0 {
+			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+			sortNo := 1
+			zorm.QueryRow(ctx, finder, &sortNo)
+			ptrObj.SortNo = sortNo
+		}
+		if ptrObj.CreateTime == "" {
+			ptrObj.CreateTime = now
+		}
+		if ptrObj.UpdateTime == "" {
+			ptrObj.UpdateTime = now
+		}
+		entity = ptrObj
+	case tablePageTemplateName:
+		ptrObj := &PageTemplate{}
+		err = c.Bind(ptrObj)
+		if ptrObj.Id == "" {
+			ptrObj.Id = FuncGenerateStringID()
+		}
+		if ptrObj.SortNo == 0 {
+			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+			sortNo := 1
+			zorm.QueryRow(ctx, finder, &sortNo)
+			ptrObj.SortNo = sortNo
+		}
+		if ptrObj.CreateTime == "" {
+			ptrObj.CreateTime = now
+		}
+		if ptrObj.UpdateTime == "" {
+			ptrObj.UpdateTime = now
+		}
+		entity = ptrObj
+	case tableCategoryName:
+		ptrObj := &Category{}
+		err = c.Bind(ptrObj)
+		if ptrObj.Id == "" {
+			ptrObj.Id = FuncGenerateStringID()
+		}
+		if ptrObj.SortNo == 0 {
+			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+			sortNo := 1
+			zorm.QueryRow(ctx, finder, &sortNo)
+			ptrObj.SortNo = sortNo
+		}
+		if ptrObj.CreateTime == "" {
+			ptrObj.CreateTime = now
+		}
+		if ptrObj.UpdateTime == "" {
+			ptrObj.UpdateTime = now
+		}
+		entity = ptrObj
+	case tableContentName:
+		ptrObj := &Content{}
+		err = c.Bind(ptrObj)
+		if ptrObj.Id == "" {
+			ptrObj.Id = FuncGenerateStringID()
+		}
+		if ptrObj.SortNo == 0 {
+			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
+			sortNo := 1
+			zorm.QueryRow(ctx, finder, &sortNo)
+			ptrObj.SortNo = sortNo
+		}
+		if ptrObj.CreateTime == "" {
+			ptrObj.CreateTime = now
+		}
+		if ptrObj.UpdateTime == "" {
+			ptrObj.UpdateTime = now
+		}
+		var content string
+		var toc string
+		content, toc, err = setMarkdownHtml(ptrObj.Markdown)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+			c.Abort() // 终止后续调用
+			FuncLogError(err)
+			return
+		}
+		ptrObj.Content = content
+		ptrObj.Toc = toc
+		entity = ptrObj
+	default:
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "表不存在!"})
 		c.Abort() // 终止后续调用
 		return
 	}
-
-	newMap := make(map[string]interface{}, 0)
-
-	//err = json.Unmarshal(jsonBody, &newMap)
-	err := c.Bind(&newMap)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 		return
 	}
-	err = setMarkdownHtml(&newMap)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-		return
-	}
 
-	//设置默认值
-	funcSetDefaultMapValue(ctx, &newMap, urlPathParam)
-
-	entityMap := zorm.NewEntityMap(urlPathParam)
-	for k, v := range newMap {
-		entityMap.Set(k, v)
-	}
-
-	responseData, err := saveEntityMap(ctx, entityMap)
+	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		return zorm.Insert(ctx, entity)
+	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
 		c.Abort() // 终止后续调用
 		FuncLogError(err)
 		return
 	}
-	c.JSON(http.StatusOK, responData2Map(responseData))
+	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
 }
 
 func funcSetDefaultMapValue(ctx context.Context, valueMap *map[string]interface{}, tableName string) {
@@ -531,11 +635,11 @@ func funcSetDefaultMapValue(ctx context.Context, valueMap *map[string]interface{
 
 }
 
-// 修改内容
+// 删除内容
 func funcDelete(ctx context.Context, c *app.RequestContext) {
 	id := c.PostForm("id")
 	//id := c.Query("id")
-	if id == "" { //没有id,认为是新增
+	if id == "" { //没有id,终止调用
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
 		c.Abort() // 终止后续调用
 		return
@@ -551,60 +655,39 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
 }
 
-// 保存表内容
-func funcTableInfoSave(ctx context.Context, c *app.RequestContext) {
-	newMap := make(map[string]interface{}, 0)
-	err := c.Bind(&newMap)
-	tableCode := newMap["code"]
-	if err != nil || tableCode == nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增表失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-	}
-	tableCodeString := tableCode.(string)
-	createTableSQL := `CREATE TABLE IF NOT EXISTS ` + tableCodeString + ` (
-		id TEXT PRIMARY KEY     NOT NULL
-	 ) strict ;`
-	_, err = execNativeSQL(ctx, createTableSQL)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增表失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-	}
+/*
+// permissionHandler 权限拦截器
+func permissionHandler() app.HandlerFunc {
+	return func(ctx context.Context, c *app.RequestContext) {
+		rs := &requestState{c: c}
+		ctx = context.WithValue(ctx, requestStateKey{}, rs)
+		//c.Request.AppendBodyString("go test body")
+		fmt.Println("------------开始调用wasm---- ")
 
-	funcSaveTable(ctx, c, "tableInfo")
+		ctxNext, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+			t1 := time.Now()
+			outCtx, next, _, err := wasmFediOS.HandleHTTP(ctx, []byte("test extData 1"))
+			c.Request.Header.Set(api.WasmCallMethodHeaderName, api.HeaderHandleFollowNodeFn)
+			_, next, value, err := wasmFediOS.HandleHTTP(outCtx, []byte("test extData 2"))
+			tm2 := time.Now().Sub(t1).Milliseconds()
+			fmt.Println("------------结束调用wasm----,耗时:" + strconv.FormatInt(tm2, 10) + "毫秒,返回值:" + string(value))
+			return next, err
+		})
+		next, ok := ctxNext.(bool)
+		if err != nil || !ok || !next { //中止调用
+			c.Abort()
+			return
+		}
+
+	}
 }
-
-// 保存字段内容
-func funcTableFieldSave(ctx context.Context, c *app.RequestContext) {
-	fieldStruct := TableFieldStruct{}
-	err := c.Bind(&fieldStruct)
-	if err != nil || fieldStruct.TableCode == "" || fieldStruct.FieldCode == "" {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增字段失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-	}
-
-	sqlType := "text"
-	if fieldStruct.FieldType == 1 { //数字
-		sqlType = "int"
-	}
-	// code
-	createTableSQL := "alter table " + fieldStruct.TableCode + "  add column " + fieldStruct.FieldCode + " " + sqlType
-	_, err = execNativeSQL(ctx, createTableSQL)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "新增表失败"})
-		c.Abort() // 终止后续调用
-		FuncLogError(err)
-	}
-
-	funcSaveTable(ctx, c, "tableField")
-}
+*/
 
 // permissionHandler 权限拦截器
 func permissionHandler() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		jwttoken := string(c.Cookie(config.JwttokenKey))
+		//fmt.Println(config.JwtSecret)
 		userId, err := userIdByToken(jwttoken)
 		if err != nil || userId == "" {
 			c.Redirect(http.StatusOK, cRedirecURI("admin/login"))
@@ -627,8 +710,9 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	}
 	urlPathParam := c.Param("urlPathParam")
 	//tableName := bleveDataDir + urlPathParam
-	responseData, err := funcSelectOne("* FROM "+urlPathParam+" WHERE id=? ", id)
-	responseData["urlPathParam"] = urlPathParam
+	responseData, err := funcSelectOne(urlPathParam, "* FROM "+urlPathParam+" WHERE id=? ", id)
+	//responseData["UrlPathParam"] = urlPathParam
+	responseData.UrlPathParam = urlPathParam
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -640,26 +724,17 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	if t == nil { //不存在自定义模板,使用通用模板
 		lookFile = "admin/" + htmlfile
 	}
+	responseData.StatusCode = 1
 	c.HTML(http.StatusOK, lookFile, responseData)
 }
 
-func setMarkdownHtml(newMap *map[string]interface{}) error {
-	markdown, ok := (*newMap)["markdown"]
-	// markdown转html
-	if ok {
-		mkstring := markdown.(string)
-		if mkstring != "" {
-			_, tocHtml, html, err := conver2Html([]byte(mkstring))
-			if err != nil {
-				return err
-			}
-
-			if html != nil && *html != "" {
-				(*newMap)["content"] = *html
-				(*newMap)["toc"] = *tocHtml
-			}
+func setMarkdownHtml(mkstring string) (string, string, error) {
+	if mkstring != "" {
+		_, tocHtml, html, err := conver2Html([]byte(mkstring))
+		if err != nil {
+			return "", "", err
 		}
-
+		return *html, *tocHtml, nil
 	}
-	return nil
+	return "", "", nil
 }

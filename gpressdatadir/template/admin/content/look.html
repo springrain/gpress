@@ -1,7 +1,7 @@
 {{template "admin/header.html"}}
-<title>look - gpress</title>
+<title>查看内容 - GPRESS</title>
 {{template "admin/bodystart.html"}}
-{{ $tableFiled := tableFiled .urlPathParam }}
+
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
@@ -14,24 +14,23 @@
 	}
 </style>
 <section class="section">
-	<input type="hidden" id="content" value="{{.content}}">
-	<input type="hidden" id="markdown" value="{{.markdown}}">
-	<input type="hidden" id="thumbnail" value="{{.thumbnail}}">
-	<input type="hidden" id="templateID" value="{{.templateID}}">
+	<input type="hidden" id="content" value="{{.Data.Content}}">
+	<input type="hidden" id="markdown" value="{{.Data.Markdown}}">
+	<input type="hidden" id="thumbnail" value="{{.Data.Thumbnail}}">
+	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
 	<input type="hidden" id="navurl" value="{{.}}">
 
 	<div class="container">
 		<div class="table-content">
 			<div class="column">
 				<form id="gpress-form" action="/" method="POST">
-					{{ $data := . }}
 					<ul class="save-ul">
 						<li>
 							<div class="left">
 								文章标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.title}}">
+								<input class="input" type="text" disabled value="{{.Data.Title}}">
 							</div>
 						</li>
 						<li>
@@ -39,7 +38,7 @@
 								副标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.subtitle}}">
+								<input class="input" type="text" disabled value="{{.Data.Subtitle}}">
 							</div>
 						</li>
 						<li>
@@ -47,7 +46,7 @@
 								文章ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled name="id" value="{{.id}}">
+								<input class="input" type="text" disabled name="id" value="{{.Data.Id}}">
 							</div>
 						</li>
 						<li>
@@ -55,7 +54,7 @@
 								关键字
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.keyword}}">
+								<input class="input" type="text" disabled value="{{.Data.Keyword}}">
 							</div>
 						</li>
 						<li>
@@ -76,7 +75,7 @@
 								导航名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.categoryName}}">
+								<input class="input" type="text" disabled value="{{.Data.CategoryName}}">
 							</div>
 						</li>
 						<li>
@@ -84,7 +83,7 @@
 								tag标签
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.tag}}">
+								<input class="input" type="text" disabled value="{{.Data.Tag}}">
 							</div>
 						</li>
 						<li>
@@ -92,7 +91,7 @@
 								作者
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.author}}">
+								<input class="input" type="text" disabled value="{{.Data.Author}}">
 							</div>
 						</li>
 						<li style="align-items: flex-start;">
@@ -108,7 +107,7 @@
 									</div>
 									<div class="img-box">
 										<div class="img-preview">
-											<img src="{{.thumbnail}}" id="img">
+											<img src="{{.Data.Thumbnail}}" id="img">
 											<div class="delete-btn">
 												<i class="iconfont icon-shanchu"></i>
 											</div>
@@ -120,10 +119,9 @@
 						<li>
 							<div class="left">
 								排序
-								<input type="hidden" id="fieldType_{{.FieldCode}}" disabled value="{{.FieldType}}" />
 							</div>
 							<div class="right">
-								<input class="input" type="number" disabled value="{{.sortNo}}">
+								<input class="input" type="number" disabled value="{{.Data.SortNo}}">
 							</div>
 						</li>
 						<li>
@@ -168,11 +166,11 @@
 
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
-							<a href="{{basePath}}admin/{{.urlPathParam}}/update?id={{$data.id}}"
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/update?id={{.Data.Id}}"
 								class="button is-primary">编辑</a>
 						</div>
 						<div class="control">
-							<a href="{{basePath}}admin/{{.urlPathParam}}/list" class="button is-info is-light">返回</a>
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/list" class="button is-info is-light">返回</a>
 						</div>
 					</div>
 				</form>

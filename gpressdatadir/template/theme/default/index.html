@@ -1,13 +1,13 @@
 {{ $site:=site }}
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList .q .pageNo "id,title,hrefURL,categoryID,categoryName,summary,updateTime FROM content WHERE status=1 order by sortNo desc"  }}
+{{ $selectList := selectList "content" .q .pageNo "id,title,hrefURL,categoryID,categoryName,summary,updateTime FROM content WHERE status=1 order by sortNo desc"  }}
 
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-  <title>{{ $site.title }}</title>
-  <meta name="description" content="{{ $site.description }}" />
-  <meta name="keyword" content="{{ $site.keyword }}" />
+  <title>{{ $site.Title }}</title>
+  <meta name="description" content="{{ $site.Description }}" />
+  <meta name="keyword" content="{{ $site.Keyword }}" />
 
 {{template "bodystart.html" }}
 
@@ -15,24 +15,24 @@
 
 <section id="posts" class="posts">
 
-{{ range $k,$v := $selectList.data }}
+{{ range $k,$v := $selectList.Data }}
 <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="{{basePath}}post/{{$v.id}}">{{ $v.title }}</a></h1>
+    <h1 class="post-title"><a class="post-link" href="{{basePath}}post/{{.Id}}">{{ .Title }}</a></h1>
     <div class="post-meta">
-      <span class="post-time">{{ slice $v.updateTime 0 10 }}</span>
+      <span class="post-time">{{ slice .UpdateTime 0 10 }}</span>
       <div class="post-category">
-          <a href="{{basePath}}category/{{ $v.categoryID }}">{{ $v.categoryName }}</a>
+          <a href="{{basePath}}category/{{ .CategoryID }}">{{ .CategoryName }}</a>
           </div>
     </div>
   </header>
   
   <div class="post-content">
     <div class="post-summary">
-      {{ $v.summary }} 
+      {{ .Summary }} 
     </div>
     <div class="read-more">
-      <a href="{{basePath}}post/{{$v.id}}" class="read-more-link">阅读更多</a>
+      <a href="{{basePath}}post/{{.Id}}" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
@@ -42,14 +42,14 @@
 </section>
   
 <nav class="pagination">
-  {{ if $selectList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}?pageNo={{ addInt $selectList.page.PageNo -1 }}&q={{.q}}">
+  {{ if $selectList.Page.HasPrev }}
+  <a class="prev" href="{{basePath}}?pageNo={{ addInt $selectList.Page.PageNo -1 }}&q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
-  {{ if $selectList.page.HasNext }}
-  <a class="next" href="{{basePath}}?pageNo={{ addInt $selectList.page.PageNo 1 }}&q={{.q}}">
+  {{ if $selectList.Page.HasNext }}
+  <a class="next" href="{{basePath}}?pageNo={{ addInt $selectList.Page.PageNo 1 }}&q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>

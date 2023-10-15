@@ -1,0 +1,180 @@
+{{template "admin/header.html"}}
+<script type="text/javascript" src="https://cdn.staticfile.org/js-sha3/0.8.0/sha3.min.js"></script>
+<title>查看站点信息 - GPRESS</title>
+{{template "admin/bodystart.html"}}
+
+
+
+<section class="section">
+	<div class="container">
+		<div class="table-content">
+			<div class="column">
+				<form id="gpress-form" action="/" method="POST">
+					<input type="hidden" name="id" id="id" value="{{.Data.Id}}">
+					<ul class="save-ul">
+						<li>
+							<div class="left">
+								站点信息ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Id}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								标题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Title}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								名称
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Name}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								域名
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Domain}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								关键字
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Keyword}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								站点描述
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Description}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								默认主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Theme}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								PC主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.ThemePC}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								手机主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.ThemeWAP}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								微信主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.SiteThemeWEIXIN}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Logo
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Logo}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Favicon
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Favicon}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								底部信息
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Footer}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								创建时间
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.CreateTime}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								更新时间
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.UpdateTime}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								创建人
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.CreateUser}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								排序
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.Data.SortNo}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								是否有效
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.Data.Status}}">
+							</div>
+						</li>
+					</ul>
+
+					<div class="field is-grouped" style="padding-left: 190px;">
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/update?id={{.Data.Id}}"
+								class="button is-primary">编辑</a>
+						</div>
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/list" class="button is-info is-light">返回</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	
+</script>
+
+{{template "admin/bodyend.html"}}

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"os"
 	"runtime"
 
 	"gitee.com/chunanyong/zorm"
@@ -73,22 +74,26 @@ func checkSQLiteStatus() bool {
 		return isInit
 	}
 
-	// 初始化indexField
-	_, err = initTableField()
-	if err != nil {
-		return false
+	if tableExist(tableContentName) {
+		return true
 	}
-	// 初始化tableInfo
-	_, err = initTableInfo()
+
+	sqlByte, err := os.ReadFile("gpressdatadir/gpress.sql")
 	if err != nil {
-		return false
+		panic(err)
 	}
-	// 初始化 config
-	ok, err := initConfig()
+	createTableSQL := string(sqlByte)
+	if createTableSQL == "" {
+		panic("gpressdatadir/gpress.sql 文件异常")
+	}
+
+	ctx := context.Background()
+	_, err = execNativeSQL(ctx, createTableSQL)
 	if err != nil {
-		return false
+		panic(err)
 	}
-	return ok
+
+	return true
 }
 
 func tableExist(tableName string) bool {
@@ -98,37 +103,11 @@ func tableExist(tableName string) bool {
 	return count > 0
 }
 
-// findTableFieldStruct 获取表中符合条件字段,返回Struct对象
-// tableName: 表名/表名
-func findTableFieldStruct(ctx context.Context, tableName string, required int) ([]TableFieldStruct, error) {
-	finder := zorm.NewSelectFinder(tableFieldName, "*").Append(" WHERE tableCode=? ")
-	if required != 0 {
-		finder.Append(" and required=? ", required)
-	}
-	finder.Append("order by sortNo asc,id desc", tableName)
-	page := zorm.NewPage()
-	page.PageNo = 1
-	page.PageSize = 1000
-	fields := make([]TableFieldStruct, 0)
-	err := zorm.Query(ctx, finder, &fields, page)
-	if err != nil {
-		FuncLogError(err)
-		return nil, err
-	}
-	return fields, nil
-}
-
 // 保存新表
 func saveEntityMap(ctx context.Context, newTable zorm.IEntityMap) (ResponseData, error) {
-	tableFields, err := findTableFieldStruct(ctx, newTable.GetTableName(), 1)
 
 	responseData := ResponseData{StatusCode: 1}
-	if err != nil {
-		FuncLogError(err)
-		responseData.StatusCode = 303
-		responseData.Message = "查询异常"
-		return responseData, err
-	}
+
 	id := ""
 	newId, ok := newTable.GetDBFieldMap()["id"]
 	if ok {
@@ -140,22 +119,12 @@ func saveEntityMap(ctx context.Context, newTable zorm.IEntityMap) (ResponseData,
 
 	newTable.Set("id", id)
 
-	for _, v := range tableFields {
-		tmp := v.FieldCode
-		_, ok := newTable.GetDBFieldMap()[tmp]
-		if !ok {
-			responseData.StatusCode = 401
-			responseData.Message = tmp + "不能为空"
-			return responseData, err
-		}
-	}
-
 	if newTable.GetDBFieldMap()["sortNo"] == 0 {
 		count, _ := selectTableCount(ctx, newTable.GetTableName())
 		newTable.Set("sortNo", count)
 	}
 
-	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.InsertEntityMap(ctx, newTable)
 		return nil, err
 	})
@@ -209,21 +178,6 @@ func execNativeSQL(ctx context.Context, nativeSQL string) (bool, error) {
 		return false, err
 	}
 	return true, nil
-}
-
-func saveTableInfo(ctx context.Context, tableInfoStruct TableInfoStruct) error {
-	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
-		_, err := zorm.Insert(ctx, &tableInfoStruct)
-		return nil, err
-	})
-	return err
-}
-
-func saveTableField(ctx context.Context, tableFiledStruct TableFieldStruct) {
-	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
-		_, err := zorm.Insert(ctx, &tableFiledStruct)
-		return nil, err
-	})
 }
 
 func selectTableCount(ctx context.Context, tableName string) (int, error) {
