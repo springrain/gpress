@@ -136,8 +136,11 @@
 							<div class="left">
 								是否有效
 							</div>
-							<div class="right">
-								<input class="input" type="number" name="status" value="{{.Data.Status}}" id="status">
+							<div class="select">
+								<select name="status" id="status">
+								  <option value="1">是</option>
+								  <option value="0">否</option>
+								</select>
 							</div>
 						</li>
 					</ul>
@@ -157,6 +160,7 @@
 </section>
 
 <script>
+	 $("#status").val("{{.Data.Status}}")
 	const form = document.getElementById('gpress-form')
 	form.addEventListener('submit', async event => {
 		event.preventDefault()

@@ -100,21 +100,7 @@
 								封面图
 							</div>
 							<div class="right">
-								<div class="upload-modlue">
-									<div class="upload-box">
-										<i class="iconfont icon-shangchuan"></i>
-										<p>上传图片</p>
-										<input class="input" type="file" id="fileInput">
-									</div>
-									<div class="img-box">
-										<div class="img-preview">
-											<img src="{{.Data.Thumbnail}}" id="img">
-											<div class="delete-btn">
-												<i class="iconfont icon-shanchu"></i>
-											</div>
-										</div>
-									</div>
-								</div>
+							
 							</div>
 						</li>
 						<li>
@@ -127,16 +113,28 @@
 						</li>
 						<li>
 							<div class="left">
+								是否有效
+							</div>
+							<div class="right">
+							    {{if .Data.Status }}
+								<input class="input" type="number" disabled value="是">
+								{{else}}
+								<input class="input" type="number" disabled value="否">
+								{{end}}
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								文章内容
 							</div>
 							<div class="right">
 								<div class="control">
 									<label class="radio">
-										<input type="radio" value="0" name="foobar" checked>
+										<input type="radio" value="0" name="foobar" >
 										富文本
 									</label>
 									<label class="radio">
-										<input type="radio" value="1" name="foobar">
+										<input type="radio" value="1" name="foobar" checked>
 										Markdown
 									</label>
 								</div>

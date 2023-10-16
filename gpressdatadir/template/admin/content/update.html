@@ -107,8 +107,11 @@
 							<div class="left">
 								是否有效
 							</div>
-							<div class="right">
-								<input class="input" type="number" name="status" value="{{.Data.Status}}" id="status">
+							<div class="select">
+								<select name="status" id="status">
+								  <option value="1">是</option>
+								  <option value="0">否</option>
+								</select>
 							</div>
 						</li>
 						<li style="align-items: flex-start;">
@@ -198,6 +201,8 @@
 <script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
 <script>
+    $("#status").val("{{.Data.Status}}")
+
 	let categoryID = $('#categoryID').val()
 	let categoryName = $('#categoryName').val()
 	let templateID = $('#templateID').val()
