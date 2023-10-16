@@ -41,10 +41,12 @@ func main() {
 	//initAdminRoute()
 
 	//注册category和context的href路由
-	err := registerHrefRoute()
-	if err != nil {
-		FuncLogError(err)
-	}
+	/*
+		err := registerHrefRoute()
+		if err != nil {
+			FuncLogError(err)
+		}
+	*/
 	message := "浏览器打开前端: "
 	httpStr := "http://"
 	if strings.HasPrefix(config.ServerPort, ":") {
