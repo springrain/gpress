@@ -16,7 +16,7 @@
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
-						<input class="input" type="text" name="q" placeholder="输入搜索内容...">
+						<input class="input" type="text" name="q" id="q" placeholder="输入搜索内容...">
 						<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
 					</div>
 				</div>
@@ -103,6 +103,14 @@
 <script>
 	// 加载分页
 	initPage()
+
+	const query = window.location.search;
+	const params=new URLSearchParams(query)
+	var q=params.get("q")
+	if(q){
+		$("#q").val(q)
+	}
+
 </script>
 
 {{template "admin/bodyend.html"}}
