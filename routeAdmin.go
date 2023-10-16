@@ -395,17 +395,17 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 		err = c.Bind(ptrObj)
 		id = ptrObj.Id
 		ptrObj.UpdateTime = now
-		var content string
-		var toc string
-		content, toc, err = setMarkdownHtml(ptrObj.Markdown)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
-			c.Abort() // 终止后续调用
-			FuncLogError(err)
-			return
+		if ptrObj.Markdown != "" {
+			content, toc, err := setMarkdownHtml(ptrObj.Markdown)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+				c.Abort() // 终止后续调用
+				FuncLogError(err)
+				return
+			}
+			ptrObj.Content = content
+			ptrObj.Toc = toc
 		}
-		ptrObj.Content = content
-		ptrObj.Toc = toc
 
 		entity = ptrObj
 	default:
@@ -579,17 +579,18 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		if ptrObj.UpdateTime == "" {
 			ptrObj.UpdateTime = now
 		}
-		var content string
-		var toc string
-		content, toc, err = setMarkdownHtml(ptrObj.Markdown)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
-			c.Abort() // 终止后续调用
-			FuncLogError(err)
-			return
+
+		if ptrObj.Markdown != "" {
+			content, toc, err := setMarkdownHtml(ptrObj.Markdown)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+				c.Abort() // 终止后续调用
+				FuncLogError(err)
+				return
+			}
+			ptrObj.Content = content
+			ptrObj.Toc = toc
 		}
-		ptrObj.Content = content
-		ptrObj.Toc = toc
 		entity = ptrObj
 	default:
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "表不存在!"})
