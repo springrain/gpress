@@ -2,8 +2,6 @@
 <title>查看页面模版 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $category := category }} <!-- 导航数据 -->
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
 	.code-line .number{
@@ -83,9 +81,9 @@
 							</div>
 							<div class="right">
 							    {{if .Data.Status }}
-								<input class="input" type="number" disabled value="是">
+								<input class="input" type="text" disabled value="是">
 								{{else}}
-								<input class="input" type="number" disabled value="否">
+								<input class="input" type="text" disabled value="否">
 								{{end}}
 							</div>
 						</li>

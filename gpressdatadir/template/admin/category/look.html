@@ -2,7 +2,7 @@
 <title>查看导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $category := category }} <!-- 导航数据 -->
+
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
@@ -77,7 +77,7 @@
 								<select class="input" id="templateSelect" disabled>
 									<option value="">请选择</option>
 									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
 							</div>
@@ -112,9 +112,9 @@
 							</div>
 							<div class="right">
 							    {{if .Data.Status }}
-								<input class="input" type="number" disabled value="是">
+								<input class="input" type="text" disabled value="是">
 								{{else}}
-								<input class="input" type="number" disabled value="否">
+								<input class="input" type="text" disabled value="否">
 								{{end}}
 							</div>
 						</li>
