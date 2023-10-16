@@ -12,7 +12,7 @@ import (
 )
 
 // 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入表,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
-func loadInstallConfig() configStruct {
+func loadInstallConfig() Config {
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
 	if installed { // 如果已经安装,需要从表读取配置,这里暂时返回defaultConfig
 		config, err := findConfig()
@@ -34,7 +34,7 @@ func loadInstallConfig() configStruct {
 		FuncLogError(defaultErr)
 		return defaultConfig
 	}
-	configJson := configStruct{}
+	configJson := Config{}
 	// Decode从输入流读取下一个json编码值并保存在v指向的值里
 	err = json.Unmarshal([]byte(byteValue), &configJson)
 	if err != nil {
@@ -52,7 +52,7 @@ func loadInstallConfig() configStruct {
 	return configJson
 }
 
-var defaultConfig = configStruct{
+var defaultConfig = Config{
 	BasePath: "/",
 	// 默认的加密Secret
 	// JwtSecret:   "gpress+jwtSecret-2023",
@@ -63,48 +63,19 @@ var defaultConfig = configStruct{
 	ServerPort:  ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
 }
 
-type configStruct struct {
-	//基本路径,类似ContextPath,默认 /
-	BasePath string `json:"basePath"`
-	//JWT的Secret
-	JwtSecret string `json:"jwtSecret"`
-	//JWT的token名称
-	JwttokenKey string `json:"jwttokenKey"`
-	//超时时间
-	Timeout int `json:"timeout"`
-	//服务器端口
-	ServerPort string `json:"serverPort"`
-	//使用的主题
-	Theme string `json:"theme"`
-	//翻墙代理
-	Proxy string `json:"proxy"`
-	//使用外部的Nats消息队列服务,默认false,默认使用内嵌的Nats服务
-	//ExternalNats bool `json:"externalNats"`
-}
-
 // insertConfig 插入config
-func insertConfig(ctx context.Context, config configStruct) error {
+func insertConfig(ctx context.Context, configStruct Config) error {
 	// 清空配置,重新创建
 	deleteAll(ctx, tableConfigName)
 
-	ID := FuncGenerateStringID()
+	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		return zorm.Insert(ctx, &configStruct)
+	})
 
-	m := make(map[string]interface{})
-	m["id"] = ID
-	b, _ := json.Marshal(config)
-	json.Unmarshal(b, &m)
-
-	entityMap := zorm.NewEntityMap(tableConfigName)
-	for k, v := range m {
-		entityMap.Set(k, v)
-	}
-	entityMap.Set("sortNo", 0)
-	entityMap.Set("status", 1)
-	saveEntityMap(ctx, entityMap)
-	return nil
+	return err
 }
 
-func findConfig() (configStruct, error) {
+func findConfig() (Config, error) {
 
 	finder := zorm.NewSelectFinder(tableConfigName, "*")
 

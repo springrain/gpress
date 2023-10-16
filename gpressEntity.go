@@ -31,9 +31,6 @@ type Config struct {
 	// TableType index/module 表和模型,两种类型
 	Proxy string `column:"proxy" json:"proxy,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
-	MainServer string `column:"mainServer" json:"mainServer,omitempty"`
-
 	// CreateTime 创建时间
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 
