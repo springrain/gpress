@@ -350,9 +350,6 @@ type User struct {
 	// 链address
 	ChainAddress string `column:"chainAddress" json:"chainAddress,omitempty"`
 
-	// rsa公钥
-	RsaPublicKey string `column:"rsaPublicKey" json:"rsaPublicKey,omitempty"`
-
 	// CreateTime
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 

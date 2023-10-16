@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS user (
 		userName         TEXT NOT NULL,
 		chainType        TEXT,
 		chainAddress     TEXT,
-		rsaPublicKey     TEXT,
 		createTime       TEXT,
 		updateTime       TEXT,
 		createUser       TEXT,
