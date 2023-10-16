@@ -27,8 +27,11 @@ func TestCategory(t *testing.T) {
 		menu.Set("sortNo", i+1)
 		menu.Set("createTime", now)
 		menu.Set("updateTime", now)
-
-		_, err := saveEntityMap(context.Background(), menu)
+		_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+			_, err := zorm.InsertEntityMap(ctx, menu)
+			return nil, err
+		})
+		//_, err := saveEntityMap(context.Background(), menu)
 		if err != nil {
 			t.Error(err)
 		}
@@ -128,7 +131,13 @@ func TestReadmks(t *testing.T) {
 		dateStr := date.Format("2006-01-02 15:04:05")
 		cMap.Set("updateTime", dateStr)
 		cMap.Set("createTime", dateStr)
-		_, err := saveEntityMap(context.Background(), cMap)
+
+		_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+			_, err := zorm.InsertEntityMap(ctx, cMap)
+			return nil, err
+		})
+
+		//_, err := saveEntityMap(context.Background(), cMap)
 		if err != nil {
 			t.Error(err)
 		}
@@ -162,8 +171,11 @@ func TestAbout(t *testing.T) {
 	cMap.Set("toc", tocHtml)
 	cMap.Set("summary", `本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......
 	不妨大胆一些,大胆一些......`)
-
-	_, err = saveEntityMap(ctx, cMap)
+	_, err = zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
+		_, err := zorm.InsertEntityMap(ctx, cMap)
+		return nil, err
+	})
+	//_, err = saveEntityMap(ctx, cMap)
 	if err != nil {
 		t.Error(err)
 	}

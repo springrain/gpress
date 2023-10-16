@@ -65,20 +65,21 @@ func init() {
 			return
 		}
 		// 使用后端管理界面配置,jwtSecret也有后端随机产生
-		userMap := make(map[string]string, 0)
-		userMap["account"] = c.PostForm("account")
-		userMap["userName"] = c.PostForm("account")
-		userMap["password"] = c.PostForm("password")
-		userMap["chainType"] = c.PostForm("chainType")
-		userMap["chainAddress"] = c.PostForm("chainAddress")
+
+		user := User{}
+		user.Account = c.PostForm("account")
+		user.UserName = c.PostForm("account")
+		user.Password = c.PostForm("password")
+		user.ChainType = c.PostForm("chainType")
+		user.ChainAddress = c.PostForm("chainAddress")
 
 		loginHtml := "admin/login"
-		if c.PostForm("chainAddress") != "" && c.PostForm("chainType") != "" { //如果使用了address作为登录方式
-			userMap["account"] = ""
-			userMap["userName"] = ""
+		if user.ChainAddress != "" && user.ChainType != "" { //如果使用了address作为登录方式
+			user.Account = ""
+			user.UserName = ""
 			loginHtml = "admin/chainlogin"
 		}
-		err := insertUser(ctx, userMap)
+		err := insertUser(ctx, user)
 		if err != nil {
 			c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 			c.Abort() // 终止后续调用
@@ -425,7 +426,8 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 	}
 
 	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
-		_, err = zorm.Update(ctx, entity)
+		ctx, err = zorm.BindContextMustUpdateCols(ctx, []string{"status"})
+		_, err = zorm.UpdateNotZeroValue(ctx, entity)
 		return nil, err
 	})
 	if err != nil {
