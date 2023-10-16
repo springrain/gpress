@@ -4,7 +4,7 @@
 {{template "admin/bodystart.html"}}
 
 
-{{ $category := category }} <!-- 导航数据 -->
+{{ $category := category}}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
@@ -67,7 +67,7 @@
 								<select class="input" id="templateSelect">
 									<option value="">请选择</option>
 									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
 							</div>
@@ -81,7 +81,7 @@
 								<select class="input" id="navSelect">
 									<option value="">请选择</option>
 									{{ range $index,$obj := $category }}
-									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
 							</div>
