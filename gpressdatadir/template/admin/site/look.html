@@ -153,7 +153,11 @@
 								是否有效
 							</div>
 							<div class="right">
-								<input class="input" type="number" disabled value="{{.Data.Status}}">
+							    {{if .Data.Status }}
+								<input class="input" type="number" disabled value="是">
+								{{else}}
+								<input class="input" type="number" disabled value="否">
+								{{end}}
 							</div>
 						</li>
 					</ul>
