@@ -6,19 +6,16 @@ import (
 	"gitee.com/chunanyong/zorm"
 )
 
-func insertUser(ctx context.Context, userMap map[string]string) error {
+func insertUser(ctx context.Context, user User) error {
 	// 清空用户,只能有一个管理员
 	deleteAll(ctx, tableUserName)
 	// 初始化数据
-	user := zorm.NewEntityMap(tableUserName)
-	id := FuncGenerateStringID()
-	user.PkColumnName = "id"
-	user.Set("id", id)
-	for k, v := range userMap {
-		user.Set(k, v)
-	}
-
-	_, err := saveEntityMap(ctx, user)
+	user.Id = FuncGenerateStringID()
+	user.SortNo = 1
+	user.Status = 1
+	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		return zorm.Insert(ctx, &user)
+	})
 	return err
 }
 
