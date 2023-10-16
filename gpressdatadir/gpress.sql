@@ -7,12 +7,11 @@ CREATE TABLE IF NOT EXISTS config (
 		theme            TEXT NOT NULL,
 		timeout          INT  NOT NULL,
 		proxy            TEXT NULL,
-		mainServer       TEXT,
 		createTime       TEXT,
 		updateTime       TEXT,
 		createUser       TEXT,
-		sortNo           INT  NOT NULL,
-		status           INT  NOT NULL
+		sortNo           int,
+		status           int  
 	 ) strict ;
 
 CREATE TABLE IF NOT EXISTS user (

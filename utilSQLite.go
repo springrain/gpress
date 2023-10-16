@@ -103,6 +103,7 @@ func tableExist(tableName string) bool {
 	return count > 0
 }
 
+/*
 // 保存新表
 func saveEntityMap(ctx context.Context, newTable zorm.IEntityMap) (ResponseData, error) {
 
@@ -140,6 +141,7 @@ func saveEntityMap(ctx context.Context, newTable zorm.IEntityMap) (ResponseData,
 	responseData.Data = id
 	return responseData, err
 }
+*/
 
 func updateTable(ctx context.Context, newMap zorm.IEntityMap) error {
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
