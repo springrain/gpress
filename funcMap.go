@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"html/template"
+	"regexp"
 	"strings"
 
 	"gitee.com/chunanyong/zorm"
@@ -99,6 +100,19 @@ func funcAddFloat(x, y float64) float64 {
 	return x + y
 }
 
+// 查询'order by'在sql中出现的开始位置和结束位置
+// Query the start position and end position of'order by' in SQL
+var (
+	orderByExpr      = "(?i)\\s(order)\\s+by\\s"
+	orderByRegexp, _ = regexp.Compile(orderByExpr)
+)
+
+// findOrderByIndex 查询order by在sql中出现的开始位置和结束位置
+// findOrderByIndex Query the start position and end position of'order by' in SQL
+func findOrderByIndex(strsql *string) []int {
+	loc := orderByRegexp.FindStringIndex(*strsql)
+	return loc
+}
 func funcSelectList(urlPathParam string, q string, pageNo int, sql string, values ...interface{}) (ResponseData, error) {
 	responseData := ResponseData{StatusCode: 0}
 	sql = strings.TrimSpace(sql)
@@ -112,6 +126,13 @@ func funcSelectList(urlPathParam string, q string, pageNo int, sql string, value
 	finder := zorm.NewFinder().Append("SELECT")
 	if q != "" { // 如果有搜索关键字
 		whereSQL := strings.ToLower(sql)
+		locOrderBy := findOrderByIndex(&sql)
+		orderBy := ""
+		if len(locOrderBy) > 0 {
+			orderBy = sql[locOrderBy[0]:]
+			sql = sql[:locOrderBy[0]]
+		}
+
 		i := strings.Index(whereSQL, " where ")
 		if i < 0 { // 没有where
 			finder.Append(sql, values...)
@@ -120,7 +141,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, sql string, value
 			finder.Append(sql[:i+7]+" rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) and ", q)
 			finder.Append(sql[i+7:], values...)
 		}
-
+		finder.Append(orderBy)
 	} else {
 		finder.Append(sql, values...)
 	}
