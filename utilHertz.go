@@ -309,42 +309,45 @@ func pathExist(path string) bool {
 	return false
 }
 
+/*
 // registerHrefRoute 注册category 和 content的自定义路由,最多500个
-func registerHrefRoute() error {
-	ctx := context.Background()
-	page := zorm.NewPage()
-	page.PageNo = 1
-	page.PageSize = 500
-	finder1 := zorm.NewSelectFinder(tableCategoryName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
-	categoryMaps, err := zorm.QueryMap(ctx, finder1, page)
-	if err != nil {
-		return err
-	}
-	for _, categoryMap := range categoryMaps {
-		id := categoryMap["id"].(string)
-		hrefURL := categoryMap["hrefURL"].(string)
-		err := hrefURLRoute("category/"+id, hrefURL)
-		if err != nil {
-			return err
-		}
-	}
 
-	finder2 := zorm.NewSelectFinder(tableContentName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
-	contentMaps, err := zorm.QueryMap(ctx, finder2, page)
-	if err != nil {
-		return err
-	}
-	for _, contentMap := range contentMaps {
-		id := contentMap["id"].(string)
-		hrefURL := contentMap["hrefURL"].(string)
-		err := hrefURLRoute("post/"+id, hrefURL)
+	func registerHrefRoute() error {
+		ctx := context.Background()
+		page := zorm.NewPage()
+		page.PageNo = 1
+		page.PageSize = 500
+		finder1 := zorm.NewSelectFinder(tableCategoryName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
+		categoryMaps, err := zorm.QueryMap(ctx, finder1, page)
 		if err != nil {
 			return err
 		}
-	}
-	return nil
+		for _, categoryMap := range categoryMaps {
+			id := categoryMap["id"].(string)
+			hrefURL := categoryMap["hrefURL"].(string)
+			err := hrefURLRoute("category/"+id, hrefURL)
+			if err != nil {
+				return err
+			}
+		}
+
+		finder2 := zorm.NewSelectFinder(tableContentName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
+		contentMaps, err := zorm.QueryMap(ctx, finder2, page)
+		if err != nil {
+			return err
+		}
+		for _, contentMap := range contentMaps {
+			id := contentMap["id"].(string)
+			hrefURL := contentMap["hrefURL"].(string)
+			err := hrefURLRoute("post/"+id, hrefURL)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
 
 }
+*/
 
 func findPageTemplate(ctx context.Context, tableName string, urlPathParam string) (string, error) {
 	finder := zorm.NewFinder().Append("select p.templatePath from pageTemplate p, "+tableName+" t WHERE t.templateID=p.id and t.id=?", urlPathParam)
