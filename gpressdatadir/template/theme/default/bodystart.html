@@ -61,9 +61,14 @@
 			</a>
 
 			{{ range $k,$v := $category }}
-			<a href="{{basePath}}category/{{ $v.id }}">
-				<li class="mobile-menu-item">{{ $v.name }}</li>
+			  {{if $v.HrefURL}}
+			    <a href="{{ hrefURL $v.HrefURL }}">
+			  {{else}}
+			    <a href="{{basePath}}category/{{ $v.Id }}">
+			  {{end}}
+				<li class="mobile-menu-item">{{ $v.Name }}</li>
 			</a>
+
 			{{ end }}
 
 		</ul>
@@ -81,7 +86,11 @@
 					</li>
 					{{ range $k,$v := $category }}
 					<li class="menu-item">
-						<a class="menu-item-link" href="{{basePath}}category/{{ $v.id }}">{{ $v.name }}</a>
+					  {{if $v.HrefURL}}
+					     <a class="menu-item-link" href="{{ hrefURL $v.HrefURL }}">{{ $v.Name }}</a>
+					  {{else}}
+					     <a class="menu-item-link" href="{{basePath}}category/{{ $v.Id }}">{{ $v.Name }}</a>
+					  {{end}}
 					</li>
 					{{ end }}
 				</ul>

@@ -19,6 +19,7 @@ var funcMap = template.FuncMap{
 	"T":            funcT,
 	"safeHTML":     funcSafeHTML,
 	"safeURL":      funcSafeURL,
+	"hrefURL":      funcHrefURL,
 	"relURL":       funcRelURL,
 	"site":         funcSite,
 	"category":     funcCategory,
@@ -54,6 +55,15 @@ func funcSafeURL(html string) (template.URL, error) {
 	return ss, nil
 }
 
+func funcHrefURL(href string) (string, error) {
+	href = strings.TrimSpace(href)
+	if strings.HasPrefix(href, "http") { //http协议开头
+		return href, nil
+	}
+	href = strings.TrimPrefix(href, "/") //斜杠开头就删除掉
+	return funcBasePath() + href, nil
+}
+
 // funcRelURL 拼接url路径的
 func funcRelURL(url string) (template.HTML, error) {
 	return funcSafeHTML(themePath + url)
@@ -68,21 +78,26 @@ func funcSite() (Site, error) {
 }
 
 // 菜单信息
-func funcCategory() ([]map[string]interface{}, error) {
+func funcCategory() ([]Category, error) {
 	finder := zorm.NewSelectFinder(tableCategoryName)
 	finder.Append(" order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 200
-	return zorm.QueryMap(context.Background(), finder, page)
+	list := make([]Category, 0)
+	err := zorm.Query(context.Background(), finder, &list, page)
+	return list, err
 }
 
 // 页面模板
-func funcPageTemplate() ([]map[string]interface{}, error) {
+func funcPageTemplate() ([]PageTemplate, error) {
 	finder := zorm.NewSelectFinder(tablePageTemplateName)
 	finder.Append(" order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 200
-	return zorm.QueryMap(context.Background(), finder, page)
+
+	list := make([]PageTemplate, 0)
+	err := zorm.Query(context.Background(), finder, &list, page)
+	return list, err
 }
 
 /*

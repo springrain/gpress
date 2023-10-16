@@ -2,7 +2,7 @@
 <title>新增导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $category := category }} <!-- 导航数据 -->
+
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <section class="section">
@@ -78,7 +78,7 @@
 								<select class="input" id="templateSelect">
 									<option value="">请选择</option>
 									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
 							</div>
