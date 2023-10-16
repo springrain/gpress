@@ -71,7 +71,13 @@
 						<td> {{ .CreateTime }}</td>
 						<td> {{ .UpdateTime }}</td>
 						<td> {{ .SortNo }}</td>
-						<td> {{ .Status }}</td>
+						<td> 
+							{{if .Status }}
+							是
+							{{else}}
+							否
+							{{end}}
+						</td>
 						<td class="pos-sticky">
 							<div style="margin-bottom: 10px;">
 								<a class="button is-success is-light is-small"
