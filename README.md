@@ -39,8 +39,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | theme       | string      | 主题名称     |  默认 default  |
 | timeout     | int         | jwt超时时间秒|  默认 1800  |
 | proxy       | string      | http代理地址 |             |
-| createTime  |string       | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  |string       | 更新时间     |  2006-01-02 15:04:05  |
+| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
 | status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
@@ -54,8 +54,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | account     | string      | 登录名称    |  默认admin  |
 | passWord    | string      | 密码        |    -  |
 | userName    | string      | 说明        |    -  |
-| createTime  |string       | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  |string       | 更新时间     |  2006-01-02 15:04:05  |
+| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
 | status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
@@ -75,8 +75,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | themeWEIXIN | string      | 微信主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
 | logo        | string      | logo       |     -  |
 | favicon     | string      | Favicon    |     -  |
-| createTime  |string       | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  |string       | 更新时间     |  2006-01-02 15:04:05  |
+| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
 | status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
@@ -89,8 +89,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | id          | string      | 主键        | 否       |    -  |
 | name        | string      | 模板名称     | 否       |    -  |
 | templatePath| string      | 模板路径     | 否       |    -  |
-| createTime  |string       | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  |string       | 更新时间     |  2006-01-02 15:04:05  |
+| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
 | status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
@@ -107,8 +107,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
 | templateID  | string      | 模板Id       | 当前导航页的模板  |
 | childTemplateID  | string | 子页面模板Id  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
-| createTime  |string       | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  |string       | 更新时间     |  2006-01-02 15:04:05  |
+| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
 | status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
@@ -116,26 +116,28 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 ### 文章内容(表名:content)
 文章内容表,默认使用 module_default 的模型字段
 
-| columnName    | 类型         | 说明    | 是否分词 |  备注       | 
-| ----------- | ----------- | ----------- | ------- | ----------- |
-| id          | string      | 主键         | 否      |    -  |
-| moduleID    | string      | 模型ID       | 否      |  文章使用的模型字段 |
-| title       | string      | 文章标题     | 是      |    使用 jieba 分词器  |
+| columnName  | 类型        | 说明        | 是否分词 |  备注                  | 
+| ----------- | ----------- | ----------- | ------- | ---------------------- |
+| id          | string      | 主键         | 否      |    -                   |
+| moduleID    | string      | 模型ID       | 否      |  文章使用的模型字段     |
+| title       | string      | 文章标题     | 是      |    使用 jieba 分词器    |
 | keyword     | string      | 关键字       | 是      |    使用 jieba 分词器    |
-| description | string      | 站点描述     | 否      |    使用 jieba 分词器 |
-| hrefURL     | string      | 自身页面路径 | 否       |    -  |
+| description | string      | 站点描述     | 否      |    使用 jieba 分词器    |
+| hrefURL     | string      | 自身页面路径 | 否      |    -                    |
 | subtitle    | string      | 副标题       | 是      |      使用 jieba 分词器  |
-| author      | string      | 作者       | 是      |      使用 jieba 分词器  |
-| tag         | string      | 标签       | 是      |      使用 jieba 分词器  |
-| toc         | string      | 目录       | 是      |      使用 jieba 分词器  |
-| summary     | string      | 摘要       | 是      |      使用 jieba 分词器  |
-| categoryName| string      | 导航名称,逗号(,)隔开     | 是      | 使用 jieba 分词器.  |
-| categoryID  | string      | 导航ID       | 否      | -    |
-| templateID  | string      | 模板Id       | 否      | 模板  |
-| content     | string      | 文章内容     | 是      |       |
-| createTime  |string       | 创建时间     | -       |  2006-01-02 15:04:05  |
-| updateTime  |string       | 更新时间     | -       |  2006-01-02 15:04:05  |
-| createUser  | string      | 创建人       | -       |  初始化 system  |
-| sortNo      | int         | 排序        | -       |  正序  |
+| author      | string      | 作者         | 是      |      使用 jieba 分词器  |
+| tag         | string      | 标签         | 是      |      使用 jieba 分词器  |
+| toc         | string      | 目录         | 是      |      使用 jieba 分词器  |
+| summary     | string      | 摘要         | 是      |      使用 jieba 分词器  |
+| categoryName| string      | 导航名称,逗号(,)隔开| 是| 使用 jieba 分词器.      |
+| categoryID  | string      | 导航ID       | 否      | -                       |
+| templateID  | string      | 模板Id       | 否      | 模板                    |
+| content     | string      | 文章内容     | 否      |                         |
+| markdown    | string      | Markdown内容 | 否      |                         |
+| thumbnail   | string      | 封面图       | 否      |                         |
+| createTime  | string      | 创建时间     | -       |  2006-01-02 15:04:05    |
+| updateTime  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
+| createUser  | string      | 创建人       | -       |  初始化 system          |
+| sortNo      | int         | 排序         | -       |  正序                   |
 | status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
 
