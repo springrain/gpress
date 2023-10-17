@@ -137,7 +137,7 @@ func init() {
 		account := c.PostForm("account")
 		password := c.PostForm("password")
 		if account == "" || password == "" { // 用户不存在或者异常
-			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码不能位空"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码不能为空"))
 			c.Abort() // 终止后续调用
 			return
 		}
