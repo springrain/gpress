@@ -36,7 +36,6 @@
 			<table class="table is-hoverable is-fullwidth">
 				<thead>
 					<tr>
-						<th>用户ID</th>
 						<th>账号</th>
 						<th>密码</th>
 						<th>用户名称</th>
@@ -50,7 +49,6 @@
 					{{ range $i,$v := .Data }}
 					<tr>
 						<!-- 获取每一列的值 -->
-						<td> {{ .Id }}</td>
 						<td> {{ .Account }}</td>
 						<td> {{ .Password }}</td>
 						<td> {{ .UserName }}</td>
