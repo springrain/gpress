@@ -23,6 +23,14 @@
 					<ul class="save-ul">
 						<li>
 							<div class="left">
+								ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Id}}" />
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								菜单名称
 							</div>
 							<div class="right">
@@ -45,30 +53,7 @@
 								<input class="input" type="text" disabled value="{{.Data.HrefTarget}}">
 							</div>
 						</li>
-						<li>
-							<div class="left">
-								父菜单ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Pid}}">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								PC主题
-							</div>
-							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.ThemePC}}">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								模型ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.ModuleID}}">
-							</div>
-						</li>
+					
 						<li>
 							<div class="left">
 								页面模版
@@ -82,22 +67,7 @@
 								</select>
 							</div>
 						</li>
-						<li>
-							<div class="left">
-								子页面模版ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.ChildTemplateID}}">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								创建人
-							</div>
-							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.CreateUser}}">
-							</div>
-						</li>
+
 						<li>
 							<div class="left">
 								排序
