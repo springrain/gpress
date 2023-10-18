@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS site (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,siteThemeWEIXIN,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2023<span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备2020026846号-1</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41010302002680''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备41010302002680号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','gpress','gpress','jiagou.com','架构','jiagou','gpress');
+INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,siteThemeWEIXIN,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2023<span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','gpress','gpress','jiagou.com','架构','jiagou','gpress');
 
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
 		title, 
