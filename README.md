@@ -33,7 +33,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | 主键        |    -        |
 | basePath    | string      | 基础路径    |  默认 /      |
-| jwtSecret   | string      | jwt加密字符串| 随机生成     |
+| jwtSecret   | string      | jwt密钥| 随机生成     |
 | jwttokenKey | string      | jwt的key    |  默认 jwttoken  |
 | serverPort  | string      | 服务器的IP:port    |  默认 :660  |
 | theme       | string      | 主题名称     |  默认 default  |
