@@ -35,19 +35,9 @@
 			<table class="table is-hoverable is-fullwidth">
 				<thead>
 					<tr>
-						<th>导航菜单ID</th>
+						<th>ID</th>
 						<th>菜单名称</th>
 						<th>跳转路径</th>
-						<th>跳转方式</th>
-						<th>父菜单ID</th>
-						<th>PC主题</th>
-						<th>模型ID</th>
-						<th>逗号隔开的全路径</th>
-						<th>模板ID</th>
-						<th>子页面模版ID</th>
-						<th>创建时间</th>
-						<th>更新时间</th>
-						<th>创建人</th>
 						<th>排序</th>
 						<th>是否有效</th>
 						<th class="pos-sticky">操作</th>
@@ -62,16 +52,6 @@
 						<td> {{ .Id }}</td>
 						<td> {{ .Name }}</td>
 						<td> {{ .HrefURL }}</td>
-						<td> {{ .HrefTarget }}</td>
-						<td> {{ .Pid }}</td>
-						<td> {{ .ThemePC }}</td>
-						<td> {{ .ModuleID }}</td>
-						<td> {{ .ModuleID }}</td>
-						<td> {{ .ModuleID }}</td>
-						<td> {{ .ChildTemplateID }}</td>
-						<td> {{ .CreateTime }}</td>
-						<td> {{ .UpdateTime }}</td>
-						<td>{{ .CreateUser }}</td>
 						<td> {{ .SortNo }}</td>
 						<td> 
 							{{if .Status }}

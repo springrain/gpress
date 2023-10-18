@@ -16,18 +16,18 @@
 					<ul class="save-ul">
 						<li>
 							<div class="left">
-								菜单名称
+								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="name" id="name">
+								<input class="input" type="text" name="id" id="id">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								菜单ID
+								菜单名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" id="id">
+								<input class="input" type="text" name="name" id="name">
 							</div>
 						</li>
 						<li>
@@ -48,55 +48,15 @@
 						</li>
 						<li>
 							<div class="left">
-								父菜单ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="pid" id="pid">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								PC主题
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="themePC" id="themePC">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								模型ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="moduleID" id="moduleID">
-							</div>
-						</li>
-						<li>
-							<div class="left">
 								页面模版
 							</div>
 							<div class="right">
 								<select class="input" id="templateSelect">
-									<option value="">请选择</option>
+									<option value="">默认</option>
 									{{ range $index,$obj := $pageTemplate }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								子页面模版ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="childTemplateID" id="childTemplateID">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								创建人
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="createUser" id="createUser">
 							</div>
 						</li>
 						<li>
