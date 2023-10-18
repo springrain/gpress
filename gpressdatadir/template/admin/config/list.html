@@ -36,14 +36,12 @@
 			<table class="table is-hoverable is-fullwidth">
 				<thead>
 					<tr>
-						<th>配置ID</th>
 						<th>基础路径</th>
 						<th>jwt密钥</th>
 						<th>jwt的key</th>
 						<th>服务器ip:端口</th>
 						<th>主题</th>
 						<th>超时时间</th>
-						<th>代理地址</th>
 						<th class="pos-sticky">操作</th>
 					</tr>
 				</thead>
@@ -52,14 +50,12 @@
 					{{ range $i,$v := .Data }}
 					<tr>
 						<!-- 获取每一列的值 -->
-						<td> {{ .Id }}</td>
 						<td> {{ .BasePath }}</td>
 						<td> {{ .JwtSecret }}</td>
 						<td> {{ .JwttokenKey }} </td>
 						<td> {{ .ServerPort }} </td>
 						<td> {{ .Theme }} </td>
 						<td> {{ .Timeout }} </td>
-						<td> {{ .Proxy }} </td>
 						<td class="pos-sticky">
 							<div style="margin-bottom: 10px;">
 								<a class="button is-success is-light is-small"
