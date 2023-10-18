@@ -29,6 +29,14 @@
 					<ul class="save-ul">
 						<li>
 							<div class="left">
+								ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="id" id="id">
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								文章标题
 							</div>
 							<div class="right">
@@ -43,14 +51,7 @@
 								<input class="input" type="text" name="subtitle" id="subtitle">
 							</div>
 						</li>
-						<li>
-							<div class="left">
-								文章ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="id" id="id">
-							</div>
-						</li>
+						
 						<li>
 							<div class="left">
 								关键字
@@ -65,9 +66,9 @@
 							</div>
 							<div class="right">
 								<select class="input" id="templateSelect">
-									<option value="">请选择</option>
+									<option value="">默认</option>
 									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+									   <option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
 							</div>
@@ -102,17 +103,7 @@
 								<input class="input" type="text" name="author" id="author">
 							</div>
 						</li>
-						<li>
-							<div class="left">
-								是否有效
-							</div>
-							<div class="select">
-								<select name="status" id="status">
-								  <option value="1">是</option>
-								  <option value="0">否</option>
-								</select>
-							</div>
-						</li>
+						
 						<li style="align-items: flex-start;">
 							<div class="left">
 								封面图
@@ -133,6 +124,17 @@
 										</div>
 									</div>
 								</div>
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								是否有效
+							</div>
+							<div class="select">
+								<select name="status" id="status">
+								  <option value="1">是</option>
+								  <option value="0">否</option>
+								</select>
 							</div>
 						</li>
 						<li>
@@ -385,6 +387,7 @@
 			categoryID: categoryID,
 			templateID: templateID,
 			tag: $('#tag').val(),
+			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
 			sortNo: $('#sortNo').val()-0,
