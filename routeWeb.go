@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 // 初始化函数
@@ -74,6 +72,7 @@ func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 	return data
 }
 
+/*
 // hrefURLRoute href 需要跳转的地址,hrefURL原地址
 func hrefURLRoute(realURL string, hrefURL string) error {
 	if hrefURL == "" || realURL == "" {
@@ -97,3 +96,4 @@ func hrefURLRoute(realURL string, hrefURL string) error {
 
 	return nil
 }
+*/
