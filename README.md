@@ -43,7 +43,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 状态     |  不显示(0),公开(1),私密(2)  |
 
 ### 用户(表名:user)
 后台只有一个用户.
@@ -58,7 +58,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 状态     |  不显示(0),公开(1),私密(2)  |
 
 ### 站点信息(site)
 站点的信息,例如 title,logo,keywords,description等
@@ -79,7 +79,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 状态     |  不显示(0),公开(1),私密(2)  |
 
 ### 页面模板(表名:pageTemplate)
 | columnName    | 类型         | 说明    | 是否分词 |  备注       | 
@@ -91,7 +91,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 状态     |  不显示(0),公开(1),私密(2)  |
 
 ### 导航菜单(表名:category)
 | columnName    | 类型         | 说明    |  备注       | 
@@ -109,7 +109,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 是否有效     |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 状态     |  不显示(0),公开(1),私密(2)  |
 
 ### 文章内容(表名:content)
 | columnName  | 类型        | 说明        | 是否分词 |  备注                  | 
@@ -135,5 +135,5 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | updateTime  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
 | createUser  | string      | 创建人       | -       |  初始化 system          |
 | sortNo      | int         | 排序         | -       |  正序                   |
-| status      | int         | 是否有效     | -       |  无效(0),正常显示(1),界面不显示(3)  |
+| status      | int         | 状态     | -       |  不显示(0),公开(1),私密(2)  |
 

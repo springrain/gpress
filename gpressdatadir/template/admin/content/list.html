@@ -44,7 +44,7 @@
 						<th>导航名称</th>
 						<th>作者</th>
 						<th>排序</th>
-						<th>是否有效</th>
+						<th>状态</th>
 						<th class="pos-sticky">操作</th>
 					</tr>
 				</thead>
@@ -62,10 +62,14 @@
 						<td> {{ .Author }}</td>
 						<td> {{ .SortNo }}</td>
 						<td> 
-							{{if .Status }}
-							是
+							{{if eq .Status 0 }}
+							不显示
+							{{else if eq .Status 1 }}
+							公开
+							{{else if eq .Status 2 }}
+							私密
 							{{else}}
-							否
+							未知
 							{{end}}
 						</td>
 						<td class="pos-sticky">
