@@ -118,7 +118,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | moduleID    | string      | 模型ID       | 否      |  文章使用的模型字段     |
 | title       | string      | 文章标题     | 是      |    使用 jieba 分词器    |
 | keyword     | string      | 关键字       | 是      |    使用 jieba 分词器    |
-| description | string      | 站点描述     | 否      |    使用 jieba 分词器    |
+| description | string      | 站点描述     | 是      |    使用 jieba 分词器    |
 | hrefURL     | string      | 自身页面路径 | 否      |    -                    |
 | subtitle    | string      | 副标题       | 是      |      使用 jieba 分词器  |
 | author      | string      | 作者         | 是      |      使用 jieba 分词器  |
