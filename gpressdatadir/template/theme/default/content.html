@@ -55,7 +55,9 @@
 <p class="copyright-item">
   <span class="item-title">上次更新</span>
   <span class="item-content">
-    {{ slice $content.Data.UpdateTime 0 10 }}
+    {{ if $content.Data.UpdateTime }}
+     {{ slice $content.Data.UpdateTime 0 10 }}
+    {{end}}
   </span>
 </p>
 
