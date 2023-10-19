@@ -14,7 +14,6 @@
 </style>
 
 <section class="section">
-	<input type="hidden" id="updateId" value="{{.Data.Id}}">
 	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
 
 	<div class="container">
@@ -22,6 +21,16 @@
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
 					<ul class="save-ul">
+                      
+                        <li>
+							<div class="left">
+								ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" readonly name="id" id="id" value="{{.Data.Id}}">
+							</div>
+						</li>
+
 						<li>
 							<div class="left">
 								菜单名称
@@ -118,7 +127,7 @@
 		jsonObject.sortNo = jsonObject.sortNo-0
 		jsonObject.status = jsonObject.status-0
 		jsonObject.templateID = templateID
-		jsonObject.id = $('#updateId').val()
+		jsonObject.id = $('#id').val()
 		console.log(jsonObject)
 		const response = await fetch(form.action, {
 			method: form.method,
