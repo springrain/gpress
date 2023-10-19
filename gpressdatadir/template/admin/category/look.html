@@ -78,13 +78,15 @@
 						</li>
 						<li>
 							<div class="left">
-								是否有效
+								状态
 							</div>
 							<div class="right">
-							    {{if .Data.Status }}
-								<input class="input" type="text" disabled value="是">
-								{{else}}
-								<input class="input" type="text" disabled value="否">
+							    {{if eq .Data.Status 0 }}
+								<input class="input" type="text" disabled value="不显示">
+								{{else if eq .Data.Status 1 }}
+								<input class="input" type="text" disabled value="公开">
+								{{else if eq .Data.Status 2 }}
+								<input class="input" type="text" disabled value="私密">
 								{{end}}
 							</div>
 						</li>
