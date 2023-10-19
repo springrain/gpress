@@ -43,7 +43,7 @@ type Config struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 不显示(0),公开(1),私密(2)
+	// 状态 列表不显示(0),公开(1),私密(2)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -108,7 +108,7 @@ type Category struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 不显示(0),公开(1),私密(2)
+	// 状态 列表不显示(0),公开(1),私密(2)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -195,7 +195,7 @@ type Content struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 不显示(0),公开(1),私密(2)
+	// 状态 列表不显示(0),公开(1),私密(2)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -309,7 +309,7 @@ type Site struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 不显示(0),公开(1),私密(2)
+	// 状态 列表不显示(0),公开(1),私密(2)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
