@@ -51,6 +51,13 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 		templateFile = "category.html"
 	}
 
+	userType, ok := c.Get(userTypeKey)
+	if ok {
+		data[userTypeKey] = userType
+	} else {
+		data[userTypeKey] = 0
+	}
+
 	c.HTML(http.StatusOK, templateFile, data)
 }
 func funcListTags(ctx context.Context, c *app.RequestContext) {
@@ -79,11 +86,11 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 		templateFile = "content.html"
 	}
 
-	whereCondition, ok := c.Get(whereConditionKey)
+	userType, ok := c.Get(userTypeKey)
 	if ok {
-		data[whereConditionKey] = whereCondition
+		data[userTypeKey] = userType
 	} else {
-		data[whereConditionKey] = " and status<2 "
+		data[userTypeKey] = 0
 	}
 
 	c.HTML(http.StatusOK, templateFile, data)

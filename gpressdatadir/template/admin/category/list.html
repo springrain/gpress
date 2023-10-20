@@ -68,8 +68,14 @@
 							<div style="margin-bottom: 10px;">
 								<a class="button is-success is-light is-small"
 									href="{{basePath}}admin/{{$path}}/update?id={{.Id}}">编辑</a>
-								<a class="button is-link is-light is-small"
-									href="{{basePath}}admin/{{$path}}/look?id={{.Id}}">查看</a>
+
+							      {{if .HrefURL}}
+									<a class="button is-link is-light is-small" href="{{ hrefURL .HrefURL }}" target="_blank">预览</a>
+								  {{else}}
+									<a class="button is-link is-light is-small"
+									href="{{basePath}}admin/{{$path}}/look?id={{.Id}}" target="_blank">预览</a>
+								  {{end}}
+
 								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$path}}/delete')"
 									id="{{.Id}}" value="删除"></input>
 							</div>
