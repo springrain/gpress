@@ -9,9 +9,9 @@ const (
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
 	sqliteDBfile = datadir + "gpress.db"
 	// 表信息的名称
-	tableInfoName = "tableInfo"
+	//tableInfoName = "tableInfo"
 	// 表字段的名称
-	tableFieldName = "tableField"
+	//tableFieldName = "tableField"
 
 	// config 配置的表名称
 	tableConfigName = "config"
@@ -43,4 +43,6 @@ const (
 	tokenUserId = "userId"
 
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+	whereConditionKey = "whereCondition"
 )
