@@ -13,16 +13,16 @@ import (
 
 var funcMap = template.FuncMap{
 
-	"basePath":     funcBasePath,
-	"addInt":       funcAddInt,
-	"addFloat":     funcAddFloat,
-	"T":            funcT,
-	"safeHTML":     funcSafeHTML,
-	"safeURL":      funcSafeURL,
-	"hrefURL":      funcHrefURL,
-	"relURL":       funcRelURL,
-	"site":         funcSite,
-	"category":     funcCategory,
+	"basePath": funcBasePath,
+	"addInt":   funcAddInt,
+	"addFloat": funcAddFloat,
+	"T":        funcT,
+	"safeHTML": funcSafeHTML,
+	"safeURL":  funcSafeURL,
+	"hrefURL":  funcHrefURL,
+	"relURL":   funcRelURL,
+	"site":     funcSite,
+	//"category":     funcCategory,
 	"pageTemplate": funcPageTemplate,
 	"selectList":   funcSelectList,
 	"selectOne":    funcSelectOne,
@@ -77,6 +77,7 @@ func funcSite() (Site, error) {
 	return site, err
 }
 
+/*
 // 菜单信息
 func funcCategory() ([]Category, error) {
 	finder := zorm.NewSelectFinder(tableCategoryName)
@@ -87,6 +88,7 @@ func funcCategory() ([]Category, error) {
 	err := zorm.Query(context.Background(), finder, &list, page)
 	return list, err
 }
+*/
 
 // 页面模板
 func funcPageTemplate() ([]PageTemplate, error) {
