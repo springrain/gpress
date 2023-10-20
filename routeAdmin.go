@@ -354,7 +354,7 @@ func funcContentPreview(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	c.Set(userTypeKey, " ")
+	c.Set(userTypeKey, 1)
 	params := make([]param.Param, 0, 1)
 	params = append(params, param.Param{
 		Key:   "urlPathParam",
