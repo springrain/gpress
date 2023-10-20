@@ -106,6 +106,8 @@ github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc h1:+
 github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc/go.mod h1:ovIvrum6DQJA4QsJSovrkC4saKHQVs7TvcaeO8AIl5I=
 github.com/yuin/goldmark-meta v1.1.0 h1:pWw+JLHGZe8Rk0EGsMVssiNb/AaPMHfSRszZeUeiOUc=
 github.com/yuin/goldmark-meta v1.1.0/go.mod h1:U4spWENafuA7Zyg+Lj5RqK/MF+ovMYtBvXi1lBb2VP0=
+go.abhg.dev/goldmark/mermaid v0.4.0 h1:yqwaYvNFbKwh9JByKzN0eDpxrUoYe8NUJvtSKY94S5M=
+go.abhg.dev/goldmark/mermaid v0.4.0/go.mod h1:L5SiQ7PedPuZY0+zaPoJ5ZnDitIYS0Obi5w7Pf02tPY=
 go.abhg.dev/goldmark/toc v0.7.0 h1:k/4ggeiYOvwZzKF1NPASwehjJsAeYwXLLaqsbAcvzBQ=
 go.abhg.dev/goldmark/toc v0.7.0/go.mod h1:ImHqxNKoALqRKZJ+or2uFpGaEpf/+c0qKKPK0TX/gjI=
 golang.org/x/arch v0.0.0-20201008161808-52c3e6f60cff/go.mod h1:flIaEI6LNU6xOCD5PaJvn9wGP0agmIOqjrtsKGRguv4=
