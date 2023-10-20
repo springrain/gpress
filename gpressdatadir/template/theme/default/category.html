@@ -2,7 +2,9 @@
 {{ $contentSQL :="id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" }}
 {{ $categorySQL := "name FROM category WHERE id=? and status<2 order by sortNo desc"}}
 
-{{ if eq .userType 1}}
+{{$userType := .userType}}
+
+{{ if eq $userType 1}}
   {{ $contentSQL ="id,title,hrefURL,updateTime FROM content WHERE categoryID=? order by sortNo desc" }}
   {{ $categorySQL = "name FROM category WHERE id=? order by sortNo desc"}}
 {{end}}
@@ -30,7 +32,12 @@
         {{ slice .UpdateTime 0 10 }}
       </span>
       <span class="archive-post-title">
+        {{ if eq $userType 1}}
+        <a href="{{basePath}}admin/content/look?id={{.Id}}" class="archive-post-link">
+        {{else}}
         <a href="{{basePath}}post/{{.Id}}" class="archive-post-link">
+        {{ end }}
+
           {{ .Title }}
         </a>
       </span>
