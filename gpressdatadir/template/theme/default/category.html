@@ -1,6 +1,6 @@
 <!-- 查询 content 列表 -->
 {{ $selectList := selectList "content" .q .pageNo "id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" .UrlPathParam }}
-{{ $nav := selectOne "category" "name FROM category WHERE id=?" .UrlPathParam }}
+{{ $nav := selectOne "category" "name FROM category WHERE id=? and status<2 " .UrlPathParam }}
 {{ $site:=site }}
 <!DOCTYPE html>
 <html lang="zh-cn">
