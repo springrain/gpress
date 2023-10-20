@@ -1,5 +1,10 @@
 <!-- 查询 content -->
-{{ $contentSQL := print "* FROM content WHERE id=?" .whereCondition " order by sortNo desc"}}
+{{ $contentSQL := print "* FROM content WHERE id=? and status<2 order by sortNo desc"}}
+
+{{ if eq .userType 1}}
+  {{ $contentSQL ="* FROM content WHERE id=? order by sortNo desc" }}
+{{end}}
+
 {{ $content := selectOne "content" $contentSQL .UrlPathParam }}
 
 {{ $prevContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo < ? order by sortNo desc " $content.Data.SortNo  }}

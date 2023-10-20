@@ -44,5 +44,5 @@ const (
 
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-	whereConditionKey = "whereCondition"
+	userTypeKey = "userType" //0访客,1管理员
 )

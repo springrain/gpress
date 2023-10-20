@@ -267,6 +267,8 @@ func init() {
 
 	// 内容预览
 	adminGroup.GET("/content/look", funcContentPreview)
+	// 栏目预览
+	adminGroup.GET("/category/look", funcCategoryPreview)
 
 	// 通用list列表,先都使用get方法
 	adminGroup.GET("/:urlPathParam/list", funcList)
@@ -352,7 +354,7 @@ func funcContentPreview(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	c.Set(whereConditionKey, " ")
+	c.Set(userTypeKey, " ")
 	params := make([]param.Param, 0, 1)
 	params = append(params, param.Param{
 		Key:   "urlPathParam",
@@ -360,6 +362,29 @@ func funcContentPreview(ctx context.Context, c *app.RequestContext) {
 	})
 	c.Params = params
 	funcOneContent(ctx, c)
+	//funcTableById(ctx, c, "look.html")
+}
+
+// funcCategoryPreview 栏目预览
+func funcCategoryPreview(ctx context.Context, c *app.RequestContext) {
+	id := c.Query("id")
+	if id == "" {
+		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+
+	//应该先查询一下herfURL,看是否需要跳转,这里先不处理了
+
+	c.Set(userTypeKey, 1)
+	params := make([]param.Param, 0, 1)
+	params = append(params, param.Param{
+		Key:   "urlPathParam",
+		Value: id,
+	})
+	c.Params = params
+
+	funcListCategory(ctx, c)
 	//funcTableById(ctx, c, "look.html")
 }
 
