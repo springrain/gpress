@@ -33,7 +33,6 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
 	data["UrlPathParam"] = urlPathParam
-
 	templateFile, err := findPageTemplate(ctx, "category", urlPathParam)
 	if err != nil || templateFile == "" {
 		templateFile = "category.html"
@@ -56,6 +55,13 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	templateFile, err := findPageTemplate(ctx, "content", urlPathParam)
 	if err != nil || templateFile == "" {
 		templateFile = "content.html"
+	}
+
+	whereCondition, ok := c.Get(whereConditionKey)
+	if ok {
+		data[whereConditionKey] = whereCondition
+	} else {
+		data[whereConditionKey] = " and status<2 "
 	}
 
 	c.HTML(http.StatusOK, templateFile, data)
