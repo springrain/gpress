@@ -17,6 +17,7 @@ import (
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
+	"go.abhg.dev/goldmark/mermaid"
 	"go.abhg.dev/goldmark/toc"
 	// github.com/OhYee/goldmark-fenced_codeblock_extension
 	// github.com/stefanfritsch/goldmark-fences
@@ -41,9 +42,9 @@ func init() {
 			// extension.Footnote,//php
 			meta.Meta,
 			//&toc.Extender{},//不能在这里引用toc插件,手动控制
-			emoji.Emoji,        // emoji表情
-			initHighlighting(), // 代码高亮
-
+			emoji.Emoji,         // emoji表情
+			initHighlighting(),  // 代码高亮
+			&mermaid.Extender{}, // mermaid流程图
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
