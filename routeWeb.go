@@ -2,12 +2,10 @@ package main
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strconv"
 	"strings"
 
-	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -37,13 +35,14 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 
 func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
-	status, err := findStatus(ctx, tableCategoryName, urlPathParam)
-	if err != nil || status < 0 || status > 1 { //异常状态
-		c.Redirect(http.StatusOK, cRedirecURI("error"))
-		c.Abort() // 终止后续调用
-		return
-	}
-
+	/*
+		status, err := findStatus(ctx, tableCategoryName, urlPathParam)
+		if err != nil || status < 0 || status > 1 { //异常状态
+			c.Redirect(http.StatusOK, cRedirecURI("error"))
+			c.Abort() // 终止后续调用
+			return
+		}
+	*/
 	data := warpRequestMap(c)
 
 	data["UrlPathParam"] = urlPathParam
@@ -64,13 +63,14 @@ func funcListTags(ctx context.Context, c *app.RequestContext) {
 }
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
-	status, err := findStatus(ctx, tableContentName, urlPathParam)
-	if err != nil || status < 0 || status > 1 { //异常状态
-		c.Redirect(http.StatusOK, cRedirecURI("error"))
-		c.Abort() // 终止后续调用
-		return
-	}
-
+	/*
+		status, err := findStatus(ctx, tableContentName, urlPathParam)
+		if err != nil || status < 0 || status > 1 { //异常状态
+			c.Redirect(http.StatusOK, cRedirecURI("error"))
+			c.Abort() // 终止后续调用
+			return
+		}
+	*/
 	data := warpRequestMap(c)
 	data["UrlPathParam"] = urlPathParam
 
@@ -125,7 +125,7 @@ func hrefURLRoute(realURL string, hrefURL string) error {
 	return nil
 }
 */
-
+/*
 func findStatus(ctx context.Context, tableName string, id string) (int, error) {
 	if tableName == "" || id == "" {
 		return -1, errors.New("数据异常")
@@ -138,3 +138,4 @@ func findStatus(ctx context.Context, tableName string, id string) (int, error) {
 	}
 	return stauts, err
 }
+*/
