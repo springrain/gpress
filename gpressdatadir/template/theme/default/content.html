@@ -1,5 +1,6 @@
 <!-- 查询 content -->
-{{ $content := selectOne "content" "* FROM content WHERE id=? and status<2 order by sortNo desc " .UrlPathParam }}
+{{ $contentSQL := print "* FROM content WHERE id=?" .whereCondition " order by sortNo desc"}}
+{{ $content := selectOne "content" $contentSQL .UrlPathParam }}
 
 {{ $prevContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo < ? order by sortNo desc " $content.Data.SortNo  }}
 {{ $nextContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo > ? order by sortNo desc " $content.Data.SortNo  }}
