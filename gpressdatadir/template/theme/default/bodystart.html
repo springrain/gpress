@@ -1,5 +1,5 @@
 {{ $site := site }}
-{{ $category := category}}
+{{ $category := selectList "category" "" 1 "* FROM category WHERE status=1 order by sortNo desc" }}
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -60,7 +60,7 @@
 				<li class="mobile-menu-item">Home</li>
 			</a>
 
-			{{ range $k,$v := $category }}
+			{{ range $k,$v := $category.Data }}
 			  {{if $v.HrefURL}}
 			    <a href="{{ hrefURL $v.HrefURL }}">
 			  {{else}}
@@ -84,7 +84,7 @@
 					<li class="menu-item">
 						<a class="menu-item-link" href="{{basePath}}">Home</a>
 					</li>
-					{{ range $k,$v := $category }}
+					{{ range $k,$v := $category.Data }}
 					<li class="menu-item">
 					  {{if $v.HrefURL}}
 					     <a class="menu-item-link" href="{{ hrefURL $v.HrefURL }}">{{ $v.Name }}</a>

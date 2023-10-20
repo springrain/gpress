@@ -4,7 +4,7 @@
 {{template "admin/bodystart.html"}}
 
 
-{{ $category := category}}
+{{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
@@ -81,7 +81,7 @@
 								<!-- 下拉菜单 -->
 								<select class="input" id="navSelect">
 									<option value="">请选择</option>
-									{{ range $index,$obj := $category }}
+									{{ range $index,$obj := $category.Data }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
