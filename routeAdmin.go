@@ -14,6 +14,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol"
 	"github.com/cloudwego/hertz/pkg/route"
+	"github.com/cloudwego/hertz/pkg/route/param"
 )
 
 // adminGroup路由组,使用变量声明,优先级高于init函数
@@ -339,7 +340,22 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 
 // funcLook 通用查看,根据id查看
 func funcLook(ctx context.Context, c *app.RequestContext) {
-	funcTableById(ctx, c, "look.html")
+	id := c.Query("id")
+	if id == "" {
+		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+
+	c.Set(whereConditionKey, " ")
+	params := make([]param.Param, 0, 1)
+	params = append(params, param.Param{
+		Key:   "urlPathParam",
+		Value: id,
+	})
+	c.Params = params
+	funcOneContent(ctx, c)
+	//funcTableById(ctx, c, "look.html")
 }
 
 // funcUpdatePre 修改页面
