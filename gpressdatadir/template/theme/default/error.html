@@ -1,0 +1,21 @@
+
+{{ $site:=site }}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <title>{{.UrlPathParam}}</title>
+  <meta name="description" content="{{ $site.Description }}" />
+  <meta name="keyword" content="{{ $site.Keyword }}" />
+
+{{template "bodystart.html"  }}
+
+<section id="archive" class="archive">
+ 
+    数据异常
+    
+</section>
+  
+
+        
+
+  {{template "bodyend.html" }}
