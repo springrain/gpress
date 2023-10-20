@@ -1,5 +1,5 @@
 <!-- 查询 content -->
-{{ $contentSQL := print "* FROM content WHERE id=? and status<2 order by sortNo desc"}}
+{{ $contentSQL := "* FROM content WHERE id=? and status<2 order by sortNo desc" }}
 
 {{ if eq .userType 1}}
   {{ $contentSQL ="* FROM content WHERE id=? order by sortNo desc" }}
