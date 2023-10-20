@@ -265,6 +265,9 @@ func init() {
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
 
+	// 内容预览
+	adminGroup.GET("/content/look", funcContentPreview)
+
 	// 通用list列表,先都使用get方法
 	adminGroup.GET("/:urlPathParam/list", funcList)
 	//adminGroup.POST("/:urlPathParam/list", funcList)
@@ -299,24 +302,21 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	//删除掉固定的两个
 	delete(mapParams, "pageNo")
 	delete(mapParams, "q")
-	var params strings.Builder
-	i := 0
+	where := " WHERE 1=1 "
+	var values []interface{} = make([]interface{}, 0)
 	for k := range mapParams {
-		if i > 0 {
-			params.WriteString(" and ")
-		}
-		params.WriteString(k)
-		params.WriteByte('=')
-		params.WriteString(c.Query(k))
-		i++
+		where = where + " and k=? "
+		values = append(values, c.Query(k))
 	}
-	where := params.String()
-	sql := "* from " + urlPathParam
-	if where != "" {
-		sql += " WHERE " + where
+	sql := "* from " + urlPathParam + where + " order by sortNo desc "
+	var responseData ResponseData
+	var err error
+	if len(values) == 0 {
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql)
+	} else {
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql, values)
 	}
-	sql += " order by sortNo desc "
-	responseData, err := funcSelectList(urlPathParam, q, pageNo, sql)
+
 	responseData.UrlPathParam = urlPathParam
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
@@ -340,6 +340,11 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 
 // funcLook 通用查看,根据id查看
 func funcLook(ctx context.Context, c *app.RequestContext) {
+	funcTableById(ctx, c, "look.html")
+}
+
+// funcContentPreview 内容预览
+func funcContentPreview(ctx context.Context, c *app.RequestContext) {
 	id := c.Query("id")
 	if id == "" {
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
