@@ -80,7 +80,7 @@ func funcSite() (Site, error) {
 // 菜单信息
 func funcCategory() ([]Category, error) {
 	finder := zorm.NewSelectFinder(tableCategoryName)
-	finder.Append(" order by sortNo desc")
+	finder.Append(" WHERE status=1 order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 200
 	list := make([]Category, 0)
