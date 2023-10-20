@@ -135,7 +135,7 @@ func initHighlighting() goldmark.Extender {
 		// 用于处理没有指定语言的情况,例如:
 		// ```
 		// 不写语言
-		// ````
+		// ```
 		highlighting.WithGuessLanguage(true),
 		// highlighting.WithCSSWriter(&css),
 		/*
