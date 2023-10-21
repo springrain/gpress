@@ -2,7 +2,7 @@
 <title>内容文章 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{$path := .UrlPathParam}}
+
 <section class="section">
 	<input type="hidden" id="data" value="{{.Data}}">
 	<!-- 分页隐藏域 -->
@@ -75,10 +75,10 @@
 						<td class="pos-sticky">
 							<div style="margin-bottom: 10px;">
 								<a class="button is-success is-light is-small"
-									href="{{basePath}}admin/{{$path}}/update?id={{.Id}}">编辑</a>
+									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
 								<a class="button is-link is-light is-small"
-									href="{{basePath}}admin/{{$path}}/look?id={{.Id}}" target="_blank">预览</a>
-								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$path}}/delete')"
+									href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}" target="_blank">预览</a>
+								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
 									id="{{.Id}}" value="删除"></input>
 							</div>
 							
