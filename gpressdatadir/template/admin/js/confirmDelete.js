@@ -9,7 +9,7 @@ function deleteFunc(id,url) {
 				'确定': function () {
 					$.ajax({
 						type: 'Post',
-						url: url, //'{{basePath}}admin/{{$path}}/delete'
+						url: url, //'{{basePath}}admin/{{$.UrlPathParam}}/delete'
 						data: { id: id },
 						success: function (res) {
 							if (res.statusCode === 1) {
