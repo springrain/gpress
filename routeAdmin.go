@@ -353,8 +353,6 @@ func funcContentPreview(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-
-	c.Set(userTypeKey, 1)
 	params := make([]param.Param, 0, 1)
 	params = append(params, param.Param{
 		Key:   "urlPathParam",
@@ -373,10 +371,6 @@ func funcCategoryPreview(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-
-	//应该先查询一下herfURL,看是否需要跳转,这里先不处理了
-
-	c.Set(userTypeKey, 1)
 	params := make([]param.Param, 0, 1)
 	params = append(params, param.Param{
 		Key:   "urlPathParam",
@@ -751,6 +745,8 @@ func permissionHandler() app.HandlerFunc {
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 		// 传递从jwttoken获取的userId
 		c.Set(tokenUserId, userId)
+		// 设置用户类型是 管理员
+		c.Set(userTypeKey, 1)
 	}
 }
 
