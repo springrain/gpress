@@ -51,13 +51,6 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 		templateFile = "category.html"
 	}
 
-	userType, ok := c.Get(userTypeKey)
-	if ok {
-		data[userTypeKey] = userType
-	} else {
-		data[userTypeKey] = 0
-	}
-
 	c.HTML(http.StatusOK, templateFile, data)
 }
 func funcListTags(ctx context.Context, c *app.RequestContext) {
@@ -86,13 +79,6 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 		templateFile = "content.html"
 	}
 
-	userType, ok := c.Get(userTypeKey)
-	if ok {
-		data[userTypeKey] = userType
-	} else {
-		data[userTypeKey] = 0
-	}
-
 	c.HTML(http.StatusOK, templateFile, data)
 }
 
@@ -104,6 +90,13 @@ func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 	data := make(map[string]interface{}, 0)
 	data["pageNo"] = pageNo
 	data["q"] = q
+	//设置用户角色,0是访客,1是管理员
+	userType, ok := c.Get(userTypeKey)
+	if ok {
+		data[userTypeKey] = userType
+	} else {
+		data[userTypeKey] = 0
+	}
 	return data
 }
 
