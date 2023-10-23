@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>内容文章 - GPRESS</title>
+<title>用户 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
 
@@ -16,7 +16,7 @@
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
-						<input class="input" type="text" name="q" id="q" placeholder="输入搜索内容...">
+						<input class="input" type="text" name="q" placeholder="输入搜索内容...">
 						<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
 					</div>
 				</div>
@@ -36,15 +36,11 @@
 			<table class="table is-hoverable is-fullwidth">
 				<thead>
 					<tr>
-						<th>ID</th>
-						<th>标题</th>
-						<th>副标题</th>
-						<th>关键字</th>
-						<th>tag标签</th>
-						<th>导航名称</th>
-						<th>作者</th>
-						<th>排序</th>
-						<th>状态</th>
+						<th>账号</th>
+						<th>密码</th>
+						<th>用户名称</th>
+						<th>区块链类型</th>
+						<th>区块链地址</th>
 						<th class="pos-sticky">操作</th>
 					</tr>
 				</thead>
@@ -53,35 +49,20 @@
 					{{ range $i,$v := .Data }}
 					<tr>
 						<!-- 获取每一列的值 -->
-						<td> {{ .Id }}</td>
-						<td> {{ .Title }}</td>
-						<td> {{ .Subtitle }}</td>
-						<td> {{ .Keyword }}</td>
-						<td> {{ .Tag }}</td>
-						<td> {{ .CategoryName }}</td>
-						<td> {{ .Author }}</td>
-						<td> {{ .SortNo }}</td>
-						<td> 
-							{{if eq .Status 0 }}
-							列表不显示
-							{{else if eq .Status 1 }}
-							公开
-							{{else if eq .Status 2 }}
-							私密
-							{{else}}
-							未知
-							{{end}}
-						</td>
+						<td> {{ .Account }}</td>
+						<td> {{ .Password }}</td>
+						<td> {{ .UserName }}</td>
+						<td> {{ .ChainType }}</td>
+						<td> {{ .ChainAddress }}</td>
 						<td class="pos-sticky">
 							<div style="margin-bottom: 10px;">
 								<a class="button is-success is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
+									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{$v.Id}}">编辑</a>
 								<a class="button is-link is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}" target="_blank">预览</a>
+									href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{$v.Id}}">查看</a>
 								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
-									id="{{.Id}}" value="删除"></input>
+									id="{{$v.Id}}" value="删除"></input>
 							</div>
-							
 						</td>
 					</tr>
 					{{end }}
@@ -92,18 +73,10 @@
 	<!-- 分页条 -->
 	<div class="page"></div>
 </section>
-<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
-<script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
+
 <script>
 	// 加载分页
 	initPage()
-
-	const query = window.location.search;
-	const params=new URLSearchParams(query)
-	var q=params.get("q")
-	if(q){
-		$("#q").val(q)
-	}
 
 </script>
 

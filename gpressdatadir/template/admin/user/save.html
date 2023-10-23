@@ -1,9 +1,7 @@
 {{template "admin/header.html"}}
-<title>新增导航菜单 - GPRESS</title>
+<title>新增用户 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <section class="section">
 	<input type="hidden" id="basePath" value="{{basePath}}">
@@ -16,69 +14,49 @@
 					<ul class="save-ul">
 						<li>
 							<div class="left">
-								ID
+								账号
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" id="id">
+								<input class="input" type="text" name="account" id="account">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								菜单名称
+								密码
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="name" id="name">
+								<input class="input" type="text" name="password" id="password">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								跳转路径
+								用户名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefURL" id="hrefURL">
+								<input class="input" type="text" name="userName" id="userName">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								跳转方式
+								区块链类型
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefTarget" id="hrefTarget">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								页面模版
-							</div>
-							<div class="right">
-								<select class="input" id="templateSelect">
-									<option value="">默认</option>
-									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
+								<select class="input" id="chainSelect">
+									<option value="">请选择</option>
+									<option value="ETH">以太坊</option>
+									<option value="XUPER">百度超级链</option>
 								</select>
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								排序
+								区块链地址
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" id="sortNo">
+								<input class="input" type="text" name="chainAddress" id="chainAddress">
 							</div>
 						</li>
-						<li>
-							<div class="left">
-								状态
-							</div>
-							<div class="select">
-								<select name="status" id="status">
-								  <option value="1">公开</option>
-								  <option value="0">列表不显示</option>
-								  <option value="2">私密</option>
-								</select>
-							</div>
-						</li>
+
 					</ul>
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
@@ -95,10 +73,12 @@
 </section>
 
 <script>
-	let templateID = ''
-	$('#templateSelect').change(function(e) {
-		templateID = $('#templateSelect').val()
+let chainType = $('#chainType').val()
+	$('#chainSelect').val(chainType)
+	$('#chainSelect').change(function(e) {
+		chainType = $('#chainSelect').val()
 	})
+	
 	// 保存提交
 	const form = document.querySelector('#gpress-form')
 	form.addEventListener('submit', async event => {
@@ -107,11 +87,14 @@
 		const jsonObject = {}
 		for (const [key, value] of formData.entries()) {
 			const fieldType = document.querySelector(key)
-				jsonObject[key] = value
+							jsonObject[key] = value
 		}
 		jsonObject.sortNo = jsonObject.sortNo-0
 		jsonObject.status = jsonObject.status-0
-		jsonObject.templateID = templateID
+		let key = $('#rsaPublicKey').val()
+		let keyVal = { value: JSON.parse('"' + key + '"') }
+		jsonObject['rsaPublicKey'] = keyVal.value
+		jsonObject.chainType = chainType
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),

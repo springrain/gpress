@@ -1,9 +1,10 @@
 {{template "admin/header.html"}}
-<title>save - gpress</title>
+<title>新增内容 - GPRESS</title>
+<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/cherry-markdown.min.css">
 {{template "admin/bodystart.html"}}
-{{ $tableFiled := tableFiled .urlPathParam }}
-{{$fieldType := fieldType}}
-{{ $category := category }} <!-- 导航数据 -->
+
+
+{{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
@@ -17,21 +18,18 @@
 </style>
 
 <section class="section">
-	<!-- <input type="hidden" id="categoryName" value="{{.categoryName}}">
-	<input type="hidden" id="categoryID" value="{{.categoryID}}">
-	<input type="hidden" id="templateName" value="{{.templateName}}">
-	<input type="hidden" id="templateID" value="{{.templateID}}"> -->
+	
 	<input type="hidden" id="basePath" value="{{basePath}}">
 
 	<div class="container">
 		<div class="table-content">
 			<!-- is-6-desktop is-6-tablet -->
 			<div class="column">
-				<form id="gpress-form" action="{{basePath}}admin/{{.urlPathParam}}/save" method="POST">
+				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
 					<ul class="save-ul">
 						<li>
 							<div class="left">
-								文章ID
+								ID
 							</div>
 							<div class="right">
 								<input class="input" type="text" name="id" id="id">
@@ -53,7 +51,7 @@
 								<input class="input" type="text" name="subtitle" id="subtitle">
 							</div>
 						</li>
-
+						
 						<li>
 							<div class="left">
 								关键字
@@ -68,9 +66,9 @@
 							</div>
 							<div class="right">
 								<select class="input" id="templateSelect">
-									<option value="">请选择</option>
+									<option value="">默认</option>
 									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									   <option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
 							</div>
@@ -83,8 +81,8 @@
 								<!-- 下拉菜单 -->
 								<select class="input" id="navSelect">
 									<option value="">请选择</option>
-									{{ range $index,$obj := $category }}
-									<option value='{{$obj.id}}'>{{$obj.name}}</option>
+									{{ range $index,$obj := $category.Data }}
+									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
 							</div>
@@ -105,6 +103,7 @@
 								<input class="input" type="text" name="author" id="author">
 							</div>
 						</li>
+						
 						<li style="align-items: flex-start;">
 							<div class="left">
 								封面图
@@ -129,18 +128,22 @@
 						</li>
 						<li>
 							<div class="left">
-								排序
+								状态
 							</div>
-							<div class="right">
-								<input class="input" type="number" name="sortNo" value="1" id="sortNo">
+							<div class="select">
+								<select name="status" id="status">
+								  <option value="1">公开</option>
+								  <option value="0">列表不显示</option>
+								  <option value="2">私密</option>
+								</select>
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								是否有效
+								排序
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="status"  value="1" id="status">
+								<input class="input" type="number" name="sortNo" id="sortNo">
 							</div>
 						</li>
 						<li>
@@ -150,17 +153,17 @@
 							<div class="right">
 								<div class="control">
 									<label class="radio">
-										<input type="radio" value="0" name="foobar" checked>
+										<input type="radio" value="0" name="foobar" >
 										富文本
 									</label>
 									<label class="radio">
-										<input type="radio" value="1" name="foobar">
+										<input type="radio" value="1" name="foobar" checked>
 										Markdown
 									</label>
 								</div>
 							</div>
 						</li>
-						<li id="editor-show" style="align-items: flex-start;">
+						<li id="editor-show" style="align-items: flex-start;display: none;">
 							<div class="left">
 							</div>
 							<div class="right flex1">
@@ -174,7 +177,7 @@
 								</div>
 							</div>
 						</li>
-						<li id="markdown-show" style="align-items: flex-start;display: none;">
+						<li id="markdown-show" style="align-items: flex-start;">
 							<div class="left">
 							</div>
 							<div class="right flex1" style="height: 500px;">
@@ -365,7 +368,8 @@
 	const toolbar = createToolbar({
 		editor,
 		selector: '#toolbar-container',
-		config: { excludeKeys: 'group-video' },
+		config: {},
+		//config: { excludeKeys: 'group-video' },
 		mode: 'default', // or 'simple'
 	})
 
@@ -375,6 +379,7 @@
 		event.preventDefault()
 		const formData = new FormData(form)
 		const jsonObject = {
+			status: $('#status').val()-0,
 			id: $('#id').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
@@ -383,21 +388,21 @@
 			categoryID: categoryID,
 			templateID: templateID,
 			tag: $('#tag').val(),
+			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
-			sortNo: $('#sortNo').val(),
+			sortNo: $('#sortNo').val()-0,
 			content: content,
-			status: $('#status').val(),
 			markdown: cherryObj.getMarkdown(),
 		}
-		//console.log(jsonObject)
+		console.log(jsonObject)
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
 			headers: { 'Content-Type': 'application/json' }
 		})
 		let res = await response.json()
-		if (res.statusCode == 200) {
+		if (res.statusCode == 1) {
 			$.confirm({
 				useBootstrap: false,
 				boxWidth: '400px',
@@ -406,7 +411,7 @@
 				type: 'green',
 				buttons: {
 					'确定': function() {
-						window.location.href = '{{basePath}}admin/{{.urlPathParam}}/list'
+						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
 					}
 				}
 			})

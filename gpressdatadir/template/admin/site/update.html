@@ -1,70 +1,104 @@
 {{template "admin/header.html"}}
-<title>新增导航菜单 - GPRESS</title>
+<script type="text/javascript" src="https://cdn.staticfile.org/js-sha3/0.8.0/sha3.min.js"></script>
+<title>更新站点信息 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
 
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <section class="section">
-	<input type="hidden" id="basePath" value="{{basePath}}">
-
 	<div class="container">
 		<div class="table-content">
-			<!-- is-6-desktop is-6-tablet -->
 			<div class="column">
-				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
+				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
+					<input type="hidden" name="id" id="id" value="{{.Data.Id}}">
 					<ul class="save-ul">
 						<li>
 							<div class="left">
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" id="id">
+								<input class="input" type="text" name="id" readonly value="{{.Data.Id}}">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								菜单名称
+								标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="name" id="name">
+								<input class="input" type="text" name="title" value="{{.Data.Title}}">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								跳转路径
+								名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefURL" id="hrefURL">
+								<input class="input" type="text" name="name" value="{{.Data.Name}}">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								跳转方式
+								域名
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefTarget" id="hrefTarget">
+								<input class="input" type="text" name="domain" value="{{.Data.Domain}}">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								页面模版
+								关键字
 							</div>
 							<div class="right">
-								<select class="input" id="templateSelect">
-									<option value="">默认</option>
-									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
-								</select>
+								<input class="input" type="text" name="keyword" value="{{.Data.Keyword}}">
 							</div>
 						</li>
+						<li>
+							<div class="left">
+								站点描述
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="description" value="{{.Data.Description}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								默认主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="theme" value="{{.Data.Theme}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Logo
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="logo" value="{{.Data.Logo}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Favicon
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="favicon" value="{{.Data.Favicon}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								底部信息
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="footer" value="{{.Data.Footer}}">
+							</div>
+						</li>
+					
 						<li>
 							<div class="left">
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" id="sortNo">
+								<input class="input" type="number" name="sortNo" value="{{.Data.SortNo}}">
 							</div>
 						</li>
 						<li>
@@ -80,6 +114,7 @@
 							</div>
 						</li>
 					</ul>
+
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
 							<button type="submit" class="button is-primary">提交</button>
@@ -95,35 +130,32 @@
 </section>
 
 <script>
-	let templateID = ''
-	$('#templateSelect').change(function(e) {
-		templateID = $('#templateSelect').val()
-	})
-	// 保存提交
-	const form = document.querySelector('#gpress-form')
+	 $("#status").val("{{.Data.Status}}")
+	const form = document.getElementById('gpress-form')
 	form.addEventListener('submit', async event => {
 		event.preventDefault()
+
 		const formData = new FormData(form)
 		const jsonObject = {}
 		for (const [key, value] of formData.entries()) {
 			const fieldType = document.querySelector(key)
-				jsonObject[key] = value
+			jsonObject[key] = value
 		}
 		jsonObject.sortNo = jsonObject.sortNo-0
 		jsonObject.status = jsonObject.status-0
-		jsonObject.templateID = templateID
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json', }
 		})
+	
 		let res = await response.json()
 		if (res.statusCode == 1) {
 			$.confirm({
 				useBootstrap: false,
 				boxWidth: '400px',
 				title: '提示',
-				content: '保存成功！',
+				content: '修改成功！',
 				type: 'green',
 				buttons: {
 					'确定': function() {
@@ -134,6 +166,5 @@
 		}
 	})
 </script>
-
 
 {{template "admin/bodyend.html"}}
