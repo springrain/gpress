@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7165594",
+      "name": "应用",
+      "font_class": "yingyong",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "577311",
+      "name": "关闭2",
+      "font_class": "guanbi2",
+      "unicode": "e725",
+      "unicode_decimal": 59173
+    },
+    {
+      "icon_id": "6582366",
+      "name": "网络",
+      "font_class": "wangluo",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
       "icon_id": "2733970",
       "name": "模版",
       "font_class": "moban",

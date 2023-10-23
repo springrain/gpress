@@ -17,6 +17,7 @@ import (
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
+	"go.abhg.dev/goldmark/mermaid"
 	"go.abhg.dev/goldmark/toc"
 	// github.com/OhYee/goldmark-fenced_codeblock_extension
 	// github.com/stefanfritsch/goldmark-fences
@@ -43,7 +44,7 @@ func init() {
 			//&toc.Extender{},//不能在这里引用toc插件,手动控制
 			emoji.Emoji,        // emoji表情
 			initHighlighting(), // 代码高亮
-
+			&mermaid.Extender{MermaidJS: funcBasePath() + "js/mermaid.min.js"}, // mermaid流程图,不使用cdn的js
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
@@ -134,7 +135,7 @@ func initHighlighting() goldmark.Extender {
 		// 用于处理没有指定语言的情况,例如:
 		// ```
 		// 不写语言
-		// ````
+		// ```
 		highlighting.WithGuessLanguage(true),
 		// highlighting.WithCSSWriter(&css),
 		/*

@@ -168,7 +168,7 @@ body {
 .save-ul li .right{
 	width: 340px;
 }
-.upload-modlue .img-box{
+.upload-modlue .img-box,.upload-modlue .zip-box{
 	display: none;
 }
 .upload-modlue .img-preview{
@@ -204,7 +204,7 @@ body {
 	font-size: 14px;
 	margin-top: 8px;
 }
-.upload-box{
+.upload-box,.upload-box2{
 	width: 200px;
 	height: 200px;
 	position: relative;
@@ -217,15 +217,15 @@ body {
 	overflow: hidden;
 	border-radius: 4px;
 }
-.upload-box .iconfont{
+.upload-box .iconfont,.upload-box2 .iconfont{
 	font-size: 30px;
 	color: #999999;
 }
-.upload-box p{
+.upload-box p,.upload-box2 p{
 	font-size: 14px;
 	color: #999999;
 }
-.upload-box input{
+.upload-box input,.upload-box2 input{
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -233,6 +233,14 @@ body {
 	z-index: 9;
 	left: 0;
 	top: 0;
+	cursor: pointer;
+}
+.upload-modlue .zip-box .zip-preview{
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+.upload-modlue .zip-box .zip-preview .delete-btn2{
 	cursor: pointer;
 }
 /* 下拉框 */
