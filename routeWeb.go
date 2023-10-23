@@ -2,17 +2,19 @@ package main
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 // 初始化函数
 func init() {
+	// 异常页面
+	h.GET("/error", func(ctx context.Context, c *app.RequestContext) {
+		c.HTML(http.StatusOK, "error.html", nil)
+	})
 
 	// 默认首页
 	h.GET("/", funcIndex)
@@ -32,11 +34,19 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 }
 
 func funcListCategory(ctx context.Context, c *app.RequestContext) {
-	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	data["urlPathParam"] = urlPathParam
+	/*
+		status, err := findStatus(ctx, tableCategoryName, urlPathParam)
+		if err != nil || status < 0 || status > 1 { //异常状态
+			c.Redirect(http.StatusOK, cRedirecURI("error"))
+			c.Abort() // 终止后续调用
+			return
+		}
+	*/
+	data := warpRequestMap(c)
 
-	templateFile, err := findPageTemplate(ctx, "category", urlPathParam)
+	data["UrlPathParam"] = urlPathParam
+	templateFile, err := findPageTemplate(ctx, tableCategoryName, urlPathParam)
 	if err != nil || templateFile == "" {
 		templateFile = "category.html"
 	}
@@ -44,18 +54,27 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, templateFile, data)
 }
 func funcListTags(ctx context.Context, c *app.RequestContext) {
+
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	data["urlPathParam"] = urlPathParam
+	data["UrlPathParam"] = urlPathParam
 
 	c.HTML(http.StatusOK, "tag.html", data)
 }
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
-	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	data["urlPathParam"] = urlPathParam
+	/*
+		status, err := findStatus(ctx, tableContentName, urlPathParam)
+		if err != nil || status < 0 || status > 1 { //异常状态
+			c.Redirect(http.StatusOK, cRedirecURI("error"))
+			c.Abort() // 终止后续调用
+			return
+		}
+	*/
+	data := warpRequestMap(c)
+	data["UrlPathParam"] = urlPathParam
 
-	templateFile, err := findPageTemplate(ctx, "content", urlPathParam)
+	templateFile, err := findPageTemplate(ctx, tableContentName, urlPathParam)
 	if err != nil || templateFile == "" {
 		templateFile = "content.html"
 	}
@@ -71,9 +90,17 @@ func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 	data := make(map[string]interface{}, 0)
 	data["pageNo"] = pageNo
 	data["q"] = q
+	//设置用户角色,0是访客,1是管理员
+	userType, ok := c.Get(userTypeKey)
+	if ok {
+		data[userTypeKey] = userType
+	} else {
+		data[userTypeKey] = 0
+	}
 	return data
 }
 
+/*
 // hrefURLRoute href 需要跳转的地址,hrefURL原地址
 func hrefURLRoute(realURL string, hrefURL string) error {
 	if hrefURL == "" || realURL == "" {
@@ -97,3 +124,18 @@ func hrefURLRoute(realURL string, hrefURL string) error {
 
 	return nil
 }
+*/
+/*
+func findStatus(ctx context.Context, tableName string, id string) (int, error) {
+	if tableName == "" || id == "" {
+		return -1, errors.New("数据异常")
+	}
+	finder := zorm.NewSelectFinder(tableName, "status").Append("WHERE id=?", id)
+	stauts := -1
+	ok, err := zorm.QueryRow(ctx, finder, &stauts)
+	if !ok {
+		return -1, errors.New("数据异常")
+	}
+	return stauts, err
+}
+*/

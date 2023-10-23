@@ -2,9 +2,10 @@
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/navigation.css">
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/comm-style.css">
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/font/iconfont.css">
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/cherry-markdown.min.css">
 <script type="text/javascript" src="{{basePath}}admin/js/navigation.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/page.js"></script>
+<script type="text/javascript" src="{{basePath}}admin/js/initPage.js"></script>
+<script type="text/javascript" src="{{basePath}}admin/js/confirmDelete.js"></script>
 
 </head>
 <body>
@@ -20,7 +21,7 @@
 				<div>
 					<div class="gpress-menu">
 						<ul class="menu-list">
-							<li><a href="" class="menu-heading">gpress</a></li>
+							<li><a href="" class="menu-heading">GPRESS</a></li>
 						</ul>
 						<ul class="menu-list">
 							<li>
@@ -48,23 +49,20 @@
 								</a>
 							</li>
 							<li>
+								<a href="{{basePath}}admin/user/list">
+									<i class="iconfont icon-yonghuxinxi"></i>用户信息
+								</a>
+							</li>
+						</ul>
+						<ul class="menu-list">
+							<li>
 								<a href="{{basePath}}admin/pageTemplate/list">
 									<i class="iconfont icon-moban"></i>页面模版
 								</a>
 							</li>
 							<li>
-								<a href="{{basePath}}admin/user/list">
-									<i class="iconfont icon-yonghuxinxi"></i>用户信息
-								</a>
-							</li>
-							<li>
-								<a href="{{basePath}}admin/tableInfo/list">
-									<i class="iconfont icon-kebiaoxinxi"></i>表信息
-								</a>
-							</li>
-							<li>
-								<a href="{{basePath}}admin/tableField/list">
-									<i class="iconfont icon-ziduankongzhi"></i>表字段
+								<a class="refresh">
+									<i class="iconfont icon-shuaxin"></i>刷新模板
 								</a>
 							</li>
 							<!-- <li><a>Tables</a></li> -->
@@ -76,11 +74,7 @@
 									<i class="iconfont icon-shezhi"></i>设置
 								</a>
 							</li>
-							<li>
-								<a class="refresh">
-									<i class="iconfont icon-shuaxin"></i>刷新
-								</a>
-							</li>
+
 							<li>
 								<a class="quit">
 									<i class="iconfont icon-tuichu"></i>退出

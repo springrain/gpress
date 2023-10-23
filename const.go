@@ -9,9 +9,9 @@ const (
 	// 数据目录,如果不存在认为是第一次安装启动,会创建默认的数据
 	sqliteDBfile = datadir + "gpress.db"
 	// 表信息的名称
-	tableInfoName = "tableInfo"
+	//tableInfoName = "tableInfo"
 	// 表字段的名称
-	tableFieldName = "tableField"
+	//tableFieldName = "tableField"
 
 	// config 配置的表名称
 	tableConfigName = "config"
@@ -43,22 +43,6 @@ const (
 	tokenUserId = "userId"
 
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-)
 
-//var keywordMapping = bleve.NewKeywordFieldMapping()
-
-const (
-	fieldType_数字 = iota + 1
-	fieldType_日期
-	fieldType_文本框
-	fieldType_文本域
-	fieldType_富文本
-	fieldType_下拉框
-	fieldType_单选
-	fieldType_多选
-	fieldType_上传图片
-	fieldType_上传附件
-	fieldType_轮播图
-	fieldType_音频
-	fieldType_视频
+	userTypeKey = "userType" //0访客,1管理员
 )

@@ -31,11 +31,26 @@
 										placeholder="请输入密码">
 								</div>
 							</div>
+
+							{{ if .showCaptcha }}
+							<div class="field has-addons">
+								<p class="control">
+									<img src="{{ safeURL .captchaBase64 }}" />
+								</p>
+								<p class="control">
+							      <input class="input is-large" id="answer" name="answer" type="text" placeholder="请输入验证码">
+								</p>
+							</div>
+							{{ end }}
+                            
+							<!--
 							<div class="field">
 								<label class="checkbox">
 									<input type="checkbox">记住我
 								</label>
 							</div>
+							-->
+
 							<button class="button is-primary is-large is-fullwidth">登录 <i class="fa fa-sign-in"
 									aria-hidden="true"></i></button>
 						</form>
