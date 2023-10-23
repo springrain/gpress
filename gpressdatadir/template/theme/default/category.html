@@ -1,28 +1,43 @@
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList .q .pageNo "id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" .urlPathParam }}
-{{ $nav := selectOne "name FROM category WHERE id=?" .urlPathParam }}
+{{ $contentSQL :="id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" }}
+{{ $categorySQL := "name FROM category WHERE id=? and status<2 order by sortNo desc"}}
+
+
+{{ if eq .userType 1}}
+  {{ $contentSQL ="id,title,hrefURL,updateTime FROM content WHERE categoryID=? order by sortNo desc" }}
+  {{ $categorySQL = "name FROM category WHERE id=? order by sortNo desc"}}
+{{end}}
+
+{{ $selectList := selectList "content" .q .pageNo $contentSQL .UrlPathParam }}
+
+{{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
 {{ $site:=site }}
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-  <title>{{ $nav.name }}</title>
-  <meta name="description" content="{{ $site.description }}" />
-  <meta name="keyword" content="{{ $site.keyword }}" />
+  <title>{{ $nav.Data.Name }}</title>
+  <meta name="description" content="{{ $site.Description }}" />
+  <meta name="keyword" content="{{ $site.Keyword }}" />
 
 {{template "bodystart.html"  }}
 
 <section id="archive" class="archive">
   <div class="archive-title category">
-        <h2 class="archive-name">{{$nav.name}}</h2>
+        <h2 class="archive-name">{{$nav.Data.Name}}</h2>
   </div>
-  {{ range $k,$v := $selectList.data }}
+  {{ range $k,$v := $selectList.Data }}
   <div class="archive-post">
       <span class="archive-post-time">
-        {{ slice $v.updateTime 0 10 }} 
+        {{ slice .UpdateTime 0 10 }}
       </span>
       <span class="archive-post-title">
-        <a href="{{basePath}}post/{{$v.id}}" class="archive-post-link">
-          {{ $v.title }}
+        {{ if eq $.userType 1}}
+        <a href="{{basePath}}admin/content/look?id={{.Id}}" class="archive-post-link">
+        {{else}}
+        <a href="{{basePath}}post/{{.Id}}" class="archive-post-link">
+        {{ end }}
+
+          {{ .Title }}
         </a>
       </span>
   </div>
@@ -32,14 +47,14 @@
 </section>
   
 <nav class="pagination">
-  {{ if $selectList.page.HasPrev }}
-  <a class="prev" href="{{basePath}}category/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo -1 }}&q={{.q}}">
+  {{ if $selectList.Page.HasPrev }}
+  <a class="prev" href="{{basePath}}category/{{.UrlPathParam}}?pageNo={{ addInt $selectList.Page.PageNo -1 }}&q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
-  {{ if $selectList.page.HasNext }}
-  <a class="next" href="{{basePath}}category/{{.urlPathParam}}?pageNo={{ addInt $selectList.page.PageNo 1 }}&q={{.q}}">
+  {{ if $selectList.Page.HasNext }}
+  <a class="next" href="{{basePath}}category/{{.UrlPathParam}}?pageNo={{ addInt $selectList.Page.PageNo 1 }}&q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>

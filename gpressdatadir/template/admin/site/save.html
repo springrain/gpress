@@ -1,9 +1,6 @@
 {{template "admin/header.html"}}
-<title>新增导航菜单 - GPRESS</title>
+<title>新增站点信息 - GPRESS</title>
 {{template "admin/bodystart.html"}}
-
-
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <section class="section">
 	<input type="hidden" id="basePath" value="{{basePath}}">
@@ -16,15 +13,15 @@
 					<ul class="save-ul">
 						<li>
 							<div class="left">
-								ID
+								标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" id="id">
+								<input class="input" type="text" name="title" id="title">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								菜单名称
+								名称
 							</div>
 							<div class="right">
 								<input class="input" type="text" name="name" id="name">
@@ -32,33 +29,61 @@
 						</li>
 						<li>
 							<div class="left">
-								跳转路径
+								域名
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefURL" id="hrefURL">
+								<input class="input" type="text" name="domain" id="domain">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								跳转方式
+								关键字
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefTarget" id="hrefTarget">
+								<input class="input" type="text" name="keyword" id="keyword">
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								页面模版
+								站点描述
 							</div>
 							<div class="right">
-								<select class="input" id="templateSelect">
-									<option value="">默认</option>
-									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
-								</select>
+								<input class="input" type="text" name="description" id="description">
 							</div>
 						</li>
+						<li>
+							<div class="left">
+								默认主题
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="theme" id="theme">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Logo
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="logo" id="logo">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Favicon
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="favicon" id="favicon">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								底部信息
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="footer" id="footer">
+							</div>
+						</li>
+						
 						<li>
 							<div class="left">
 								排序
@@ -95,10 +120,6 @@
 </section>
 
 <script>
-	let templateID = ''
-	$('#templateSelect').change(function(e) {
-		templateID = $('#templateSelect').val()
-	})
 	// 保存提交
 	const form = document.querySelector('#gpress-form')
 	form.addEventListener('submit', async event => {
@@ -107,11 +128,11 @@
 		const jsonObject = {}
 		for (const [key, value] of formData.entries()) {
 			const fieldType = document.querySelector(key)
-				jsonObject[key] = value
+							jsonObject[key] = value
 		}
 		jsonObject.sortNo = jsonObject.sortNo-0
 		jsonObject.status = jsonObject.status-0
-		jsonObject.templateID = templateID
+
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),

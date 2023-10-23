@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>内容文章 - GPRESS</title>
+<title>站点信息 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
 
@@ -16,7 +16,7 @@
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
-						<input class="input" type="text" name="q" id="q" placeholder="输入搜索内容...">
+						<input class="input" type="text" name="q" placeholder="输入搜索内容...">
 						<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
 					</div>
 				</div>
@@ -38,11 +38,14 @@
 					<tr>
 						<th>ID</th>
 						<th>标题</th>
-						<th>副标题</th>
+						<th>名称</th>
+						<th>域名</th>
 						<th>关键字</th>
-						<th>tag标签</th>
-						<th>导航名称</th>
-						<th>作者</th>
+						<th>站点描述</th>
+						<th>默认主题</th>
+						<th>Logo</th>
+						<th>Favicon</th>
+						<th>底部信息</th>
 						<th>排序</th>
 						<th>状态</th>
 						<th class="pos-sticky">操作</th>
@@ -55,11 +58,14 @@
 						<!-- 获取每一列的值 -->
 						<td> {{ .Id }}</td>
 						<td> {{ .Title }}</td>
-						<td> {{ .Subtitle }}</td>
+						<td> {{ .Name }}</td>
+						<td> {{ .Domain }}</td>
 						<td> {{ .Keyword }}</td>
-						<td> {{ .Tag }}</td>
-						<td> {{ .CategoryName }}</td>
-						<td> {{ .Author }}</td>
+						<td> {{ .Description }}</td>
+						<td> {{ .Theme }}</td>
+						<td> {{ .Logo }}</td>
+						<td> {{ .Favicon }}</td>
+						<td> {{ .Footer }}</td>
 						<td> {{ .SortNo }}</td>
 						<td> 
 							{{if eq .Status 0 }}
@@ -75,13 +81,12 @@
 						<td class="pos-sticky">
 							<div style="margin-bottom: 10px;">
 								<a class="button is-success is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
+									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{$v.Id}}">编辑</a>
 								<a class="button is-link is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}" target="_blank">预览</a>
+									href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{$v.Id}}">查看</a>
 								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
-									id="{{.Id}}" value="删除"></input>
+									id="{{$v.Id}}" value="删除"></input>
 							</div>
-							
 						</td>
 					</tr>
 					{{end }}
@@ -92,18 +97,10 @@
 	<!-- 分页条 -->
 	<div class="page"></div>
 </section>
-<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
-<script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
+
 <script>
 	// 加载分页
 	initPage()
-
-	const query = window.location.search;
-	const params=new URLSearchParams(query)
-	var q=params.get("q")
-	if(q){
-		$("#q").val(q)
-	}
 
 </script>
 

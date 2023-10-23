@@ -1,0 +1,106 @@
+{{template "admin/header.html"}}
+<title>查看页面模版 - GPRESS</title>
+{{template "admin/bodystart.html"}}
+
+
+<style>
+	.code-line .number{
+		background-color: transparent;
+		font-size: 12px;
+		padding: 0;
+		vertical-align: unset;
+	}
+</style>
+<section class="section">
+	<input type="hidden" id="id" value="{{.Data.Id}}">
+
+	<div class="container">
+		<div class="table-content">
+			<div class="column">
+				<form id="gpress-form" action="/" method="POST">
+					<ul class="save-ul">
+						<li>
+							<div class="left">
+								ID
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Id}}" />
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								模板名称
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.Name}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								模板路径
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.TemplatePath}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								创建时间
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.CreateTime}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								更新时间
+							</div>
+							<div class="right">
+								<input class="input" type="text" disabled value="{{.Data.UpdateTime}}">
+							</div>
+						</li>
+						
+						<li>
+							<div class="left">
+								排序
+							</div>
+							<div class="right">
+								<input class="input" type="number" disabled value="{{.Data.SortNo}}">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								状态
+							</div>
+							<div class="right">
+							    {{if eq .Data.Status 0 }}
+								<input class="input" type="text" disabled value="列表不显示">
+								{{else if eq .Data.Status 1 }}
+								<input class="input" type="text" disabled value="公开">
+								{{else if eq .Data.Status 2 }}
+								<input class="input" type="text" disabled value="私密">
+								{{end}}
+							</div>
+						</li>
+					</ul>
+
+					<div class="field is-grouped" style="padding-left: 190px;">
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/update?id={{.Data.Id}}"
+								class="button is-primary">编辑</a>
+						</div>
+						<div class="control">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/list" class="button is-info is-light">返回</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+
+</script>
+
+{{template "admin/bodyend.html"}}
