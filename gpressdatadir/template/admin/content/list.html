@@ -8,23 +8,21 @@
 	<!-- 分页隐藏域 -->
 	<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
 	<input type="hidden" id="pageCount" value="{{.Page.PageCount}}">
-
-
-	<div class="container">
+		<div class="container">
 		<!-- 搜索表单 -->
 		<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
-						<input class="input" type="text" name="q" id="q" placeholder="输入搜索内容...">
+						<input class="input is-small" type="text" name="q" id="q" placeholder="输入搜索内容...">
 						<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
 					</div>
 				</div>
 				<div class="field">
 					<div class="control">
-						<button class="button is-primary" type="submit">搜索</button>
-						<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-primary"
-							type="submit">新增</a>
+						<button class="button is-success is-small" type="submit">搜索</button>
+						<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success is-small"
+							type="submit">+新增</a>
 					</div>
 				</div>
 			</div>
@@ -45,7 +43,7 @@
 						<th>作者</th>
 						<th>排序</th>
 						<th>状态</th>
-						<th class="pos-sticky">操作</th>
+						<th class="">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -72,7 +70,7 @@
 							未知
 							{{end}}
 						</td>
-						<td class="pos-sticky">
+						<td class="">
 							<div style="margin-bottom: 10px;">
 								<a class="button is-success is-light is-small"
 									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
@@ -88,9 +86,9 @@
 				</tbody>
 			</table>
 		</div>
+		<!-- 分页条 -->
+		<div class="page"></div>
 	</div>
-	<!-- 分页条 -->
-	<div class="page"></div>
 </section>
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 <script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
