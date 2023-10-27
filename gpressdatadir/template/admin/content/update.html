@@ -28,125 +28,195 @@
 		<div class="table-content">
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
-					<ul class="save-ul">
-						<li>
-							<div class="left">
-								ID
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="id" readonly value="{{.Data.Id}}" id="id">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								文章标题
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="title" value="{{.Data.Title}}" id="title" />
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								副标题
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="subtitle" value="{{.Data.Subtitle}}" id="subtitle">
-							</div>
-						</li>
-
-						<li>
-							<div class="left">
-								关键字
-							</div>
-							<div class="right">
-								<input class="input" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								页面模版
-							</div>
-							<div class="right">
-								<select class="input" id="templateSelect">
-									<option value="">默认</option>
-									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
-								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								导航名称
-							</div>
-							<div class="right">
-								<select class="input" id="navSelect">
-									<option value="">请选择</option>
-									{{ range $index,$obj := $category.Data }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
-								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								tag标签
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								作者
-							</div>
-							<div class="right">
-								<input class="input" type="text" name="author" value="{{.Data.Author}}" id="author">
-							</div>
-						</li>
-						
-						<li style="align-items: flex-start;">
-							<div class="left">
-								封面图
-							</div>
-							<div class="right">
-								<div class="upload-modlue">
-									<div class="upload-box">
-										<i class="iconfont icon-shangchuan"></i>
-										<p>上传图片</p>
-										<input class="input" type="file" id="fileInput">
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										ID
 									</div>
-									<div class="img-box">
-										<div class="img-preview">
-											<img src="{{.Data.Thumbnail}}" id="img">
-											<div class="delete-btn">
-												<i class="iconfont icon-shanchu"></i>
+									<div class="right">
+										<input class="input" type="text" name="id" readonly value="{{.Data.Id}}" id="id">
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										文章标题
+									</div>
+									<div class="right">
+										<input class="input" type="text" name="title" value="{{.Data.Title}}" id="title" />
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										副标题
+									</div>
+									<div class="right">
+										<input class="input" type="text" name="subtitle" value="{{.Data.Subtitle}}" id="subtitle">
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										关键字
+									</div>
+									<div class="right">
+										<input class="input" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										页面模版
+									</div>
+									<div class="right">
+										<select class="input" id="templateSelect">
+											<option value="">默认</option>
+											{{ range $index,$obj := $pageTemplate }}
+											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+											{{end}}
+										</select>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										导航名称
+									</div>
+									<div class="right">
+										<select class="input" id="navSelect">
+											<option value="">请选择</option>
+											{{ range $index,$obj := $category.Data }}
+											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+											{{end}}
+										</select>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										tag标签
+									</div>
+									<div class="right">
+										<input class="input" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										作者
+									</div>
+									<div class="right">
+										<input class="input" type="text" name="author" value="{{.Data.Author}}" id="author">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										状态
+									</div>
+									<div class="select is-small">
+										<select name="status" id="status">
+											<option value="1">公开</option>
+											<option value="0">列表不显示</option>
+											<option value="2">私密</option>
+										</select>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										排序
+									</div>
+									<div class="right">
+										<input class="input" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li style="align-items: flex-start;">
+									<div class="left">
+										封面图
+									</div>
+									<div class="right">
+										<div class="upload-modlue">
+											<div class="upload-box">
+												<i class="iconfont icon-shangchuan"></i>
+												<p>上传图片</p>
+												<input class="input" type="file" id="fileInput">
+											</div>
+											<div class="img-box">
+												<div class="img-preview">
+													<img src="{{.Data.Thumbnail}}" id="img">
+													<div class="delete-btn">
+														<i class="iconfont icon-shanchu"></i>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								排序
-							</div>
-							<div class="right">
-								<input class="input" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								状态
-							</div>
-							<div class="select">
-								<select name="status" id="status">
-								  <option value="1">公开</option>
-								  <option value="0">列表不显示</option>
-								  <option value="2">私密</option>
-								</select>
-							</div>
-						</li>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+
+						</div>
+					</div>
+					<ul class="save-ul">
 						<li>
 							<div class="left">
 								文章内容
