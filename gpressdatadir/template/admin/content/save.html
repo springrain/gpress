@@ -32,7 +32,7 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" id="id">
+								<input class="input is-small" type="text" name="id" id="id">
 							</div>
 						</li>
 						<li>
@@ -40,7 +40,7 @@
 								文章标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="title" id="title">
+								<input class="input is-small" type="text" name="title" id="title">
 							</div>
 						</li>
 						<li>
@@ -48,7 +48,7 @@
 								副标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="subtitle" id="subtitle">
+								<input class="input is-small" type="text" name="subtitle" id="subtitle">
 							</div>
 						</li>
 						
@@ -57,7 +57,7 @@
 								关键字
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="keyword" id="keyword">
+								<input class="input is-small" type="text" name="keyword" id="keyword">
 							</div>
 						</li>
 						<li>
@@ -65,7 +65,7 @@
 								页面模版
 							</div>
 							<div class="right">
-								<select class="input" id="templateSelect">
+								<select class="input is-small" id="templateSelect">
 									<option value="">默认</option>
 									{{ range $index,$obj := $pageTemplate }}
 									   <option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -79,7 +79,7 @@
 							</div>
 							<div class="right">
 								<!-- 下拉菜单 -->
-								<select class="input" id="navSelect">
+								<select class="input is-small" id="navSelect">
 									<option value="">请选择</option>
 									{{ range $index,$obj := $category.Data }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -92,7 +92,7 @@
 								tag标签
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="tag" id="tag">
+								<input class="input is-small" type="text" name="tag" id="tag">
 							</div>
 						</li>
 						<li>
@@ -100,7 +100,7 @@
 								作者
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="author" id="author">
+								<input class="input is-small" type="text" name="author" id="author">
 							</div>
 						</li>
 						
@@ -131,7 +131,7 @@
 								状态
 							</div>
 							<div class="select">
-								<select name="status" id="status">
+								<select name="status  is-small" id="status">
 								  <option value="1">公开</option>
 								  <option value="0">列表不显示</option>
 								  <option value="2">私密</option>
@@ -143,7 +143,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" id="sortNo">
+								<input class="input  is-small" type="number" name="sortNo" id="sortNo">
 							</div>
 						</li>
 						<li>
@@ -187,10 +187,10 @@
 					</ul>
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
-							<button type="submit" class="button is-primary">提交</button>
+							<button type="submit" class="button is-primary is-small">提交</button>
 						</div>
 						<div class="control">
-							<button type="reset" class="button is-info is-light">重置</button>
+							<button type="reset" class="button is-info is-light  is-small">重置</button>
 						</div>
 					</div>
 				</form>
