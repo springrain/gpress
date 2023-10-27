@@ -26,165 +26,235 @@
 			<!-- is-6-desktop is-6-tablet -->
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
-					<ul class="save-ul">
-						<li>
-							<div class="left">
-								ID
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="id" id="id">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								文章标题
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="title" id="title">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								副标题
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="subtitle" id="subtitle">
-							</div>
-						</li>
-						
-						<li>
-							<div class="left">
-								关键字
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="keyword" id="keyword">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								页面模版
-							</div>
-							<div class="right">
-								<select class="input is-small" id="templateSelect">
-									<option value="">默认</option>
-									{{ range $index,$obj := $pageTemplate }}
-									   <option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
-								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								导航名称
-							</div>
-							<div class="right">
-								<!-- 下拉菜单 -->
-								<select class="input is-small" id="navSelect">
-									<option value="">请选择</option>
-									{{ range $index,$obj := $category.Data }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
-								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								tag标签
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="tag" id="tag">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								作者
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="author" id="author">
-							</div>
-						</li>
-						
-						<li style="align-items: flex-start;">
-							<div class="left">
-								封面图
-							</div>
-							<div class="right">
-								<div class="upload-modlue">
-									<div class="upload-box">
-										<i class="iconfont icon-shangchuan"></i>
-										<p>上传图片</p>
-										<input class="input" name="file" type="file" id="fileInput">
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										ID
 									</div>
-									<div class="img-box">
-										<div class="img-preview">
-											<img src="" id="img">
-											<div class="delete-btn">
-												<i class="iconfont icon-shanchu"></i>
+									<div class="right">
+										<input class="input is-small" type="text" name="id" id="id">
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										文章标题
+									</div>
+									<div class="right">
+										<input class="input is-small" type="text" name="title" id="title">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										副标题
+									</div>
+									<div class="right">
+										<input class="input is-small" type="text" name="subtitle" id="subtitle">
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										关键字
+									</div>
+									<div class="right">
+										<input class="input is-small" type="text" name="keyword" id="keyword">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										页面模版
+									</div>
+									<div class="right">
+										<select class="input is-small" id="templateSelect">
+											<option value="">默认</option>
+											{{ range $index,$obj := $pageTemplate }}
+											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+											{{end}}
+										</select>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										导航名称
+									</div>
+									<div class="right">
+										<!-- 下拉菜单 -->
+										<select class="input is-small" id="navSelect">
+											<option value="">请选择</option>
+											{{ range $index,$obj := $category.Data }}
+											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+											{{end}}
+										</select>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										tag标签
+									</div>
+									<div class="right">
+										<input class="input is-small" type="text" name="tag" id="tag">
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										作者
+									</div>
+									<div class="right">
+										<input class="input is-small" type="text" name="author" id="author">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										状态
+									</div>
+									<div class="select is-small">
+										<select name="status is-small" id="status">
+											<option value="1">公开</option>
+											<option value="0">列表不显示</option>
+											<option value="2">私密</option>
+										</select>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										排序
+									</div>
+									<div class="right">
+										<input class="input  is-small" type="number" name="sortNo" id="sortNo">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-6">
+							<!-- 1/3 -->
+							<ul class="save-ul">
+								<li style="align-items: flex-start;">
+									<div class="left">
+										封面图
+									</div>
+									<div class="right">
+										<div class="upload-modlue">
+											<div class="upload-box">
+												<i class="iconfont icon-shangchuan"></i>
+												<p>上传图片</p>
+												<input class="input" name="file" type="file" id="fileInput">
+											</div>
+											<div class="img-box">
+												<div class="img-preview">
+													<img src="" id="img">
+													<div class="delete-btn">
+														<i class="iconfont icon-shanchu"></i>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="tile">
+							<!-- This tile will take the rest: 2/3 -->
+
+						</div>
+					</div>
+						<ul class="save-ul">
+							<li>
+								<div class="left">
+									文章内容
 								</div>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								状态
-							</div>
-							<div class="select">
-								<select name="status  is-small" id="status">
-								  <option value="1">公开</option>
-								  <option value="0">列表不显示</option>
-								  <option value="2">私密</option>
-								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								排序
-							</div>
-							<div class="right">
-								<input class="input  is-small" type="number" name="sortNo" id="sortNo">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								文章内容
-							</div>
-							<div class="right">
-								<div class="control">
-									<label class="radio">
-										<input type="radio" value="0" name="foobar" >
-										富文本
-									</label>
-									<label class="radio">
-										<input type="radio" value="1" name="foobar" checked>
-										Markdown
-									</label>
-								</div>
-							</div>
-						</li>
-						<li id="editor-show" style="align-items: flex-start;display: none;">
-							<div class="left">
-							</div>
-							<div class="right flex1">
-								<div id="editor—wrapper">
-									<div id="toolbar-container">
-										<!-- 工具栏 -->
-									</div>
-									<div id="editor-container" style="height: 400px;">
-										<!-- 编辑器 -->
+								<div class="right">
+									<div class="control">
+										<label class="radio">
+											<input type="radio" value="0" name="foobar" >
+											富文本
+										</label>
+										<label class="radio">
+											<input type="radio" value="1" name="foobar" checked>
+											Markdown
+										</label>
 									</div>
 								</div>
-							</div>
-						</li>
-						<li id="markdown-show" style="align-items: flex-start;">
-							<div class="left">
-							</div>
-							<div class="right flex1" style="height: 500px;">
-								<div id="markdown-container"></div>
-							</div>
-						</li>
-					</ul>
+							</li>
+							<li id="editor-show" style="align-items: flex-start;display: none;">
+								<div class="left">
+								</div>
+								<div class="right flex1">
+									<div id="editor—wrapper">
+										<div id="toolbar-container">
+											<!-- 工具栏 -->
+										</div>
+										<div id="editor-container" style="height: 400px;">
+											<!-- 编辑器 -->
+										</div>
+									</div>
+								</div>
+							</li>
+							<li id="markdown-show" style="align-items: flex-start;">
+								<div class="left">
+								</div>
+								<div class="right flex1" style="height: 500px;">
+									<div id="markdown-container"></div>
+								</div>
+							</li>
+						</ul>
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
 							<button type="submit" class="button is-primary is-small">提交</button>
