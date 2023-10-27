@@ -334,7 +334,7 @@ body {
 	background:#e8e8e8;
 }
 .table  thead th{background: #f7f7f7;font-size: 14px;border-bottom:1px solid #e8e8e8;}
-.table  thead th:nth-child(1){border-top-left-radius: 10px;border-top-right-radius: 10px;}
+.table  thead th:nth-child(1){border-top-left-radius: 10px;}
 .table  thead th:first-child(1){border-top-left-radius: 10px;}
 .table  thead th:last-child(1){border-top-right-radius: 10px;}
 .table  thead th { position:sticky; top:0px; padding:10px; }
