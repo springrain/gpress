@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }catch(e){
 
   }
-  addWebNav(_secondTitle,null);
+  // addWebNav(_secondTitle,null);
   $navbarBurgers.addEventListener('click', () => {
     // 切换菜单的可见性
     $navbarBurgers.classList.toggle('is-active');

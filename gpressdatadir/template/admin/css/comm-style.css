@@ -40,7 +40,7 @@ body {
 
 #main,
 #layout {
-	background-color: #f5f5f5;
+	background-color: #ffffff;
 	height: 100%;
 }
 
@@ -50,7 +50,7 @@ body {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	padding: 10px 20px 50px 20px !important;
+	padding: 10px 20px 10px 20px !important;
 	box-sizing: border-box;
 }
 
@@ -60,7 +60,7 @@ body {
 	flex: 1;
 	overflow: hidden;
 	background: white;
-	box-shadow: 2px 2px 5px #ededed;
+	/*box-shadow: 2px 2px 5px #ededed;*/
 	box-sizing: border-box;
 	padding: 20px 10px 10px 20px;
 	margin-bottom: 10px;
@@ -177,8 +177,8 @@ body {
 	display: none;
 }
 .upload-modlue .img-preview{
-	width: 200px;
-	height: 200px;
+	width: auto;
+	height: 70px;
 	border: 1px dashed #dbdbdb;
 	box-sizing: border-box;
 	display: flex;
@@ -210,8 +210,8 @@ body {
 	margin-top: 8px;
 }
 .upload-box,.upload-box2{
-	width: 200px;
-	height: 200px;
+	/*width: 200px;*/
+	/*height: 200px;*/
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -232,8 +232,8 @@ body {
 }
 .upload-box input,.upload-box2 input{
 	position: absolute;
-	width: 100%;
-	height: 100%;
+	width: auto;
+	height: 70px;
 	opacity: 0;
 	z-index: 9;
 	left: 0;
@@ -412,3 +412,5 @@ th.pos-sticky{background: #f7f7f7}
 	-o-transition: display 1.6s ease;
 	transition: display 1.6s ease;
 }
+.is-ancestor div:last-child .left{width:80px;}
+.is-small.select{font-size: .75rem;}
