@@ -417,4 +417,4 @@ th.pos-sticky{background: #f7f7f7}
 }
 .is-ancestor div:last-child .left{width:56px;}
 .is-small.select{font-size: .75rem;}
-.control input{width:auto!important;}
+.save-ul .control input{width:auto!important;}
