@@ -1,7 +1,7 @@
 html,
 body {
 	height: 100%;
-	overflow: scroll;
+	overflow: auto;
 }
 .pos-sticky{
 	position: sticky;
