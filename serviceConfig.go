@@ -49,10 +49,13 @@ func loadInstallConfig() Config {
 		configJson.BasePath = "/"
 	}
 
+	configJson.Id = defaultConfig.Id
+
 	return configJson
 }
 
 var defaultConfig = Config{
+	Id:       "gpress_config",
 	BasePath: "/",
 	// 默认的加密Secret
 	// JwtSecret:   "gpress+jwtSecret-2023",
