@@ -41,7 +41,7 @@ body {
 #main,
 #layout {
 	background-color: #ffffff;
-	height: 100%;
+	/*height: auto;*/
 }
 
 #main .section {
@@ -67,6 +67,7 @@ body {
 	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
+	border-bottom: none;
 }
 
 .flex-center {
@@ -370,7 +371,7 @@ th.pos-sticky{background: #f7f7f7}
 .button{
 	position: initial!important;
 }
-.page{margin-top:10px;border-top:1px solid #f7f7f7;padding-top: 10px;padding-bottom: 10px;}
+.page{margin-top:10px;border-top:1px solid #f7f7f7;border-bottom:1px solid #f7f7f7;padding-top: 10px;padding-bottom: 10px;}
 .pagination-link, .pagination-next, .pagination-previous{height:1.8rem;min-width: 1.8rem;line-height: 1.8em}
 .pagination-next, .pagination-previous{padding: 0px;}
 .pagination input{height:1.8rem}
