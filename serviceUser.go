@@ -10,7 +10,7 @@ func insertUser(ctx context.Context, user User) error {
 	// 清空用户,只能有一个管理员
 	deleteAll(ctx, tableUserName)
 	// 初始化数据
-	user.Id = FuncGenerateStringID()
+	user.Id = "gpress_admin"
 	user.SortNo = 1
 	user.Status = 1
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
