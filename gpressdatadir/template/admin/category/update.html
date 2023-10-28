@@ -27,7 +27,8 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" readonly name="id" id="id" value="{{.Data.Id}}">
+								<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
+								<input class="input" type="text" disabled value="{{.Data.Id}}">
 							</div>
 						</li>
 
