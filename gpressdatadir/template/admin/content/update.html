@@ -19,7 +19,7 @@
 	<input type="hidden" id="content" value="{{.Data.Content}}">
 	<input type="hidden" id="markdown" value="{{.Data.Markdown}}">
 	<input type="hidden" id="thumbnail" value="{{.Data.Thumbnail}}">
-	<input type="hidden" id="updateId" value="{{.Data.Id}}">
+	<input type="hidden" id="id" value="{{.Data.Id}}">
 	<input type="hidden" id="categoryName" value="{{.Data.CategoryName}}">
 	<input type="hidden" id="categoryID" value="{{.Data.CategoryID}}">
 	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
@@ -37,7 +37,7 @@
 										ID
 									</div>
 									<div class="right">
-										<input class="input input is-small" type="text" name="id" readonly value="{{.Data.Id}}" id="id">
+										<input class="input is-small" type="text" disabled value="{{.Data.Id}}">
 									</div>
 								</li>
 							</ul>
@@ -243,8 +243,6 @@
 						<div class="tile is-12">
 							<ul class="save-ul">
 								<li id="editor-show" style="align-items: flex-start;">
-									<div class="left">
-									</div>
 									<div class="right flex1">
 										<div id="editor—wrapper">
 											<div id="toolbar-container">
@@ -257,8 +255,6 @@
 									</div>
 								</li>
 								<li id="markdown-show" style="align-items: flex-start;display: none;">
-									<div class="left">
-									</div>
 									<div class="right flex1" style="height: 500px;">
 										<div id="markdown-container"></div>
 									</div>
@@ -483,7 +479,7 @@
 		const formData = new FormData(form)
 		const jsonObject = {
 			status: $('#status').val()-0,
-			id: $('#updateId').val(),
+			id: $('#id').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
 			keyword: $('#keyword').val(),
