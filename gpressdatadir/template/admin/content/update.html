@@ -29,7 +29,7 @@
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
 					<div class="tile is-ancestor">
-						<div class="tile is-6">
+						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
@@ -37,12 +37,12 @@
 										ID
 									</div>
 									<div class="right">
-										<input class="input" type="text" name="id" readonly value="{{.Data.Id}}" id="id">
+										<input class="input input is-small" type="text" name="id" readonly value="{{.Data.Id}}" id="id">
 									</div>
 								</li>
 							</ul>
 						</div>
-						<div class="tile">
+						<div class="tile is-4">
 							<!-- This tile will take the rest: 2/3 -->
 							<ul class="save-ul">
 								<li>
@@ -50,14 +50,12 @@
 										文章标题
 									</div>
 									<div class="right">
-										<input class="input" type="text" name="title" value="{{.Data.Title}}" id="title" />
+										<input class="input input is-small" type="text" name="title" value="{{.Data.Title}}" id="title" />
 									</div>
 								</li>
 							</ul>
 						</div>
-					</div>
-					<div class="tile is-ancestor">
-						<div class="tile is-6">
+						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
@@ -65,12 +63,14 @@
 										副标题
 									</div>
 									<div class="right">
-										<input class="input" type="text" name="subtitle" value="{{.Data.Subtitle}}" id="subtitle">
+										<input class="input input is-small" type="text" name="subtitle" value="{{.Data.Subtitle}}" id="subtitle">
 									</div>
 								</li>
 							</ul>
 						</div>
-						<div class="tile">
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-4">
 							<!-- This tile will take the rest: 2/3 -->
 							<ul class="save-ul">
 								<li>
@@ -78,14 +78,12 @@
 										关键字
 									</div>
 									<div class="right">
-										<input class="input" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
+										<input class="input input is-small" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
 									</div>
 								</li>
 							</ul>
 						</div>
-					</div>
-					<div class="tile is-ancestor">
-						<div class="tile is-6">
+						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
@@ -93,7 +91,7 @@
 										页面模版
 									</div>
 									<div class="right">
-										<select class="input" id="templateSelect">
+										<select class="input input is-small" id="templateSelect">
 											<option value="">默认</option>
 											{{ range $index,$obj := $pageTemplate }}
 											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -111,7 +109,7 @@
 										导航名称
 									</div>
 									<div class="right">
-										<select class="input" id="navSelect">
+										<select class="input input is-small" id="navSelect">
 											<option value="">请选择</option>
 											{{ range $index,$obj := $category.Data }}
 											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -123,7 +121,7 @@
 						</div>
 					</div>
 					<div class="tile is-ancestor">
-						<div class="tile is-6">
+						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
@@ -131,12 +129,12 @@
 										tag标签
 									</div>
 									<div class="right">
-										<input class="input" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
+										<input class="input input is-small" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
 									</div>
 								</li>
 							</ul>
 						</div>
-						<div class="tile">
+						<div class="tile is-4">
 							<!-- This tile will take the rest: 2/3 -->
 							<ul class="save-ul">
 								<li>
@@ -144,15 +142,12 @@
 										作者
 									</div>
 									<div class="right">
-										<input class="input" type="text" name="author" value="{{.Data.Author}}" id="author">
+										<input class="input input is-small" type="text" name="author" value="{{.Data.Author}}" id="author">
 									</div>
 								</li>
 							</ul>
 						</div>
-					</div>
-
-					<div class="tile is-ancestor">
-						<div class="tile is-6">
+						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
@@ -169,22 +164,14 @@
 								</li>
 							</ul>
 						</div>
-						<div class="tile">
-							<!-- This tile will take the rest: 2/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										排序
-									</div>
-									<div class="right">
-										<input class="input" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
-									</div>
-								</li>
-							</ul>
-						</div>
+					</div>
+
+					<div class="tile is-ancestor">
+
+
 					</div>
 					<div class="tile is-ancestor">
-						<div class="tile is-6">
+						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li style="align-items: flex-start;">
@@ -196,7 +183,7 @@
 											<div class="upload-box">
 												<i class="iconfont icon-shangchuan"></i>
 												<p>上传图片</p>
-												<input class="input" type="file" id="fileInput">
+												<input class="input input is-small" type="file" id="fileInput">
 											</div>
 											<div class="img-box">
 												<div class="img-preview">
@@ -211,52 +198,74 @@
 								</li>
 							</ul>
 						</div>
+						<div class="tile is-4">
+							<!-- This tile will take the rest: 2/3 -->
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										排序
+									</div>
+									<div class="right">
+										<input class="input input is-small" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
+									</div>
+								</li>
+							</ul>
+						</div>
 						<div class="tile">
 							<!-- This tile will take the rest: 2/3 -->
 
 						</div>
 					</div>
-					<ul class="save-ul">
-						<li>
-							<div class="left">
-								文章内容
-							</div>
-							<div class="right">
-								<div class="control">
-									<label class="radio">
-										<input type="radio" value="0" name="foobar" checked>
-										富文本
-									</label>
-									<label class="radio">
-										<input type="radio" value="1" name="foobar">
-										Markdown
-									</label>
-								</div>
-							</div>
-						</li>
-						<li id="editor-show" style="align-items: flex-start;">
-							<div class="left">
-							</div>
-							<div class="right flex1">
-								<div id="editor—wrapper">
-									<div id="toolbar-container">
-										<!-- 工具栏 -->
+					<div class="tile is-ancestor">
+						<div class="tile is-4">
+							<ul class="save-ul">
+								<li>
+									<div class="left">
+										文章内容
 									</div>
-									<div id="editor-container" style="height: 400px;">
-										<!-- 编辑器 -->
+									<div class="right">
+										<div class="control">
+											<label class="radio">
+												<input type="radio" value="0" name="foobar" checked>
+												富文本
+											</label>
+											<label class="radio">
+												<input type="radio" value="1" name="foobar">
+												Markdown
+											</label>
+										</div>
 									</div>
-								</div>
-							</div>
-						</li>
-						<li id="markdown-show" style="align-items: flex-start;display: none;">
-							<div class="left">
-							</div>
-							<div class="right flex1" style="height: 500px;">
-								<div id="markdown-container"></div>
-							</div>
-						</li>
-					</ul>
-
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tile is-ancestor">
+						<div class="tile is-12">
+							<ul class="save-ul">
+								<li id="editor-show" style="align-items: flex-start;">
+									<div class="left">
+									</div>
+									<div class="right flex1">
+										<div id="editor—wrapper">
+											<div id="toolbar-container">
+												<!-- 工具栏 -->
+											</div>
+											<div id="editor-container" style="height: 400px;">
+												<!-- 编辑器 -->
+											</div>
+										</div>
+									</div>
+								</li>
+								<li id="markdown-show" style="align-items: flex-start;display: none;">
+									<div class="left">
+									</div>
+									<div class="right flex1" style="height: 500px;">
+										<div id="markdown-container"></div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
 							<button type="submit" class="button is-success is-small">提交</button>
