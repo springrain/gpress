@@ -31,11 +31,11 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 
 | columnName  | 类型        | 说明         |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
-| id          | string      | 主键        |    -        |
+| id          | string      | 主键        |gpress_config |
 | basePath    | string      | 基础路径    |  默认 /      |
-| jwtSecret   | string      | jwt密钥| 随机生成     |
+| jwtSecret   | string      | jwt密钥     | 随机生成     |
 | jwttokenKey | string      | jwt的key    |  默认 jwttoken  |
-| serverPort  | string      | 服务器的IP:port    |  默认 :660  |
+| serverPort  | string      | IP:端口     |  默认 :660  |
 | theme       | string      | 主题名称     |  默认 default  |
 | timeout     | int         | jwt超时时间秒|  默认 1800  |
 | proxy       | string      | http代理地址 |             |
@@ -50,7 +50,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 
 | columnName  | 类型         | 说明        |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
-| id          | string      | 主键        |    -  |
+| id          | string      | 主键        | gpress_admin |
 | account     | string      | 登录名称    |  默认admin  |
 | passWord    | string      | 密码        |    -  |
 | userName    | string      | 说明        |    -  |
@@ -65,7 +65,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 
 | columnName    | 类型         | 说明    |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
-| id          | string      | 主键        |    -  |
+| id          | string      | 主键        |gpress_site  |
 | title       | string      | 站点名称     |     -  |
 | keyword     | string      | 关键字       |     -  |
 | description | string      | 站点描述    |     -  |
