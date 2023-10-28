@@ -50,7 +50,7 @@ body {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	padding: 10px 20px 10px 20px !important;
+	padding: 10px 20px 0px 20px !important;
 	box-sizing: border-box;
 }
 
@@ -62,8 +62,8 @@ body {
 	background: white;
 	/*box-shadow: 2px 2px 5px #ededed;*/
 	box-sizing: border-box;
-	padding: 20px 10px 10px 20px;
-	margin-bottom: 10px;
+	padding: 20px 10px 0px 20px;
+	margin-bottom: 0px;
 	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
@@ -139,12 +139,12 @@ body {
 	text-indent: 12%;
 }
 #markdown-container{
-	width: 90%;
+	width: 97%;
 }
 #editor—wrapper {
 	border: 1px solid #ccc;
 	z-index: 100;
-	width: 90%;
+	width: 97%;
 	/* 按需定义 */
 }
 
@@ -155,24 +155,27 @@ body {
 #editor-container {
 	height: 500px;
 }
-
+.save-ul{width: 100%;}
 .save-ul li{
 	display: flex;
 	align-items: center;
 	margin-bottom: 10px;
 }
 .save-ul li .left{
-	width: 180px;
+	width: 56px;
+	min-width: 56px;
 	font-size: 14px;
 	color: rgba(0, 0, 0, .88);
 	margin-right: 10px;
 	text-align: right;
+	/*text-align-last: justify;*/
 	font-weight: normal;
 }
 .save-ul li .right{
-	width: 340px;
+	width: 100%;
 	font-size: 14px;
 }
+.save-ul li .right input,.save-ul li .right select,.save-ul li .right .upload-modlue{width:90%}
 .upload-modlue .img-box,.upload-modlue .zip-box{
 	display: none;
 }
@@ -362,12 +365,12 @@ th.pos-sticky{background: #f7f7f7}
 .lineheight30{line-height: 1.8rem;}
 .page_input{width:42px!important;}
 .pagination {
-		justify-content: center!important;
+		/*justify-content: center!important;*/
 	}
 .button{
 	position: initial!important;
 }
-.page{margin-top:10px;border-top:1px solid #f7f7f7;padding-top: 10px;}
+.page{margin-top:10px;border-top:1px solid #f7f7f7;padding-top: 10px;padding-bottom: 10px;}
 .pagination-link, .pagination-next, .pagination-previous{height:1.8rem;min-width: 1.8rem;line-height: 1.8em}
 .pagination-next, .pagination-previous{padding: 0px;}
 .pagination input{height:1.8rem}
@@ -412,5 +415,6 @@ th.pos-sticky{background: #f7f7f7}
 	-o-transition: display 1.6s ease;
 	transition: display 1.6s ease;
 }
-.is-ancestor div:last-child .left{width:80px;}
+.is-ancestor div:last-child .left{width:56px;}
 .is-small.select{font-size: .75rem;}
+.control input{width:auto!important;}
