@@ -71,7 +71,7 @@ func funcRelURL(url string) (template.HTML, error) {
 
 // 站点信息
 func funcSite() (Site, error) {
-	finder := zorm.NewSelectFinder(tableSiteName).Append(" WHERE id=?", appName)
+	finder := zorm.NewSelectFinder(tableSiteName).Append(" WHERE id=?", "gpress_site")
 	site := Site{}
 	_, err := zorm.QueryRow(context.Background(), finder, &site)
 	return site, err
