@@ -421,3 +421,10 @@ th.pos-sticky{background: #f7f7f7}
 .is-ancestor div:last-child .left{width:56px;}
 .is-small.select{font-size: .75rem;}
 .save-ul .control input{width:auto!important;}
+.textarea {
+	display: block;
+	max-width: 90%;
+	min-width: 90%;
+	padding: calc(0.75em - 1px);
+	resize: vertical;
+}
