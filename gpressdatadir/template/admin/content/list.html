@@ -9,86 +9,221 @@
 	<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
 	<input type="hidden" id="pageCount" value="{{.Page.PageCount}}">
 		<div class="container">
-		<!-- 搜索表单 -->
-		<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
-			<div class="field-body">
-				<div class="field">
-					<div class="control">
-						<input class="input is-small" type="text" name="q" id="q" placeholder="输入搜索内容...">
-						<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
+				<div class="tile is-ancestor">
+					<div class="tile is-2">
 					</div>
-				</div>
-				<div class="field">
-					<div class="control">
-						<button class="button is-success is-small" type="submit">搜索</button>
-						<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success is-small"
-							type="submit">+新增</a>
-					</div>
-				</div>
-			</div>
-		</form>
-
-		<!-- 列表 -->
-
-		<div class="table-content">
-			<table class="table is-hoverable is-fullwidth">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>标题</th>
-						<th>副标题</th>
-						<th>关键字</th>
-						<th>tag标签</th>
-						<th>导航名称</th>
-						<th>作者</th>
-						<th>排序</th>
-						<th>状态</th>
-						<th class="">操作</th>
-					</tr>
-				</thead>
-				<tbody>
-					<!-- 循环所有的数据 -->
-					{{ range $i,$v := .Data }}
-					<tr>
-						<!-- 获取每一列的值 -->
-						<td> {{ .Id }}</td>
-						<td> {{ .Title }}</td>
-						<td> {{ .Subtitle }}</td>
-						<td> {{ .Keyword }}</td>
-						<td> {{ .Tag }}</td>
-						<td> {{ .CategoryName }}</td>
-						<td> {{ .Author }}</td>
-						<td> {{ .SortNo }}</td>
-						<td> 
-							{{if eq .Status 0 }}
-							列表不显示
-							{{else if eq .Status 1 }}
-							公开
-							{{else if eq .Status 2 }}
-							私密
-							{{else}}
-							未知
-							{{end}}
-						</td>
-						<td class="">
-							<div style="margin-bottom: 10px;">
-								<a class="button is-success is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
-								<a class="button is-link is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}" target="_blank">预览</a>
-								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
-									id="{{.Id}}" value="删除"></input>
+					<div class="tile is-10">
+						<!-- 搜索表单 -->
+						<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
+							<div class="field-body">
+								<div class="field">
+									<div class="control">
+										<input class="input is-small" type="text" name="q" id="q" placeholder="输入搜索内容...">
+										<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
+									</div>
+								</div>
+								<div class="field">
+									<div class="control">
+										<button class="button is-success is-small" type="submit">搜索</button>
+										<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success is-small"
+										   type="submit">+新增</a>
+									</div>
+								</div>
 							</div>
-							
-						</td>
-					</tr>
-					{{end }}
-				</tbody>
-			</table>
+						</form>
+					</div>
+				</div>
+				<br>
+			<!-- 列表 -->
+				<div class="tile is-ancestor">
+					<div class="tile is-2">
+						<div class="tree" id="tree">
+							<details>
+								<summary class="tree-item">
+									项目1
+								</summary>
+								<details>
+									<summary class="tree-item">
+										文件夹
+									</summary>
+									<details>
+										<summary class="tree-item">
+											sdd
+										</summary>
+									</details>
+								</details>
+								<details>
+									<summary class="tree-item">
+										chrome test
+									</summary>
+								</details>
+							</details>
+							<details>
+								<summary class="tree-item">
+									项目2
+								</summary>
+								<details>
+									<summary class="tree-item">
+										文件夹2-1
+									</summary>
+									<details>
+										<summary class="tree-item">
+											文件夹2-1-1
+										</summary>
+										<details>
+											<summary class="tree-item">
+												文件夹2-1-1-1
+											</summary>
+											<details>
+												<summary class="tree-item">
+													文件夹2-1-1-1-1
+												</summary>
+												<details>
+													<summary class="tree-item">
+														文件夹2-1-1-1-1-1
+													</summary>
+												</details>
+											</details>
+										</details>
+									</details>
+								</details>
+							</details>
+							<details>
+								<summary class="tree-item">
+									文件夹1
+								</summary>
+								<details>
+									<summary class="tree-item">
+										文件夹
+									</summary>
+								</details>
+								<details>
+									<summary class="tree-item">
+										文件夹2
+									</summary>
+								</details>
+							</details>
+							<details>
+								<summary class="tree-item">
+									项目3
+								</summary>
+								<details>
+									<summary class="tree-item">
+										文件夹1
+									</summary>
+									<details>
+										<summary class="tree-item">
+											1
+										</summary>
+										<details>
+											<summary class="tree-item">
+												文件夹2
+											</summary>
+										</details>
+									</details>
+								</details>
+								<details>
+									<summary class="tree-item">
+										文件夹
+									</summary>
+								</details>
+								<details>
+									<summary class="tree-item">
+										文件夹
+									</summary>
+								</details>
+								<details>
+									<summary class="tree-item">
+										文件夹
+									</summary>
+								</details>
+								<details>
+									<summary class="tree-item">
+										文件夹的副本
+									</summary>
+								</details>
+								<details>
+									<summary class="tree-item">
+										点点点
+									</summary>
+								</details>
+								<details>
+									<summary class="tree-item">
+										hewei
+									</summary>
+									<details>
+										<summary class="tree-item">
+											hewei02
+										</summary>
+									</details>
+								</details>
+							</details>
+						</div>
+					</div>
+					<div class="tile is-10">
+							<div class="table-content">
+								<table class="table is-hoverable is-fullwidth">
+									<thead>
+									<tr>
+										<th>ID</th>
+										<th>标题</th>
+										<th>副标题</th>
+										<th>关键字</th>
+										<th>tag标签</th>
+										<th>导航名称</th>
+										<th>作者</th>
+										<th>排序</th>
+										<th>状态</th>
+										<th class="">操作</th>
+									</tr>
+									</thead>
+									<tbody>
+									<!-- 循环所有的数据 -->
+									{{ range $i,$v := .Data }}
+									<tr>
+										<!-- 获取每一列的值 -->
+										<td> {{ .Id }}</td>
+										<td> {{ .Title }}</td>
+										<td> {{ .Subtitle }}</td>
+										<td> {{ .Keyword }}</td>
+										<td> {{ .Tag }}</td>
+										<td> {{ .CategoryName }}</td>
+										<td> {{ .Author }}</td>
+										<td> {{ .SortNo }}</td>
+										<td>
+											{{if eq .Status 0 }}
+											列表不显示
+											{{else if eq .Status 1 }}
+											公开
+											{{else if eq .Status 2 }}
+											私密
+											{{else}}
+											未知
+											{{end}}
+										</td>
+										<td class="">
+											<div style="margin-bottom: 10px;">
+												<a class="button is-success is-light is-small"
+												   href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
+												<a class="button is-link is-light is-small"
+												   href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}" target="_blank">预览</a>
+												<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
+													   id="{{.Id}}" value="删除"></input>
+											</div>
+
+										</td>
+									</tr>
+									{{end }}
+									</tbody>
+								</table>
+								<div class="page"></div>
+							</div>
+
+						<!-- 分页条 -->
+					</div>
+				</div>
+
 		</div>
-		<!-- 分页条 -->
-		<div class="page"></div>
-	</div>
 </section>
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 <script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
