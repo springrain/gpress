@@ -22,7 +22,13 @@
     background-color: #ccc; /* 灰色背景 */  
     border-radius: 10px; /* 圆角样式 */  
     
+    
     margin: 20px 10px;
+  }
+  .right .table-content {
+    width: 100%;
+    overflow: auto;
+    flex:1;
   }
 
   .tree summary{
