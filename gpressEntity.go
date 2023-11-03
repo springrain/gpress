@@ -2,33 +2,33 @@ package main
 
 import "gitee.com/chunanyong/zorm"
 
-// 设置
+// Config 配置表
 type Config struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
 
-	// ID 主键 值为 TableName,也就是表名
+	// ID 主键
 	Id string `column:"id" json:"id,omitempty"`
 
-	// Title
+	// BasePath 根路径,默认/
 	BasePath string `column:"basePath" json:"basePath,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// JwtSecret jwt加密密钥
 	JwtSecret string `column:"jwtSecret" json:"jwtSecret,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// JwttokenKey jwt加密密钥
 	JwttokenKey string `column:"jwttokenKey" json:"jwttokenKey,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// ServerPort 服务器端口
 	ServerPort string `column:"serverPort" json:"serverPort,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Theme 主题
 	Theme string `column:"theme" json:"theme,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Timeout 超时时间,单位秒
 	Timeout int `column:"timeout" json:"timeout,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Proxy 代理,用于翻墙 格式: http://127.0.0.1:8090
 	Proxy string `column:"proxy" json:"proxy,omitempty"`
 
 	// CreateTime 创建时间
@@ -61,39 +61,39 @@ func (entity *Config) GetPKColumnName() string {
 	return "id"
 }
 
-// 导航菜单
+// Category 导航菜单
 type Category struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
 
-	// ID 主键 值为 TableName,也就是表名
+	// ID
 	Id string `column:"id" json:"id,omitempty"`
 
-	// Title
+	// Name 名称
 	Name string `column:"name" json:"name,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// HrefURL 链接地址
 	HrefURL string `column:"hrefURL" json:"hrefURL,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// HrefTarget 链接打开方式
 	HrefTarget string `column:"hrefTarget" json:"hrefTarget,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Pid 父级ID
 	Pid string `column:"pid" json:"pid,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// ThemePC 主题PC
 	ThemePC string `column:"themePC" json:"themePC,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// ModuleID 模型ID
 	ModuleID string `column:"moduleID" json:"moduleID,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// ComCode 组件代码
 	ComCode string `column:"comCode" json:"comCode,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// TemplateID 模板ID
 	TemplateID string `column:"templateID" json:"templateID,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// ChildTemplateID 模板ID
 	ChildTemplateID string `column:"childTemplateID" json:"childTemplateID,omitempty"`
 
 	// CreateTime 创建时间
@@ -126,13 +126,13 @@ func (entity *Category) GetPKColumnName() string {
 	return "id"
 }
 
-// 内容文章
+// Content 内容文章
 type Content struct {
 
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
 
-	// ID 主键 值为 TableName,也就是表名
+	// ID
 	Id string `column:"id" json:"id,omitempty"`
 
 	// Title 文章标题
@@ -159,28 +159,28 @@ type Content struct {
 	// CategoryName 导航名称
 	CategoryName string `column:"categoryName" json:"categoryName,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// TemplateID 模板ID
 	TemplateID string `column:"templateID" json:"templateID,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Author 文章作者
 	Author string `column:"author" json:"author,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Tag 标签
 	Tag string `column:"tag" json:"tag,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Toc 目录
 	Toc string `column:"toc" json:"toc,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Summary 摘要
 	Summary string `column:"summary" json:"summary,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Content 内容
 	Content string `column:"content" json:"content,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Markdown Markdown内容
 	Markdown string `column:"markdown" json:"markdown,omitempty"`
 
-	// TableType index/module 表和模型,两种类型
+	// Thumbnail 缩略图
 	Thumbnail string `column:"thumbnail" json:"thumbnail,omitempty"`
 
 	// CreateTime 创建时间
@@ -213,15 +213,15 @@ func (entity *Content) GetPKColumnName() string {
 	return "id"
 }
 
-// 模板
+// PageTemplate 页面模板
 type PageTemplate struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
 
-	// 主键
+	// Id 主键
 	Id string `column:"id" json:"id,omitempty"`
 
-	// 名称
+	// Name 名称
 	Name string `column:"name" json:"name,omitempty"`
 
 	// TemplatePath 模板路径
@@ -253,48 +253,48 @@ func (entity *PageTemplate) GetPKColumnName() string {
 	return "id"
 }
 
-// 站点信息
+// Site 站点信息
 type Site struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
 
-	// ID 主键 值为 TableName,也就是表名
+	// ID 主键
 	Id string `column:"id" json:"id"`
 
-	// Title 头
+	// Title 标题
 	Title string `column:"title" json:"title,omitempty"`
 
-	// Name 名字
+	// Name 名称
 	Name string `column:"name" json:"name,omitempty"`
 
-	// Domain
+	// Domain 域名
 	Domain string `column:"domain" json:"domain,omitempty"`
 
-	// Keyword
+	// Keyword 关键字
 	Keyword string `column:"keyword" json:"keyword,omitempty"`
 
-	// Description
+	// Description 描述
 	Description string `column:"description" json:"description,omitempty"`
 
-	// Theme
+	// Theme 主题
 	Theme string `column:"theme" json:"theme,omitempty"`
 
-	// ThemePC
+	// ThemePC PC主题
 	ThemePC string `column:"themePC" json:"themePC,omitempty"`
 
-	// ThemeWAP
+	// ThemeWAP WAP主题WAP
 	ThemeWAP string `column:"themeWAP" json:"themeWAP,omitempty"`
 
-	// SiteThemeWEIXIN
+	// SiteThemeWEIXIN 微信主题
 	SiteThemeWEIXIN string `column:"siteThemeWEIXIN" json:"siteThemeWEIXIN,omitempty"`
 
-	// Logo
+	// Logo 站点logo
 	Logo string `column:"logo" json:"logo,omitempty"`
 
-	// Favicon
+	// Favicon 站点favicon
 	Favicon string `column:"favicon" json:"favicon,omitempty"`
 
-	// Footer
+	// Footer 页脚
 	Footer string `column:"footer" json:"footer,omitempty"`
 
 	// CreateTime 创建时间
@@ -327,7 +327,7 @@ func (entity *Site) GetPKColumnName() string {
 	return "id"
 }
 
-// 用户信息
+// User 用户信息
 type User struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
@@ -335,19 +335,19 @@ type User struct {
 	// Id 主键
 	Id string `column:"id" json:"id,omitempty"`
 
-	// 账号
+	// Account 账号
 	Account string `column:"account" json:"account,omitempty"`
 
-	// 密码
+	// Password 密码
 	Password string `column:"password" json:"password,omitempty"`
 
-	// 用户名
+	// UserName 用户名
 	UserName string `column:"userName" json:"userName,omitempty"`
 
-	// 链类型
+	// ChainType 链类型
 	ChainType string `column:"chainType" json:"chainType,omitempty"`
 
-	// 链address
+	// ChainAddress 链address
 	ChainAddress string `column:"chainAddress" json:"chainAddress,omitempty"`
 
 	// CreateTime
