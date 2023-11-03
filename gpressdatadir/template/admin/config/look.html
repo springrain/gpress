@@ -52,7 +52,7 @@
 						</li>
 						<li>
 							<div class="left">
-								服务器ip:端口
+								ip:端口
 							</div>
 							<div class="right">
 								<input class="input" type="text" disabled value="{{.Data.ServerPort}}">
@@ -80,10 +80,10 @@
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
 							<a href="{{basePath}}admin/{{.UrlPathParam}}/update?id={{.Data.Id}}"
-								class="button is-primary">编辑</a>
+								class="button is-primary is-small">编辑</a>
 						</div>
 						<div class="control">
-							<a href="{{basePath}}admin/{{.UrlPathParam}}/list" class="button is-info is-light">返回</a>
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/list" class="button is-info is-light is-small">返回</a>
 						</div>
 					</div>
 				</form>

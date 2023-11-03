@@ -1,25 +1,32 @@
 .gpress-menu {
-  width: 10rem;
+  width: 96%;
   font-size: 1.05rem;
+  margin: 0px auto;
   height: 100vh;
   font-family: Helvetica,Arial,sans-serif;
   overflow-y: auto;
 	position: relative;
 }
 .gpress-menu .menu-list {
-  line-height: 1.75;
+  line-height: 1.2;
 }
 .gpress-menu .menu-list a {
-  border-radius: 0;
-  padding: 0.8em 0.85em 0.8em 1.2em;
-  color: #fff;
-	font-size: 15px;
+    border-radius: 5px;
+    padding: 0.8em 0.85em 0.8em 1.2em;
+    color: #fff;
+	font-size: 14px;
 	display: flex;
 	align-items: center;
 }
 .gpress-menu .menu-list a:hover {
   background: #333;
+  -webkit-transition: background 1s ease;
+  -moz-transition: background 1s ease;
+  -ms-transition: background 1s ease;
+  -o-transition: background 1s ease;
+  transition: background 1s ease;
 }
+
 .gpress-menu .menu-list a i{
 	font-size: 20px;
 	margin-right: 10px;
@@ -31,8 +38,18 @@
   font-weight: 400;
   letter-spacing: .1em;
 }
+.banner {
+  line-height: 3rem!important;
+}
+.banner a:hover{
+  background: none!important;
+}
+.banner a img{
+  height:1.8rem;
+  margin-right:10px;
+}
 .gpress-menu ul.menu-list:not(:first-child){
-  border-top: 1px solid #333;
+  /*border-top: 1px solid #333;*/
 }
 .navbar-burger {
   background: rgba(0,0,0,.7);
@@ -46,11 +63,11 @@
   position: relative;
 }
 #layout.is-active{
-  padding-left: 160px;
+  padding-left: 200px;
 }
 #menu{
-  width: 160px;
-  margin-left: -160px;
+  width: 200px;
+  margin-left: -200px;
   bottom: 0;
   overflow-y: auto;
   background-color: #191818;
@@ -63,15 +80,16 @@
   left: 0;
   position: fixed;
   top: 0;
+  z-index: 9999;
 }
 #layout, #menu, .menu-link{
   transition: .2s ease-out;
 }
 #menuLink.is-active{
-  left: 160px;
+  left: 200px;
 }
 #navbarMenu.active .navbar-burger {
-  left: 160px;
+  left: 200px;
 }
 .navbar-burger span{
   background-color: #fff;
@@ -86,10 +104,10 @@
 @media (min-width: 58em) {
   #layout {
     left:0;
-    padding-left: 160px
+    padding-left: 200px
   }
   #layout.is-active .menu-link,#menu,.menu-link {
-    left: 160px;
+    left: 200px;
   }
   .menu-link {
     display: none;

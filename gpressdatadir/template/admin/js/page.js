@@ -11,15 +11,15 @@ Page.prototype = {
 	create: function() {
 		var _template = `<nav class="pagination is-centered" role="navigation" aria-label="pagination">
 		<div class="flex">
-			<div class="lineheight40">共 ${this.settings.count} 条</div>
-			<div><a class="pagination-link" aria-label="总页数">共 ${this.settings.countPage} 页</a></div>
-			<div><a class="pagination-previous page_up">上一页</a></div>
+			<div class="lineheight30">共 ${this.settings.count} 条</div>
+<!--			<div><a class="pagination-link" aria-label="总页数">共 ${this.settings.countPage} 页</a></div>-->
+			<div><a class="pagination-previous page_up"><</a></div>
 			<ul class="pagination-list page_view_ul">
 			</ul>
-			<div><a class="pagination-next page_down">下一页</a></div>
+			<div><a class="pagination-next page_down">></a></div>
 			<div class="pagination-page flex">
-				<input class="input page_input" type="text" placeholder="页码"> &nbsp;
-				<button class="button page_btn">跳转</button>
+				<input class="input page_input  is-small" type="text" placeholder="页码"> &nbsp;
+				<button class="button page_btn  is-small">跳转</button>
 			</div>
 		</div>
     </nav>`
