@@ -17,7 +17,8 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" readonly value="{{.Data.Id}}">
+								<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
+								<input class="input" type="text" disabled value="{{.Data.Id}}">
 							</div>
 						</li>
 						<li>
@@ -89,38 +90,20 @@
 								底部信息
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="footer" value="{{.Data.Footer}}">
+								<textarea class="textarea"   name="footer"  >{{.Data.Footer}}</textarea>
 							</div>
 						</li>
 					
-						<li>
-							<div class="left">
-								排序
-							</div>
-							<div class="right">
-								<input class="input" type="number" name="sortNo" value="{{.Data.SortNo}}">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								状态
-							</div>
-							<div class="select">
-								<select name="status" id="status">
-								  <option value="1">公开</option>
-								  <option value="0">列表不显示</option>
-								  <option value="2">私密</option>
-								</select>
-							</div>
-						</li>
+						<input type="hidden" name="sortNo" id="sortNo" value="1" />
+						<input type="hidden" name="status" id="status" value="1" />
 					</ul>
 
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
-							<button type="submit" class="button is-primary">提交</button>
+							<button type="submit" class="button is-success is-small">提交</button>
 						</div>
 						<div class="control">
-							<button type="reset" class="button is-info is-light">重置</button>
+							<button type="reset" class="button is-info is-light is-small">重置</button>
 						</div>
 					</div>
 				</form>
@@ -130,7 +113,7 @@
 </section>
 
 <script>
-	 $("#status").val("{{.Data.Status}}")
+	 //$("#status").val("{{.Data.Status}}")
 	const form = document.getElementById('gpress-form')
 	form.addEventListener('submit', async event => {
 		event.preventDefault()
@@ -159,7 +142,7 @@
 				type: 'green',
 				buttons: {
 					'确定': function() {
-						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
+						//window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
 					}
 				}
 			})

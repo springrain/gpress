@@ -20,48 +20,48 @@
 			<nav role="navigation" aria-label="main navigation">
 				<div>
 					<div class="gpress-menu">
-						<ul class="menu-list">
+						<ul class="menu-list banner">
 							<li><a href="" class="menu-heading">GPRESS</a></li>
 						</ul>
 						<ul class="menu-list">
 							<li>
-								<a href="{{basePath}}admin/index">
+								<a class="nav-addr"  href="{{basePath}}admin/index">
 									<i class="iconfont icon-shouye"></i>首页
 								</a>
 							</li>
 						</ul>
 						<ul class="menu-list">
 							<li>
-								<a href="{{basePath}}admin/content/list">
+								<a class="nav-addr"  href="{{basePath}}admin/content/list">
 									<i class="iconfont icon-fabiaowenzhang"></i>内容文章
 								</a>
 							</li>
 							<li>
-								<a href="{{basePath}}admin/category/list">
+								<a class="nav-addr"  href="{{basePath}}admin/category/list">
 									<i class="iconfont icon-caidan1"></i>导航菜单
 								</a>
 							</li>
 						</ul>
 						<ul class="menu-list">
 							<li>
-								<a href="{{basePath}}admin/site/list">
+								<a class="nav-addr" href="{{basePath}}admin/site/update?id=gpress_site">
 									<i class="iconfont icon-zhandianguanli"></i>站点信息
 								</a>
 							</li>
 							<li>
-								<a href="{{basePath}}admin/user/list">
+								<a class="nav-addr"  href="{{basePath}}admin/user/update?id=gpress_admin">
 									<i class="iconfont icon-yonghuxinxi"></i>用户信息
 								</a>
 							</li>
 						</ul>
 						<ul class="menu-list">
 							<li>
-								<a href="{{basePath}}admin/pageTemplate/list">
+								<a class="nav-addr"  href="{{basePath}}admin/pageTemplate/list">
 									<i class="iconfont icon-moban"></i>页面模版
 								</a>
 							</li>
 							<li>
-								<a class="refresh">
+								<a  class="nav-addr refresh">
 									<i class="iconfont icon-shuaxin"></i>刷新模板
 								</a>
 							</li>
@@ -70,13 +70,13 @@
 						</ul>
 						<ul class="menu-list">
 							<li>
-								<a href="{{basePath}}admin/config/list">
+								<a  class="nav-addr"  href="{{basePath}}admin/config/update?id=gpress_config">
 									<i class="iconfont icon-shezhi"></i>设置
 								</a>
 							</li>
 
 							<li>
-								<a class="quit">
+								<a  class="nav-addr quit">
 									<i class="iconfont icon-tuichu"></i>退出
 								</a>
 							</li>
@@ -95,12 +95,14 @@
 		<!-- 右侧内容 -->
 		<div id="main">
 			<script type="text/javascript">
-				$('.refresh').click(function() {
-					$.get('{{basePath}}admin/reload', function(result) {
-						location.reload()
+				$(document).ready(function(){
+					$('.refresh').click(function() {
+						$.get('{{basePath}}admin/reload', function(result) {
+							location.reload()
+						})
 					})
-				})
-				$('.quit').click(function() {
-					window.location.href = '{{basePath}}admin/login'
+					$('.quit').click(function() {
+							window.location.href = '{{basePath}}admin/login'
+					})
 				})
 			</script>

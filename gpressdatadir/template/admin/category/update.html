@@ -27,7 +27,8 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" readonly name="id" id="id" value="{{.Data.Id}}">
+								<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
+								<input class="input" type="text" disabled value="{{.Data.Id}}">
 							</div>
 						</li>
 
@@ -92,10 +93,10 @@
 
 					<div class="field is-grouped" style="padding-left: 190px;">
 						<div class="control">
-							<button type="submit" class="button is-primary">提交</button>
+							<button type="submit" class="button is-success is-small">提交</button>
 						</div>
 						<div class="control">
-							<button type="reset" class="button is-info is-light">重置</button>
+							<button type="reset" class="button is-info is-light is-small">重置</button>
 						</div>
 					</div>
 				</form>

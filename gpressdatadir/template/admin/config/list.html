@@ -16,15 +16,15 @@
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
-						<input class="input" type="text" name="q" placeholder="输入搜索内容...">
+						<input class="input  is-small" type="text" name="q" placeholder="输入搜索内容...">
 						<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
 					</div>
 				</div>
 				<div class="field">
 					<div class="control">
-						<button class="button is-primary" type="submit">搜索</button>
-						<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-primary"
-							type="submit">新增</a>
+						<button class="button is-success is-small" type="submit">搜索</button>
+						<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success  is-small"
+							type="submit">+新增</a>
 					</div>
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 						<th>基础路径</th>
 						<th>jwt密钥</th>
 						<th>jwt的key</th>
-						<th>服务器ip:端口</th>
+						<th>ip:端口</th>
 						<th>主题</th>
 						<th>超时时间</th>
 						<th class="pos-sticky">操作</th>
@@ -71,9 +71,9 @@
 				</tbody>
 			</table>
 		</div>
+		<!-- 分页条 -->
+		<div class="page"></div>
 	</div>
-	<!-- 分页条 -->
-	<div class="page"></div>
 </section>
 
 <script>
