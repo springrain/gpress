@@ -44,7 +44,7 @@ func init() {
 			//&toc.Extender{},//不能在这里引用toc插件,手动控制
 			emoji.Emoji,        // emoji表情
 			initHighlighting(), // 代码高亮
-			&mermaid.Extender{MermaidJS: funcBasePath() + "js/mermaid.min.js"}, // mermaid流程图,不使用cdn的js
+			&mermaid.Extender{MermaidURL: funcBasePath() + "js/mermaid.min.js"}, // mermaid流程图,不使用cdn的js
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
