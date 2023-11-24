@@ -48,6 +48,14 @@
 						</li>
 						<li>
 							<div class="left">
+								Pid
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="pid" id="pid" value="{{.Data.Pid}}" readonly="readonly">
+							</div>
+						</li>
+						<li>
+							<div class="left">
 								页面模版
 							</div>
 							<div class="right">
@@ -127,7 +135,7 @@
 				type: 'green',
 				buttons: {
 					'确定': function() {
-						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
+						window.location.href = '{{basePath}}admin/content/list'
 					}
 				}
 			})

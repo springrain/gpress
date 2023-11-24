@@ -3,181 +3,236 @@
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/tree.css">
 {{template "admin/bodystart.html"}}
 
-	<input type="hidden" id="data" value="{{.Data}}">
-	<!-- 分页隐藏域 -->
-	<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
 
-	<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
-<div class="welcome-wrapper">
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #f1f1f1;
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			z-index: 1;
+		}
 
-	<div class="left">
+		.dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
 
-	 
-		 
-			 
-		<div class="searchMenu">
-			<input class="input" type="text" name="q" id="q" placeholder="输入搜索内容...">
-			<button class="button is-primary" style="margin-left: 20px" type="submit">搜索</button>
-		</div>
-			 
-	 
-		<div class="tree" id="tree">
-			<details>
-			  <summary class="tree-item">
-				项目1
-			  </summary>
-			  <details>
-				<summary class="tree-item">
-				  文件夹
-				</summary>
-				<details>
-				  <summary class="tree-item">
-					sdd
-				  </summary>
-				</details>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  chrome test
-				</summary>
-			  </details>
-			</details>
-			<details>
-			  <summary class="tree-item">
-				项目2
-			  </summary>
-			  <details>
-				<summary class="tree-item">
-				  文件夹2-1
-				</summary>
-				<details>
-				  <summary class="tree-item">
-					文件夹2-1-1
-				  </summary>
-				  <details>
-					<summary class="tree-item">
-					  文件夹2-1-1-1
-					</summary>
-					<details>
-					  <summary class="tree-item">
-						文件夹2-1-1-1-1
-					  </summary>
-					  <details>
-						<summary class="tree-item">
-						  文件夹2-1-1-1-1-1
-						</summary>
-					  </details>
-					</details>
-				  </details>
-				</details>
-			  </details>
-			</details>
-			<details>
-			  <summary class="tree-item">
-				文件夹1
-			  </summary>
-			  <details>
-				<summary class="tree-item">
-				  文件夹
-				</summary>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  文件夹2
-				</summary>
-			  </details>
-			</details>
-			<details>
-			  <summary class="tree-item">
-				项目3
-			  </summary>
-			  <details>
-				<summary class="tree-item">
-				  文件夹1
-				</summary>
-				<details>
-				  <summary class="tree-item">
-					1
-				  </summary>
-				  <details>
-					<summary class="tree-item">
-					  文件夹2
-					</summary>
-				  </details>
-				</details>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  文件夹
-				</summary>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  文件夹
-				</summary>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  文件夹
-				</summary>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  文件夹的副本
-				</summary>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  点点点
-				</summary>
-			  </details>
-			  <details>
-				<summary class="tree-item">
-				  hewei
-				</summary>
-				<details>
-				  <summary class="tree-item">
-					hewei02
-				  </summary>
-				</details>
-			  </details>
-			</details>
-		  </div>
-	</div>  
-	<div class="right">
-		
-		<section class="section">
-			<input type="hidden" id="data" value="{{.Data}}">
-			<!-- 分页隐藏域 -->
-			<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
-			<input type="hidden" id="pageCount" value="{{.Page.PageCount}}">
+		.dropdown-content a:hover {background-color: #ddd;}
 
+		.dropdown:hover .dropdown-content {display: block;}
 
-			<div class="container">
-				<!-- 搜索表单 -->
-				<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathParam}}/list"
-					method="GET">
-					<div class="field-body">
-						<div class="field">
-							<div class="control">
-								<input class="input is-small" type="text" name="q" placeholder="输入搜索内容...">
-								<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
+		/* 设置链接的字体颜色 */
+		a {
+			color: black;
+		}
+		/* 设置链接悬停时的字体颜色 */
+		a:hover {
+			color: red;
+		}
+	</style>
+</head>
+
+	<div class="welcome-wrapper">
+		<input type="hidden" id="data" value="{{.Data}}">
+		<!-- 分页隐藏域 -->
+		<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
+		<input type="hidden" id="pageCount" value="{{.Page.PageCount}}">
+		<div class="left">
+			<div class="section">
+				<div class="container">
+					<div class="searchMenu">
+							<div class="field-body">
+								<div class="field">
+									<div class="control">
+										<a href="{{basePath}}admin/content/list" class="button is-success is-small"
+										   type="submit">全部</a>
+										<a href="{{basePath}}admin/category/save" class="button is-success is-small"
+										   type="submit">+新增</a>
+									</div>
+								</div>
 							</div>
-						</div>
-						<div class="field">
-							<div class="control">
-								<button class="button is-success is-small" type="submit">搜索</button>
-								<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success is-small"
-									type="submit">+新增</a>
-							</div>
-						</div>
 					</div>
-				</form>
+					<div class="tree" id="tree" >
+						{{ range $i,$v := .ChildLevelData }}
+						{{ if .Data }}
+						<details >
+							<summary class="tree-item" >
+								{{ .Name }}
+								<div class="dropdown">
+									<button class="dropbtn" style="border: none;background:transparent;">...</button>
+									<div class="dropdown-content">
+										{{.Pid}}
+										<a href="{{basePath}}admin/category/save1?pid={{.Id}}">新增</a>
+										<a href="{{basePath}}admin/category/update?id={{.Id}}">编辑</a>
+										{{if .HrefURL}}
+										<a href="{{ hrefURL .HrefURL }}">预览</a>
+										{{else}}
+										<a href="{{basePath}}admin/category/look?id={{.Id}}">预览</a>
+										{{end}}
+										<a type="button" onclick="deleteFunc('{{.Id}}','{{basePath}}admin/category/delete')">删除</a>
+									</div>
+								</div>
+							</summary>
 
-				<!-- 列表 -->
-				<div class="table-content">
-					<table class="table is-hoverable is-fullwidth">
-						<thead>
+							{{ range $i,$v := .Data }}
+							{{ if .Data }}
+							<details>
+								<summary class="tree-item">
+									{{ .Name }}
+									<div class="dropdown">
+										<button class="dropbtn" style="border: none;background:transparent;">...</button>
+										<div class="dropdown-content">
+											<a href="{{basePath}}admin/category/save1?pid={{.Id}}">新增</a>
+											<a href="{{basePath}}admin/category/update?id={{.Id}}">编辑</a>
+											{{if .HrefURL}}
+											<a href="{{ hrefURL .HrefURL }}">预览</a>
+											{{else}}
+											<a href="{{basePath}}admin/category/look?id={{.Id}}">预览</a>
+											{{end}}
+											<a type="button" onclick="deleteFunc(this.id,'{{basePath}}admin/category/delete')">删除</a>
+										</div>
+									</div>
+								</summary>
+								{{ range $i,$v := .Data }}
+								{{ if .Data }}
+								<details>
+									<summary class="tree-item">
+										{{ .Name }}
+										<div class="dropdown">
+											<button class="dropbtn" style="border: none;background:transparent;">...</button>
+											<div class="dropdown-content">
+												<a href="{{basePath}}admin/category/save1?pid={{.Id}}">新增</a>
+												<a href="{{basePath}}admin/category/update?id={{.Id}}">编辑</a>
+												{{if .HrefURL}}
+												<a href="{{ hrefURL .HrefURL }}">预览</a>
+												{{else}}
+												<a href="{{basePath}}admin/category/look?id={{.Id}}">预览</a>
+												{{end}}
+												<a type="button" onclick="deleteFunc(this.id,'{{basePath}}admin/category/delete')">删除</a>
+											</div>
+										</div>
+									</summary>
+								</details>
+								{{else}}
+								<details>
+									<summary class="tree-item">
+										<a class="tree-item"  href="{{basePath}}admin/content/listByCategory?q={{.Id}}&pageNo=1">
+											<i class="tree-item"></i>{{ .Name }}
+										</a>
+										<div class="dropdown">
+											<button class="dropbtn" style="border: none;background:transparent;">...</button>
+											<div class="dropdown-content">
+												<a href="{{basePath}}admin/category/save1?pid={{.Id}}">新增</a>
+												<a href="{{basePath}}admin/category/update?id={{.Id}}">编辑</a>
+												{{if .HrefURL}}
+												<a href="{{ hrefURL .HrefURL }}">预览</a>
+												{{else}}
+												<a href="{{basePath}}admin/category/look?id={{.Id}}">预览</a>
+												{{end}}
+												<a type="button" onclick="deleteFunc(this.id,'{{basePath}}admin/category/delete')">删除</a>
+											</div>
+										</div>
+									</summary>
+								</details>
+								{{end }}
+								{{end }}
+							</details>
+							{{else}}
+							<details>
+								<summary class="tree-item">
+									<a class="tree-item"  href="{{basePath}}admin/content/listByCategory?q={{.Id}}&pageNo=1">
+										<i class="tree-item"></i>{{ .Name }}
+									</a>
+									<div class="dropdown">
+										<button class="dropbtn" style="border: none;background:transparent;">...</button>
+										<div class="dropdown-content">
+											<a href="{{basePath}}admin/category/save1?pid={{.Id}}">新增</a>
+											<a href="{{basePath}}admin/category/update?id={{.Id}}">编辑</a>
+											{{if .HrefURL}}
+											<a href="{{ hrefURL .HrefURL }}">预览</a>
+											{{else}}
+											<a href="{{basePath}}admin/category/look?id={{.Id}}">预览</a>
+											{{end}}
+											<a type="button" onclick="deleteFunc(this.id,'{{basePath}}admin/category/delete')">删除</a>
+										</div>
+									</div>
+								</summary>
+							</details>
+							{{end }}
+							{{end }}
+
+						</details>
+						{{else}}
+						<details>
+							<summary class="tree-item">
+								<a class="tree-item"  href="{{basePath}}admin/content/listByCategory?q={{.Id}}&pageNo=1">
+									<i class="tree-item"></i>{{ .Name }}
+								</a>
+								<div class="dropdown">
+									<button class="dropbtn" style="border: none;background:transparent;">...</button>
+									<div class="dropdown-content">
+										<a href="{{basePath}}admin/category/save1?pid={{.Id}}">新增</a>
+										<a href="{{basePath}}admin/category/update?id={{.Id}}">编辑</a>
+										{{if .HrefURL}}
+										<a href="{{ hrefURL .HrefURL }}">预览</a>
+										{{else}}
+										<a href="{{basePath}}admin/category/look?id={{.Id}}">预览</a>
+										{{end}}
+										<a type="button" onclick="deleteFunc(this.id,'{{basePath}}admin/category/delete')">删除</a>
+									</div>
+								</div>
+							</summary>
+						</details>
+						{{end}}
+						{{end }}
+					</div>
+				</div>
+
+
+			<!--<div id="ID-tree-demo-onlyIconControl"></div>-->
+			</div>
+			</section>
+		</div>
+
+		<div class="right">
+
+			<section class="section">
+
+				<div class="container">
+					<!-- 搜索表单 -->
+					<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathParam}}/list"
+						  method="GET">
+						<div class="field-body">
+							<div class="field">
+								<div class="control">
+									<input class="input is-small" type="text" name="q" placeholder="输入搜索内容...">
+									<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
+								</div>
+							</div>
+							<div class="field">
+								<div class="control">
+									<button class="button is-success is-small" type="submit">搜索</button>
+									<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success is-small"
+									   type="submit">+新增</a>
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<!-- 列表 -->
+					<div class="table-content">
+						<table class="table is-hoverable is-fullwidth">
+							<thead>
 							<tr>
 								<th>ID</th>
 								<th>标题</th>
@@ -190,8 +245,8 @@
 								<th>状态</th>
 								<th class="">操作</th>
 							</tr>
-						</thead>
-						<tbody>
+							</thead>
+							<tbody>
 							<!-- 循环所有的数据 -->
 							{{ range $i,$v := .Data }}
 							<tr>
@@ -218,27 +273,27 @@
 								<td class="">
 									<div style="margin-bottom: 10px;">
 										<a class="button is-success is-light is-small"
-											href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
+										   href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
 										<a class="button is-link is-light is-small"
-											href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}"
-											target="_blank">预览</a>
+										   href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}"
+										   target="_blank">预览</a>
 										<input type="button" class="button is-danger is-small"
-											onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
-											id="{{.Id}}" value="删除" />
+											   onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
+											   id="{{.Id}}" value="删除" />
 									</div>
 
 								</td>
 							</tr>
 							{{end }}
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					</div>
+					<!-- 分页条 -->
+					<div class="page"></div>
 				</div>
-				<!-- 分页条 -->
-				<div class="page"></div>
-			</div>
-		</section>
-	</div>  
-</div>
+			</section>
+		</div>
+	</div>
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 <script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
 

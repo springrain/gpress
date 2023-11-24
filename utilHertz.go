@@ -189,6 +189,10 @@ type ResponseData struct {
 	// HttpCode int `json:"httpCode,omitempty"`
 	// 返回数据
 	Data interface{} `json:"data,omitempty"`
+
+	//携带的数据
+	ChildLevelData interface{} `json:"childLevelData,omitempty"`
+
 	// 返回的信息内容,配合StatusCode
 	Message string `json:"message,omitempty"`
 	// 扩展的map,用于处理返回多个值的情况
