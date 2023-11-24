@@ -6,6 +6,7 @@ import (
 	"errors"
 	"html/template"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"gitee.com/chunanyong/zorm"
@@ -187,6 +188,8 @@ func funcSelectList(urlPathParam string, q string, pageNo int, sql string, value
 		data := make([]Category, 0)
 		zorm.Query(context.Background(), finder, &data, page)
 		responseData.Data = data
+		childLevelData := funcChildLevel(strconv.Itoa(pageNo))
+		responseData.ChildLevelData = childLevelData
 	case tableContentName:
 		data := make([]Content, 0)
 		zorm.Query(context.Background(), finder, &data, page)
@@ -197,6 +200,48 @@ func funcSelectList(urlPathParam string, q string, pageNo int, sql string, value
 		responseData.StatusCode = 0
 		return responseData, err
 	}
+	responseData.Page = page
+	responseData.StatusCode = 1
+	return responseData, nil
+}
+
+func funcSelectList1(urlPathParam string, q string, pageNo int, sql string, values ...interface{}) (ResponseData, error) {
+	responseData := ResponseData{StatusCode: 0}
+	sql = strings.TrimSpace(sql)
+	if sql == "" || strings.Contains(sql, ";") {
+		err := errors.New("sql语句错误")
+		responseData.ERR = err
+		responseData.StatusCode = 0
+		return responseData, err
+	}
+
+	finder := zorm.NewFinder().Append("SELECT")
+	if q != "" { // 如果有搜索关键字
+		whereSQL := strings.ToLower(sql)
+		locOrderBy := findOrderByIndex(&sql)
+		orderBy := ""
+		if len(locOrderBy) > 0 {
+			orderBy = sql[locOrderBy[0]:]
+			sql = sql[:locOrderBy[0]]
+		}
+
+		i := strings.Index(whereSQL, " where ")
+		if i < 0 { // 没有where
+			finder.Append(sql, values...)
+			finder.Append(" where rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) ", q)
+		} else {
+			finder.Append(sql[:i+7]+" rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) and ", q)
+			finder.Append(sql[i+7:], values...)
+		}
+		finder.Append(orderBy)
+	} else {
+		finder.Append(sql, values...)
+	}
+	page := zorm.NewPage()
+	page.PageNo = pageNo
+	childLevelData := funcChildLevel(strconv.Itoa(pageNo))
+	responseData.ChildLevelData = childLevelData
+
 	responseData.Page = page
 	responseData.StatusCode = 1
 	return responseData, nil

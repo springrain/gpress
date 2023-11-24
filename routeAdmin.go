@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -162,7 +163,7 @@ func init() {
 		// c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 		errorLoginCount.Store(0)
-		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/content/list"))
 	})
 
 	// 后台管理员使用区块链账号登录
@@ -217,7 +218,7 @@ func init() {
 
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 
-		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/content/list"))
 	})
 
 	// 后台管理员首页
@@ -230,7 +231,7 @@ func init() {
 			return
 		}
 
-		c.HTML(http.StatusOK, "admin/index.html", nil)
+		c.HTML(http.StatusOK, "admin/content/list.html", nil)
 	})
 	// 重新加载资源包含模板和对应的静态文件
 	adminGroup.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
@@ -264,6 +265,39 @@ func init() {
 		}
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
+	// 后台管理员首页
+	adminGroup.GET("/category/save1", func(ctx context.Context, c *app.RequestContext) {
+		//获取页码
+		/*pageNoStr := c.DefaultQuery("pageNo", "1")
+		pageNo, _ := strconv.Atoi(pageNoStr)
+		//categoryID := strings.TrimSpace(c.Query("categoryID"))
+		q := strings.TrimSpace(c.Query("q"))
+		finder := zorm.NewSelectFinder(tableContentName, "*").Append(" where categoryID = ? order by sortNo desc ", q)
+		responseData := ResponseData{StatusCode: 0}
+
+		page := zorm.NewPage()
+		page.PageNo = pageNo
+		data := make([]Content, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		responseData.Page = page
+		responseData.StatusCode = 1
+		responseData.Data = data
+		c.JSON(http.StatusOK, responseData)*/
+
+		urlPathParam := "category"
+
+		pid := strings.TrimSpace(c.Query("pid"))
+
+		//优先使用自定义模板文件
+		updateFile := "admin/" + urlPathParam + "/save.html"
+		category := Category{}
+		category.Pid = pid
+		responseData := ResponseData{StatusCode: 0}
+		responseData.StatusCode = 1
+		responseData.Data = category
+		responseData.UrlPathParam = urlPathParam
+		c.HTML(http.StatusOK, updateFile, responseData)
+	})
 
 	// 内容预览
 	adminGroup.GET("/content/look", funcContentPreview)
@@ -272,6 +306,10 @@ func init() {
 
 	// 通用list列表,先都使用get方法
 	adminGroup.GET("/:urlPathParam/list", funcList)
+	//adminGroup.POST("/:urlPathParam/list", funcList)
+
+	// 通用list列表,先都使用get方法
+	adminGroup.GET("/:urlPathParam/listByCategory", funcListByCategory)
 	//adminGroup.POST("/:urlPathParam/list", funcList)
 
 	// 通用查看
@@ -319,6 +357,11 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql, values)
 	}
 
+	if urlPathParam == "content" {
+		childLevelData := funcChildLevel(pageNoStr)
+		responseData.ChildLevelData = childLevelData
+	}
+
 	responseData.UrlPathParam = urlPathParam
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
@@ -338,6 +381,88 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	//responseData.QueryString = string(queryString)
 	//responseData.UrlPathParam = urlPathParam
 	c.HTML(http.StatusOK, listFile, responseData)
+}
+
+// funcList 通用list列表
+func funcListByCategory(ctx context.Context, c *app.RequestContext) {
+	urlPathParam := c.Param("urlPathParam")
+	//获取页码
+	pageNoStr := c.DefaultQuery("pageNo", "1")
+	pageNo, _ := strconv.Atoi(pageNoStr)
+	//categoryID := strings.TrimSpace(c.Query("categoryID"))
+	q := strings.TrimSpace(c.Query("q"))
+	finder := zorm.NewSelectFinder(tableContentName, "*").Append(" where categoryID = ? order by sortNo desc ", q)
+	responseData := ResponseData{StatusCode: 0}
+
+	page := zorm.NewPage()
+	page.PageNo = pageNo
+	data := make([]Content, 0)
+	zorm.Query(context.Background(), finder, &data, page)
+	responseData.Page = page
+	responseData.StatusCode = 1
+	responseData.Data = data
+	childLevelData := funcChildLevel(pageNoStr)
+	responseData.ChildLevelData = childLevelData
+
+	responseData.UrlPathParam = urlPathParam
+
+	//优先使用自定义模板文件
+	listFile := "admin/" + urlPathParam + "/list.html"
+	c.HTML(http.StatusOK, listFile, responseData)
+}
+
+// funcList 通用list列表
+func funcChildLevel(pageNoStr string) interface{} {
+	finder := zorm.NewSelectFinder(tableCategoryName, "*").Append(" WHERE 1=1 and pid is Null or pid = ? order by sortNo desc ", "")
+	childLevelData := make([]CategoryVO, 0)
+	page := zorm.NewPage()
+	pageNo, _ := strconv.Atoi(pageNoStr)
+	page.PageNo = pageNo
+	zorm.Query(context.Background(), finder, &childLevelData, page)
+	if len(childLevelData) != 0 {
+		for i := 0; i < len(childLevelData); i++ {
+			level := ChildLevel(childLevelData[i].Id, page)
+			if len(level) != 0 {
+				childLevelData[i].Data = level
+			}
+		}
+	}
+	return childLevelData
+}
+
+func ChildLevel(id string, page *zorm.Page) []CategoryVO {
+	finder1 := zorm.NewSelectFinder(tableCategoryName, "*").Append("WHERE pid=? order by sortNo desc", id)
+	data := make([]CategoryVO, 0)
+	zorm.Query(context.Background(), finder1, &data, page)
+	if len(data) != 0 {
+		for i := 0; i < len(data); i++ {
+			data[i].Data = ChildLevel(data[i].Id, page)
+		}
+	}
+	return data
+}
+
+func ChildLevel1(data interface{}) []directory {
+	directories := make([]directory, 0)
+	if arr, ok := data.([]CategoryVO); ok { // 检查是否是数组类型
+		array := make([]CategoryVO, len(arr)) // 创建一个与原数组长度相同的切片
+		copy(array, arr)                      // 将接口数组的值复制到新的切片
+		if len(array) != 0 {
+			for i := 0; i < len(array); i++ {
+				d := directory{}
+				d.Id = array[i].Id
+				d.Title = array[i].Name
+				if array[i].Data != nil {
+					level1 := ChildLevel1(array[i].Data)
+					d.Children = level1
+				}
+				directories = append(directories, d)
+			}
+		}
+	} else {
+		fmt.Println("data 不包含数组类型的值")
+	}
+	return directories
 }
 
 // funcLook 通用查看,根据id查看
@@ -482,6 +607,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 // funcSavePre 保存页面
 func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
+
 	//优先使用自定义模板文件
 	updateFile := "admin/" + urlPathParam + "/save.html"
 	/*
@@ -491,6 +617,17 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 		}
 	*/
 
+	if urlPathParam == "category" {
+		pid := c.Param("pid")
+		category := Category{}
+		category.Pid = pid
+		responseData := ResponseData{StatusCode: 0}
+		responseData.StatusCode = 1
+		responseData.Data = category
+		responseData.UrlPathParam = urlPathParam
+		c.HTML(http.StatusOK, updateFile, responseData)
+	}
+
 	c.HTML(http.StatusOK, updateFile, ResponseData{UrlPathParam: urlPathParam})
 }
 
@@ -498,6 +635,11 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 func funcSave(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 	funcSaveTable(ctx, c, urlPathParam)
+}
+
+// 保存内容
+func funcSave1(ctx context.Context, c *app.RequestContext) {
+
 }
 
 // 保存内容
@@ -693,12 +835,29 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	urlPathParam := c.Param("urlPathParam")
+	if urlPathParam == "category" {
+		finder := zorm.NewSelectFinder(tableCategoryName, "*").Append(" where pid =?", id)
+		page := zorm.NewPage()
+		pageNo, _ := strconv.Atoi("1")
+		page.PageNo = pageNo
+		data := make([]Category, 0)
+		zorm.Query(context.Background(), finder, &data, page)
+		if len(data) != 0 {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "无法删除有子级的菜单!"})
+			c.Abort() // 终止后续调用
+		}
+		f := zorm.NewSelectFinder(tableContentName, "*").Append(" where categoryID =?", id)
+		data1 := make([]Content, 0)
+		zorm.Query(context.Background(), f, &data1, page)
+		if len(data1) != 0 {
+			c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "无法删除有内容的菜单!"})
+		}
+	}
 	//tableName := bleveDataDir + urlPathParam
 	err := deleteById(ctx, urlPathParam, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
 		c.Abort() // 终止后续调用
-		FuncLogError(err)
 	}
 	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
 }
