@@ -4,6 +4,8 @@
 *.iml
 *.iws
 gpressdatadir/public/upload/*
+gpressdatadir/install_config.json
+gpressdatadir/template/admin/install.html
 testTable/
 dict/
 natsdata/
