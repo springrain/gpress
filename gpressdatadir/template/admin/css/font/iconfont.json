@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11558844",
+      "name": "更多操作",
+      "font_class": "gengduocaozuo",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
       "icon_id": "7165594",
       "name": "应用",
       "font_class": "yingyong",

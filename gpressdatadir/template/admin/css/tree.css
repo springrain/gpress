@@ -1,62 +1,66 @@
-.left {  
-    width: 20%;  
-    background-color: #ccc; /* 灰色背景 */  
-    border-radius: 10px; /* 圆角样式 */  
+.left {
+    width: 20%;
+    /* background-color: #ccc;   */
+    border-radius: 10px; /* 圆角样式 */
 
-    margin: 20px 10px;
+    margin: 20px 0 20px 0;
 
     overflow-y: auto;
-
-  }  
-
-  .searchMenu{ 
-        display: flex;  
-        justify-content: center;  
-        align-items: center;  
-        margin: 20px 10px;  
-     
-  }
-    
-  .right {  
-    width: 80%;  
-    background-color: #ccc; /* 灰色背景 */  
-    border-radius: 10px; /* 圆角样式 */  
-    
-    
+}
+.left .section {
+    border-right: 1px solid #ededed;
+}
+.left .section .container {
+    overflow: auto !important;
+}
+.searchMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 20px 10px;
-  }
-  .right .table-content {
+}
+
+.right {
+    width: 80%;
+    /* background-color: #ccc; */
+    border-radius: 10px; /* 圆角样式 */
+
+    margin: 20px 0 20px 0;
+}
+.right .table-content {
     width: 100%;
     overflow: auto;
-    flex:1;
-  }
+    flex: 1;
+}
 
-  .tree summary{
+.tree summary {
     outline: 0;
     padding-left: 30px;
     list-style: none;
-    background: repeating-linear-gradient( 90deg, #999 0 1px,transparent 0px 2px) 0px 50%/20px 1px no-repeat;
+    background: repeating-linear-gradient(90deg, #999 0 1px, transparent 0px 2px)
+    0px 50%/20px 1px no-repeat;
     /* background: linear-gradient(#999,#999) 0px 50%/20px 1px no-repeat; */
 }
-.tree details:last-child{
+.tree details:last-child {
     background-size: 1px 23px;
 }
-.tree>details:not(:last-child)>details:last-child{
+.tree > details:not(:last-child) > details:last-child {
     background-size: 1px 100%;
 }
-.tree details{
+.tree details {
     padding-left: 40px;
-    background: repeating-linear-gradient( #999 0 1px,transparent 0px 2px) 40px 0px/1px 100% no-repeat;
+    background: repeating-linear-gradient(#999 0 1px, transparent 0px 2px) 40px
+    0px/1px 100% no-repeat;
     /* background: linear-gradient(#999, #999) 40px 0px/1px 100% no-repeat; */
 }
-.tree>details{
+.tree > details {
     background: none;
     padding-left: 0;
 }
-.tree>details>summary{
-    background: none
+.tree > details > summary {
+    background: none;
 }
-.tree summary{
+.tree summary {
     display: flex;
     align-items: center;
     height: 46px;
@@ -65,30 +69,32 @@
     color: rgba(0, 0, 0, 0.85);
     cursor: default;
 }
-.tree summary::after{
+.tree summary::after {
     content: '';
     position: absolute;
     left: 10px;
     right: 10px;
     height: 38px;
-    background: #EEF2FF;
+    background: #eef2ff;
     border-radius: 8px;
     z-index: -1;
     opacity: 0;
-    transition: .2s;
+    transition: 0.2s;
 }
-.tree summary:hover::after{
+.tree summary:hover::after {
     opacity: 1;
 }
-.tree summary:not(:only-child)::before{
+.tree summary:not(:only-child)::before {
     content: '';
     width: 14px;
     height: 14px;
     flex-shrink: 0;
     margin-right: 8px;
     border: 1px solid #999;
-    background: linear-gradient(#999, #999) 50%/1px 10px no-repeat,linear-gradient(#999, #999)  50%/10px 1px no-repeat;
+    background: linear-gradient(#999, #999) 50%/1px 10px no-repeat,
+    linear-gradient(#999, #999) 50%/10px 1px no-repeat;
 }
-.tree details[open]>summary::before{
+.tree details[open] > summary::before {
     background: linear-gradient(#999, #999) 50%/10px 1px no-repeat;
 }
+

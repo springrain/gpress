@@ -1,6 +1,6 @@
 {{ $site := site }}
-{{ $category := selectList "category" "" 1 "* FROM category WHERE status=1 and pid is Null order by sortNo desc" }}
-
+{{ $category := selectList "category" "" 1 "* FROM category WHERE status=1 order by sortNo desc" }}
+{{ $convertJson := convertJson  $category }}
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
@@ -24,123 +24,165 @@
 <link rel="manifest" href="{{basePath}}js/manifest.json">
 <link rel="mask-icon" href="{{basePath}}{{ $site.Favicon }}" color="#5bbad5">
 
-<link rel="stylesheet" href="{{basePath}}css/even.css">
+<link rel="stylesheet" type="text/css" href="{{basePath}}css/comm-style.css">
+<link rel="stylesheet" type="text/css" href="{{basePath}}css/even.css">
 <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
 
 
 <!--[if lte IE 9]>
-  <script src="https://cdn.staticfile.org/classlist/1.2.20180112/classList.min.js"></script>
+<script src="https://cdn.staticfile.org/classlist/1.2.20180112/classList.min.js"></script>
 <![endif]-->
 
 <!--[if lt IE 9]>
-  <script src="https://cdn.staticfile.org/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<script src="https://cdn.staticfile.org/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-
+<style>
+	.site-navbar{
+		display: flex;
+		align-items: center;
+		background-color: #fafafa;
+	}
+	.site-navbar>.nav-ul{
+		flex: 1;
+		display: flex;
+		align-items: center;
+	}
+	.site-navbar .nav-ul.depth-2 .nav-li.depth-2{
+		line-height: 30px;
+		font-size: 14px;
+	}
+	.site-navbar>.nav-ul .nav-li{
+		position: relative;
+		line-height: 60px;
+		flex: 1;
+	}
+	.site-navbar>.nav-ul .nav-li a{
+		width: 100%;
+		display: block;
+		text-align: center;
+	}
+	.site-navbar .nav-ul .nav-li .sub-menu{
+		position: absolute;
+		display: none;
+		width: 150px;
+		left: 0;
+		top: 50px;
+		z-index: 2;
+		background: white;
+		box-shadow: 0 0 5px rgba(0,0,0,.2);
+		padding: 10px 0;
+	}
+</style>
 </head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Demo</title>
-<!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
-<link href="//unpkg.com/layui@2.8.18/dist/css/layui.css" rel="stylesheet">
 </header>
 <body>
-	<div id="mobile-navbar" class="mobile-navbar">
-		<div class="mobile-header">
-			<div class="mobile-navbar-icon">
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-			<div class="mobile-header-logo">
-				<a href="{{basePath}}" class="logo">{{ $site.Name }}</a>
-			</div>
-			<div class="search-box">
-				<input type="text" placeholder="查询内容..." id="input-phone" />
-			</div>
+<div class="container" id="mobile-panel">
+	<header id="header" class="header">
+		<div class="logo-wrapper">
+			<a href="{{basePath}}" class="logo">{{ $site.Name }}</a>
 		</div>
-	</div>
-	<nav id="mobile-menu" class="mobile-menu slideout-menu">
-		<ul class="mobile-menu-list">
-			<a href="{{basePath}}">
-				<li class="mobile-menu-item">Home</li>
-			</a>
 
-			{{ range $k,$v := $category.Data }}
-			  {{if $v.HrefURL}}
-			    <a href="{{ hrefURL $v.HrefURL }}">
-			  {{else}}
-			    <a href="{{basePath}}category/{{ $v.Id }}">
-			  {{end}}
-				<li class="mobile-menu-item">{{ $v.Name }}</li>
-			</a>
-			</a>
-			{{ end }}
-		</ul>
-	</nav>
-	<div class="container" id="mobile-panel">
-		<header id="header" class="header">
-			<div class="logo-wrapper">
-				<a href="{{basePath}}" class="logo">{{ $site.Name }}</a>
+		<nav class="site-navbar" id="nav-container" style="width: 800px">
+			<ul class="layui-nav layui-bg-gray">
+				<li class="layui-nav-item">
+					<a href="{{basePath}}">Home</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="search-box">
+			<input type="text" placeholder="查询内容..." id="input-enter" />
+		</div>
+	</header>
+
+
+	<main id="main" class="main">
+		<div class="content-wrapper">
+			<div id="content" class="content">
 			</div>
 
-			<nav class="site-navbar">
-				<ul class="layui-nav layui-bg-gray" >
-					<li class="layui-nav-item">
-						<a href="{{basePath}}">Home</a>
-					</li>
-					{{ range $k,$v := $category.ChildLevelData }}
-					<li class="layui-nav-item">
-					  {{if $v.HrefURL}}
-					     <a class="menu-item-link" href="{{ hrefURL $v.HrefURL }}">{{ $v.Name }}</a>
-					  {{else}}
-					     <a class="menu-item-link" href="javascript:;">{{ $v.Name }}</a>
-					  {{end}}
-						{{ if .Data }}
-						<dl class="layui-nav-child">
-							{{ range $i,$v := .Data }}
-							<dd><a href="{{basePath}}category/{{ $v.Id }}">{{ $v.Name }}</a></dd>
-							{{end }}
-						</dl>
-					{{end }}
-					</li>
-					{{ end }}
-				</ul>
-			</nav>
-			<div class="search-box">
-				<input type="text" placeholder="查询内容..." id="input-enter" />
-			</div>
-		</header>
+			<script type="text/javascript" src="https://cdn.staticfile.org/jquery/3.7.0/jquery.min.js"></script>
 
+			<script type="text/javascript">
+				console.log('123')
+				// 获取后端传递的 JSON 数据，并将其解析为 JavaScript 对象或数组
+				var categoryData = JSON.parse("{{ $convertJson }}");
+				console.log(categoryData);
 
-		<main id="main" class="main">
-			<div class="content-wrapper">
-				<div id="content" class="content">
-				</div>
+				function buildTree(data) {
+					const roots = data.filter(item => !item.pid);// 找到没有父节点的项，即顶级节点
+					// 递归构建树
+					function buildHierarchy(parent) {
+						const children = data.filter(item => item.pid === parent.id);
 
-<script type="text/javascript" src="https://cdn.staticfile.org/jquery/3.7.0/jquery.min.js"></script>
-<script src="//unpkg.com/layui@2.8.18/dist/layui.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-	$('#input-enter').val($('#search-q').val())
-	$('#input-phone').val($('#search-q').val())
+						if (children.length > 0) {
+							parent.children = children;
+							children.forEach(child => buildHierarchy(child));
+						}
+					}
 
-	$('#input-enter').keypress(function(e){
-		if(e.which == 13){
-			// 回车键开始执行搜索查询
-			let key = $('#input-enter').val()
-			window.location.href="{{basePath}}?q="+key
-		}		
-	})
+					// 为每个顶级节点构建树
+					roots.forEach(root => buildHierarchy(root));
 
-	$('#input-phone').keypress(function(e){
-		if(e.which == 13){
-			// 回车键开始执行搜索查询
-			let key = $('#input-phone').val()
-			window.location.href="{{basePath}}?q="+key
-		}
-	})
+					return roots;
+				}
 
-})
+				// 用法
+				const flatData = categoryData.data;
+				const treeData = buildTree(flatData);
+				console.log(treeData,'--treeData--');
 
-</script>
+				// 渲染树形结构的递归函数
+				function renderTree(container, data, depth = 1) {
+					const ul = $('<ul class="nav-ul">');
+					data.forEach(node => {
+						const li = $('<li class="nav-li">').append($('<a>').attr('href', '{{basePath}}' + 'category/' + node.id).text(node.name));
+						li.addClass(`depth-${depth}`);
+						if (node.children) {
+							renderTree(li, node.children, depth + 1);
+
+							li.children('ul').addClass(`sub-menu depth-${depth + 1}`);
+
+							li.on('mouseover', function () {
+								li.children('.sub-menu').css('display', 'block');
+							}).on('mouseout', function () {
+								li.children('.sub-menu').css('display', 'none');
+							});
+						}
+
+						ul.append(li);
+					});
+
+					container.append(ul);
+				}
+
+				$(document).ready(function(){
+					// 将树形结构渲染到页面上
+					const treeContainer = $('#nav-container');
+					renderTree(treeContainer, treeData);
+
+					$('#input-enter').val($('#search-q').val())
+					$('#input-phone').val($('#search-q').val())
+
+					$('#input-enter').keypress(function(e){
+						if(e.which == 13){
+							// 回车键开始执行搜索查询
+							let key = $('#input-enter').val()
+							window.location.href="{{basePath}}?q="+key
+						}
+					})
+
+					$('#input-phone').keypress(function(e){
+						if(e.which == 13){
+							// 回车键开始执行搜索查询
+							let key = $('#input-phone').val()
+							window.location.href="{{basePath}}?q="+key
+						}
+					})
+
+				})
+
+			</script>
