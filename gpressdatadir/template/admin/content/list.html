@@ -85,7 +85,7 @@
 					<div class="field-body">
 						<div class="field">
 							<div class="control">
-								<input class="input is-small" type="text" name="q" placeholder="输入搜索内容...">
+								<input class="input is-small" type="text" name="q" id="q" placeholder="输入搜索内容...">
 								<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
 							</div>
 						</div>
@@ -186,7 +186,7 @@
 			const summary = document.createElement('summary');
 			summary.className = 'tree-item';
 			const a = document.createElement('a');
-			a.href= "{{basePath}}"+"admin/content/listByCategory?q="+node.id+"&pageNo=1"
+			a.href= "{{basePath}}"+"admin/content/listByCategory?categoryID="+node.id+"&pageNo=1"
 			a.innerHTML=`<i class="tree-item"></i>${node.name}`
 			summary.append(a)
 

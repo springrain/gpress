@@ -368,7 +368,7 @@ func funcListByCategory(ctx context.Context, c *app.RequestContext) {
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	pageNo, _ := strconv.Atoi(pageNoStr)
 	//categoryID := strings.TrimSpace(c.Query("categoryID"))
-	q := strings.TrimSpace(c.Query("q"))
+	q := strings.TrimSpace(c.Query("categoryID"))
 	finder := zorm.NewSelectFinder(tableContentName, "*").Append(" where categoryID in (select id from category where comCode like ? ) order by sortNo desc ", "%,"+q+",%")
 	responseData := ResponseData{StatusCode: 0}
 
