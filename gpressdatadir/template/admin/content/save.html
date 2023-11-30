@@ -1,14 +1,16 @@
 {{template "admin/header.html"}}
 <title>新增内容 - GPRESS</title>
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/cherry-markdown.min.css">
-{{template "admin/bodystart.html"}}
-
-
-{{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+<link
+		rel="stylesheet"
+		type="text/css"
+		href="{{basePath}}admin/css/cherry-markdown.min.css"
+/>
+{{template "admin/bodystart.html"}} {{ $category := selectList "category" "" 1
+"* FROM category order by sortNo desc" }} {{ $pageTemplate := pageTemplate }}
+<!-- 模版数据 -->
 
 <style>
-	.code-line .number{
+	.code-line .number {
 		background-color: transparent;
 		font-size: 12px;
 		padding: 0;
@@ -18,24 +20,30 @@
 </style>
 
 <section class="section">
-	
-	<input type="hidden" id="basePath" value="{{basePath}}">
+	<input type="hidden" id="basePath" value="{{basePath}}" />
 
 	<div class="container">
 		<div class="table-content">
 			<!-- is-6-desktop is-6-tablet -->
 			<div class="column">
-				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
+				<form
+						id="gpress-form"
+						action="{{basePath}}admin/{{.UrlPathParam}}/save"
+						method="POST"
+				>
 					<div class="tile is-ancestor">
 						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										ID
-									</div>
+									<div class="left">ID</div>
 									<div class="right">
-										<input class="input is-small" type="text" name="id" id="id">
+										<input
+												class="input is-small"
+												type="text"
+												name="id"
+												id="id"
+										/>
 									</div>
 								</li>
 							</ul>
@@ -44,11 +52,14 @@
 							<!-- This tile will take the rest: 2/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										文章标题
-									</div>
+									<div class="left">文章标题</div>
 									<div class="right">
-										<input class="input is-small" type="text" name="title" id="title">
+										<input
+												class="input is-small"
+												type="text"
+												name="title"
+												id="title"
+										/>
 									</div>
 								</li>
 							</ul>
@@ -56,11 +67,14 @@
 						<div class="tile is-4">
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										副标题
-									</div>
+									<div class="left">副标题</div>
 									<div class="right">
-										<input class="input is-small" type="text" name="subtitle" id="subtitle">
+										<input
+												class="input is-small"
+												type="text"
+												name="subtitle"
+												id="subtitle"
+										/>
 									</div>
 								</li>
 							</ul>
@@ -72,11 +86,14 @@
 							<!-- This tile will take the rest: 2/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										关键字
-									</div>
+									<div class="left">关键字</div>
 									<div class="right">
-										<input class="input is-small" type="text" name="keyword" id="keyword">
+										<input
+												class="input is-small"
+												type="text"
+												name="keyword"
+												id="keyword"
+										/>
 									</div>
 								</li>
 							</ul>
@@ -84,14 +101,12 @@
 						<div class="tile">
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										页面模版
-									</div>
+									<div class="left">页面模版</div>
 									<div class="right">
 										<select class="input is-small" id="templateSelect">
 											<option value="">默认</option>
 											{{ range $index,$obj := $pageTemplate }}
-											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+											<option value="{{$obj.Id}}">{{$obj.Name}}</option>
 											{{end}}
 										</select>
 									</div>
@@ -102,15 +117,13 @@
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										导航名称
-									</div>
+									<div class="left">导航名称</div>
 									<div class="right">
 										<!-- 下拉菜单 -->
 										<select class="input is-small" id="navSelect">
 											<option value="">请选择</option>
 											{{ range $index,$obj := $category.Data }}
-											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+											<option value="{{$obj.Id}}">{{$obj.Name}}</option>
 											{{end}}
 										</select>
 									</div>
@@ -123,11 +136,14 @@
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										tag标签
-									</div>
+									<div class="left">tag标签</div>
 									<div class="right">
-										<input class="input is-small" type="text" name="tag" id="tag">
+										<input
+												class="input is-small"
+												type="text"
+												name="tag"
+												id="tag"
+										/>
 									</div>
 								</li>
 							</ul>
@@ -136,11 +152,14 @@
 							<!-- This tile will take the rest: 2/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										作者
-									</div>
+									<div class="left">作者</div>
 									<div class="right">
-										<input class="input is-small" type="text" name="author" id="author">
+										<input
+												class="input is-small"
+												type="text"
+												name="author"
+												id="author"
+										/>
 									</div>
 								</li>
 							</ul>
@@ -149,9 +168,7 @@
 							<!-- 1/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										状态
-									</div>
+									<div class="left">状态</div>
 									<div class="select is-small">
 										<select name="status" id="status">
 											<option value="1">公开</option>
@@ -168,20 +185,23 @@
 						<div class="tile is-4">
 							<!-- 1/3 -->
 							<ul class="save-ul">
-								<li style="align-items: flex-start;">
-									<div class="left">
-										封面图
-									</div>
+								<li style="align-items: flex-start">
+									<div class="left">封面图</div>
 									<div class="right">
 										<div class="upload-modlue">
 											<div class="upload-box">
 												<i class="iconfont icon-shangchuan"></i>
 												<p>上传图片</p>
-												<input class="input" name="file" type="file" id="fileInput">
+												<input
+														class="input"
+														name="file"
+														type="file"
+														id="fileInput"
+												/>
 											</div>
 											<div class="img-box">
 												<div class="img-preview">
-													<img src="" id="img">
+													<img src="" id="img" />
 													<div class="delete-btn">
 														<i class="iconfont icon-shanchu"></i>
 													</div>
@@ -196,35 +216,33 @@
 							<!-- This tile will take the rest: 2/3 -->
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										排序
-									</div>
+									<div class="left">排序</div>
 									<div class="right">
-										<input class="input  is-small" type="number" name="sortNo" id="sortNo">
+										<input
+												class="input is-small"
+												type="number"
+												name="sortNo"
+												id="sortNo"
+										/>
 									</div>
 								</li>
 							</ul>
-
 						</div>
-						<div class="tile">
-
-						</div>
+						<div class="tile"></div>
 					</div>
 					<div class="tile is-ancestor">
 						<div class="tile is-4">
 							<ul class="save-ul">
 								<li>
-									<div class="left">
-										文章内容
-									</div>
+									<div class="left">文章内容</div>
 									<div class="right">
 										<div class="control">
 											<label class="radio is-small">
-												<input type="radio" value="0" name="foobar" >
+												<input type="radio" value="0" name="foobar" />
 												富文本
 											</label>
 											<label class="radio is-small">
-												<input type="radio" value="1" name="foobar" checked>
+												<input type="radio" value="1" name="foobar" checked />
 												Markdown
 											</label>
 										</div>
@@ -237,33 +255,49 @@
 					</div>
 					<div class="tile is-ancestor">
 						<div class="tile is-12">
-						<ul class="save-ul">
-							<li id="editor-show" style="align-items: flex-start;display: none;">
-								<div class="right flex1">
-									<div id="editor—wrapper">
-										<div id="toolbar-container">
-											<!-- 工具栏 -->
-										</div>
-										<div id="editor-container" style="height: 400px;">
-											<!-- 编辑器 -->
+							<ul class="save-ul">
+								<li
+										id="editor-show"
+										style="
+                    align-items: flex-start;
+                    display: none;
+                    height: 420px;
+                    width: 1700px;
+                    margin-left: 115px;
+                  "
+								>
+									<div class="right flex1">
+										<div id="editor—wrapper">
+											<div id="toolbar-container">
+												<!-- 工具栏 -->
+											</div>
+											<div id="editor-container" style="height: 400px">
+												<!-- 编辑器 -->
+											</div>
 										</div>
 									</div>
-								</div>
-							</li>
-							<li id="markdown-show" style="align-items: flex-start;">
-								<div class="right flex1" style="height: 500px;">
-									<div id="markdown-container"></div>
-								</div>
-							</li>
-						</ul>
+								</li>
+								<li id="markdown-show" style="align-items: flex-start">
+									<div
+											class="right flex1"
+											style="height: 420px; width: 1700px; margin-left: 115px"
+									>
+										<div id="markdown-container"></div>
+									</div>
+								</li>
+							</ul>
 						</div>
 					</div>
-					<div class="field is-grouped" style="padding-left: 190px;">
+					<div class="field is-grouped" style="padding-left: 190px">
 						<div class="control">
-							<button type="submit" class="button is-primary is-small">提交</button>
+							<button type="submit" class="button is-primary is-small">
+								提交
+							</button>
 						</div>
 						<div class="control">
-							<button type="reset" class="button is-info is-light  is-small">重置</button>
+							<button type="reset" class="button is-info is-light is-small">
+								重置
+							</button>
 						</div>
 					</div>
 				</form>
@@ -271,28 +305,46 @@
 		</div>
 	</div>
 </section>
-<link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet">
+<link
+		href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css"
+		rel="stylesheet"
+/>
 <script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
-<script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
+<script
+		type="text/javascript"
+		src="{{basePath}}admin/js/cherry-markdown.min.js"
+></script>
 <script>
+	let param = 'categoryID'
+	let reg = new RegExp('(^|&)' + param + '=([^&]*)(&|$)', 'i')
+	let paramsData = window.location.search.substr(1).match(reg)
+
+	let categoryID = ''
+	if (paramsData) {
+		categoryID = paramsData[2]
+	} else {
+		categoryID = ''
+	}
+
 	let content = ''
 	let thumbnail = ''
-	let categoryID = ''
 	let categoryName = ''
 	let templateID = ''
 	let templateName = ''
 
-	$('#templateSelect').change(function(e) {
+	$('#navSelect').val(categoryID)
+
+	$('#templateSelect').change(function (e) {
 		templateID = $('#templateSelect').val()
 		templateName = $('#templateSelect option:selected').text()
 	})
-	$('#navSelect').change(function(e) {
+	$('#navSelect').change(function (e) {
 		categoryID = $('#navSelect').val()
 		categoryName = $('#navSelect option:selected').text()
 	})
 
 	// 图片上传
-	$('#fileInput').change(function(e) {
+	$('#fileInput').change(function (e) {
 		let file = e.target.files[0]
 		if (!/image\/\w+/.test(file.type)) {
 			$.confirm({
@@ -301,7 +353,7 @@
 				title: '提示',
 				content: '请上传图片格式！',
 				type: 'red',
-				buttons: { '确定': function() {} }
+				buttons: { 确定: function () {} },
 			})
 			return false
 		}
@@ -326,14 +378,14 @@
 					title: '提示',
 					content: '上传失败！',
 					type: 'red',
-					buttons: { '确定': function() {} }
+					buttons: { 确定: function () {} },
 				})
-			}
+			},
 		})
 	})
 
 	// 删除图片
-	$('.delete-btn').click(function() {
+	$('.delete-btn').click(function () {
 		thumbnail = ''
 		$('#fileInput').val('')
 		$('#img').attr('src', '')
@@ -342,20 +394,41 @@
 	})
 
 	// markdown编辑器
-	$(document).ready(function() {
+	$(document).ready(function () {
 		let fullScreen = Cherry.createMenuHook('全屏', 'full')
 		window.cherryObj = new Cherry({
 			id: 'markdown-container',
 			toolbars: {
-				toolbar: ['bold', 'italic', 'strikethrough', '|', 'color', 'header', '|', 'list', {
-					insert: ['image', 'link', 'hr', 'br', 'code', 'formula',
-						'toc', 'table', 'line-table', 'bar-table',
-					]
-				}, '|', 'full'],
+				toolbar: [
+					'bold',
+					'italic',
+					'strikethrough',
+					'|',
+					'color',
+					'header',
+					'|',
+					'list',
+					{
+						insert: [
+							'image',
+							'link',
+							'hr',
+							'br',
+							'code',
+							'formula',
+							'toc',
+							'table',
+							'line-table',
+							'bar-table',
+						],
+					},
+					'|',
+					'full',
+				],
 				customMenu: {
 					// 注入编辑器的菜单中
 					// 对象 key 可以作为菜单项的名字（需要保证唯一），在上方的配置中使用
-					'full': fullScreen,
+					full: fullScreen,
 				},
 			},
 			fileUpload(file, callback) {
@@ -370,11 +443,11 @@
 					success(res) {
 						callback(res.data)
 					},
-					error(err) {}
+					error(err) {},
 				})
-			}
+			},
 		})
-		$('.cherry-toolbar-全屏').click(function(e) {
+		$('.cherry-toolbar-全屏').click(function (e) {
 			if ($('#markdown-container').hasClass('full-screen')) {
 				$('.cherry-toolbar-全屏').html('全屏')
 				$('#markdown-container').removeClass('full-screen')
@@ -386,8 +459,8 @@
 	})
 
 	// 单选切换
-	$('input[name=\'foobar\']').click(function(e) {
-		let current = $('input[name=\'foobar\']:checked').val()
+	$("input[name='foobar']").click(function (e) {
+		let current = $("input[name='foobar']:checked").val()
 		if (current == 0) {
 			$('#editor-show').show()
 			$('#markdown-show').hide()
@@ -399,22 +472,20 @@
 	})
 
 	// 富文本编辑器
-	const {
-		createEditor,
-		createToolbar
-	} = window.wangEditor
+	const { createEditor, createToolbar } = window.wangEditor
 	const editorConfig = {
 		placeholder: '请输入内容...',
 		MENU_CONF: {},
 		onChange(editor) {
 			content = editor.getHtml()
 			// 也可以同步到 <textarea>
-		}
+		},
 	}
 	editorConfig.MENU_CONF['uploadImage'] = {
 		server: '/admin/upload',
 		fieldName: 'file',
-		customInsert(res, insertFn) { // 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
+		customInsert(res, insertFn) {
+			// 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
 			insertFn(res.data)
 		},
 		onSuccess(file, res) {
@@ -448,11 +519,11 @@
 
 	// 保存提交
 	const form = document.querySelector('#gpress-form')
-	form.addEventListener('submit', async event => {
+	form.addEventListener('submit', async (event) => {
 		event.preventDefault()
 		const formData = new FormData(form)
 		const jsonObject = {
-			status: $('#status').val()-0,
+			status: $('#status').val() - 0,
 			id: $('#id').val(),
 			title: $('#title').val(),
 			subtitle: $('#subtitle').val(),
@@ -464,7 +535,7 @@
 			description: $('#description').val(),
 			author: $('#author').val(),
 			thumbnail: thumbnail,
-			sortNo: $('#sortNo').val()-0,
+			sortNo: $('#sortNo').val() - 0,
 			content: content,
 			markdown: cherryObj.getMarkdown(),
 		}
@@ -472,7 +543,7 @@
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json' },
 		})
 		let res = await response.json()
 		if (res.statusCode == 1) {
@@ -483,14 +554,14 @@
 				content: '保存成功！',
 				type: 'green',
 				buttons: {
-					'确定': function() {
+					确定: function () {
 						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
-					}
-				}
+					},
+				},
 			})
 		}
 	})
 </script>
 
-
 {{template "admin/bodyend.html"}}
+
