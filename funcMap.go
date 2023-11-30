@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"html/template"
 	"regexp"
 	"strings"
@@ -284,8 +283,8 @@ func convertJson(obj interface{}) (string, error) {
 	// 将 Person 对象转换为 JSON 字符串
 	jsonData, err := json.Marshal(obj)
 	if err != nil {
-		fmt.Println("JSON encoding failed:", err)
-		return "", nil
+		//fmt.Println("JSON encoding failed:", err)
+		return "{}", nil
 	}
 
 	s := string(jsonData)
