@@ -2,6 +2,7 @@
 <title>更新导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
+{{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
@@ -54,6 +55,14 @@
 							</div>
 							<div class="right">
 								<input class="input" type="text" name="hrefTarget" value="{{.Data.HrefTarget}}" id="hrefTarget">
+							</div>
+						</li>
+						<li>
+							<div class="left">
+								Pid
+							</div>
+							<div class="right">
+								<input class="input" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
 							</div>
 						</li>
 						<li>
@@ -145,7 +154,7 @@
 				type: 'green',
 				buttons: {
 					'确定': function() {
-						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
+						window.location.href = '{{basePath}}admin/content/list'
 					}
 				}
 			})

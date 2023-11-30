@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html/template"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"gitee.com/chunanyong/zorm"
@@ -31,7 +31,7 @@ var funcMap = template.FuncMap{
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
 	//"themeFile":  funcThemeFile,
-
+	"convertJson": convertJson,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -185,11 +185,10 @@ func funcSelectList(urlPathParam string, q string, pageNo int, sql string, value
 		zorm.Query(context.Background(), finder, &data, page)
 		responseData.Data = data
 	case tableCategoryName:
+		page.PageSize = 100
 		data := make([]Category, 0)
 		zorm.Query(context.Background(), finder, &data, page)
 		responseData.Data = data
-		childLevelData := funcChildLevel(strconv.Itoa(pageNo))
-		responseData.ChildLevelData = childLevelData
 	case tableContentName:
 		data := make([]Content, 0)
 		zorm.Query(context.Background(), finder, &data, page)
@@ -279,6 +278,18 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (Resp
 	responseData.StatusCode = 1
 	responseData.UrlPathParam = urlPathParam
 	return responseData, nil
+}
+
+func convertJson(obj interface{}) (string, error) {
+	// 将 Person 对象转换为 JSON 字符串
+	jsonData, err := json.Marshal(obj)
+	if err != nil {
+		fmt.Println("JSON encoding failed:", err)
+		return "", nil
+	}
+
+	s := string(jsonData)
+	return s, nil
 }
 
 func funcJsonMarshal(obj interface{}) (string, error) {
