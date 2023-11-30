@@ -1,14 +1,14 @@
 <!-- 查询 content 列表 -->
-{{ $contentSQL :="id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID in (select id from category where comCode like ? ) order by sortNo desc" }}
+{{ $contentSQL :="id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" }}
 {{ $categorySQL := "name FROM category WHERE id=? and status<2 order by sortNo desc"}}
 
 
 {{ if eq .userType 1}}
-  {{ $contentSQL ="id,title,hrefURL,updateTime FROM content WHERE categoryID in (select id from category where comCode like ? ) order by sortNo desc" }}
+  {{ $contentSQL ="id,title,hrefURL,updateTime FROM content WHERE categoryID=? order by sortNo desc" }}
   {{ $categorySQL = "name FROM category WHERE id=? order by sortNo desc"}}
 {{end}}
 
-{{ $selectList := selectList "content" .q .pageNo $contentSQL (printf "%%,%s,%%" .UrlPathParam) }}
+{{ $selectList := selectList "content" .q .pageNo $contentSQL .UrlPathParam }}
 
 {{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
 {{ $site:=site }}
