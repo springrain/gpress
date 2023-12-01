@@ -156,7 +156,7 @@ type Content struct {
 	// CategoryID 导航ID
 	CategoryID string `column:"categoryID" json:"categoryID,omitempty"`
 
-	// CategoryName 导航名称
+	// CategoryName 导航菜单
 	CategoryName string `column:"categoryName" json:"categoryName,omitempty"`
 
 	// TemplateID 模板ID

@@ -165,7 +165,6 @@ body {
 }
 
 .save-ul li .left {
-	width: 180px;
 	font-size: 16px;
 	color: #363636;
 	margin-right: 10px;
@@ -571,9 +570,6 @@ th.pos-sticky {
 	transition: display 1.6s ease;
 }
 
-.is-ancestor div:last-child .left {
-	width: 56px;
-}
 
 .is-small.select {
 	font-size: .75rem;
