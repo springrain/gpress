@@ -291,10 +291,6 @@ func init() {
 	adminGroup.GET("/:urlPathParam/list", funcList)
 	//adminGroup.POST("/:urlPathParam/list", funcList)
 
-	// 通用list列表,先都使用get方法
-	//adminGroup.GET("/:urlPathParam/listByCategory", funcListByCategory)
-	//adminGroup.POST("/:urlPathParam/list", funcList)
-
 	// 通用查看
 	adminGroup.GET("/:urlPathParam/look", funcLook)
 
@@ -360,34 +356,6 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	//responseData.UrlPathParam = urlPathParam
 	c.HTML(http.StatusOK, listFile, responseData)
 }
-
-/*
-// funcList 通用list列表
-func funcListByCategory(ctx context.Context, c *app.RequestContext) {
-	urlPathParam := c.Param("urlPathParam")
-	//获取页码
-	pageNoStr := c.DefaultQuery("pageNo", "1")
-	pageNo, _ := strconv.Atoi(pageNoStr)
-	//categoryID := strings.TrimSpace(c.Query("categoryID"))
-	q := strings.TrimSpace(c.Query("categoryID"))
-	finder := zorm.NewSelectFinder(tableContentName, "*").Append(" where categoryID in (select id from category where comCode like ? ) order by sortNo desc ", "%,"+q+",%")
-	responseData := ResponseData{StatusCode: 0}
-
-	page := zorm.NewPage()
-	page.PageNo = pageNo
-	data := make([]Content, 0)
-	zorm.Query(context.Background(), finder, &data, page)
-	responseData.Page = page
-	responseData.StatusCode = 1
-	responseData.Data = data
-
-	responseData.UrlPathParam = urlPathParam
-
-	//优先使用自定义模板文件
-	listFile := "admin/" + urlPathParam + "/list.html"
-	c.HTML(http.StatusOK, listFile, responseData)
-}
-*/
 
 // funcLook 通用查看,根据id查看
 func funcLook(ctx context.Context, c *app.RequestContext) {
