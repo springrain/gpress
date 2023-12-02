@@ -146,7 +146,7 @@
 			const summary = document.createElement('summary');
 			summary.className = 'tree-item';
 			const a = document.createElement('a');
-			a.href= "{{basePath}}"+"admin/content/listByCategory?categoryID="+node.id+"&pageNo=1"
+			a.href= "{{basePath}}"+"admin/content/list?categoryID="+node.id+"&pageNo=1"
 			a.innerHTML=`<i class="tree-item"></i>${node.name}`
 			summary.append(a)
 
