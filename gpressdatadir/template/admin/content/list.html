@@ -26,7 +26,13 @@
 						</div>
 					</div>
 				</div>
-				<div class="tree" id="tree"></div>
+				<div class="tree" id="tree">
+					<details open="">
+						<summary class="tree-item">
+							<a id="all_tree_a" href="/admin/content/list?pageNo=1"><i class="tree-item"></i>全部</a>
+				        </summary>
+					</details>
+				</div>
 			</div>
 		</div>
 		</section>
@@ -45,6 +51,7 @@
 							<div class="control">
 								<input class="input is-small" type="text" name="q" id="q" placeholder="输入搜索内容...">
 								<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
+								<input type="hidden" id="categoryID" name="categoryID" value="">
 							</div>
 						</div>
 						<div class="field">
@@ -137,15 +144,25 @@
 	if(q){
 		$("#q").val(q)
 	}
+	var categoryID=params.get("categoryID")
+	if(categoryID){
+		$("#categoryID").val(categoryID)
+	}
+
+	var comCode="";
 
 	// 渲染树形菜单结构
 	function renderTree(container, data) {
 		const details = container;
 		data.forEach(node => {
+			if(categoryID==node.id){
+				comCode=node.comCode;
+			}
 			const details2 = $('<details open>');
 			const summary = document.createElement('summary');
 			summary.className = 'tree-item';
 			const a = document.createElement('a');
+			a.id="tree_a_"+node.id;
 			a.href= "{{basePath}}"+"admin/content/list?categoryID="+node.id+"&pageNo=1"
 			a.innerHTML=`<i class="tree-item"></i>${node.name}`
 			summary.append(a)
@@ -226,6 +243,20 @@
 			// 调用 deleteFunc 函数
 			deleteFunc(buttonId, basePath);
 		});
+		//选中高亮
+		if(comCode==""){//没有被选中
+           $("#all_tree_a").css("color", "#3e8ed0")
+		}else{
+			var codes=comCode.split(",");
+			for(i = 0; i < codes.length; i++) {
+                var code=codes[i];
+				if(code!=""){
+					$("#tree_a_"+code).css("color", "#3e8ed0")
+				}
+             }
+		}
+        
+
 	})
 </script>
 {{template "admin/bodyend.html"}}
