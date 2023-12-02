@@ -292,7 +292,7 @@ func init() {
 	//adminGroup.POST("/:urlPathParam/list", funcList)
 
 	// 通用list列表,先都使用get方法
-	adminGroup.GET("/:urlPathParam/listByCategory", funcListByCategory)
+	//adminGroup.GET("/:urlPathParam/listByCategory", funcListByCategory)
 	//adminGroup.POST("/:urlPathParam/list", funcList)
 
 	// 通用查看
@@ -328,7 +328,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	where := " WHERE 1=1 "
 	var values []interface{} = make([]interface{}, 0)
 	for k := range mapParams {
-		where = where + " and k=? "
+		where = where + " and " + k + "=? "
 		values = append(values, c.Query(k))
 	}
 	sql := "* from " + urlPathParam + where + " order by sortNo desc "
@@ -361,6 +361,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, listFile, responseData)
 }
 
+/*
 // funcList 通用list列表
 func funcListByCategory(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
@@ -386,6 +387,7 @@ func funcListByCategory(ctx context.Context, c *app.RequestContext) {
 	listFile := "admin/" + urlPathParam + "/list.html"
 	c.HTML(http.StatusOK, listFile, responseData)
 }
+*/
 
 // funcLook 通用查看,根据id查看
 func funcLook(ctx context.Context, c *app.RequestContext) {
