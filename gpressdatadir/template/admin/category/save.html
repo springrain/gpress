@@ -51,7 +51,11 @@
 								Pid
 							</div>
 							<div class="right">
+								{{if .Data }}
 								<input class="input" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
+                                {{else}}
+								<input class="input" type="text" name="pid" id="pid" value="">
+								{{end}}
 							</div>
 						</li>
 						<li>
