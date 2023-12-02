@@ -324,8 +324,12 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	where := " WHERE 1=1 "
 	var values []interface{} = make([]interface{}, 0)
 	for k := range mapParams {
+		value := c.Query(k)
+		if value == "" || strings.Contains(k, "+") || strings.Contains(k, "=") || strings.Contains(k, "#") || strings.Contains(k, "/") || strings.Contains(k, "(") || strings.Contains(k, "%") || strings.Contains(k, "*") || strings.Contains(k, " ") || strings.Contains(k, "'") || strings.Contains(k, ";") {
+			continue
+		}
 		where = where + " and " + k + "=? "
-		values = append(values, c.Query(k))
+		values = append(values, value)
 	}
 	sql := "* from " + urlPathParam + where + " order by sortNo desc "
 	var responseData ResponseData
