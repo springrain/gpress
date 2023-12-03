@@ -165,7 +165,7 @@ body {
 }
 
 .save-ul li .left {
-	font-size: 16px;
+	font-size: 14px;
 	color: #363636;
 	margin-right: 10px;
 	text-align: right;
@@ -173,6 +173,7 @@ body {
 }
 
 .save-ul li .right {
+	font-size: 14px;
 	width: 340px;
 }
 
@@ -433,10 +434,6 @@ th.pos-sticky {
 
 .page_input {
 	width: 42px !important;
-}
-
-.pagination {
-	/*justify-content: center!important;*/
 }
 
 .button {

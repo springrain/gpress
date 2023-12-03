@@ -50,7 +50,7 @@
 										文章标题
 									</div>
 									<div class="right">
-										<input class="input input is-small" type="text" name="title" value="{{.Data.Title}}" id="title" />
+										<input class="input is-small" type="text" name="title" value="{{.Data.Title}}" id="title" />
 									</div>
 								</li>
 							</ul>
@@ -63,7 +63,7 @@
 										副标题
 									</div>
 									<div class="right">
-										<input class="input input is-small" type="text" name="subtitle" value="{{.Data.Subtitle}}" id="subtitle">
+										<input class="input is-small" type="text" name="subtitle" value="{{.Data.Subtitle}}" id="subtitle">
 									</div>
 								</li>
 							</ul>
@@ -78,7 +78,7 @@
 										关键字
 									</div>
 									<div class="right">
-										<input class="input input is-small" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
+										<input class="input is-small" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
 									</div>
 								</li>
 							</ul>
@@ -90,8 +90,8 @@
 									<div class="left">
 										页面模版
 									</div>
-									<div class="right">
-										<select class="input input is-small" id="templateSelect">
+									<div class="select is-small">
+										<select id="templateSelect">
 											<option value="">默认</option>
 											{{ range $index,$obj := $pageTemplate }}
 											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -108,8 +108,8 @@
 									<div class="left">
 										导航菜单
 									</div>
-									<div class="right">
-										<select class="input input is-small" id="navSelect">
+									<div class="select is-small">
+										<select id="navSelect">
 											<option value="">请选择</option>
 											{{ range $index,$obj := $category.Data }}
 											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -129,7 +129,7 @@
 										tag标签
 									</div>
 									<div class="right">
-										<input class="input input is-small" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
+										<input class="input is-small" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
 									</div>
 								</li>
 							</ul>
@@ -142,7 +142,7 @@
 										作者
 									</div>
 									<div class="right">
-										<input class="input input is-small" type="text" name="author" value="{{.Data.Author}}" id="author">
+										<input class="input is-small" type="text" name="author" value="{{.Data.Author}}" id="author">
 									</div>
 								</li>
 							</ul>
@@ -183,7 +183,7 @@
 											<div class="upload-box">
 												<i class="iconfont icon-shangchuan"></i>
 												<p>上传图片</p>
-												<input class="input input is-small" type="file" id="fileInput">
+												<input class="input is-small" type="file" id="fileInput">
 											</div>
 											<div class="img-box">
 												<div class="img-preview">
@@ -206,7 +206,7 @@
 										排序
 									</div>
 									<div class="right">
-										<input class="input input is-small" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
+										<input class="input is-small" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
 									</div>
 								</li>
 							</ul>

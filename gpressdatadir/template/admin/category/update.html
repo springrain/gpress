@@ -29,7 +29,7 @@
 							</div>
 							<div class="right">
 								<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
-								<input class="input" type="text" disabled value="{{.Data.Id}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Id}}">
 							</div>
 						</li>
 
@@ -38,7 +38,7 @@
 								菜单名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="name" value="{{.Data.Name}}" id="name" />
+								<input class="input is-small" type="text" name="name" value="{{.Data.Name}}" id="name" />
 							</div>
 						</li>
 						<li>
@@ -46,7 +46,7 @@
 								跳转路径
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefURL" value="{{.Data.HrefURL}}" id="hrefURL">
+								<input class="input is-small" type="text" name="hrefURL" value="{{.Data.HrefURL}}" id="hrefURL">
 							</div>
 						</li>
 						<li>
@@ -54,7 +54,7 @@
 								跳转方式
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefTarget" value="{{.Data.HrefTarget}}" id="hrefTarget">
+								<input class="input is-small" type="text" name="hrefTarget" value="{{.Data.HrefTarget}}" id="hrefTarget">
 							</div>
 						</li>
 						<li>
@@ -62,15 +62,15 @@
 								Pid
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
+								<input class="input is-small" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
 							</div>
 						</li>
 						<li>
 							<div class="left">
 								页面模版
 							</div>
-							<div class="right">
-								<select class="input" id="templateSelect">
+							<div class="select is-small">
+								<select id="templateSelect">
 									<option value="">请选择</option>
 									{{ range $index,$obj := $pageTemplate }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -83,7 +83,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
+								<input class="input is-small" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
 							</div>
 						</li>
 						<li>
