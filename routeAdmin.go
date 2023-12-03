@@ -309,7 +309,7 @@ func init() {
 
 }
 
-// alphaNumericReg 只能是字母或数字,长度不超过20
+// alphaNumericReg 传入的列名只能是字母或数字,长度不超过20
 var alphaNumericReg = regexp.MustCompile("^[a-zA-Z0-9]{1,20}$")
 
 // funcList 通用list列表
