@@ -17,7 +17,7 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Id}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Id}}">
 							</div>
 						</li>
 						<li>
@@ -25,7 +25,7 @@
 								标题
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Title}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Title}}">
 							</div>
 						</li>
 						<li>
@@ -33,7 +33,7 @@
 								名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Name}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Name}}">
 							</div>
 						</li>
 						<li>
@@ -41,7 +41,7 @@
 								域名
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Domain}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Domain}}">
 							</div>
 						</li>
 						<li>
@@ -49,7 +49,7 @@
 								关键字
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Keyword}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Keyword}}">
 							</div>
 						</li>
 						<li>
@@ -57,7 +57,7 @@
 								站点描述
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Description}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Description}}">
 							</div>
 						</li>
 						<li>
@@ -65,7 +65,7 @@
 								默认主题
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Theme}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Theme}}">
 							</div>
 						</li>
 						<li>
@@ -73,7 +73,7 @@
 								Logo
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Logo}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Logo}}">
 							</div>
 						</li>
 						<li>
@@ -81,7 +81,7 @@
 								Favicon
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Favicon}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Favicon}}">
 							</div>
 						</li>
 						<li>
@@ -89,7 +89,7 @@
 								底部信息
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Footer}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.Footer}}">
 							</div>
 						</li>
 						<li>
@@ -97,7 +97,7 @@
 								创建时间
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.CreateTime}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.CreateTime}}">
 							</div>
 						</li>
 						<li>
@@ -105,7 +105,7 @@
 								更新时间
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.UpdateTime}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.UpdateTime}}">
 							</div>
 						</li>
 						
@@ -114,7 +114,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" disabled value="{{.Data.SortNo}}">
+								<input class="input is-small" type="number" disabled value="{{.Data.SortNo}}">
 							</div>
 						</li>
 						<li>
@@ -123,11 +123,11 @@
 							</div>
 							<div class="right">
 							    {{if eq .Data.Status 0 }}
-								<input class="input" type="text" disabled value="列表不显示">
+								<input class="input is-small" type="text" disabled value="列表不显示">
 								{{else if eq .Data.Status 1 }}
-								<input class="input" type="text" disabled value="公开">
+								<input class="input is-small" type="text" disabled value="公开">
 								{{else if eq .Data.Status 2 }}
-								<input class="input" type="text" disabled value="私密">
+								<input class="input is-small" type="text" disabled value="私密">
 								{{end}}
 							</div>
 						</li>
