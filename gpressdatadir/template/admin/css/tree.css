@@ -116,6 +116,7 @@
 }
 
 .dropdown-content a {
+    text-align: center;
     color: black;
     padding: 8px 10px;
     text-decoration: none;
