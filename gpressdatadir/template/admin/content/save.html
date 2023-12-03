@@ -80,8 +80,8 @@
 							<ul class="save-ul">
 								<li>
 									<div class="left">页面模版</div>
-									<div class="right">
-										<select class="input is-small" id="templateSelect">
+									<div class="select is-small">
+										<select id="templateSelect">
 											<option value="">默认</option>
 											{{ range $index,$obj := $pageTemplate }}
 											<option value="{{$obj.Id}}">{{$obj.Name}}</option>
@@ -96,9 +96,9 @@
 							<ul class="save-ul">
 								<li>
 									<div class="left">导航菜单</div>
-									<div class="right">
+									<div class="select is-small">
 										<!-- 下拉菜单 -->
-										<select class="input is-small" id="navSelect">
+										<select id="navSelect">
 											<option value="">请选择</option>
 											{{ range $index,$obj := $category.Data }}
 											<option value="{{$obj.Id}}">{{$obj.Name}}</option>
@@ -160,7 +160,7 @@
 											<div class="upload-box">
 												<i class="iconfont icon-shangchuan"></i>
 												<p>上传图片</p>
-												<input class="input" name="file" type="file" id="fileInput" />
+												<input class="input is-small" name="file" type="file" id="fileInput" />
 											</div>
 											<div class="img-box">
 												<div class="img-preview">
