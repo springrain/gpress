@@ -26,7 +26,7 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Id}}" />
+								<input class="input is-small" type="text" disabled value="{{.Data.Id}}" />
 							</div>
 						</li>
 						<li>
@@ -34,7 +34,7 @@
 								菜单名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.Name}}" />
+								<input class="input is-small" type="text" disabled value="{{.Data.Name}}" />
 							</div>
 						</li>
 						<li>
@@ -42,7 +42,7 @@
 								跳转路径
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.HrefURL}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.HrefURL}}">
 							</div>
 						</li>
 						<li>
@@ -50,7 +50,7 @@
 								跳转方式
 							</div>
 							<div class="right">
-								<input class="input" type="text" disabled value="{{.Data.HrefTarget}}">
+								<input class="input is-small" type="text" disabled value="{{.Data.HrefTarget}}">
 							</div>
 						</li>
 					
@@ -58,8 +58,8 @@
 							<div class="left">
 								页面模版
 							</div>
-							<div class="right">
-								<select class="input" id="templateSelect" disabled>
+							<div class="select is-small">
+								<select id="templateSelect" disabled>
 									<option value="">请选择</option>
 									{{ range $index,$obj := $pageTemplate }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -73,7 +73,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" disabled value="{{.Data.SortNo}}">
+								<input class="input is-small" type="number" disabled value="{{.Data.SortNo}}">
 							</div>
 						</li>
 						<li>
@@ -82,11 +82,11 @@
 							</div>
 							<div class="right">
 							    {{if eq .Data.Status 0 }}
-								<input class="input" type="text" disabled value="列表不显示">
+								<input class="input is-small" type="text" disabled value="列表不显示">
 								{{else if eq .Data.Status 1 }}
-								<input class="input" type="text" disabled value="公开">
+								<input class="input is-small" type="text" disabled value="公开">
 								{{else if eq .Data.Status 2 }}
-								<input class="input" type="text" disabled value="私密">
+								<input class="input is-small" type="text" disabled value="私密">
 								{{end}}
 							</div>
 						</li>

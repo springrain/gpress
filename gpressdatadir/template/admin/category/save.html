@@ -19,7 +19,7 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="id" id="id">
+								<input class="input is-small" type="text" name="id" id="id">
 							</div>
 						</li>
 						<li>
@@ -27,7 +27,7 @@
 								菜单名称
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="name" id="name">
+								<input class="input is-small" type="text" name="name" id="name">
 							</div>
 						</li>
 						<li>
@@ -35,7 +35,7 @@
 								跳转路径
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefURL" id="hrefURL">
+								<input class="input is-small" type="text" name="hrefURL" id="hrefURL">
 							</div>
 						</li>
 						<li>
@@ -43,7 +43,7 @@
 								跳转方式
 							</div>
 							<div class="right">
-								<input class="input" type="text" name="hrefTarget" id="hrefTarget">
+								<input class="input is-small" type="text" name="hrefTarget" id="hrefTarget">
 							</div>
 						</li>
 						<li>
@@ -52,9 +52,9 @@
 							</div>
 							<div class="right">
 								{{if .Data }}
-								<input class="input" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
+								<input class="input is-small" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
                                 {{else}}
-								<input class="input" type="text" name="pid" id="pid" value="">
+								<input class="input is-small" type="text" name="pid" id="pid" value="">
 								{{end}}
 							</div>
 						</li>
@@ -62,8 +62,8 @@
 							<div class="left">
 								页面模版
 							</div>
-							<div class="right">
-								<select class="input" id="templateSelect">
+							<div class="select is-small">
+								<select id="templateSelect">
 									<option value="">默认</option>
 									{{ range $index,$obj := $pageTemplate }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
@@ -76,7 +76,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input" type="number" name="sortNo" id="sortNo">
+								<input class="input is-small" type="number" name="sortNo" id="sortNo">
 							</div>
 						</li>
 						<li>
