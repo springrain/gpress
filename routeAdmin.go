@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -308,6 +309,9 @@ func init() {
 
 }
 
+// alphaNumericReg 只能是字母或数字,长度不超过20
+var alphaNumericReg = regexp.MustCompile("^[a-zA-Z0-9]{1,20}$")
+
 // funcList 通用list列表
 func funcList(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
@@ -324,8 +328,11 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	where := " WHERE 1=1 "
 	var values []interface{} = make([]interface{}, 0)
 	for k := range mapParams {
+		if !alphaNumericReg.MatchString(k) {
+			continue
+		}
 		value := c.Query(k)
-		if value == "" || strings.Contains(k, "+") || strings.Contains(k, "=") || strings.Contains(k, "#") || strings.Contains(k, "/") || strings.Contains(k, "(") || strings.Contains(k, "%") || strings.Contains(k, "*") || strings.Contains(k, " ") || strings.Contains(k, "'") || strings.Contains(k, ";") {
+		if strings.TrimSpace(value) == "" {
 			continue
 		}
 		where = where + " and " + k + "=? "
