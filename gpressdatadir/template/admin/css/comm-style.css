@@ -56,7 +56,7 @@ body {
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	padding: 20px 10px 10px 20px !important;
+	padding: 10px 10px 10px 10px !important;
 	box-sizing: border-box;
 }
 
@@ -67,7 +67,7 @@ body {
 	background: white;
 	box-shadow: 2px 2px 5px #ededed;
 	box-sizing: border-box;
-	padding: 20px 10px 10px 20px;
+	padding: 10px 10px 10px 10px;
 	margin-bottom: 10px;
 	border-radius: 5px;
 	display: flex;
@@ -170,6 +170,7 @@ body {
 	margin-right: 10px;
 	text-align: right;
 	font-weight: 600;
+	width: 70px;
 }
 
 .save-ul li .right {

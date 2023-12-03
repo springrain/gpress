@@ -3,7 +3,7 @@
     /* background-color: #ccc;   */
     border-radius: 10px; /* 圆角样式 */
 
-    margin: 20px 0 20px 0;
+    margin: 10px 0 10px 0;
 
     overflow-y: auto;
 }
@@ -17,15 +17,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px 10px;
+    margin: 10px 10px;
 }
 
 .right {
     width: 80%;
     /* background-color: #ccc; */
     border-radius: 10px; /* 圆角样式 */
-
-    margin: 20px 0 20px 0;
+    margin: 10px 0 10px 0;
 }
 .right .table-content {
     width: 100%;
