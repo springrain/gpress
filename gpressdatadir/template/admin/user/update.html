@@ -11,8 +11,16 @@
 		<div class="table-content">
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
-					<input type="hidden" name="id" id="id" value="{{.Data.Id}}">
 					<ul class="save-ul">
+						<li>
+							<div class="left">
+								ID
+							</div>
+							<div class="right">
+								<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
+								<input class="input is-small" type="text" disabled value="{{.Data.Id}}">
+							</div>
+						</li>
 						<li>
 							<div class="left">
 								账号
