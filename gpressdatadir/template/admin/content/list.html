@@ -1,7 +1,7 @@
 {{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
 {{ $convertJson := convertJson  $category }}
 {{template "admin/header.html"}}
-<title>内容栏目 - GPRESS</title>
+<title>内容导航 - GPRESS</title>
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/tree.css">
 {{template "admin/bodystart.html"}}
 
