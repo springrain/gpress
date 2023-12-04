@@ -97,7 +97,7 @@
 								<li>
 									<div class="left">导航菜单</div>
 									<div class="select is-small">
-										<!-- 下拉菜单 -->
+										<!-- 下拉导航 -->
 										<select id="navSelect">
 											<option value="">请选择</option>
 											{{ range $index,$obj := $category.Data }}
@@ -373,8 +373,8 @@
 					'full',
 				],
 				customMenu: {
-					// 注入编辑器的菜单中
-					// 对象 key 可以作为菜单项的名字（需要保证唯一），在上方的配置中使用
+					// 注入编辑器的导航中
+					// 对象 key 可以作为导航项的名字（需要保证唯一），在上方的配置中使用
 					full: fullScreen,
 				},
 			},
