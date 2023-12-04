@@ -34,7 +34,7 @@
 								密码
 							</div>
 							<div class="right">
-								<input class="input is-small" type="text" name="password" value="{{.Data.Password}}" id="password">
+								<input class="input is-small" type="password" name="password" value="" id="password">
 							</div>
 						</li>
 						<li>
@@ -94,7 +94,7 @@
 	form.addEventListener('submit', async event => {
 		event.preventDefault()
 		let pwdValue=$('#password').val()
-		if(pwdValue){
+		if(pwdValue&&pwdValue!=""){
 			$('#password').val(sha3_512(pwdValue))
 		}
 		

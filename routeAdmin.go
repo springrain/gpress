@@ -266,7 +266,7 @@ func init() {
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
 
-	adminGroup.GET("/category/save1", func(ctx context.Context, c *app.RequestContext) {
+	adminGroup.GET("/category/save", func(ctx context.Context, c *app.RequestContext) {
 
 		urlPathParam := "category"
 
@@ -745,33 +745,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		return
 	}
 	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
-}
-
-func funcSetDefaultMapValue(ctx context.Context, valueMap *map[string]interface{}, tableName string) {
-	newMap := *valueMap
-	status, has := newMap["status"]
-	if !has || status == nil {
-		newMap["status"] = 1
-	}
-
-	sortNo, has := newMap["sortNo"]
-	if !has || sortNo == nil {
-		finder := zorm.NewSelectFinder(tableName, "count(*)")
-		sortNo := 1
-		zorm.QueryRow(ctx, finder, &sortNo)
-		newMap["sortNo"] = sortNo
-	}
-
-	now := time.Now().Format("2006-01-02 15:04:05")
-	createTime, has := newMap["createTime"]
-	if !has || createTime == nil {
-		newMap["createTime"] = now
-	}
-	updateTime, has := newMap["updateTime"]
-	if !has || updateTime == nil {
-		newMap["updateTime"] = now
-	}
-
 }
 
 // 删除内容
