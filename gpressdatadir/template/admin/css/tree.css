@@ -35,8 +35,8 @@
     padding-left: 10px;
     list-style: none;
     background: repeating-linear-gradient(90deg, #999 0 1px, transparent 0px 2px)
-    0px 50%/20px 1px no-repeat;
-    /* background: linear-gradient(#999,#999) 0px 50%/20px 1px no-repeat; */
+    0px 50%/10px 1px no-repeat;
+    /* background: linear-gradient(#999,#999) 0px 50%/10px 1px no-repeat; */
 }
 .tree details:last-child {
     background-size: 1px 23px;
@@ -61,7 +61,7 @@
     display: flex;
     align-items: center;
     height: 46px;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.85);
     cursor: default;
