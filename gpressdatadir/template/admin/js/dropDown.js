@@ -1,4 +1,4 @@
-// 下拉菜单选封装
+// 下拉导航选封装
 function DropDown(settings){
 	this.settings = settings
 	this.init()

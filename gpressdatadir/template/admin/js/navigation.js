@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   // addWebNav(_secondTitle,null);
   $navbarBurgers.addEventListener('click', () => {
-    // 切换菜单的可见性
+    // 切换导航的可见性
     $navbarBurgers.classList.toggle('is-active');
     $layout.classList.toggle('is-active');
     $menu.classList.toggle('is-active');
