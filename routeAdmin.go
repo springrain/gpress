@@ -288,6 +288,9 @@ func init() {
 	// 栏目预览
 	adminGroup.GET("/category/look", funcCategoryPreview)
 
+	// 查询Content列表,根据CategoryId like
+	adminGroup.GET("/content/list", funcContentList)
+
 	// 通用list列表,先都使用get方法
 	adminGroup.GET("/:urlPathParam/list", funcList)
 	//adminGroup.POST("/:urlPathParam/list", funcList)
@@ -408,6 +411,40 @@ func funcCategoryPreview(ctx context.Context, c *app.RequestContext) {
 
 	funcListCategory(ctx, c)
 	//funcTableById(ctx, c, "look.html")
+}
+
+// funcContentList 查询Content列表,根据CategoryId like
+func funcContentList(ctx context.Context, c *app.RequestContext) {
+	urlPathParam := "content"
+	//获取页码
+	pageNoStr := c.DefaultQuery("pageNo", "1")
+	q := strings.TrimSpace(c.Query("q"))
+	pageNo, _ := strconv.Atoi(pageNoStr)
+	categoryID := strings.TrimSpace(c.Query("categoryID"))
+	values := make([]interface{}, 0)
+	sql := ""
+	if categoryID != "" {
+		sql = " * from content where categoryID in (select id from category where comCode like ? ) order by sortNo desc "
+		values = append(values, ","+categoryID+",%")
+	} else {
+		sql = " * from content order by sortNo desc "
+	}
+	var responseData ResponseData
+	var err error
+	if len(values) == 0 {
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql)
+	} else {
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql, values)
+	}
+	responseData.UrlPathParam = urlPathParam
+	if err != nil { //表不存在
+		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	//优先使用自定义模板文件
+	listFile := "admin/" + urlPathParam + "/list.html"
+	c.HTML(http.StatusOK, listFile, responseData)
 }
 
 // funcUpdatePre 修改页面
