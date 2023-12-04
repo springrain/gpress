@@ -765,7 +765,7 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		data := make([]Category, 0)
 		zorm.Query(context.Background(), finder, &data, page)
 		if len(data) != 0 {
-			c.JSON(http.StatusOK, ResponseData{StatusCode: 0, Message: "无法删除有子级的菜单!"})
+			c.JSON(http.StatusOK, ResponseData{StatusCode: 0, Message: "无法删除有子级的导航!"})
 		} else {
 			//tableName := bleveDataDir + urlPathParam
 			err := deleteById(ctx, urlPathParam, id)

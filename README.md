@@ -97,10 +97,10 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | columnName    | 类型         | 说明    |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | 主键        |    -  |
-| name        | string      | 菜单名称     |    -  |
+| name        | string      | 导航名称     |    -  |
 | hrefURL     | string      | 跳转路径     |    -  |
 | hrefTarget  | string      | 跳转方式     | _self,_blank,_parent,_top|
-| pid         | string      | 父菜单ID     | 父菜单ID  |
+| pid         | string      | 父导航ID     | 父导航ID  |
 | moduleID    | string      | module表ID   |  导航菜单下的文章默认使用的模型字段 |
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
 | templateID  | string      | 模板Id       | 当前导航页的模板  |
