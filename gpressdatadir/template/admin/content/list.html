@@ -4,12 +4,21 @@
 <title>内容导航 - GPRESS</title>
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/tree.css">
 {{template "admin/bodystart.html"}}
-
-<div class="welcome-wrapper">
+<div class="welcome-wrapper" style="position: relative;">
+  
 	<!-- 分页隐藏域 -->
 	<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
 	<input type="hidden" id="pageCount" value="{{.Page.PageCount}}">
+  <input type="hidden" id="nodeId" value="">
+
+  <div class="dropdown-content" id="dropdown">
+    <a href="{{basePath}}admin/content/save?categoryID="  id="addContentLink">新增内容</a>
+    <a href="{{basePath}}admin/category/save?pid=" id="addSubNavLink">新增子导航</a>
+    <a href="{{basePath}}admin/category/update?id=" id="editNavLink">编辑导航</a>
+    <a id="" type="button" class="deleteNavLink">删除导航</a>
+  </div>
 	<div class="left">
+    
 		<div class="section" style="padding: 0 0 0 10px !important">
 			<div class="container">
 				<div class="searchMenu">
@@ -135,7 +144,7 @@
 <script>
 	// 加载分页
 	initPage()
-
+    var nodeId = ''
 	const query = window.location.search;
 	const params=new URLSearchParams(query)
 	var q=params.get("q")
@@ -149,7 +158,7 @@
 
 	var comCode="";
 
-	// 渲染树形导航结构
+	// 渲染树形菜单结构
 	function renderTree(container, data) {
 		const details = container;
 		data.forEach(node => {
@@ -158,6 +167,7 @@
 			}
 			const details2 = $('<details open>');
 			const summary = document.createElement('summary');
+            summary.id = node.id;
 			summary.className = 'tree-item';
 			const a = document.createElement('a');
 			a.id="tree_a_"+node.id;
@@ -173,31 +183,8 @@
 			button.className = 'dropbtn';
 			button.style = 'border:none;background:transparent';
 			button.innerHTML = `<i class="iconfont icon-gengduocaozuo icon-handle"></i>`
+
 			dropdown.append(button)
-
-			const dropdownContent = document.createElement('div');
-			dropdownContent.className = 'dropdown-content'
-			dropdown.append(dropdownContent)
-
-			const dropAddCont = document.createElement('a');
-			dropAddCont.href = "{{basePath}}"+"admin/content/save?categoryID="+node.id
-			dropAddCont.innerHTML = '新增内容'
-			const dropAdd = document.createElement('a');
-			dropAdd.href = "{{basePath}}"+"admin/category/save?pid="+node.id
-			dropAdd.innerHTML = '新增子导航'
-			const dropEdit = document.createElement('a');
-			dropEdit.href = "{{basePath}}"+"admin/category/update?id="+node.id
-			dropEdit.innerHTML = '编辑导航'
-			const dropDel = document.createElement('a');
-			dropDel.setAttribute('type', 'button');
-			dropDel.id = node.id
-			dropDel.innerHTML = '删除导航'
-
-			dropdownContent.append(dropAddCont)
-			dropdownContent.append(dropAdd)
-			dropdownContent.append(dropEdit)
-			dropdownContent.append(dropDel)
-
 			details2.append(summary)
 
 			if (node.children) {
@@ -253,8 +240,32 @@
 				}
              }
 		}
-        
 
+    $('.dropdown').mouseenter(function(){
+      $('#dropdown').hide()
+      var parentOffset = $(this).parent().offset();
+      var top = parentOffset.top + $(this).parent().outerHeight()-20;
+      var left = $(this)[0].offsetLeft+30;
+
+      $('#dropdown').css({
+          top: top + 'px',
+          left: left + 'px'
+      });
+      nodeId = $(this).parent()[0].id
+      $('#addContentLink').attr('href', "{{basePath}}admin/content/save?categoryID=" + nodeId);
+      $('#addSubNavLink').attr('href', "{{basePath}}admin/category/save?pid=" + nodeId);
+      $('#editNavLink').attr('href', "{{basePath}}admin/category/update?id=" + nodeId);
+      $('.deleteNavLink').attr('id',nodeId);
+
+      $('#dropdown').show()
+    })
+
+    $('#dropdown').mouseleave(function(){
+      $('#dropdown').hide()
+    })
+    $('details a').mouseleave(function(){
+      $('#dropdown').hide()
+    })
 	})
 </script>
 {{template "admin/bodyend.html"}}
