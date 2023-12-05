@@ -6,7 +6,7 @@ body {
 }
 
 .hero.is-success {
-  background: #F2F6FA;
+  background: #f2f6fa;
 }
 
 .hero .nav,
@@ -28,9 +28,11 @@ body {
   padding: 5px;
   background: #fff;
   height: 150px;
+  width: 150px;
   border-radius: 50%;
-  -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
-  box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+  -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
 }
 
 input {
@@ -66,13 +68,13 @@ p.subtitle {
   flex-direction: column;
 }
 
-.wallet>div {
+.wallet > div {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
 
-.wallet>div div {
+.wallet > div div {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -81,14 +83,14 @@ p.subtitle {
   border: 1px solid #eeeeee;
   justify-content: left;
   margin-bottom: 10px;
-	padding-left: 10px;
-	box-sizing: border-box;
+  padding-left: 10px;
+  box-sizing: border-box;
   cursor: pointer;
 }
 
-.wallet>div div img {
+.wallet > div div img {
   width: 42px;
-	margin-right: 10px;
+  margin-right: 10px;
 }
 
 .wallet .xpocket {
@@ -97,7 +99,7 @@ p.subtitle {
   margin-left: 3px;
 }
 
-.wallet>div div:first-child {
+.wallet > div div:first-child {
   margin-right: 5px;
 }
 
