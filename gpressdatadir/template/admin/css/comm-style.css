@@ -583,4 +583,5 @@ th.pos-sticky {
 	min-width: 90%;
 	padding: calc(0.75em - 1px);
 	resize: vertical;
+	font-size: 14px;
 }
