@@ -266,23 +266,6 @@ func init() {
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
 
-	adminGroup.GET("/category/save", func(ctx context.Context, c *app.RequestContext) {
-
-		urlPathParam := "category"
-
-		pid := strings.TrimSpace(c.Query("pid"))
-
-		//优先使用自定义模板文件
-		updateFile := "admin/" + urlPathParam + "/save.html"
-		category := Category{}
-		category.Pid = pid
-		responseData := ResponseData{StatusCode: 0}
-		responseData.StatusCode = 1
-		responseData.Data = category
-		responseData.UrlPathParam = urlPathParam
-		c.HTML(http.StatusOK, updateFile, responseData)
-	})
-
 	// 内容预览
 	adminGroup.GET("/content/look", funcContentPreview)
 	// 栏目预览
@@ -464,6 +447,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 	var err error
 	var now = time.Now().Format("2006-01-02 15:04:05")
 	id := ""
+	mastUpdateColumn := []string{"status"}
 	switch urlPathParam {
 	case tableConfigName:
 		ptrObj := &Config{}
@@ -501,6 +485,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 		} else {
 			ptrObj.ComCode = "," + ptrObj.Id + ","
 		}
+		mastUpdateColumn = append(mastUpdateColumn, "hrefTarget")
 		entity = ptrObj
 	case tableContentName:
 		ptrObj := &Content{}
@@ -518,7 +503,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 			ptrObj.Content = content
 			ptrObj.Toc = toc
 		}
-
+		mastUpdateColumn = append(mastUpdateColumn, "markdown", "content")
 		entity = ptrObj
 	default:
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "表不存在!"})
@@ -538,7 +523,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 	}
 
 	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
-		ctx, err = zorm.BindContextMustUpdateCols(ctx, []string{"status"})
+		ctx, err = zorm.BindContextMustUpdateCols(ctx, mastUpdateColumn)
 		_, err = zorm.UpdateNotZeroValue(ctx, entity)
 		return nil, err
 	})
@@ -556,26 +541,18 @@ func funcSavePre(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 
 	//优先使用自定义模板文件
-	updateFile := "admin/" + urlPathParam + "/save.html"
+	templateFile := "admin/" + urlPathParam + "/save.html"
 	/*
-		t := tmpl.Lookup(updateFile)
+		t := tmpl.Lookup(templateFile)
 		if t == nil { //不存在自定义模板,使用通用模板
-			updateFile = "admin/save.html"
+			templateFile = "admin/save.html"
 		}
 	*/
+	responseData := ResponseData{UrlPathParam: urlPathParam}
 
-	if urlPathParam == "category" {
-		pid := c.Param("pid")
-		category := Category{}
-		category.Pid = pid
-		responseData := ResponseData{StatusCode: 0}
-		responseData.StatusCode = 1
-		responseData.Data = category
-		responseData.UrlPathParam = urlPathParam
-		c.HTML(http.StatusOK, updateFile, responseData)
-	}
+	responseData.QueryStringMap = wrapQueryStringMap(c)
 
-	c.HTML(http.StatusOK, updateFile, ResponseData{UrlPathParam: urlPathParam})
+	c.HTML(http.StatusOK, templateFile, responseData)
 }
 
 // 保存内容
@@ -846,6 +823,7 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 	responseData, err := funcSelectOne(urlPathParam, "* FROM "+urlPathParam+" WHERE id=? ", id)
 	//responseData["UrlPathParam"] = urlPathParam
 	responseData.UrlPathParam = urlPathParam
+
 	if err != nil { //表不存在
 		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
 		c.Abort() // 终止后续调用
@@ -860,6 +838,7 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 		}
 	*/
 	responseData.StatusCode = 1
+	responseData.QueryStringMap = wrapQueryStringMap(c)
 	c.HTML(http.StatusOK, lookFile, responseData)
 }
 
@@ -872,4 +851,13 @@ func setMarkdownHtml(mkstring string) (string, string, error) {
 		return *html, *tocHtml, nil
 	}
 	return "", "", nil
+}
+
+func wrapQueryStringMap(c *app.RequestContext) map[string]string {
+	queryStringMap := make(map[string]string, 0)
+	c.BindQuery(&queryStringMap)
+	for k := range queryStringMap {
+		queryStringMap[k] = c.Query(k)
+	}
+	return queryStringMap
 }

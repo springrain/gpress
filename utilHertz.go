@@ -197,8 +197,7 @@ type ResponseData struct {
 	// 列表的分页对象
 	Page *zorm.Page `json:"page,omitempty"`
 	// 查询条件的struct回传
-	// QueryStruct interface{} `json:"queryStruct,omitempty"`
-	QueryString string `json:"queryString,omitempty"`
+	QueryStringMap map[string]string `json:"queryStringMap,omitempty"`
 	// 表名称
 	UrlPathParam string `json:"urlPathParam,omitempty"`
 	// 表字段信息
@@ -214,7 +213,7 @@ func responData2Map(responseData ResponseData) map[string]interface{} {
 	result["message"] = responseData.Message
 	result["extMap"] = responseData.ExtMap
 	result["page"] = responseData.Page
-	result["queryString"] = responseData.QueryString
+	result["queryString"] = responseData.QueryStringMap
 	result["UrlPathParam"] = responseData.UrlPathParam
 	result["err"] = responseData.ERR
 	return result

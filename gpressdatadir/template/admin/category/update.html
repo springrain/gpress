@@ -3,6 +3,7 @@
 {{template "admin/bodystart.html"}}
 
 {{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
+{{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
 <style>
@@ -53,16 +54,23 @@
 							<div class="left">
 								跳转方式
 							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="hrefTarget" value="{{.Data.HrefTarget}}" id="hrefTarget">
+							<div class="select is-small">
+								<select name="hrefTarget" id="hrefTarget">
+									<option value="">默认</option>
+									<option value="_blank">_blank</option>
+									<option value="_parent">_parent</option>
+									<option value="_self">_self</option>
+									<option value="_top">_top</option>
+								</select>
 							</div>
 						</li>
 						<li>
 							<div class="left">
-								父导航ID
+								父级导航
 							</div>
 							<div class="right">
-								<input class="input is-small" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
+								<input  type="hidden"  name="pid"  value="{{.Data.Pid}}">
+								<input class="input is-small" type="text" value="{{$categoryName.Data.Name}}" disabled>
 							</div>
 						</li>
 						<li>
@@ -116,6 +124,7 @@
 
 <script>
 	 $("#status").val("{{.Data.Status}}")
+	 $("#hrefTarget").val("{{.Data.HrefTarget}}")
 	 
 	let templateID = $('#templateID').val()
 	$('#templateSelect').val(templateID)

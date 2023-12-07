@@ -5,6 +5,8 @@
 
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
+{{ $categoryName := selectOne "category" "* from category WHERE id=?" .QueryStringMap.pid }}
+
 <section class="section">
 	<input type="hidden" id="basePath" value="{{basePath}}">
 
@@ -42,20 +44,24 @@
 							<div class="left">
 								跳转方式
 							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="hrefTarget" id="hrefTarget">
+							<div class="select is-small">
+								<select name="hrefTarget" id="hrefTarget">
+									<option value="">默认</option>
+									<option value='_blank'>_blank</option>
+									<option value='_parent'>_parent</option>
+									<option value='_self'>_self</option>
+									<option value='_top'>_top</option>
+								</select>
 							</div>
+
 						</li>
 						<li>
 							<div class="left">
-								父导航ID
+								父级导航
 							</div>
 							<div class="right">
-								{{if .Data }}
-								<input class="input is-small" type="text" name="pid" id="pid" value="{{.Data.Pid}}">
-                                {{else}}
-								<input class="input is-small" type="text" name="pid" id="pid" value="">
-								{{end}}
+								<input  type="hidden"  name="pid"  value="{{$categoryName.Data.Id}}">
+								<input class="input is-small" type="text" value="{{$categoryName.Data.Name}}" disabled>
 							</div>
 						</li>
 						<li>
