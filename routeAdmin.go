@@ -328,9 +328,9 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 	var responseData ResponseData
 	var err error
 	if len(values) == 0 {
-		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql)
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, defaultPageSize, sql)
 	} else {
-		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql, values)
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, defaultPageSize, sql, values)
 	}
 
 	responseData.UrlPathParam = urlPathParam
@@ -415,9 +415,9 @@ func funcContentList(ctx context.Context, c *app.RequestContext) {
 	var responseData ResponseData
 	var err error
 	if len(values) == 0 {
-		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql)
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, defaultPageSize, sql)
 	} else {
-		responseData, err = funcSelectList(urlPathParam, q, pageNo, sql, values)
+		responseData, err = funcSelectList(urlPathParam, q, pageNo, defaultPageSize, sql, values)
 	}
 	responseData.UrlPathParam = urlPathParam
 	if err != nil { //表不存在
