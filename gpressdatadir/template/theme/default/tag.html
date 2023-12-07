@@ -1,5 +1,5 @@
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList "content" .q .pageNo  "id,title,hrefURL,updateTime FROM content WHERE status=1 and tag=? order by sortNo desc" .UrlPathParam }}
+{{ $selectList := selectList "content" .q .pageNo 20  "id,title,hrefURL,updateTime FROM content WHERE status=1 and tag=? order by sortNo desc" .UrlPathParam }}
 
 {{ $site:=site }}
 <!DOCTYPE html>

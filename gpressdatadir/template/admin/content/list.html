@@ -1,4 +1,4 @@
-{{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
+{{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }}
 {{ $convertJson := convertJson  $category }}
 {{template "admin/header.html"}}
 <title>内容导航 - GPRESS</title>
