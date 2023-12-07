@@ -2,6 +2,7 @@
 <title>查看导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
+{{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
 
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 
@@ -53,7 +54,14 @@
 								<input class="input is-small" type="text" disabled value="{{.Data.HrefTarget}}">
 							</div>
 						</li>
-					
+						<li>
+							<div class="left">
+								父级导航
+							</div>
+							<div class="right">
+								<input class="input is-small" type="text" value="{{$categoryName.Data.Name}}" disabled>
+							</div>
+						</li>
 						<li>
 							<div class="left">
 								页面模版
