@@ -3,7 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/cherry-markdown.min.css" />
 {{template "admin/bodystart.html"}} 
 
-{{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }} 
+{{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }} 
 {{ $pageTemplate := pageTemplate }}
 <!-- 模版数据 -->
 

@@ -2,7 +2,7 @@
 <title>更新导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $category := selectList "category" "" 1 "* FROM category order by sortNo desc" }}
+{{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }}
 {{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
 

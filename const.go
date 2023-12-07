@@ -45,4 +45,6 @@ const (
 	letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	userTypeKey = "userType" //0访客,1管理员
+
+	defaultPageSize = 20
 )

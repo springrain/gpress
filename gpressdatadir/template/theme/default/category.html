@@ -8,7 +8,7 @@
   {{ $categorySQL = "name FROM category WHERE id=? order by sortNo desc"}}
 {{end}}
 
-{{ $selectList := selectList "content" .q .pageNo $contentSQL .UrlPathParam }}
+{{ $selectList := selectList "content" .q .pageNo 20 $contentSQL .UrlPathParam }}
 
 {{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
 {{ $site:=site }}
