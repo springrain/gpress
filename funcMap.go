@@ -130,7 +130,7 @@ func findOrderByIndex(strsql *string) []int {
 	loc := orderByRegexp.FindStringIndex(*strsql)
 	return loc
 }
-func funcSelectList(urlPathParam string, q string, pageNo int, sql string, values ...interface{}) (ResponseData, error) {
+func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql string, values ...interface{}) (ResponseData, error) {
 	responseData := ResponseData{StatusCode: 0}
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
@@ -166,6 +166,10 @@ func funcSelectList(urlPathParam string, q string, pageNo int, sql string, value
 	//finder.Append("order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageNo = pageNo
+	if pageSize > 1000 {
+		pageSize = 1000
+	}
+	page.PageSize = pageSize
 	switch urlPathParam {
 	case tableConfigName:
 		data := make([]Config, 0)
