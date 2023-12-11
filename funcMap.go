@@ -31,6 +31,9 @@ var funcMap = template.FuncMap{
 	//"themePath":  funcThemePath,
 	//"themeFile":  funcThemeFile,
 	"convertJson": convertJson,
+	"hasPrefix":   hasPrefix,
+	"hasSuffix":   hasSuffix,
+	"contains":    contains,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -287,15 +290,19 @@ func convertJson(obj interface{}) (string, error) {
 	// 将 Person 对象转换为 JSON 字符串
 	jsonData, err := json.Marshal(obj)
 	if err != nil {
-		//fmt.Println("JSON encoding failed:", err)
 		return "{}", nil
 	}
-
 	s := string(jsonData)
 	return s, nil
 }
 
-func funcJsonMarshal(obj interface{}) (string, error) {
-	jsonByte, err := json.Marshal(obj)
-	return string(jsonByte), err
+func hasPrefix(s, prefix string) bool {
+	return strings.HasPrefix(s, prefix)
+}
+
+func hasSuffix(s, suffix string) bool {
+	return strings.HasSuffix(s, suffix)
+}
+func contains(s, substr string) bool {
+	return strings.Contains(s, substr)
 }
