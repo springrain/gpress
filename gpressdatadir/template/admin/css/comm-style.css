@@ -579,9 +579,8 @@ th.pos-sticky {
 
 .textarea {
 	display: block;
-	max-width: 90%;
-	min-width: 90%;
+	width: 100%;
 	padding: calc(0.75em - 1px);
 	resize: vertical;
-	font-size: 14px;
+	font-size: .75rem;
 }
