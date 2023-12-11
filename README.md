@@ -127,6 +127,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一
 | summary     | string      | 摘要         | 是      |      使用 jieba 分词器  |
 | categoryName| string      | 导航菜单,逗号(,)隔开| 是| 使用 jieba 分词器.      |
 | categoryID  | string      | 导航ID       | 否      | -                       |
+| comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
 | templateID  | string      | 模板Id       | 否      | 模板                    |
 | content     | string      | 文章内容     | 否      |                         |
 | markdown    | string      | Markdown内容 | 否      |                         |
