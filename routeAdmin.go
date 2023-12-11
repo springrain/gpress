@@ -403,12 +403,12 @@ func funcContentList(ctx context.Context, c *app.RequestContext) {
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	q := strings.TrimSpace(c.Query("q"))
 	pageNo, _ := strconv.Atoi(pageNoStr)
-	categoryID := strings.TrimSpace(c.Query("categoryID"))
+	comCode := strings.TrimSpace(c.Query("comCode"))
 	values := make([]interface{}, 0)
 	sql := ""
-	if categoryID != "" {
-		sql = " * from content where categoryID in (select id from category where comCode like ? ) order by sortNo desc "
-		values = append(values, ","+categoryID+",%")
+	if comCode != "" {
+		sql = " * from content where comCode like ?  order by sortNo desc "
+		values = append(values, comCode+"%")
 	} else {
 		sql = " * from content order by sortNo desc "
 	}
@@ -502,6 +502,10 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 			}
 			ptrObj.Content = content
 			ptrObj.Toc = toc
+		}
+		if ptrObj.CategoryID != "" {
+			f := zorm.NewSelectFinder(tableCategoryName, "comCode").Append(" where id =?", ptrObj.CategoryID)
+			zorm.QueryRow(ctx, f, &ptrObj.ComCode)
 		}
 		mastUpdateColumn = append(mastUpdateColumn, "markdown", "content")
 		entity = ptrObj
@@ -698,6 +702,10 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 			}
 			ptrObj.Content = content
 			ptrObj.Toc = toc
+		}
+		if ptrObj.CategoryID != "" {
+			f := zorm.NewSelectFinder(tableCategoryName, "comCode").Append(" where id =?", ptrObj.CategoryID)
+			zorm.QueryRow(ctx, f, &ptrObj.ComCode)
 		}
 		entity = ptrObj
 	default:

@@ -87,7 +87,7 @@ type Category struct {
 	// ModuleID 模型ID
 	ModuleID string `column:"moduleID" json:"moduleID,omitempty"`
 
-	// ComCode 组件代码
+	// ComCode 代码全路径
 	ComCode string `column:"comCode" json:"comCode,omitempty"`
 
 	// TemplateID 模板ID
@@ -158,6 +158,9 @@ type Content struct {
 
 	// CategoryName 导航菜单
 	CategoryName string `column:"categoryName" json:"categoryName,omitempty"`
+
+	// ComCode 代码全路径
+	ComCode string `column:"comCode" json:"comCode,omitempty"`
 
 	// TemplateID 模板ID
 	TemplateID string `column:"templateID" json:"templateID,omitempty"`
