@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS content (
 		subtitle           TEXT,
 		categoryID           TEXT,
 		categoryName           TEXT,
+		comCode        TEXT,
 		templateID           TEXT,
 		author           TEXT,
 		tag           TEXT,
@@ -140,8 +141,8 @@ CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
 			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
 			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.categoryName,new.summary,new.toc,new.tag,new.author);
 		END;
-INSERT INTO content (status,sortNo,createUser,updateTime,createTime,thumbnail,markdown,content,summary,toc,tag,author,templateID,categoryName,categoryID,subtitle,hrefURL,description,keyword,title,moduleID,id) 
-VALUES (0,100,NULL,'2023-06-27 22:43:53','2023-06-27 22:43:53',NULL,
+INSERT INTO content (comCode,status,sortNo,createUser,updateTime,createTime,thumbnail,markdown,content,summary,toc,tag,author,templateID,categoryName,categoryID,subtitle,hrefURL,description,keyword,title,moduleID,id) 
+VALUES (',about,',0,100,NULL,'2023-06-27 22:43:53','2023-06-27 22:43:53',NULL,
 '---
 title: "About"
 date: 2017-08-20T21:38:52+08:00
@@ -182,8 +183,8 @@ weight: 50
 ','本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......
 	不妨大胆一些,大胆一些......','',NULL,'springrain',NULL,'about','about',NULL,NULL,NULL,NULL,'about',NULL,'about');
 				
-INSERT INTO content (status,sortNo,createUser,updateTime,createTime,thumbnail,markdown,content,summary,toc,tag,author,templateID,categoryName,categoryID,subtitle,hrefURL,description,keyword,title,moduleID,id)
-                    VALUES (1,58,NULL,'2020-09-02 14:05:02','2020-09-02 14:05:02',NULL,
+INSERT INTO content (comCode,status,sortNo,createUser,updateTime,createTime,thumbnail,markdown,content,summary,toc,tag,author,templateID,categoryName,categoryID,subtitle,hrefURL,description,keyword,title,moduleID,id)
+                    VALUES (',web,',1,58,NULL,'2020-09-02 14:05:02','2020-09-02 14:05:02',NULL,
                     '---
 title: "springrain项目说明"
 date: 2020-09-02T14:05:02+08:00
