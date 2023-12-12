@@ -79,7 +79,7 @@
 							</div>
 							<div class="select is-small">
 								<select id="templateSelect">
-									<option value="">请选择</option>
+									<option value="">默认</option>
 									{{ range $index,$obj := $pageTemplate }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
