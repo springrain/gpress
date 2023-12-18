@@ -47,10 +47,11 @@ var funcMap = template.FuncMap{
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
 	//"themeFile":  funcThemeFile,
-	"convertJson": convertJson,
-	"hasPrefix":   hasPrefix,
-	"hasSuffix":   hasSuffix,
-	"contains":    contains,
+	"convertJson":      convertJson,
+	"hasPrefix":        hasPrefix,
+	"hasSuffix":        hasSuffix,
+	"contains":         contains,
+	"generateStringID": FuncGenerateStringID,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}

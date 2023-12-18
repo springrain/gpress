@@ -7,6 +7,8 @@
 
 {{ $categoryName := selectOne "category" "* from category WHERE id=?" .QueryStringMap.pid }}
 
+{{ $maxSortNo:=  selectOne "category" "max(sortNo) as sortNo from category" }} 
+
 <section class="section">
 	<input type="hidden" id="basePath" value="{{basePath}}">
 
@@ -21,7 +23,7 @@
 								ID
 							</div>
 							<div class="right">
-								<input class="input is-small" type="text" name="id" id="id">
+								<input class="input is-small" type="text" name="id" id="id" value="{{generateStringID}}"/>
 							</div>
 						</li>
 						<li>
@@ -82,7 +84,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input is-small" type="number" name="sortNo" id="sortNo">
+								<input class="input is-small" type="number" name="sortNo" id="sortNo" value="{{addInt $maxSortNo.Data.SortNo 1}}" />
 							</div>
 						</li>
 						<li>

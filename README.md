@@ -1,7 +1,7 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />
 
 ## 介绍  
-云原生高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需 200M 内存   
+国产高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需 200M 内存   
 默认端口660  
 需要先解压```gpressdatadir/dict.zip```      
 运行 ```go run --tags "fts5" .```   

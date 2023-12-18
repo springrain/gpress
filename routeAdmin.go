@@ -521,8 +521,8 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 			ptrObj.Toc = toc
 		}
 		if ptrObj.CategoryID != "" {
-			f := zorm.NewSelectFinder(tableCategoryName, "comCode").Append(" where id =?", ptrObj.CategoryID)
-			zorm.QueryRow(ctx, f, &ptrObj.ComCode)
+			f := zorm.NewSelectFinder(tableCategoryName, "comCode,name as categoryName").Append(" where id =?", ptrObj.CategoryID)
+			zorm.QueryRow(ctx, f, &ptrObj)
 		}
 		mastUpdateColumn = append(mastUpdateColumn, "markdown", "content")
 		entity = ptrObj
@@ -594,12 +594,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		if ptrObj.Id == "" {
 			ptrObj.Id = FuncGenerateStringID()
 		}
-		if ptrObj.SortNo == 0 {
-			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
-			sortNo := 1
-			zorm.QueryRow(ctx, finder, &sortNo)
-			ptrObj.SortNo = sortNo
-		}
 		if ptrObj.CreateTime == "" {
 			ptrObj.CreateTime = now
 		}
@@ -612,12 +606,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		err = c.Bind(ptrObj)
 		if ptrObj.Id == "" {
 			ptrObj.Id = FuncGenerateStringID()
-		}
-		if ptrObj.SortNo == 0 {
-			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
-			sortNo := 1
-			zorm.QueryRow(ctx, finder, &sortNo)
-			ptrObj.SortNo = sortNo
 		}
 		if ptrObj.CreateTime == "" {
 			ptrObj.CreateTime = now
@@ -632,12 +620,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		if ptrObj.Id == "" {
 			ptrObj.Id = FuncGenerateStringID()
 		}
-		if ptrObj.SortNo == 0 {
-			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
-			sortNo := 1
-			zorm.QueryRow(ctx, finder, &sortNo)
-			ptrObj.SortNo = sortNo
-		}
 		if ptrObj.CreateTime == "" {
 			ptrObj.CreateTime = now
 		}
@@ -651,12 +633,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		if ptrObj.Id == "" {
 			ptrObj.Id = FuncGenerateStringID()
 		}
-		if ptrObj.SortNo == 0 {
-			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
-			sortNo := 1
-			zorm.QueryRow(ctx, finder, &sortNo)
-			ptrObj.SortNo = sortNo
-		}
 		if ptrObj.CreateTime == "" {
 			ptrObj.CreateTime = now
 		}
@@ -669,12 +645,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		err = c.Bind(ptrObj)
 		if ptrObj.Id == "" {
 			ptrObj.Id = FuncGenerateStringID()
-		}
-		if ptrObj.SortNo == 0 {
-			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
-			sortNo := 1
-			zorm.QueryRow(ctx, finder, &sortNo)
-			ptrObj.SortNo = sortNo
 		}
 		if ptrObj.CreateTime == "" {
 			ptrObj.CreateTime = now
@@ -696,12 +666,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		if ptrObj.Id == "" {
 			ptrObj.Id = FuncGenerateStringID()
 		}
-		if ptrObj.SortNo == 0 {
-			finder := zorm.NewSelectFinder(urlPathParam, "count(*)")
-			sortNo := 1
-			zorm.QueryRow(ctx, finder, &sortNo)
-			ptrObj.SortNo = sortNo
-		}
 		if ptrObj.CreateTime == "" {
 			ptrObj.CreateTime = now
 		}
@@ -721,8 +685,8 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 			ptrObj.Toc = toc
 		}
 		if ptrObj.CategoryID != "" {
-			f := zorm.NewSelectFinder(tableCategoryName, "comCode").Append(" where id =?", ptrObj.CategoryID)
-			zorm.QueryRow(ctx, f, &ptrObj.ComCode)
+			f := zorm.NewSelectFinder(tableCategoryName, "comCode,name as categoryName").Append(" where id =?", ptrObj.CategoryID)
+			zorm.QueryRow(ctx, f, &ptrObj)
 		}
 		entity = ptrObj
 	default:
