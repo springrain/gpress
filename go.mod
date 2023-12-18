@@ -4,11 +4,11 @@ go 1.20
 
 require (
 	gitee.com/chunanyong/zorm v1.7.4
-	github.com/alecthomas/chroma/v2 v2.11.1
-	github.com/cloudwego/hertz v0.7.2
+	github.com/alecthomas/chroma/v2 v2.12.0
+	github.com/cloudwego/hertz v0.7.3
 	github.com/ethereum/go-ethereum v1.13.5
-	github.com/mattn/go-sqlite3 v1.14.18
-	github.com/mojocn/base64Captcha v1.3.5
+	github.com/mattn/go-sqlite3 v1.14.19
+	github.com/mojocn/base64Captcha v1.3.6
 	github.com/tetratelabs/wazero v1.5.0
 	github.com/yuin/goldmark v1.6.0
 	github.com/yuin/goldmark-emoji v1.0.2
@@ -41,7 +41,7 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
-	golang.org/x/image v0.0.0-20190501045829-6d32002ffd75 // indirect
+	golang.org/x/image v0.13.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

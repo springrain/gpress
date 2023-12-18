@@ -4,6 +4,7 @@
 {{template "admin/bodystart.html"}} 
 
 {{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }} 
+{{ $maxSortNo:=  selectOne "content" "max(sortNo) as sortNo from content" }} 
 {{ $pageTemplate := pageTemplate }}
 <!-- 模版数据 -->
 
@@ -36,7 +37,7 @@
 								<li>
 									<div class="left">ID</div>
 									<div class="right">
-										<input class="input is-small" type="text" name="id" id="id"/>
+										<input class="input is-small" type="text" name="id" id="id" value="{{generateStringID}}"/>
 									</div>
 								</li>
 							</ul>
@@ -181,7 +182,7 @@
 								<li>
 									<div class="left">排序</div>
 									<div class="right">
-										<input class="input is-small" type="number" name="sortNo" id="sortNo" />
+										<input class="input is-small" type="number" name="sortNo" id="sortNo" value="{{addInt $maxSortNo.Data.SortNo 1}}" />
 									</div>
 								</li>
 							</ul>
