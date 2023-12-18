@@ -2,6 +2,7 @@
 <title>新增页面模版 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
+{{ $maxSortNo:=  selectOne "pageTemplate" "max(sortNo) as sortNo from pageTemplate" }} 
 
 <section class="section">
 	<input type="hidden" id="basePath" value="{{basePath}}">
@@ -12,6 +13,14 @@
 			<div class="column">
 				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
 					<ul class="save-ul">
+						<li>
+							<div class="left">
+								ID
+							</div>
+							<div class="right">
+								<input class="input is-small" type="text" name="id" id="id" value="{{generateStringID}}"/>
+							</div>
+						</li>
 						<li>
 							<div class="left">
 								模板名称
@@ -35,7 +44,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input is-small" type="number" name="sortNo" id="sortNo">
+								<input class="input is-small" type="number" name="sortNo" id="sortNo" value="{{addInt $maxSortNo.Data.SortNo 1}}" />
 							</div>
 						</li>
 						<li>
