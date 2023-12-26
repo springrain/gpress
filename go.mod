@@ -6,17 +6,17 @@ require (
 	gitee.com/chunanyong/zorm v1.7.4
 	github.com/alecthomas/chroma/v2 v2.12.0
 	github.com/cloudwego/hertz v0.7.3
-	github.com/ethereum/go-ethereum v1.13.5
+	github.com/ethereum/go-ethereum v1.13.8
 	github.com/mattn/go-sqlite3 v1.14.19
 	github.com/mojocn/base64Captcha v1.3.6
-	github.com/tetratelabs/wazero v1.5.0
+	github.com/tetratelabs/wazero v1.6.0
 	github.com/yuin/goldmark v1.6.0
 	github.com/yuin/goldmark-emoji v1.0.2
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/yuin/goldmark-meta v1.1.0
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	go.abhg.dev/goldmark/toc v0.9.0
-	golang.org/x/crypto v0.16.0
+	golang.org/x/crypto v0.17.0
 )
 
 require (
@@ -33,7 +33,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
-	github.com/holiman/uint256 v1.2.3 // indirect
+	github.com/holiman/uint256 v1.2.4 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/nyaruka/phonenumbers v1.0.55 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
