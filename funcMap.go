@@ -191,32 +191,35 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 		pageSize = 1000
 	}
 	page.PageSize = pageSize
+	ctx := context.Background()
 	switch urlPathParam {
 	case tableConfigName:
 		data := make([]Config, 0)
-		zorm.Query(context.Background(), finder, &data, page)
+		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
 	case tableUserName:
 		data := make([]User, 0)
-		zorm.Query(context.Background(), finder, &data, page)
+		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
 	case tableSiteName:
 		data := make([]Site, 0)
-		zorm.Query(context.Background(), finder, &data, page)
+		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
 	case tablePageTemplateName:
 		data := make([]PageTemplate, 0)
-		zorm.Query(context.Background(), finder, &data, page)
+		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
 	case tableCategoryName:
 		page.PageSize = 100
 		data := make([]Category, 0)
-		zorm.Query(context.Background(), finder, &data, page)
+		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
 	case tableContentName:
 		data := make([]Content, 0)
-		zorm.Query(context.Background(), finder, &data, page)
+		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
+	case "": // 对象为空查询map
+		responseData.Data, responseData.ERR = zorm.QueryMap(ctx, finder, page)
 	default:
 		err := errors.New(urlPathParam + "表不存在!")
 		responseData.ERR = err
@@ -292,6 +295,8 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (Resp
 		} else {
 			responseData.Data = Content{}
 		}
+	case "": // 对象为空查询map
+		responseData.Data, responseData.ERR = zorm.QueryRowMap(ctx, finder)
 	default:
 		err := errors.New(urlPathParam + "表不存在!")
 		responseData.ERR = err
