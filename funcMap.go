@@ -52,6 +52,7 @@ var funcMap = template.FuncMap{
 	"hasSuffix":        hasSuffix,
 	"contains":         contains,
 	"generateStringID": FuncGenerateStringID,
+	"treeCategory":     funcTreeCategory,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -309,6 +310,42 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (Resp
 	return responseData, nil
 }
 
+func funcTreeCategory(pid string, pageNo int, pageSize int) []Category {
+	var page *zorm.Page = nil
+	if pageNo > 0 && pageSize > 0 {
+		page = zorm.NewPage()
+		page.PageNo = pageNo
+		page.PageSize = pageSize
+	}
+
+	ctx := context.Background()
+	categorys := make([]Category, 0)
+	comCode := ""
+	if pid != "" {
+		f1 := zorm.NewSelectFinder(tableCategoryName, "comCode").Append(" WHERE id=?", pid)
+		has, err := zorm.QueryRow(ctx, f1, &comCode)
+		if !has || err != nil {
+			return categorys
+		}
+	}
+
+	finder := zorm.NewSelectFinder(tableCategoryName).Append("WHERE 1=1")
+	if comCode != "" {
+		finder.Append(" and id<>? and comCode like ?", pid, comCode+"%")
+	}
+	finder.Append("order by sortNo desc")
+
+	err := zorm.Query(ctx, finder, &categorys, page)
+	if err != nil {
+		return categorys
+	}
+	treeCategory := make([]Category, 0)
+
+	recursionCategorys(pid, nil, categorys, &treeCategory)
+
+	return treeCategory
+}
+
 func convertJson(obj interface{}) (string, error) {
 	// 将 Person 对象转换为 JSON 字符串
 	jsonData, err := json.Marshal(obj)
@@ -328,4 +365,30 @@ func hasSuffix(s, suffix string) bool {
 }
 func contains(s, substr string) bool {
 	return strings.Contains(s, substr)
+}
+
+func recursionCategorys(pid string, pidCategory *Category, categorys []Category, treeCategory *[]Category) {
+	leaf := make([]Category, 0)
+	for i := 0; i < len(categorys); i++ {
+		if categorys[i].Pid == pid { //pid
+			leaf = append(leaf, categorys[i])
+		}
+	}
+	if len(leaf) == 0 {
+		return
+	}
+
+	var tempLeaf []Category
+
+	if pidCategory != nil {
+		pidCategory.Leaf = append(pidCategory.Leaf, leaf...)
+		tempLeaf = pidCategory.Leaf
+	} else {
+		*treeCategory = append(*treeCategory, leaf...)
+		tempLeaf = *treeCategory
+	}
+	for i := 0; i < len(tempLeaf); i++ {
+		recursionCategorys(tempLeaf[i].Id, &tempLeaf[i], categorys, treeCategory)
+	}
+
 }
