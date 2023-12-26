@@ -310,7 +310,7 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (Resp
 	return responseData, nil
 }
 
-func funcTreeCategory(pid string, pageNo int, pageSize int) []Category {
+func funcTreeCategory(pid string, pageNo int, pageSize int, hasContent bool) []Category {
 	var page *zorm.Page = nil
 	if pageNo > 0 && pageSize > 0 {
 		page = zorm.NewPage()
@@ -339,6 +339,31 @@ func funcTreeCategory(pid string, pageNo int, pageSize int) []Category {
 	if err != nil {
 		return categorys
 	}
+
+	if hasContent { //是否包含内容
+		contents := make([]Content, 0)
+		finder := zorm.NewSelectFinder(tableContentName, "id,title,categoryID,comCode,sortNo,status").Append("WHERE 1=1")
+		if comCode != "" {
+			finder.Append(" and categoryID<>? and comCode like ?", pid, comCode+"%")
+		}
+		finder.Append("order by sortNo desc")
+		err := zorm.Query(ctx, finder, &contents, page)
+		if err != nil {
+			return categorys
+		}
+		for i := 0; i < len(categorys); i++ {
+			category := &categorys[i]
+			category.Contents = make([]Content, 0)
+			for j := 0; j < len(contents); j++ {
+				content := contents[j]
+				if category.Id == content.CategoryID {
+					category.Contents = append(category.Contents, content)
+				}
+			}
+		}
+
+	}
+
 	treeCategory := make([]Category, 0)
 
 	recursionCategorys(pid, nil, categorys, &treeCategory)
