@@ -808,8 +808,15 @@ func funcTableById(ctx context.Context, c *app.RequestContext, htmlfile string) 
 		return
 	}
 	urlPathParam := c.Param("urlPathParam")
+	if !alphaNumericReg.MatchString(urlPathParam) {
+		c.Redirect(http.StatusOK, cRedirecURI("admin/error"))
+		c.Abort() // 终止后续调用
+		return
+	}
+	responseData := ResponseData{StatusCode: 0}
 	//tableName := bleveDataDir + urlPathParam
-	responseData, err := funcSelectOne(urlPathParam, "* FROM "+urlPathParam+" WHERE id=? ", id)
+	data, err := funcSelectOne(urlPathParam, "* FROM "+urlPathParam+" WHERE id=? ", id)
+	responseData.Data = data
 	//responseData["UrlPathParam"] = urlPathParam
 	responseData.UrlPathParam = urlPathParam
 
