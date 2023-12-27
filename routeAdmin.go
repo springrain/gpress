@@ -497,7 +497,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 		ptrObj.UpdateTime = now
 		if ptrObj.Pid != "" {
 			f := zorm.NewSelectFinder(urlPathParam, "comCode").Append(" where id =?", ptrObj.Pid)
-			zorm.QueryRow(ctx, f, &ptrObj.ComCode)
+			zorm.QueryRow(ctx, f, &(ptrObj.ComCode))
 			ptrObj.ComCode = ptrObj.ComCode + ptrObj.Id + ","
 		} else {
 			ptrObj.ComCode = "," + ptrObj.Id + ","
@@ -522,7 +522,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 		}
 		if ptrObj.CategoryID != "" {
 			f := zorm.NewSelectFinder(tableCategoryName, "comCode,name as categoryName").Append(" where id =?", ptrObj.CategoryID)
-			zorm.QueryRow(ctx, f, &ptrObj)
+			zorm.QueryRow(ctx, f, ptrObj)
 		}
 		mastUpdateColumn = append(mastUpdateColumn, "markdown", "content")
 		entity = ptrObj
@@ -654,7 +654,7 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		}
 		if ptrObj.Pid != "" {
 			f := zorm.NewSelectFinder(urlPathParam, "comCode").Append(" where id =?", ptrObj.Pid)
-			zorm.QueryRow(ctx, f, &ptrObj.ComCode)
+			zorm.QueryRow(ctx, f, &(ptrObj.ComCode))
 			ptrObj.ComCode = ptrObj.ComCode + ptrObj.Id + ","
 		} else {
 			ptrObj.ComCode = "," + ptrObj.Id + ","
@@ -686,7 +686,7 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		}
 		if ptrObj.CategoryID != "" {
 			f := zorm.NewSelectFinder(tableCategoryName, "comCode,name as categoryName").Append(" where id =?", ptrObj.CategoryID)
-			zorm.QueryRow(ctx, f, &ptrObj)
+			zorm.QueryRow(ctx, f, ptrObj)
 		}
 		entity = ptrObj
 	default:
