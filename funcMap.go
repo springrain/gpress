@@ -329,7 +329,7 @@ func funcTreeCategory(pid string, pageNo int, pageSize int, hasContent bool) []C
 		}
 	}
 
-	finder := zorm.NewSelectFinder(tableCategoryName).Append("WHERE 1=1")
+	finder := zorm.NewSelectFinder(tableCategoryName).Append("WHERE status=1")
 	if comCode != "" {
 		finder.Append(" and id<>? and comCode like ?", pid, comCode+"%")
 	}
@@ -342,7 +342,7 @@ func funcTreeCategory(pid string, pageNo int, pageSize int, hasContent bool) []C
 
 	if hasContent { //是否包含内容
 		contents := make([]Content, 0)
-		finder := zorm.NewSelectFinder(tableContentName, "id,title,categoryID,comCode,sortNo,status").Append("WHERE 1=1")
+		finder := zorm.NewSelectFinder(tableContentName, "id,title,categoryID,comCode,sortNo,status").Append("WHERE status=1")
 		if comCode != "" {
 			finder.Append(" and categoryID<>? and comCode like ?", pid, comCode+"%")
 		}
