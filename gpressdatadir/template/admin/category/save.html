@@ -62,8 +62,8 @@
 								父级导航
 							</div>
 							<div class="right">
-								<input  type="hidden"  name="pid"  value="{{$categoryName.Data.Id}}">
-								<input class="input is-small" type="text" value="{{$categoryName.Data.Name}}" disabled>
+								<input  type="hidden"  name="pid"  value="{{$categoryName.Id}}">
+								<input class="input is-small" type="text" value="{{$categoryName.Name}}" disabled>
 							</div>
 						</li>
 						<li>
@@ -84,7 +84,7 @@
 								排序
 							</div>
 							<div class="right">
-								<input class="input is-small" type="number" name="sortNo" id="sortNo" value="{{addInt $maxSortNo.Data.SortNo 1}}" />
+								<input class="input is-small" type="number" name="sortNo" id="sortNo" value="{{addInt $maxSortNo.SortNo 1}}" />
 							</div>
 						</li>
 						<li>

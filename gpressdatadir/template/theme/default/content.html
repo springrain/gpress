@@ -7,15 +7,15 @@
 
 {{ $content := selectOne "content" $contentSQL .UrlPathParam }}
 
-{{ $prevContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo < ? order by sortNo desc " $content.Data.SortNo  }}
-{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo > ? order by sortNo desc " $content.Data.SortNo  }}
+{{ $prevContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo < ? order by sortNo desc " $content.SortNo  }}
+{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo > ? order by sortNo desc " $content.SortNo  }}
 
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-  <title>{{ $content.Data.Title }}</title>
-  <meta name="description" content="{{ $content.Data.Description }}" />
-  <meta name="keyword" content="{{ $content.Data.Keyword }}" />
+  <title>{{ $content.Title }}</title>
+  <meta name="description" content="{{ $content.Description }}" />
+  <meta name="keyword" content="{{ $content.Keyword }}" />
 
 {{template "bodystart.html"  }}
 
@@ -23,24 +23,24 @@
 <article class="post">
     
   <header class="post-header">
-    <h1 class="post-title">{{ $content.Data.Title }}</h1>
+    <h1 class="post-title">{{ $content.Title }}</h1>
 
     <div class="post-meta">
-      <span class="post-time"> {{ $content.Data.CreateTime }} </span>
+      <span class="post-time"> {{ $content.CreateTime }} </span>
       <div class="post-category">
-          <a href="{{basePath}}category/{{ $content.Data.CategoryID }}"> {{ $content.Data.CategoryName }} </a>
+          <a href="{{basePath}}category/{{ $content.CategoryID }}"> {{ $content.CategoryName }} </a>
           </div>
       
     </div>
   </header>
 
-{{ if $content.Data.Toc }}
+{{ if $content.Toc }}
 <div class="post-toc" id="post-toc">
 <h2 class="post-toc-title">文章目录</h2>
 <div class="post-toc-content always-active">
 <nav id="TableOfContents">
 
-  {{  safeHTML $content.Data.Toc }}
+  {{  safeHTML $content.Toc }}
 
 </nav>
 </div>
@@ -50,19 +50,19 @@
 
   <div class="post-content">
 
-    {{ safeHTML $content.Data.Content }}
+    {{ safeHTML $content.Content }}
 
 </div>
 <div class="post-copyright">
 <p class="copyright-item">
   <span class="item-title">文章作者</span>
-  <span class="item-content"> {{ $content.Data.Author }}</span>
+  <span class="item-content"> {{ $content.Author }}</span>
 </p>
 <p class="copyright-item">
   <span class="item-title">上次更新</span>
   <span class="item-content">
-    {{ if $content.Data.UpdateTime }}
-     {{ slice $content.Data.UpdateTime 0 10 }}
+    {{ if $content.UpdateTime }}
+     {{ slice $content.UpdateTime 0 10 }}
     {{end}}
   </span>
 </p>
@@ -71,23 +71,23 @@
 </div>
 <footer class="post-footer">
 
-    {{if $content.Data.Tag }}
+    {{if $content.Tag }}
     <div class="post-tags">
-        <a href="{{basePath}}tag/{{$content.Data.Tag}}">{{$content.Data.Tag}}</a>
+        <a href="{{basePath}}tag/{{$content.Tag}}">{{$content.Tag}}</a>
     </div>
     {{end}}
 
     <nav class="post-nav">
-      {{if $prevContent.Data.Id }}
-      <a class="prev" href="{{basePath}}post/{{$prevContent.Data.Id}}">
+      {{if $prevContent.Id }}
+      <a class="prev" href="{{basePath}}post/{{$prevContent.Id}}">
           <i class="iconfont icon-left"></i>
-          <span class="prev-text nav-default">{{$prevContent.Data.Title}}</span>
+          <span class="prev-text nav-default">{{$prevContent.Title}}</span>
           <span class="prev-text nav-mobile">上一篇</span>
         </a>
       {{end}}
-      {{if $nextContent.Data.Id }}
-      <a class="next" href="{{basePath}}post/{{$nextContent.Data.Id}}">
-          <span class="next-text nav-default">{{$nextContent.Data.Title}}</span>
+      {{if $nextContent.Id }}
+      <a class="next" href="{{basePath}}post/{{$nextContent.Id}}">
+          <span class="next-text nav-default">{{$nextContent.Title}}</span>
           <span class="next-text nav-mobile">下一篇</span>
           <i class="iconfont icon-right"></i>
         </a>
