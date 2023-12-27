@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-  <title>{{ $nav.Data.Name }}</title>
+  <title>{{ $nav.Name }}</title>
   <meta name="description" content="{{ $site.Description }}" />
   <meta name="keyword" content="{{ $site.Keyword }}" />
 
@@ -23,7 +23,7 @@
 
 <section id="archive" class="archive">
   <div class="archive-title category">
-        <h2 class="archive-name">{{$nav.Data.Name}}</h2>
+        <h2 class="archive-name">{{$nav.Name}}</h2>
   </div>
   {{ range $k,$v := $selectList.Data }}
   <div class="archive-post">
