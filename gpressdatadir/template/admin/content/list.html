@@ -76,7 +76,7 @@
 					<table class="table is-hoverable is-fullwidth">
 						<thead>
 						<tr>
-							<th class="">操作</th>
+							<th>操作</th>
 							<th>ID</th>
 							<th>标题</th>
 							<th>排序</th>
@@ -92,7 +92,7 @@
 						<!-- 循环所有的数据 -->
 						{{ range $i,$v := .Data }}
 						<tr>
-							<td class="">
+							<td>
 								<div style="margin-bottom: 10px;">
 									<a class="button is-success is-light is-small"
 									   href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
