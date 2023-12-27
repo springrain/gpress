@@ -232,14 +232,13 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 	return responseData, nil
 }
 
-func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (ResponseData, error) {
-	responseData := ResponseData{StatusCode: 0}
+func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (interface{}, error) {
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
 		err := errors.New("sql语句错误")
-		responseData.ERR = err
-		return responseData, err
+		return nil, err
 	}
+	var selectOneData interface{}
 	finder := zorm.NewFinder().Append("SELECT")
 	finder.Append(sql, values...)
 
@@ -252,62 +251,58 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (Resp
 		data := make([]Config, 0)
 		zorm.Query(ctx, finder, &data, page)
 		if len(data) > 0 {
-			responseData.Data = data[0]
+			selectOneData = data[0]
 		} else {
-			responseData.Data = Config{}
+			selectOneData = Config{}
 		}
 	case tableUserName:
 		data := make([]User, 0)
 		zorm.Query(ctx, finder, &data, page)
 		if len(data) > 0 {
-			responseData.Data = data[0]
+			selectOneData = data[0]
 		} else {
-			responseData.Data = User{}
+			selectOneData = User{}
 		}
 	case tableSiteName:
 		data := make([]Site, 0)
 		zorm.Query(ctx, finder, &data, page)
 		if len(data) > 0 {
-			responseData.Data = data[0]
+			selectOneData = data[0]
 		} else {
-			responseData.Data = Site{}
+			selectOneData = Site{}
 		}
 	case tablePageTemplateName:
 		data := make([]PageTemplate, 0)
 		zorm.Query(ctx, finder, &data, page)
 		if len(data) > 0 {
-			responseData.Data = data[0]
+			selectOneData = data[0]
 		} else {
-			responseData.Data = PageTemplate{}
+			selectOneData = PageTemplate{}
 		}
 	case tableCategoryName:
 		data := make([]Category, 0)
 		zorm.Query(ctx, finder, &data, page)
 		if len(data) > 0 {
-			responseData.Data = data[0]
+			selectOneData = data[0]
 		} else {
-			responseData.Data = Category{}
+			selectOneData = Category{}
 		}
 	case tableContentName:
 		data := make([]Content, 0)
 		zorm.Query(ctx, finder, &data, page)
 		if len(data) > 0 {
-			responseData.Data = data[0]
+			selectOneData = data[0]
 		} else {
-			responseData.Data = Content{}
+			selectOneData = Content{}
 		}
 	case "": // 对象为空查询map
-		responseData.Data, responseData.ERR = zorm.QueryRowMap(ctx, finder)
+		selectOneData, _ = zorm.QueryRowMap(ctx, finder)
 	default:
 		err := errors.New(urlPathParam + "表不存在!")
-		responseData.ERR = err
-		responseData.StatusCode = 0
-		return responseData, err
+		return selectOneData, err
 	}
-	//resultMap := map[string]interface{}{"statusCode": 1, "data": data, "urlPathParam": tableName}
-	responseData.StatusCode = 1
-	responseData.UrlPathParam = urlPathParam
-	return responseData, nil
+
+	return selectOneData, nil
 }
 
 func funcTreeCategory(pid string, pageNo int, pageSize int, hasContent bool) []Category {
