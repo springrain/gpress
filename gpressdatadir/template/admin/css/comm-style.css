@@ -184,8 +184,8 @@ body {
 }
 
 .upload-modlue .img-preview {
-	width: 200px;
-	height: 200px;
+	width: 100px;
+	height: 100px;
 	border: 1px dashed #dbdbdb;
 	box-sizing: border-box;
 	display: flex;
@@ -220,10 +220,9 @@ body {
 	margin-top: 8px;
 }
 
-.upload-box,
-.upload-box2 {
-	width: 200px;
-	height: 200px;
+.upload-box,.upload-box2 {
+	width: 100px;
+	height: 100px;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -235,20 +234,17 @@ body {
 	border-radius: 4px;
 }
 
-.upload-box .iconfont,
-.upload-box2 .iconfont {
+.upload-box .iconfont,.upload-box2 .iconfont {
 	font-size: 30px;
 	color: #999999;
 }
 
-.upload-box p,
-.upload-box2 p {
+.upload-box p,.upload-box2 p {
 	font-size: 14px;
 	color: #999999;
 }
 
-.upload-box input,
-.upload-box2 input {
+.upload-box input,.upload-box2 input {
 	position: absolute;
 	width: 100%;
 	height: 100%;
