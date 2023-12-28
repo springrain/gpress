@@ -128,9 +128,7 @@ type Category struct {
 	// 状态 列表不显示(0),公开(1),私密(2)
 	Status int `column:"status" json:"status,omitempty"`
 
-	Leaf     []Category `json:"leaf,omitempty"`
-	Contents []Content  `json:"contents,omitempty"`
-	//HasLeaf bool       `json:"hasLeaf,omitempty"`
+	Leaf []Category `json:"leaf,omitempty"`
 }
 
 // GetTableName 获取表名称
