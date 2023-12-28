@@ -36,7 +36,7 @@ func genSearchDataJson() error {
 	searchDataLock.Lock()
 	defer searchDataLock.Unlock()
 
-	finder := zorm.NewSelectFinder(tableContentName, "id,title,hrefURL,categoryName,content").Append("WHERE status=1 order by sortNo desc")
+	finder := zorm.NewSelectFinder(tableContentName, "id,title,hrefURL,categoryName,content,description").Append("WHERE status=1 order by sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 2000
 	datas := make([]Content, 0)
