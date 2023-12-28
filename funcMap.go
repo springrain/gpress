@@ -346,7 +346,7 @@ func sliceCategory2Tree(categorys []Category) []Category {
 	for i := 0; i < len(categorys); i++ {
 		c1 := categorys[i]
 		var category *Category
-		for j := i + 1; j < len(categorys); j++ {
+		for j := 0; j < len(categorys); j++ {
 			if c1.Pid == categorys[j].Id {
 				category = &categorys[j]
 				break
