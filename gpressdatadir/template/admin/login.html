@@ -17,7 +17,7 @@
 							<img src="{{basePath}}public/logo.png">
 						</figure>
 
-						<form id="loginForm" action="{{basePath}}admin/login" method="post" onsubmit="encrypt();">
+						<form id="loginForm" action="{{basePath}}admin/login" method="post" onsubmit="return encrypt();">
 							<div class="field">
 								<div class="control">
 									<input class="input is-large" name="account" type="text" placeholder="请输入账号"
@@ -65,7 +65,7 @@
 </body>
 <script type="text/javascript">
 	function encrypt() {
-		document.getElementById('password').value = sha3_512(document.getElementById('password').value)
+		document.getElementById('password').value = sha3_512(document.getElementById('password').value);
 	}
 	$(function() {
 		let msg = $('#message').val()
