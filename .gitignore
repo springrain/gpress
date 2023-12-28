@@ -3,9 +3,10 @@
 *.ipr
 *.iml
 *.iws
-gpressdatadir/public/upload/*
-gpressdatadir/install_config.json
-gpressdatadir/template/admin/install.html
+upload/
+install_config.json
+search-data.json
+install.html
 testTable/
 dict/
 natsdata/

@@ -64,6 +64,11 @@ func main() {
 			FuncLogError(err)
 		}
 	*/
+	//生成json文件
+	if !pathExist(searchDataJsonFile) {
+		genSearchDataJson()
+	}
+
 	message := "浏览器打开前端: "
 	httpStr := "http://"
 	if strings.HasPrefix(config.ServerPort, ":") {
