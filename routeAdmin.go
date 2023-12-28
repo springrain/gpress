@@ -554,6 +554,9 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 		FuncLogError(err)
 		return
 	}
+	if urlPathParam == tableContentName {
+		genSearchDataJson()
+	}
 	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 }
 
@@ -710,6 +713,9 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		FuncLogError(err)
 		return
 	}
+	if urlPathParam == tableContentName {
+		genSearchDataJson()
+	}
 	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
 }
 
@@ -747,6 +753,9 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
 			c.Abort() // 终止后续调用
+		}
+		if urlPathParam == tableContentName {
+			genSearchDataJson()
 		}
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
 	}
