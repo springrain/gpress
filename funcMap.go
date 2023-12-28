@@ -305,63 +305,17 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 	return selectOneData, nil
 }
 
-func funcTreeCategory(pid string, pageNo int, pageSize int, hasContent bool) []Category {
-	var page *zorm.Page = nil
-	if pageNo > 0 && pageSize > 0 {
-		page = zorm.NewPage()
-		page.PageNo = pageNo
-		page.PageSize = pageSize
-	}
-
+func funcTreeCategory(sql string, values ...interface{}) []Category {
 	ctx := context.Background()
 	categorys := make([]Category, 0)
-	comCode := ""
-	if pid != "" {
-		f1 := zorm.NewSelectFinder(tableCategoryName, "comCode").Append(" WHERE id=?", pid)
-		has, err := zorm.QueryRow(ctx, f1, &comCode)
-		if !has || err != nil {
-			return categorys
-		}
-	}
-
-	finder := zorm.NewSelectFinder(tableCategoryName).Append("WHERE status=1")
-	if comCode != "" {
-		finder.Append(" and id<>? and comCode like ?", pid, comCode+"%")
-	}
-	finder.Append("order by sortNo desc")
-
-	err := zorm.Query(ctx, finder, &categorys, page)
+	finder := zorm.NewFinder().Append("SELECT")
+	finder.Append(sql, values...)
+	err := zorm.Query(ctx, finder, &categorys, nil)
 	if err != nil {
 		return categorys
 	}
 
-	if hasContent { //是否包含内容
-		contents := make([]Content, 0)
-		finder := zorm.NewSelectFinder(tableContentName, "id,title,categoryID,comCode,sortNo,status").Append("WHERE status=1")
-		if comCode != "" {
-			finder.Append(" and categoryID<>? and comCode like ?", pid, comCode+"%")
-		}
-		finder.Append("order by sortNo desc")
-		err := zorm.Query(ctx, finder, &contents, page)
-		if err != nil {
-			return categorys
-		}
-		for i := 0; i < len(categorys); i++ {
-			category := &categorys[i]
-			category.Contents = make([]Content, 0)
-			for j := 0; j < len(contents); j++ {
-				content := contents[j]
-				if category.Id == content.CategoryID {
-					category.Contents = append(category.Contents, content)
-				}
-			}
-		}
-
-	}
-
-	treeCategory := make([]Category, 0)
-
-	recursionCategorys(pid, nil, categorys, &treeCategory)
+	treeCategory := sliceCategory2Tree(categorys)
 
 	return treeCategory
 }
@@ -387,28 +341,41 @@ func contains(s, substr string) bool {
 	return strings.Contains(s, substr)
 }
 
-func recursionCategorys(pid string, pidCategory *Category, categorys []Category, treeCategory *[]Category) {
-	leaf := make([]Category, 0)
+func sliceCategory2Tree(categorys []Category) []Category {
+	categorysMap := make(map[string]*Category)
 	for i := 0; i < len(categorys); i++ {
-		if categorys[i].Pid == pid { //pid
-			leaf = append(leaf, categorys[i])
+		c1 := categorys[i]
+		var category *Category
+		for j := i + 1; j < len(categorys); j++ {
+			if c1.Pid == categorys[j].Id {
+				category = &categorys[j]
+				break
+			}
+		}
+
+		if category != nil { //找到了上级
+			delete(categorysMap, c1.Id)
+			if category.Leaf == nil {
+				category.Leaf = make([]Category, 0)
+			}
+			category.Leaf = append(category.Leaf, c1)
+			categorysMap[category.Id] = category
+		} else {
+			categorysMap[c1.Id] = &c1
+		}
+
+	}
+
+	//重新排序获取
+	treeCategory := make([]Category, 0)
+	for i := 0; i < len(categorys); i++ {
+		id := categorys[i].Id
+		c, has := categorysMap[id]
+		if has {
+			treeCategory = append(treeCategory, *c)
 		}
 	}
-	if len(leaf) == 0 {
-		return
-	}
 
-	var tempLeaf []Category
-
-	if pidCategory != nil {
-		pidCategory.Leaf = append(pidCategory.Leaf, leaf...)
-		tempLeaf = pidCategory.Leaf
-	} else {
-		*treeCategory = append(*treeCategory, leaf...)
-		tempLeaf = *treeCategory
-	}
-	for i := 0; i < len(tempLeaf); i++ {
-		recursionCategorys(tempLeaf[i].Id, &tempLeaf[i], categorys, treeCategory)
-	}
+	return treeCategory
 
 }
