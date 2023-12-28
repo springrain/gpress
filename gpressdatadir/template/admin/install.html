@@ -5,13 +5,13 @@
 <script type="text/javascript">
 
     function encrypt() {
-        var password = document.getElementById('password').value
-        var password2 = document.getElementById('password2').value
+        var password = document.getElementById('password').value;
+        var password2 = document.getElementById('password2').value;
         if (password != password2) {
-            alert('密码不一致')
-            return false
+            alert('密码不一致');
+            return false;
         }
-        document.getElementById('password').value = sha3_512(password)
+        document.getElementById('password').value = sha3_512(password);
     }
     /*
         function randomString(len) {    
@@ -47,7 +47,7 @@
                     <h3 class="title has-text-black">初始化安装</h3>
                     <hr class="login-hr">
 
-                    <form id="installForm" action="{{basePath}}admin/install" method="post" onsubmit="encrypt();">
+                    <form id="installForm" action="{{basePath}}admin/install" method="post" onsubmit="return encrypt();">
                         <div class="field">
                             <div class="control">
                                 <input class="input" name="account" type="text" placeholder="请输入管理员账号" autofocus="">
