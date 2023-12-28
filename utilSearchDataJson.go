@@ -45,9 +45,8 @@ func genSearchDataJson() error {
 		return err
 	}
 	for i := 0; i < len(datas); i++ {
-		data := datas[i]
-		if data.HrefURL == "" {
-			data.HrefURL = funcBasePath() + "post/" + data.Id
+		if datas[i].HrefURL == "" {
+			datas[i].HrefURL = funcBasePath() + "post/" + datas[i].Id
 		}
 	}
 	dataBytes, err := json.Marshal(datas)
