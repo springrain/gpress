@@ -43,13 +43,13 @@
   
 <nav class="pagination">
   {{ if $selectList.Page.HasPrev }}
-  <a class="prev" href="{{basePath}}?pageNo={{ addInt $selectList.Page.PageNo -1 }}&q={{.q}}">
+  <a class="prev" href="{{basePath}}page/{{ addInt $selectList.Page.PageNo -1 }}?q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
   {{ if $selectList.Page.HasNext }}
-  <a class="next" href="{{basePath}}?pageNo={{ addInt $selectList.Page.PageNo 1 }}&q={{.q}}">
+  <a class="next" href="{{basePath}}page/{{ addInt $selectList.Page.PageNo 1 }}?q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>
