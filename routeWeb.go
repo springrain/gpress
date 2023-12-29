@@ -107,7 +107,8 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 	pageNoStr := c.Param("pageNo")
 	if pageNoStr == "" {
-		pageNoStr = c.DefaultQuery("pageNo", "1")
+		//pageNoStr = c.DefaultQuery("pageNo", "1")
+		pageNoStr = "1"
 	}
 
 	pageNo, _ := strconv.Atoi(pageNoStr)
