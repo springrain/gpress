@@ -84,8 +84,10 @@
 							<th>导航菜单</th>
 							<th>tag标签</th>
 							<th>副标题</th>
-							<th>关键字</th>
+							<th>keyword</th>
+							<th>description</th>
 							<th>作者</th>
+							
 						</tr>
 						</thead>
 						<tbody>
@@ -124,6 +126,7 @@
 							<td> {{ .Tag }}</td>
 							<td> {{ .Subtitle }}</td>
 							<td> {{ .Keyword }}</td>
+							<td> {{ .Description }}</td>
 							<td> {{ .Author }}</td>
 						</tr>
 						{{end }}
