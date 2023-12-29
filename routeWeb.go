@@ -35,10 +35,15 @@ func init() {
 
 	// 默认首页
 	h.GET("/", funcIndex)
+	h.GET("/page/:pageNo", funcIndex)
+
 	// 导航菜单列表
 	h.GET("/category/:urlPathParam", funcListCategory)
+	h.GET("/category/:urlPathParam/page/:pageNo", funcListCategory)
+
 	// 查看标签
 	h.GET("/tag/:urlPathParam", funcListTags)
+	h.GET("/tag/:urlPathParam/page/:pageNo", funcListTags)
 	// 查看内容
 	h.GET("/post/:urlPathParam", funcOneContent)
 
@@ -100,7 +105,11 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 }
 
 func warpRequestMap(c *app.RequestContext) map[string]interface{} {
-	pageNoStr := c.DefaultQuery("pageNo", "1")
+	pageNoStr := c.Param("pageNo")
+	if pageNoStr == "" {
+		pageNoStr = c.DefaultQuery("pageNo", "1")
+	}
+
 	pageNo, _ := strconv.Atoi(pageNoStr)
 	q := strings.TrimSpace(c.Query("q"))
 
