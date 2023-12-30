@@ -149,6 +149,8 @@ func genStaticHtmlFile() error {
 		}
 	}
 
+	// TODO 复制主题里的css,js,image 和公共的public文件夹到statichtml根目录
+
 	return nil
 }
 
