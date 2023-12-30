@@ -49,8 +49,8 @@ func initTemplate() error {
 	h.SetHTMLTemplate(tmpl)
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
 	hStaticFS("/public", datadir)
-	// 设置静态网页目录
-	hStaticFS("/statichtml", datadir)
+	// gpress只负责生成静态html文件,使用Nginx读取静态文件
+	//hStaticFS("/statichtml", datadir)
 	return err
 }
 

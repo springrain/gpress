@@ -38,6 +38,9 @@ var config = loadInstallConfig()
 // 使用的主题
 var themePath = "/theme/" + config.Theme + "/"
 
+// 服务器url路径
+var httpServerPath = "http://"
+
 // hertz对象,可以在其他地方使用
 var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.BasePath))
 
@@ -70,13 +73,14 @@ func main() {
 	}
 
 	message := "浏览器打开前端: "
-	httpStr := "http://"
 	if strings.HasPrefix(config.ServerPort, ":") {
-		httpStr += "127.0.0.1"
+		httpServerPath += "127.0.0.1"
 	}
-	message += httpStr + config.ServerPort + config.BasePath
-	message += "\n浏览器打开后台: " + httpStr + config.ServerPort + config.BasePath + "admin/login"
+	httpServerPath += config.ServerPort + config.BasePath
+	message += httpServerPath
+	message += "\n浏览器打开后台: " + httpServerPath + "admin/login"
 	fmt.Println(message)
+
 	// 启动服务
 	h.Spin()
 
