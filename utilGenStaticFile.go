@@ -24,6 +24,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"sync"
 
 	"gitee.com/chunanyong/zorm"
@@ -33,6 +34,7 @@ import (
 // onlyOnce控制并发
 // var onlyOnce = make(chan struct{}, 1)
 var searchDataLock = &sync.Mutex{}
+var genStaticHtmlLock = &sync.Mutex{}
 
 // genSearchDataJson 生成flexSearch需要的json文件,默认2000条数据
 func genSearchDataJson() error {
@@ -64,6 +66,8 @@ func genSearchDataJson() error {
 
 // genStaticHtmlFile 生成全站静态文件
 func genStaticHtmlFile() error {
+	genStaticHtmlLock.Lock()
+	defer genStaticHtmlLock.Unlock()
 	ctx := context.Background()
 	postIds := make([]string, 0)
 	f_post := zorm.NewSelectFinder(tableContentName, "id").Append(" WHERE status=1 order by sortNo desc")
@@ -73,13 +77,50 @@ func genStaticHtmlFile() error {
 	}
 	//删除整个目录
 	os.RemoveAll(staticHtmlDir)
-	//生成文章的文件
+	//生成首页index网页
+	fileHash, err := writeStaticHtml(httpServerPath, staticHtmlDir, "")
+	if fileHash == "" || err != nil {
+		return err
+	}
+	//上一个分页
+	prvePageFileHash := ""
+	//生成文章的静态网页
 	for i := 0; i < len(postIds); i++ {
 		postId := postIds[i]
 		postURL := httpServerPath + "post/" + postId
-		fileHash, err := writeStaticHtml(postURL, staticHtmlDir+"post/"+postId)
+		fileHash, err := writeStaticHtml(postURL, staticHtmlDir+"post/"+postId+"/", "")
 		if fileHash == "" || err != nil {
 			continue
+		}
+		fileHash, err = writeStaticHtml(httpServerPath+"page/"+strconv.Itoa(i+1), staticHtmlDir+"page/"+strconv.Itoa(i+1)+"/", prvePageFileHash)
+		if fileHash == "" || err != nil {
+			continue
+		}
+		//如果hash完全一致,认为是最后一页
+		prvePageFileHash = fileHash
+	}
+	//生成栏目的静态网页
+	categoryIds := make([]string, 0)
+	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status=1 order by sortNo desc")
+	err = zorm.Query(ctx, f_category, &categoryIds, nil)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < len(categoryIds); i++ {
+		categoryId := categoryIds[i]
+		categoryURL := httpServerPath + "category/" + categoryId
+		//生成栏目首页index
+		fileHash, err := writeStaticHtml(categoryURL, staticHtmlDir+"category/"+categoryId+"/", "")
+		if fileHash == "" || err != nil {
+			return err
+		}
+		for j := 0; j < len(postIds); j++ {
+			fileHash, err := writeStaticHtml(httpServerPath+"category/"+categoryId+"/page/"+strconv.Itoa(j+1), staticHtmlDir+"category/"+categoryId+"/page/"+strconv.Itoa(j+1)+"/", prvePageFileHash)
+			if fileHash == "" || err != nil {
+				continue
+			}
+			//如果hash完全一致,认为是最后一页
+			prvePageFileHash = fileHash
 		}
 	}
 
@@ -87,7 +128,7 @@ func genStaticHtmlFile() error {
 }
 
 // writeStaticHtml 写入静态html
-func writeStaticHtml(httpurl string, filePath string) (string, error) {
+func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, error) {
 
 	response, err := http.Get(httpurl)
 	if err != nil {
@@ -104,9 +145,12 @@ func writeStaticHtml(httpurl string, filePath string) (string, error) {
 	}
 	//计算hash
 	bytehex := sha3.Sum256(body)
-	fileHash := hex.EncodeToString(bytehex[:])
+	bodyHash := hex.EncodeToString(bytehex[:])
+	if bodyHash == fileHash { //如果hash一致,不再生成文件
+		return bodyHash, nil
+	}
 	// 写入文件
 	os.MkdirAll(filePath, os.ModePerm)
-	err = os.WriteFile(filePath+"/index.html", body, os.ModePerm)
-	return fileHash, err
+	err = os.WriteFile(filePath+"index.html", body, os.ModePerm)
+	return bodyHash, err
 }
