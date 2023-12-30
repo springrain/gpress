@@ -503,7 +503,10 @@
 			content: content,
 			markdown: cherryObj.getMarkdown(),
 		}
-		console.log(jsonObject)
+		if(jsonObject.title==""||jsonObject.categoryID==""){
+			alert("文章标题和导航菜单不能为空");
+			return false;
+		}
 		const response = await fetch(form.action, {
 			method: form.method,
 			body: JSON.stringify(jsonObject),
