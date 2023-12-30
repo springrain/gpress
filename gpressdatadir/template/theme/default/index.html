@@ -42,14 +42,22 @@
 </section>
   
 <nav class="pagination">
-  {{ if $selectList.Page.HasPrev }}
-  <a class="prev" href="{{basePath}}page/{{ addInt $selectList.Page.PageNo -1 }}?q={{.q}}">
+  {{$currPageNo := $selectList.Page.PageNo}}
+  {{if lt $currPageNo 1}}
+    {{$currPageNo = 1}}
+  {{end}}
+  {{if gt $currPageNo $selectList.Page.PageCount }}
+     {{$currPageNo = $selectList.Page.PageCount}}
+  {{end}}
+
+  {{if gt $currPageNo 1}}
+  <a class="prev" href="{{basePath}}page/{{ addInt $currPageNo -1 }}?q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
-  {{ if $selectList.Page.HasNext }}
-  <a class="next" href="{{basePath}}page/{{ addInt $selectList.Page.PageNo 1 }}?q={{.q}}">
+  {{if lt $currPageNo $selectList.Page.PageCount}}
+  <a class="next" href="{{basePath}}page/{{ addInt $currPageNo 1 }}?q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>
