@@ -19,11 +19,15 @@ package main
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"io"
+	"net/http"
 	"os"
 	"sync"
 
 	"gitee.com/chunanyong/zorm"
+	"golang.org/x/crypto/sha3"
 )
 
 // onlyOnce控制并发
@@ -60,6 +64,49 @@ func genSearchDataJson() error {
 
 // genStaticHtmlFile 生成全站静态文件
 func genStaticHtmlFile() error {
+	ctx := context.Background()
+	postIds := make([]string, 0)
+	f_post := zorm.NewSelectFinder(tableContentName, "id").Append(" WHERE status=1 order by sortNo desc")
+	err := zorm.Query(ctx, f_post, &postIds, nil)
+	if err != nil {
+		return err
+	}
+	//删除整个目录
+	os.RemoveAll(staticHtmlDir)
+	//生成文章的文件
+	for i := 0; i < len(postIds); i++ {
+		postId := postIds[i]
+		postURL := httpServerPath + "post/" + postId
+		fileHash, err := writeStaticHtml(postURL, staticHtmlDir+"post/"+postId)
+		if fileHash == "" || err != nil {
+			continue
+		}
+	}
 
 	return nil
+}
+
+// writeStaticHtml 写入静态html
+func writeStaticHtml(httpurl string, filePath string) (string, error) {
+
+	response, err := http.Get(httpurl)
+	if err != nil {
+		FuncLogError(err)
+		return "", err
+	}
+	// 读取资源数据 body: []byte
+	body, err := io.ReadAll(response.Body)
+	// 关闭资源流
+	response.Body.Close()
+	if err != nil {
+		FuncLogError(err)
+		return "", err
+	}
+	//计算hash
+	bytehex := sha3.Sum256(body)
+	fileHash := hex.EncodeToString(bytehex[:])
+	// 写入文件
+	os.MkdirAll(filePath, os.ModePerm)
+	err = os.WriteFile(filePath+"/index.html", body, os.ModePerm)
+	return fileHash, err
 }
