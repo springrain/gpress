@@ -30,6 +30,7 @@ import (
 // var onlyOnce = make(chan struct{}, 1)
 var searchDataLock = &sync.Mutex{}
 
+// genSearchDataJson 生成flexSearch需要的json文件,默认2000条数据
 func genSearchDataJson() error {
 	//onlyOnce <- struct{}{}
 	//defer func() { <-onlyOnce }()
@@ -55,4 +56,10 @@ func genSearchDataJson() error {
 	}
 	err = os.WriteFile(searchDataJsonFile, dataBytes, os.ModePerm)
 	return err
+}
+
+// genStaticHtmlFile 生成全站静态文件
+func genStaticHtmlFile() error {
+
+	return nil
 }
