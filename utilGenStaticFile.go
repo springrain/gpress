@@ -69,12 +69,15 @@ func genStaticHtmlFile() error {
 	genStaticHtmlLock.Lock()
 	defer genStaticHtmlLock.Unlock()
 	ctx := context.Background()
-	postIds := make([]string, 0)
-	f_post := zorm.NewSelectFinder(tableContentName, "id").Append(" WHERE status=1 order by sortNo desc")
-	err := zorm.Query(ctx, f_post, &postIds, nil)
+	contents := make([]Content, 0)
+	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status=1 order by sortNo desc")
+	err := zorm.Query(ctx, f_post, &contents, nil)
 	if err != nil {
 		return err
 	}
+
+	tagsMap := make(map[string]bool, 0)
+
 	//删除整个目录
 	os.RemoveAll(staticHtmlDir)
 	//生成首页index网页
@@ -85,8 +88,12 @@ func genStaticHtmlFile() error {
 	//上一个分页
 	prvePageFileHash := ""
 	//生成文章的静态网页
-	for i := 0; i < len(postIds); i++ {
-		postId := postIds[i]
+	for i := 0; i < len(contents); i++ {
+		tag := contents[i].Tag
+		if tag != "" {
+			tagsMap[tag] = true
+		}
+		postId := contents[i].Id
 		postURL := httpServerPath + "post/" + postId
 		fileHash, err := writeStaticHtml(postURL, staticHtmlDir+"post/"+postId+"/", "")
 		if fileHash == "" || err != nil {
@@ -114,8 +121,26 @@ func genStaticHtmlFile() error {
 		if fileHash == "" || err != nil {
 			return err
 		}
-		for j := 0; j < len(postIds); j++ {
+		for j := 0; j < len(contents); j++ {
 			fileHash, err := writeStaticHtml(httpServerPath+"category/"+categoryId+"/page/"+strconv.Itoa(j+1), staticHtmlDir+"category/"+categoryId+"/page/"+strconv.Itoa(j+1)+"/", prvePageFileHash)
+			if fileHash == "" || err != nil {
+				continue
+			}
+			//如果hash完全一致,认为是最后一页
+			prvePageFileHash = fileHash
+		}
+	}
+
+	//生成tag的静态页
+	for tag, _ := range tagsMap {
+		tagURL := httpServerPath + "tag/" + tag
+		//生成栏目首页index
+		fileHash, err := writeStaticHtml(tagURL, staticHtmlDir+"tag/"+tag+"/", "")
+		if fileHash == "" || err != nil {
+			return err
+		}
+		for j := 0; j < len(contents); j++ {
+			fileHash, err := writeStaticHtml(httpServerPath+"tag/"+tag+"/page/"+strconv.Itoa(j+1), staticHtmlDir+"tag/"+tag+"/page/"+strconv.Itoa(j+1)+"/", prvePageFileHash)
 			if fileHash == "" || err != nil {
 				continue
 			}
