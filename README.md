@@ -53,7 +53,7 @@ location ~ ^/admin/ {
     proxy_set_header   X-Forwarded-Proto $scheme;
     proxy_pass  http://127.0.0.1:660;  
 }
-       ###  静态html目录
+###  静态html目录
 location / {
     proxy_redirect     off;
     proxy_set_header   Host      $host;
