@@ -70,7 +70,7 @@ func genStaticHtmlFile() error {
 	defer genStaticHtmlLock.Unlock()
 	ctx := context.Background()
 	contents := make([]Content, 0)
-	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status=1 order by sortNo desc")
+	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<2 order by sortNo desc")
 	err := zorm.Query(ctx, f_post, &contents, nil)
 	if err != nil {
 		return err
@@ -108,7 +108,7 @@ func genStaticHtmlFile() error {
 	}
 	//生成栏目的静态网页
 	categoryIds := make([]string, 0)
-	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status=1 order by sortNo desc")
+	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status<2 order by sortNo desc")
 	err = zorm.Query(ctx, f_category, &categoryIds, nil)
 	if err != nil {
 		return err
