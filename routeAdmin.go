@@ -258,20 +258,12 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
+		//重新生成静态文件
+		go genStaticHtmlFile()
+
 		//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址
 		//c.HTMLRender = render.HTMLProduction{Template: tmpl}
 		//c.HTML(http.StatusOK, "admin/index.html", nil)
-		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
-	})
-
-	// 生成静态文件
-	adminGroup.GET("/genhtml", func(ctx context.Context, c *app.RequestContext) {
-		err := genStaticHtmlFile()
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
-			c.Abort() // 终止后续调用
-			return
-		}
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 	})
 
