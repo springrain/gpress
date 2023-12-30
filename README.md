@@ -23,6 +23,53 @@ make && make install
 ## 说明
 使用 Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件.  
 
+## 静态化
+后台 ```刷新模板``` 功能会生成静态html文件到 ```statichtml``` 目录,需要把正在使用的主题的 ```css,js,image```和```gpressdatadir/public```目录复制到 ```statichtml```目录下.  
+nginx 配置示例如下:
+```conf
+### 当前模板的静态文件
+location ~ ^/css/ {
+    root /data/gpress/gpressdatadir/template/theme/default;  
+}
+### 当前模板的静态文件
+location ~ ^/js/ {
+    root /data/gpress/gpressdatadir/template/theme/default;  
+}
+### 当前模板的静态文件
+location ~ ^/image/ {
+    root /data/gpress/gpressdatadir/template/theme/default;  
+}
+### public 公共文件
+location ~ ^/public/ {
+    root /data/gpress/gpressdatadir;  
+}
+    
+### admin 后台管理,请求动态服务
+location ~ ^/admin/ {
+    proxy_redirect     off;
+    proxy_set_header   Host      $host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_pass  http://127.0.0.1:660;  
+}
+       ###  静态html目录
+location / {
+    proxy_redirect     off;
+    proxy_set_header   Host      $host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto $scheme; 
+    ## 存在q查询参数,使用动态服务.也支持FlexSearch解析public/search-data.json
+    if ($arg_q) { 
+       proxy_pass  http://127.0.0.1:660;  
+       break;
+    }
+    root   /data/gpress/gpressdatadir/statichtml;
+    index  index.html index.htm;
+}
+```  
+
 ## 表结构  
 ID默认使用时间戳(23位)+随机数(9位),全局唯一      
 
