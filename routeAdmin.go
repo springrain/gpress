@@ -264,6 +264,17 @@ func init() {
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 	})
 
+	// 生成静态文件
+	adminGroup.GET("/genhtml", func(ctx context.Context, c *app.RequestContext) {
+		err := genStaticHtmlFile()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
+			return
+		}
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
+	})
+
 	//上传文件
 	adminGroup.POST("/upload", func(ctx context.Context, c *app.RequestContext) {
 		fileHeader, err := c.FormFile("file")

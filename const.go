@@ -52,7 +52,7 @@ const (
 	templateDir = datadir + "template/"
 
 	// 静态化文件目录,网站生成的静态html
-	//statichtmlDir = datadir + "statichtml/"
+	staticHtmlDir = datadir + "statichtml/"
 
 	// 数据默认的创建用户
 	createUser = "system"
