@@ -499,7 +499,15 @@
 		}
 
 		if(jsonObject.title==""||jsonObject.categoryID==""){
-			alert("文章标题和导航菜单不能为空");
+			//alert("文章标题和导航菜单不能为空");
+			$.confirm({
+				useBootstrap: false,
+				boxWidth: '300px',
+				title: '提示',
+				content: '文章标题和导航菜单不能为空',
+				type: 'red',
+				buttons: { 确定: function () {} },
+			})
 			return false;
 		}
 		
