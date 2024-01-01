@@ -132,7 +132,7 @@ func genStaticHtmlFile() error {
 	}
 
 	//生成tag的静态页
-	for tag, _ := range tagsMap {
+	for tag := range tagsMap {
 		tagURL := httpServerPath + "tag/" + tag
 		//生成栏目首页index
 		fileHash, err := writeStaticHtml(tagURL, staticHtmlDir+"tag/"+tag+"/", "")
