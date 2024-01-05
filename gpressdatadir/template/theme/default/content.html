@@ -8,7 +8,7 @@
 {{ $content := selectOne "content" $contentSQL .UrlPathParam }}
 
 {{ $prevContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo < ? order by sortNo desc " $content.SortNo  }}
-{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo > ? order by sortNo desc " $content.SortNo  }}
+{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status=1 and sortNo > ? order by sortNo asc " $content.SortNo  }}
 
 <!DOCTYPE html>
 <html lang="zh-cn">
