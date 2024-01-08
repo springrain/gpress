@@ -24,18 +24,18 @@ make && make install
 使用 Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件.  
 
 ## 静态化
-后台 ```刷新模板``` 功能会生成静态html文件到 ```statichtml``` 目录,需要把正在使用的主题的 ```css,js,image```和```gpressdatadir/public```目录复制到 ```statichtml```目录下.  
+后台 ```刷新模板``` 功能会生成静态html文件到 ```statichtml``` 目录,需要把正在使用的主题的 ```css,js,image```和```gpressdatadir/public```目录复制到 ```statichtml```目录下,也可以用Nginx反向代理指定目录.    
 nginx 配置示例如下:
 ```conf
-### 当前模板的静态文件
+### 当前在用主题(default)的css文件
 location ~ ^/css/ {
     root /data/gpress/gpressdatadir/template/theme/default;  
 }
-### 当前模板的静态文件
+### 当前在用主题(default)的js文件
 location ~ ^/js/ {
     root /data/gpress/gpressdatadir/template/theme/default;  
 }
-### 当前模板的静态文件
+### 当前在用主题(default)的image文件
 location ~ ^/image/ {
     root /data/gpress/gpressdatadir/template/theme/default;  
 }
