@@ -193,10 +193,13 @@ func initHighlighting() goldmark.Extender {
 			//}
 			wrapper := &preWrapper{language: language}
 			return []chromahtml.Option{
-				chromahtml.WithClasses(true),
-				chromahtml.WithLineNumbers(true),
+
+				// 显示行号,暂时不显示,有些模板不兼容
+				//chromahtml.WithLineNumbers(true),
+				//chromahtml.LineNumbersInTable(true),
+
 				chromahtml.TabWidth(4),
-				chromahtml.LineNumbersInTable(true),
+				chromahtml.WithClasses(true),
 				chromahtml.WithPreWrapper(wrapper),
 			}
 		}),
