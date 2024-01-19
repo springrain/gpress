@@ -5,8 +5,8 @@ go 1.20
 require (
 	gitee.com/chunanyong/zorm v1.7.5
 	github.com/alecthomas/chroma/v2 v2.12.0
-	github.com/cloudwego/hertz v0.7.3
-	github.com/ethereum/go-ethereum v1.13.8
+	github.com/cloudwego/hertz v0.8.0
+	github.com/ethereum/go-ethereum v1.13.10
 	github.com/mattn/go-sqlite3 v1.14.19
 	github.com/mojocn/base64Captcha v1.3.6
 	github.com/tetratelabs/wazero v1.6.0
@@ -16,7 +16,7 @@ require (
 	github.com/yuin/goldmark-meta v1.1.0
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	go.abhg.dev/goldmark/toc v0.9.0
-	golang.org/x/crypto v0.17.0
+	golang.org/x/crypto v0.18.0
 )
 
 require (
@@ -42,7 +42,7 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/image v0.13.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
