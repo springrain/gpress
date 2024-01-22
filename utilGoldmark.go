@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"io"
 	"strings"
-	"unicode"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 
@@ -164,7 +163,7 @@ func (s *gpressMarkdownIDS) Put(value []byte) {
 
 		return result
 	}
-*/
+
 func startsWithDigit(str string) bool {
 	if len(str) == 0 {
 		return false
@@ -174,7 +173,7 @@ func startsWithDigit(str string) bool {
 	firstChar := rune(str[0])
 	return unicode.IsDigit(firstChar)
 }
-
+*/
 //------------------------结束----------------
 
 // initHighlighting 代码高亮的配置
