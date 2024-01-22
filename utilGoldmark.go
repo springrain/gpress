@@ -132,6 +132,8 @@ func (s *gpressMarkdownIDS) Generate(value []byte, kind ast.NodeKind) []byte {
 			result = "id"
 		}
 	}
+	// querySelector 不支持 数字开头
+	//result = "\\3" + result
 	if _, ok := s.values[result]; !ok {
 		s.values[result] = true
 	}
@@ -194,7 +196,7 @@ func initHighlighting() goldmark.Extender {
 			wrapper := &preWrapper{language: language}
 			return []chromahtml.Option{
 
-				// 显示行号,暂时不显示,有些模板不兼容
+				// 暂时不显示行号,有些模板不兼容
 				//chromahtml.WithLineNumbers(true),
 				//chromahtml.LineNumbersInTable(true),
 
