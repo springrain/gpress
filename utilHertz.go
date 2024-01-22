@@ -27,7 +27,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -181,15 +180,15 @@ func updateInstall(ctx context.Context) error {
 		return err
 	}
 
-	now := strconv.FormatInt(time.Now().UnixNano(), 10)
+	randStringId := FuncGenerateStringID()
 	// 删除 install 文件
-	err = os.Rename(templateDir+"admin/install.html", templateDir+"admin/install.html."+now)
+	err = os.Rename(templateDir+"admin/install.html", templateDir+"admin/install.html."+randStringId)
 	if err != nil {
 		return err
 	}
 
 	// install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
-	err = os.Rename(datadir+"install_config.json", datadir+"install_config.json."+now)
+	err = os.Rename(datadir+"install_config.json", datadir+"install_config.json."+randStringId)
 	if err != nil {
 		return err
 	}
