@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"unicode"
 
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 
@@ -125,6 +126,8 @@ func (s *gpressMarkdownIDS) Generate(value []byte, kind ast.NodeKind) []byte {
 	result := string(value)
 	result = strings.ReplaceAll(result, " ", "")
 	result = strings.ReplaceAll(result, ".", "-")
+	//result = strings.ReplaceAll(result, "(", "_")
+	//result = strings.ReplaceAll(result, ")", "_")
 	if len(result) == 0 {
 		if kind == ast.KindHeading {
 			result = "heading"
@@ -132,8 +135,12 @@ func (s *gpressMarkdownIDS) Generate(value []byte, kind ast.NodeKind) []byte {
 			result = "id"
 		}
 	}
-	// querySelector 不支持 数字开头
-	//result = "\\3" + result
+	// querySelector 不支持 数字开头,去掉所有的数字和符号,提取字符
+	//result = extractLetters(result)
+	// 如果是数字开头,加上 m-
+	//if startsWithDigit(result) {
+	//	result = "m-" + result
+	//}
 	if _, ok := s.values[result]; !ok {
 		s.values[result] = true
 	}
@@ -142,6 +149,30 @@ func (s *gpressMarkdownIDS) Generate(value []byte, kind ast.NodeKind) []byte {
 
 func (s *gpressMarkdownIDS) Put(value []byte) {
 	s.values[string(value)] = true
+}
+
+/*
+	func extractLetters(input string) string {
+		var result string
+
+		for _, char := range input {
+			// 判断字符是否是字母
+			if unicode.IsLetter(char) {
+				result += string(char)
+			}
+		}
+
+		return result
+	}
+*/
+func startsWithDigit(str string) bool {
+	if len(str) == 0 {
+		return false
+	}
+
+	// 使用 unicode.IsDigit 判断第一个字符是否是数字
+	firstChar := rune(str[0])
+	return unicode.IsDigit(firstChar)
 }
 
 //------------------------结束----------------
