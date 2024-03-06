@@ -1,7 +1,7 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />
 
 ## 介绍  
-国产高性能内容平台,基于Hertz + Go template + FTS5全文检索实现,仅需 200M 内存   
+国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存   
 默认端口660  
 需要先解压```gpressdatadir/dict.zip```      
 运行 ```go run --tags "fts5" .```   
@@ -21,10 +21,10 @@ make && make install
 ```
 
 ## 说明
-使用 Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件.  
+国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存 
 
 ## 静态化
-后台 ```刷新模板``` 功能会生成静态html文件到 ```statichtml``` 目录,需要把正在使用的主题的 ```css,js,image```和```gpressdatadir/public```目录复制到 ```statichtml```目录下,也可以用Nginx反向代理指定目录.    
+后台 ```刷新站点``` 功能会生成静态html文件到 ```statichtml``` 目录,需要把正在使用的主题的 ```css,js,image```和```gpressdatadir/public```目录复制到 ```statichtml```目录下,也可以用Nginx反向代理指定目录.    
 nginx 配置示例如下:
 ```conf
 ### 当前在用主题(default)的css文件
@@ -71,7 +71,8 @@ location / {
 ```  
 
 ## 表结构  
-ID默认使用时间戳(23位)+随机数(9位),全局唯一      
+ID默认使用时间戳(23位)+随机数(9位),全局唯一.  
+建表语句```gpressdatadir/gpress.sql```          
 
 ### 配置(表名:config)
 安装时会读取```gpressdatadir/install_config.json```
