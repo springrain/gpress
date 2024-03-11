@@ -18,7 +18,6 @@
 package main
 
 import (
-	"compress/gzip"
 	"context"
 	"encoding/hex"
 	"encoding/json"
@@ -183,17 +182,20 @@ func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, 
 	if err != nil {
 		return bodyHash, err
 	}
-	//压缩文件
-	gzipFile, err := os.Create(filePath + "index.html.gz")
-	if err != nil {
-		return bodyHash, err
-	}
-	defer gzipFile.Close()
-	gzipWrite := gzip.NewWriter(gzipFile)
-	defer gzipWrite.Close()
-	gzipWrite.Name = "index.html"
-	_, err = gzipWrite.Write(body)
-	//io.Copy(gzipWrite, bytes.NewReader(body))
-	//io.Copy(gzipWrite, reader)
+	/*
+		//暂时禁用压缩
+		//压缩文件
+		gzipFile, err := os.Create(filePath + "index.html.gz")
+		if err != nil {
+			return bodyHash, err
+		}
+		defer gzipFile.Close()
+		gzipWrite := gzip.NewWriter(gzipFile)
+		defer gzipWrite.Close()
+		gzipWrite.Name = "index.html"
+		_, err = gzipWrite.Write(body)
+		//io.Copy(gzipWrite, bytes.NewReader(body))
+		//io.Copy(gzipWrite, reader)
+	*/
 	return bodyHash, err
 }
