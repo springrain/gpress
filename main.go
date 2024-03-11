@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
+	//"github.com/hertz-contrib/gzip"
 )
 
 // 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init函数!!!
@@ -52,6 +53,7 @@ func init() {
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
 
+	// gzip压缩文件,产生  xxx.html.zip 文件,https://www.cloudwego.io/zh/docs/hertz/tutorials/basic-feature/middleware/gzip/
 	// h.Use(gzip.Gzip(gzip.DefaultCompression))
 }
 
