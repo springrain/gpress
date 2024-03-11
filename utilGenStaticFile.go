@@ -188,15 +188,12 @@ func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, 
 	if err != nil {
 		return bodyHash, err
 	}
-
+	defer gzipFile.Close()
 	gzipWrite := gzip.NewWriter(gzipFile)
+	defer gzipWrite.Close()
 	gzipWrite.Name = "index.html"
-	//gzipWrite.Name = "index.html"
 	_, err = gzipWrite.Write(body)
-
-	defer func() {
-		gzipFile.Close()
-		gzipWrite.Close()
-	}()
+	//io.Copy(gzipWrite, bytes.NewReader(body))
+	//io.Copy(gzipWrite, reader)
 	return bodyHash, err
 }
