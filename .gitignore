@@ -19,6 +19,7 @@ natsdata/
 
 # temp ignore
 *.hertz.gz
+*.gz
 *.log
 *.cache
 *.diff
