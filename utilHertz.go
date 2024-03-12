@@ -114,6 +114,9 @@ func loadTemplate() error {
 func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string, staticFileMap *map[string]string, isAdmin bool) error {
 	//遍历模板文件夹
 	err := filepath.Walk(walkDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
 
