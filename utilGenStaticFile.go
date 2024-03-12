@@ -169,8 +169,9 @@ func genStaticHtmlFile() error {
 		//获取文件后缀
 		suffix := filepath.Ext(path)
 
-		// 只压缩 js,mjs,json,css,html
-		if !(suffix == ".js" || suffix == ".mjs" || suffix == ".json" || suffix == ".css" || suffix == ".html") {
+		// 压缩 js,mjs,json,css,html
+		// 压缩字体文件 ttf,otf,svg  gzip_types font/ttf font/otf image/svg+xml
+		if !(suffix == ".js" || suffix == ".mjs" || suffix == ".json" || suffix == ".css" || suffix == ".html" || suffix == ".ttf" || suffix == ".otf" || suffix == ".svg") {
 			return nil
 		}
 
