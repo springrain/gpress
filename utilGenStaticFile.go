@@ -18,6 +18,7 @@
 package main
 
 import (
+	"bufio"
 	"compress/gzip"
 	"context"
 	"encoding/hex"
@@ -25,7 +26,9 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 
 	"gitee.com/chunanyong/zorm"
@@ -150,9 +153,58 @@ func genStaticHtmlFile() error {
 		}
 	}
 
+	//遍历当前使用的模板文件夹,压缩文本格式的文件
+	err = filepath.Walk(templateDir+"theme/"+config.Theme+"/", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		// 分隔符统一为 / 斜杠
+		path = filepath.ToSlash(path)
+
+		// 只处理 js 和 css 文件夹
+		if !(strings.Contains(path, "/js/") || strings.Contains(path, "/css/")) {
+			return nil
+		}
+
+		//获取文件后缀
+		suffix := filepath.Ext(path)
+
+		// 只压缩 js,mjs,json,css,html
+		if !(suffix == ".js" || suffix == ".mjs" || suffix == ".json" || suffix == ".css" || suffix == ".html") {
+			return nil
+		}
+
+		// 获取要打包的文件信息
+		readFile, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer readFile.Close()
+		reader := bufio.NewReader(readFile)
+
+		//压缩文件
+		gzipFile, err := os.Open(path + CompressedFileSuffix)
+		if err != nil && os.IsNotExist(err) { //文件不存在
+			gzipFile, err = os.Create(path + CompressedFileSuffix)
+		} else {
+			return err
+		}
+		if err != nil {
+			return err
+		}
+		defer gzipFile.Close()
+		gzipWrite, err := gzip.NewWriterLevel(gzipFile, gzip.BestCompression)
+		if err != nil {
+			return err
+		}
+		defer gzipWrite.Close()
+		_, err = io.Copy(gzipWrite, reader)
+		return err
+	})
+
 	// TODO 复制主题里的css,js,image 和公共的public文件夹到statichtml根目录
 
-	return nil
+	return err
 }
 
 // writeStaticHtml 写入静态html
@@ -185,7 +237,7 @@ func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, 
 	}
 
 	//压缩文件
-	gzipFile, err := os.Create(filePath + "index.html.gz")
+	gzipFile, err := os.Create(filePath + "index.html" + CompressedFileSuffix)
 	if err != nil {
 		return bodyHash, err
 	}
@@ -199,8 +251,5 @@ func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, 
 	_, err = gzipWrite.Write(body)
 	//io.Copy(gzipWrite, bytes.NewReader(body))
 	//io.Copy(gzipWrite, reader)
-
-	// TODO 压缩当前主题的css,js文件
-
 	return bodyHash, err
 }
