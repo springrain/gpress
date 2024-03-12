@@ -67,10 +67,23 @@ location / {
        proxy_pass  http://127.0.0.1:660;  
        break;
     }
+
+    #### gzip 静态压缩配置 开始####
     #gzip_static on;
+    ## 请求的是个目录,302重定向到 目录下的 index.html
+    #if ( -d $request_filename ) {
+        ## 不是 / 结尾
+    #    rewrite [^\/]$ $uri/index.html redirect;
+        ##以 / 结尾的
+    #    rewrite ^(.*) ${uri}index.html redirect;      
+    #}
+    #### gzip 静态压缩配置 结束####
+
+    
     root   /data/gpress/gpressdatadir/statichtml;
     index  index.html index.htm;
 }
+
 ```  
 
 ## 表结构  
