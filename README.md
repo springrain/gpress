@@ -43,7 +43,7 @@ location ~ ^/image/ {
 }
 ### search-data.json FlexSearch搜索的JSON数据
 location ~ ^/public/search-data.json {
-    gzip_static on;
+    #gzip_static on;
     root /data/gpress/gpressdatadir;  
 }
 ### public 公共文件
