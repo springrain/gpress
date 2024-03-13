@@ -195,10 +195,15 @@ func genStaticFile() error {
 
 		return err
 	})
-
+	if err != nil {
+		FuncLogError(err)
+		return err
+	}
 	// 重新生成 search-data.json
-	genSearchDataJson()
-
+	err = genSearchDataJson()
+	if err != nil {
+		FuncLogError(err)
+	}
 	// TODO 复制主题里的css,js,image 和公共的public文件夹到statichtml根目录
 
 	return err
@@ -206,10 +211,8 @@ func genStaticFile() error {
 
 // writeStaticHtml 写入静态html
 func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, error) {
-
 	response, err := http.Get(httpurl)
 	if err != nil {
-		FuncLogError(err)
 		return "", err
 	}
 	// 读取资源数据 body: []byte
@@ -217,7 +220,6 @@ func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, 
 	// 关闭资源流
 	response.Body.Close()
 	if err != nil {
-		FuncLogError(err)
 		return "", err
 	}
 	//计算hash
