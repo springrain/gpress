@@ -19,6 +19,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"compress/gzip"
 	"context"
 	"encoding/hex"
@@ -65,11 +66,18 @@ func genSearchDataJson() error {
 		return err
 	}
 	err = os.WriteFile(searchDataJsonFile, dataBytes, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	//压缩文件
+	err = doGzipFile(searchDataJsonFile+CompressedFileSuffix, bytes.NewReader(dataBytes))
+
 	return err
 }
 
-// genStaticHtmlFile 生成全站静态文件
-func genStaticHtmlFile() error {
+// genStaticFile 生成全站静态文件和gzip文件,包括静态的html和search-data.json
+func genStaticFile() error {
 	genStaticHtmlLock.Lock()
 	defer genStaticHtmlLock.Unlock()
 	ctx := context.Background()
@@ -182,26 +190,14 @@ func genStaticHtmlFile() error {
 		}
 		defer readFile.Close()
 		reader := bufio.NewReader(readFile)
-
 		//压缩文件
-		gzipFile, err := os.Open(path + CompressedFileSuffix)
-		if err != nil && os.IsNotExist(err) { //文件不存在
-			gzipFile, err = os.Create(path + CompressedFileSuffix)
-		} else {
-			return err
-		}
-		if err != nil {
-			return err
-		}
-		defer gzipFile.Close()
-		gzipWrite, err := gzip.NewWriterLevel(gzipFile, gzip.BestCompression)
-		if err != nil {
-			return err
-		}
-		defer gzipWrite.Close()
-		_, err = io.Copy(gzipWrite, reader)
+		err = doGzipFile(path+CompressedFileSuffix, reader)
+
 		return err
 	})
+
+	// 重新生成 search-data.json
+	genSearchDataJson()
 
 	// TODO 复制主题里的css,js,image 和公共的public文件夹到statichtml根目录
 
@@ -236,21 +232,30 @@ func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, 
 	if err != nil {
 		return bodyHash, err
 	}
+	// 压缩gzip文件
+	err = doGzipFile(filePath+"index.html"+CompressedFileSuffix, bytes.NewReader(body))
+	return bodyHash, err
+}
 
-	//压缩文件
-	gzipFile, err := os.Create(filePath + "index.html" + CompressedFileSuffix)
+// doGzipFile 压缩gzip文件
+func doGzipFile(gzipFilePath string, reader io.Reader) error {
+
+	//如果文件存在就删除
+	if pathExist(gzipFilePath) {
+		os.Remove(gzipFilePath)
+	}
+	//创建文件
+	gzipFile, err := os.Create(gzipFilePath)
 	if err != nil {
-		return bodyHash, err
+		return err
 	}
 	defer gzipFile.Close()
+
 	gzipWrite, err := gzip.NewWriterLevel(gzipFile, gzip.BestCompression)
 	if err != nil {
-		return bodyHash, err
+		return err
 	}
 	defer gzipWrite.Close()
-	gzipWrite.Name = "index.html"
-	_, err = gzipWrite.Write(body)
-	//io.Copy(gzipWrite, bytes.NewReader(body))
-	//io.Copy(gzipWrite, reader)
-	return bodyHash, err
+	_, err = io.Copy(gzipWrite, reader)
+	return err
 }

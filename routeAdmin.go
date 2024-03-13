@@ -259,7 +259,7 @@ func init() {
 			return
 		}
 		//重新生成静态文件
-		go genStaticHtmlFile()
+		go genStaticFile()
 
 		//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址
 		//c.HTMLRender = render.HTMLProduction{Template: tmpl}
