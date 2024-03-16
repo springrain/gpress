@@ -1,6 +1,26 @@
+
+      </div>
     </div>
-    
   </div>
 </body>
-</html>
 
+<script>
+  layui.use(function () {
+    var $ = layui.jquery;
+    var layer = layui.layer;
+
+    $('#nav-refresh').click(function() {
+			$.get('{{basePath}}admin/reload', function(result) {
+				location.reload();
+			});
+		});
+		$('#nav-quit').click(function() {
+			window.location.href = '{{basePath}}admin/login';
+		});
+
+
+  });
+</script>
+
+
+</html>

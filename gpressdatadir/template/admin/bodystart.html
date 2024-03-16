@@ -1,96 +1,92 @@
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/basic.css">
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/navigation.css">
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/comm-style.css">
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/font/iconfont.css">
-<script type="text/javascript" src="{{basePath}}admin/js/navigation.js"></script>
-<script type="text/javascript" src="{{basePath}}admin/js/page.js"></script>
-<script type="text/javascript" src="{{basePath}}admin/js/initPage.js"></script>
-<script type="text/javascript" src="{{basePath}}admin/js/confirmDelete.js"></script>
+<style>
+    .space {
+      height: 1px;
+      width: 100%;
+      background-color: #000220;
+    }
 
+    .layui-logo {
+      left: 0;
+      top: 0;
+      width: 200px;
+      text-align: center;
+      line-height: 60px;
+      color: #fff;
+      font-size: 20px;
+      letter-spacing: .1em;
+    }
+
+    .layui-bg-black {
+      background-color: #001529 !important;
+      color: #fff !important;
+    }
+
+    .layui-nav-tree .layui-this,
+    .layui-nav-tree .layui-this>a,
+    .layui-nav-tree .layui-this>a:hover,
+    .layui-nav-tree .layui-nav-child dd.layui-this,
+    .layui-nav-tree .layui-nav-child dd.layui-this a {
+      background-color: #1890ff;
+      color: #fff;
+    }
+  </style>
 </head>
+
 <body>
-	<div id="layout" class="is-gapless">
-		<a id="menuLink" role="button" class="navbar-burger burger menu-link" aria-label="menu" aria-expanded="false"
-			data-target="navbarMenu">
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-		</a>
-		<div id="menu">
-			<nav role="navigation" aria-label="main navigation">
-				<div>
-					<div class="gpress-menu">
-						<ul class="menu-list banner">
-							<li><a href="" class="menu-heading">GPRESS</a></li>
-						</ul>
-						<ul class="menu-list">
-							<li>
-								<a class="nav-addr"  href="{{basePath}}admin/content/list">
-									<i class="iconfont icon-fabiaowenzhang"></i>内容导航
-								</a>
-							</li>
-						</ul>
-						<ul class="menu-list">
-							<li>
-								<a class="nav-addr" href="{{basePath}}admin/site/update?id=gpress_site">
-									<i class="iconfont icon-zhandianguanli"></i>站点信息
-								</a>
-							</li>
-							<li>
-								<a class="nav-addr"  href="{{basePath}}admin/user/update?id=gpress_admin">
-									<i class="iconfont icon-yonghuxinxi"></i>用户信息
-								</a>
-							</li>
-						</ul>
-						<ul class="menu-list">
-							<li>
-								<a class="nav-addr"  href="{{basePath}}admin/pageTemplate/list">
-									<i class="iconfont icon-moban"></i>页面模版
-								</a>
-							</li>
-							<li>
-								<a  class="nav-addr refresh">
-									<i class="iconfont icon-shuaxin"></i>刷新站点
-								</a>
-							</li>
-							<!-- <li><a>Tables</a></li> -->
-							<!-- <li><a>Menus</a></li> -->
-						</ul>
-						<ul class="menu-list">
-							<li>
-								<a  class="nav-addr"  href="{{basePath}}admin/config/update?id=gpress_config">
-									<i class="iconfont icon-shezhi"></i>设置
-								</a>
-							</li>
+  <div class="layui-layout">
 
-							<li>
-								<a  class="nav-addr quit">
-									<i class="iconfont icon-tuichu"></i>退出
-								</a>
-							</li>
-						</ul>
-						<!-- <ul class="menu-list">
-                <li><a>Tools</a></li>
-                <li><a>Customize</a></li>
-                <li><a>Extend</a></li>
-                <li><a>Releases</a></li>
-              </ul> -->
-					</div>
-				</div>
-			</nav>
-		</div>
+    <div class="layui-side layui-bg-black">
+      <div class="layui-side-scroll">
+        <div class="layui-logo">GPRESS</div>
+        <div class="space"></div>
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree" lay-filter="test">
 
-		<!-- 右侧内容 -->
-		<div id="main">
-			<script type="text/javascript">
-				$(document).ready(function(){
-					$('.refresh').click(function() {
-						$.get('{{basePath}}admin/reload', function(result) {
-							location.reload()
-						})
-					})
-					$('.quit').click(function() {
-							window.location.href = '{{basePath}}admin/login'
-					})
-				})
-			</script>
+          <li class="layui-nav-item layui-bg-black">
+            <a href="{{basePath}}admin/content/list">
+              <i class="layui-icon layui-icon-file-b"></i>
+              <cite>内容导航</cite>
+            </a>
+          </li>
+          <li class="layui-nav-item layui-bg-black">
+            <a href="{{basePath}}admin/site/update?id=gpress_site">
+              <i class="layui-icon layui-icon-website"></i>
+              <cite>站点信息</cite>
+            </a>
+          </li>
+          <li class="layui-nav-item layui-bg-black">
+            <a href="{{basePath}}admin/user/update?id=gpress_admin">
+              <i class="layui-icon layui-icon-username"></i>
+              <cite>用户信息</cite>
+            </a>
+          </li>
+          <li class="layui-nav-item layui-bg-black">
+            <a href="{{basePath}}admin/pageTemplate/list">
+              <i class="layui-icon layui-icon-template"></i>
+              <cite>页面模板</cite>
+            </a>
+          </li>
+          <li class="layui-nav-item layui-bg-black">
+            <a id="nav-refresh" href="javascript:;">
+              <i class="layui-icon layui-icon-refresh"></i>
+              <cite>刷新站点</cite>
+            </a>
+          </li>
+          <li class="layui-nav-item layui-bg-black">
+            <a href="{{basePath}}admin/config/update?id=gpress_config">
+              <i class="layui-icon layui-icon-set"></i>
+              <cite>设置</cite>
+            </a>
+          </li>
+          <li class="layui-nav-item layui-bg-black">
+            <a id="nav-quit" href="javascript:;">
+              <i class="layui-icon layui-icon-logout"></i>
+              <cite>退出</cite>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="layui-body" style="position: absolute;">
+      <!-- 内容主体区域 -->
+      <div style="padding: 15px;">
