@@ -44,7 +44,7 @@
 
 	.gpress-login-other {
 		text-align: center;
-		margin-bottom: 10px;
+		margin-bottom: 15px;
 	}
 
 	.gpress-login-other a {
@@ -74,8 +74,8 @@
 					<div class="layui-input-prefix">
 						<i class="layui-icon layui-icon-password"></i>
 					</div>
-					<input type="password" id="password" name="password" value="" lay-verify="required" placeholder="密   码"
-						lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
+					<input type="password" id="password" name="password" value="" lay-verify="required"
+						placeholder="密   码" lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
 				</div>
 			</div>
 
@@ -107,14 +107,15 @@
 		</form>
 		<div class="gpress-login-other">
 			<a href="{{basePath}}admin/chainlogin">区块链登录</a>
-			<a href="#">忘记密码</a>
+			<a href="javascript:retrievepassword();">忘记密码</a>
 			<a href="https://gitee.com/gpress/gpress" target="_blank">联系我们</a>
 		</div>
 	</div>
 	<script>
+		var layer;
 		layui.use(function () {
 			var form = layui.form;
-			var layer = layui.layer;
+			layer = layui.layer;
 			//消息提示
 			let msg = document.getElementById('message').value;
 			if (msg) {
@@ -125,7 +126,14 @@
 				document.getElementById('password').value = sha3_512(document.getElementById('password').value);
 				return true; // 提交form
 			});
+
+
 		});
+
+		// 忘记密码
+		function retrievepassword(){
+			layer.alert(' 1.还原 gpressdatadir/install_config.json </br> 2.还原 gpressdatadir/template/install.html </br> 3.重启gpress,重新安装初始化管理员账号密码,数据不会丢失.');
+		}
 	</script>
 
 </body>
