@@ -23,7 +23,6 @@
 					<th>模板路径</th>
 					<th>更新时间</th>
 					<th>排序</th>
-					<th>状态</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -37,17 +36,6 @@
 					<td> {{ .TemplatePath }}</td>
 					<td> {{ .UpdateTime }}</td>
 					<td> {{ .SortNo }}</td>
-					<td>
-						{{if eq .Status 0 }}
-						列表不显示
-						{{else if eq .Status 1 }}
-						公开
-						{{else if eq .Status 2 }}
-						私密
-						{{else}}
-						未知
-						{{end}}
-					</td>
 					<td>
 						<button type="button" class="layui-btn layui-btn-primary layui-btn-xs">
 							<a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{$v.Id}}">
@@ -80,7 +68,7 @@
 		// 普通用法
 		laypage.render({
 			elem: 'div-list-page',
-			count: "{{.Page.TotalCount}}", // 数据总数
+			count: "{{.Page.TotalCount}}",
 			limit: "{{.Page.PageSize}}",
 			curr: "{{.Page.PageNo}}",
 			theme: '#1890ff',
@@ -103,7 +91,7 @@
 		}, function () {
 			$.ajax({
 				type: 'post',
-				url: url, //'{{basePath}}admin/{{$.UrlPathParam}}/delete'
+				url: url, 
 				data: { "id": id },
 				success: function (res) {
 					if (res.statusCode === 1) {
