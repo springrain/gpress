@@ -107,7 +107,9 @@
 				data: { "id": id },
 				success: function (res) {
 					if (res.statusCode === 1) {
-						location.reload();
+						layer.msg("删除成功",function(){
+							location.reload();
+						});
 					}
 				}
 			});
