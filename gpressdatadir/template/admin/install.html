@@ -44,7 +44,7 @@
 
     .gpress-install-other {
         text-align: center;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
     .gpress-install-other a {
 		text-decoration: underline;
@@ -96,7 +96,7 @@
         </div>
     </div>
 
-    <div class="gpress-install-container" id="div_use_wall" style="display: none;">
+    <div class="gpress-install-container" id="div_use_wallet" style="display: none;">
         <div class="install_logo"><img src="{{basePath}}public/logo.png"></div>
         <form class="layui-form" action="{{basePath}}admin/chaininstall" method="post">
             <div class="layui-form-item">
@@ -156,11 +156,11 @@
 
 
     function useAccountInstall(){
-        document.getElementById('div_use_wall').style.display="none";
+        document.getElementById('div_use_wallet').style.display="none";
         document.getElementById('div_use_account').style.display="block";
     }
     function useChainInstall(){
-        document.getElementById('div_use_wall').style.display="block";
+        document.getElementById('div_use_wallet').style.display="block";
         document.getElementById('div_use_account').style.display="none";
     }
 
