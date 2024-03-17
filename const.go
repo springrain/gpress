@@ -63,7 +63,7 @@ const (
 
 	userTypeKey = "userType" //0访客,1管理员
 
-	defaultPageSize = 20
+	defaultPageSize = 10
 
 	searchDataJsonFile = datadir + "public/search-data.json"
 
