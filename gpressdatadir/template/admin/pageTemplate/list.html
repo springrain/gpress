@@ -49,12 +49,12 @@
 						{{end}}
 					</td>
 					<td>
-						<button type="button" class="layui-btn layui-bg-blue layui-btn-xs">
+						<button type="button" class="layui-btn layui-btn-primary layui-btn-xs">
 							<a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{$v.Id}}">
 								<i class="layui-icon layui-icon-edit"></i>
 							</a>
 						</button>
-						<button type="button" class="layui-btn layui-bg-red layui-btn-xs"
+						<button type="button" class="layui-btn layui-btn-primary layui-btn-xs"
 							onclick="deleteFunc('{{$v.Id}}','{{basePath}}admin/{{$.UrlPathParam}}/delete');">
 							<i class="layui-icon layui-icon-delete"></i>
 						</button>
