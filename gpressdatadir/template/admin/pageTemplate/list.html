@@ -1,96 +1,117 @@
 {{template "admin/header.html"}}
-<title>页面模版 - GPRESS</title>
+<title>页面模板 - gpress</title>
 {{template "admin/bodystart.html"}}
-
-
-<section class="section">
-	<input type="hidden" id="data" value="{{.Data}}">
-	<!-- 分页隐藏域 -->
-	<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
-	<input type="hidden" id="pageCount" value="{{.Page.PageCount}}">
-
-
-	<div class="container">
-		<!-- 搜索表单 -->
-		<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
-			<div class="field-body">
-				<div class="field">
-					<div class="control">
-						<input class="input is-small" type="text" name="q" placeholder="输入搜索内容...">
-						<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
-					</div>
+<div class="layui-card layui-panel">
+	<div class="layui-card-body">
+		<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
+			<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
+			<div class="layui-input-group">
+				<input type="text" name="q" placeholder="搜索" class="layui-input">
+				<div class="layui-input-split layui-input-suffix" style="cursor: pointer;">
+					<i class="layui-icon layui-icon-search"></i>
 				</div>
-				<div class="field">
-					<div class="control">
-						<button class="button is-success is-small" type="submit">搜索</button>
-						<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success is-small"
-							type="submit">+新增</a>
-					</div>
+				<div class="layui-input-suffix">
+					<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="layui-btn layui-bg-blue">新增模板</a>
 				</div>
 			</div>
 		</form>
-
-		<!-- 列表 -->
-
-		<div class="table-content">
-			<table class="table is-hoverable is-fullwidth">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>模板名称</th>
-						<th>模板路径</th>
-						<th>创建时间</th>
-						<th>更新时间</th>
-						<th>排序</th>
-						<th>状态</th>
-						<th class="pos-sticky">操作</th>
-					</tr>
-				</thead>
-				<tbody>
-					<!-- 循环所有的数据 -->
-					{{ range $i,$v := .Data }}
-					<tr>
-						<!-- 获取每一列的值 -->
-						<td> {{ .Id }}</td>
-						<td> {{ .Name }}</td>
-						<td> {{ .TemplatePath }}</td>
-						<td> {{ .CreateTime }}</td>
-						<td> {{ .UpdateTime }}</td>
-						<td> {{ .SortNo }}</td>
-						<td> 
-							{{if eq .Status 0 }}
-							列表不显示
-							{{else if eq .Status 1 }}
-							公开
-							{{else if eq .Status 2 }}
-							私密
-							{{else}}
-							未知
-							{{end}}
-						</td>
-						<td class="pos-sticky">
-							<div style="margin-bottom: 10px;">
-								<a class="button is-success is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{$v.Id}}">编辑</a>
-								<a class="button is-link is-light is-small"
-									href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{$v.Id}}">查看</a>
-								<input type="button" class="button is-danger is-small" onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
-									id="{{$v.Id}}" value="删除"></input>
-							</div>
-						</td>
-					</tr>
-					{{end }}
-				</tbody>
-			</table>
-		</div>
-		<!-- 分页条 -->
-		<div class="page"></div>
+		<table class="layui-table" id="table_list" lay-filter="parse-table-list">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>模板名称</th>
+					<th>模板路径</th>
+					<th>更新时间</th>
+					<th>排序</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 循环所有的数据 -->
+				{{ range $i,$v := .Data }}
+				<tr>
+					<!-- 获取每一列的值 -->
+					<td><a href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{$v.Id}}"> {{ .Id }} </a></td>
+					<td> {{ .Name }}</td>
+					<td> {{ .TemplatePath }}</td>
+					<td> {{ .UpdateTime }}</td>
+					<td> {{ .SortNo }}</td>
+					<td>
+						{{if eq .Status 0 }}
+						列表不显示
+						{{else if eq .Status 1 }}
+						公开
+						{{else if eq .Status 2 }}
+						私密
+						{{else}}
+						未知
+						{{end}}
+					</td>
+					<td>
+						<button type="button" class="layui-btn layui-bg-blue layui-btn-xs">
+							<a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{$v.Id}}">
+								<i class="layui-icon layui-icon-edit"></i>
+							</a>
+						</button>
+						<button type="button" class="layui-btn layui-bg-red layui-btn-xs"
+							onclick="deleteFunc('{{$v.Id}}','{{basePath}}admin/{{$.UrlPathParam}}/delete');">
+							<i class="layui-icon layui-icon-delete"></i>
+						</button>
+					</td>
+				</tr>
+				{{end }}
+			</tbody>
+		</table>
+		<div id="div-list-page"></div>
 	</div>
-</section>
+</div>
+{{template "admin/bodyend.html"}}
 
 <script>
-	// 加载分页
-	initPage()
-</script>
+	var layer;
+	var $;
+	layui.use(function () {
+		//var table = layui.table;
+		layer = layui.layer;
+		$ = layui.jquery;
+		var laypage = layui.laypage;
 
-{{template "admin/bodyend.html"}}
+		// 普通用法
+		laypage.render({
+			elem: 'div-list-page',
+			count: "{{.Page.TotalCount}}", // 数据总数
+			limit: "{{.Page.PageSize}}",
+			curr: "{{.Page.PageNo}}",
+			theme: '#1890ff',
+			layout: ['prev', 'page', 'next', 'count', 'skip'], // 功能布局
+			jump: function (obj) {
+				let pageNo = document.getElementById("pageNo").value - 0;
+				if (pageNo != obj.curr) {
+					document.getElementById("pageNo").value = obj.curr;
+					document.getElementById("listForm").submit();
+				}
+			}
+		});
+	});
+
+	function deleteFunc(id, url) {
+		layer.confirm('确认删除?', {
+			icon: 3,
+			title:"确认",
+			btn: ['确定', '取消'] //按钮
+		}, function () {
+			$.ajax({
+				type: 'post',
+				url: url, //'{{basePath}}admin/{{$.UrlPathParam}}/delete'
+				data: { "id": id },
+				success: function (res) {
+					if (res.statusCode === 1) {
+						location.reload();
+					}
+				}
+			});
+		});
+	}
+
+</script>
