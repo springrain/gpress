@@ -19,6 +19,7 @@ package main
 
 import (
 	"context"
+	"encoding/hex"
 	"net/http"
 	"path/filepath"
 	"regexp"
@@ -33,6 +34,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol"
 	"github.com/cloudwego/hertz/pkg/route"
 	"github.com/cloudwego/hertz/pkg/route/param"
+	"golang.org/x/crypto/sha3"
 )
 
 // adminGroup路由组,使用变量声明,优先级高于init函数
@@ -91,6 +93,9 @@ func init() {
 		user.Password = c.PostForm("password")
 		user.ChainType = c.PostForm("chainType")
 		user.ChainAddress = c.PostForm("chainAddress")
+		// 重新hash密码,避免拖库后撞库
+		sha3Bytes := sha3.Sum512([]byte(user.Password))
+		user.Password = hex.EncodeToString(sha3Bytes[:])
 
 		loginHtml := "admin/login"
 		if user.ChainAddress != "" && user.ChainType != "" { //如果使用了address作为登录方式
@@ -160,6 +165,10 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
+		// 重新hash密码,避免拖库后撞库
+		sha3Bytes := sha3.Sum512([]byte(password))
+		password = hex.EncodeToString(sha3Bytes[:])
+
 		userId, err := findUserId(ctx, account, password)
 		if userId == "" || err != nil { // 用户不存在或者异常
 			errorLoginCount.Add(1)
@@ -480,6 +489,11 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 		err = c.Bind(ptrObj)
 		id = ptrObj.Id
 		ptrObj.UpdateTime = now
+		if ptrObj.Password != "" {
+			// 重新hash密码,避免拖库后撞库
+			sha3Bytes := sha3.Sum512([]byte(ptrObj.Password))
+			ptrObj.Password = hex.EncodeToString(sha3Bytes[:])
+		}
 		entity = ptrObj
 	case tableSiteName:
 		ptrObj := &Site{}
