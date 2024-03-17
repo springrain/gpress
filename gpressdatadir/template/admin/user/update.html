@@ -72,16 +72,18 @@
 	  $('#password').val("");
 	  $("#chainType option[value='{{.Data.ChainType}}']").attr("selected", true);
 	  form.render(); // 渲染全部表单
-	  let pwdValue=$('#password').val();
-	  if (pwdValue&&pwdValue!="") {
-		$('#password').val(sha3_512(pwdValue));
-	  }
+
 
 	  // 提交事件
 	  form.on('submit(gpress-form-ajax-update)', function(data){
+		
 		var field = data.field; // 获取表单字段值
 		field.sortNo=field.sortNo-0;
 		field.status=field.status-0;
+		let pwdValue=$('#password').val();
+		if (pwdValue&&pwdValue!="") {
+			field.password=sha3_512(pwdValue);
+		}
 		const form = document.getElementById('gpress-form');
 		$.ajax({
 			url:form.action,
