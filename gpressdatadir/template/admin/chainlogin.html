@@ -4,7 +4,6 @@
 	.gpress-login-container {
 		padding: 0 20px;
 		width: 450px;
-		text-align: center;
 		height: auto;
 		/* 定位方式 */
 		position: absolute;
@@ -43,8 +42,11 @@
 	}
 
 	.gpress-login-other {
+		padding: 0;
+		width: 100%;
 		text-align: center;
-		margin: 20px;
+		margin-top: 15px;
+		margin-bottom: 15px;
 	}
 
 	.gpress-login-other a {
@@ -59,17 +61,17 @@
 	<div class="gpress-login-container">
 		<input type="hidden" id="message" value="{{.message}}">
 		<div class="login_logo"><img src="{{basePath}}public/logo.png"></div>
-		<div><h2>区块链登录</h2></div>
+		<div><h2 class="gpress-login-other">区块链登录</h2></div>
 		<form class="layui-form" action="{{basePath}}admin/chainlogin" method="post">
 			<input type="hidden" id="signature" name="signature" value="">
 			<table class="layui-table">
 				<tbody>
 				  <tr>
 					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/metamask.png" />MetaMask </a></td>
-					<td><a href="walletLogin(window.ethereum,'xuper');"> <img src="{{basePath}}public/wallet/x-pocket.png" />X-Pocket&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
+					<td><a href="javascript:walletLogin(window.ethereum,'xuper');"> <img src="{{basePath}}public/wallet/x-pocket.png" />X-Pocket&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
 				  </tr>
 				  <tr>
-					<td><a href="walletLogin(window.bitkeep && window.bitkeep.ethereum);"> <img src="{{basePath}}public/wallet/bitkeep.png" />Bitkeep&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
+					<td><a href="javascript:walletLogin(window.bitkeep && window.bitkeep.ethereum);"> <img src="{{basePath}}public/wallet/bitkeep.png" />Bitkeep&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
 					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/tokenproket.png" />TokenPocket </a></td>
 				  </tr>
 				  <tr>
