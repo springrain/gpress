@@ -41,12 +41,15 @@
     .install_logo img {
         width: 100%;
     }
-
     .gpress-install-other {
+        padding: 0;
+        width: 100%;
         text-align: center;
-        margin-bottom: 15px;
+		margin-top: 15px;
+		margin-bottom: 15px;
     }
     .gpress-install-other a {
+        padding-top: 20px;
 		text-decoration: underline;
 	}
 </style>
@@ -55,6 +58,7 @@
 <body>
     <div class="gpress-install-container" id="div_use_account">
         <div class="install_logo"><img src="{{basePath}}public/logo.png"></div>
+        <div><h2 class="gpress-install-other">安装</h2></div>
         <form  class="layui-form" action="{{basePath}}admin/install" method="post">
             <div class="layui-form-item">
                 <div class="layui-input-wrap">
@@ -98,6 +102,7 @@
 
     <div class="gpress-install-container" id="div_use_wallet" style="display: none;">
         <div class="install_logo"><img src="{{basePath}}public/logo.png"></div>
+        <div><h2 class="gpress-install-other">区块链Address</h2></div>
         <form class="layui-form" action="{{basePath}}admin/chaininstall" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">区块链类型</label>
