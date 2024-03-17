@@ -1,94 +1,119 @@
 {{template "admin/header.html"}}
-<title>Login - gpress</title>
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/login.css">
-<script type="text/javascript" src="{{basePath}}admin/js/sha3.min.js"></script>
+<title>区块链钱包登录 - gpress</title>
+<style>
+	.gpress-login-container {
+		padding: 0 20px;
+		width: 450px;
+		text-align: center;
+		height: auto;
+		/* 定位方式 */
+		position: absolute;
+		/* 距顶部的百分比值，表示向下移动自身高度的一半 */
+		top: 45%;
+		/* 距左侧的百分比值，表示向右移动自身宽度的一半 */
+		left: 50%;
+		/* 通过变换函数将其自身的尺寸的一半作为参数传入，从而达到居中效果 */
+		transform: translate(-50%, -50%);
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-o-box-sizing: border-box;
+		box-sizing: border-box;
+		background: #fff;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		box-shadow: 0 0 30px rgba(0, 0, 0, 0.5)
+	}
+
+	.login_logo {
+		margin: -55px auto 20px;
+		width: 100px;
+		height: 100px;
+		background: #fff;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+		border-radius: 50%;
+		border: 5px solid #fff;
+		overflow: hidden;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	}
+
+	.login_logo img {
+		width: 100%;
+	}
+
+	.gpress-login-other {
+		text-align: center;
+		margin: 20px;
+	}
+
+	.gpress-login-other a {
+		margin-right: 15px;
+		margin-left: 15px;
+		text-decoration: underline;
+	}
+</style>
 </head>
 
 <body>
-	<section class="hero is-success is-fullheight">
+	<div class="gpress-login-container">
 		<input type="hidden" id="message" value="{{.message}}">
-		<div class="hero-body">
-			<div class="container has-text-centered">
-				<div class="column is-4 is-offset-4">
-					<h3 class="title has-text-black">区块链钱包登录</h3>
-					<hr class="login-hr">
-					<div class="box">
-
-						<figure class="avatar">
-							<img src="{{basePath}}public/logo.png">
-						</figure>
-
-						<div class="wallet">
-							<div>
-								<div onclick="getMetamask(window.ethereum)"><img src="{{basePath}}public/premit.png">
-									MetaMask</div>
-								<div onclick="getMetamask(window.ethereum,'xuper')"><img class="xpocket"
-										src="{{basePath}}public/headerlogo.png">X-Pocket</div>
-							</div>
-							<div>
-								<div onclick="getMetamask(window.bitkeep && window.bitkeep.ethereum)"><img
-										src="{{basePath}}public/bitkeep.png">Bitkeep</div>
-								<div onclick="getMetamask(window.ethereum)"><img
-										src="{{basePath}}public/tokenproket.png">TokenPocket</div>
-							</div>
-							<div>
-								<div onclick="getMetamask(window.okxwallet)"><img
-										src="{{basePath}}public/okx.png">OkxWallet</div>
-								<div onclick="getMetamask(window.ethereum)"><img
-										src="{{basePath}}public/TrustWallet.png">TrustWallet</div>
-							</div>
-						</div>
-					</div>
-					<p class="has-text-grey">
-						<a href="{{basePath}}admin/login">账号密码登录</a> &nbsp;·&nbsp;
-						<a href="https://gitee.com/gpress/gpress" target="_blank">联系我们</a>
-					</p>
-				</div>
-				<form id="chainlogin" action="/admin/chainlogin" method="post" style="display: none;">
-					<input id="signature" type="text" name="signature" value="">
-				</form>
-			</div>
+		<div class="login_logo"><img src="{{basePath}}public/logo.png"></div>
+		<div><h2>区块链登录</h2></div>
+		<form class="layui-form" action="{{basePath}}admin/chainlogin" method="post">
+			<input type="hidden" id="signature" name="signature" value="">
+			<table class="layui-table">
+				<tbody>
+				  <tr>
+					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/metamask.png" />MetaMask </a></td>
+					<td><a href="walletLogin(window.ethereum,'xuper');"> <img src="{{basePath}}public/wallet/x-pocket.png" />X-Pocket&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
+				  </tr>
+				  <tr>
+					<td><a href="walletLogin(window.bitkeep && window.bitkeep.ethereum);"> <img src="{{basePath}}public/wallet/bitkeep.png" />Bitkeep&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
+					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/tokenproket.png" />TokenPocket </a></td>
+				  </tr>
+				  <tr>
+					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/okx.png" />OkxWallet </a></td>
+					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/TrustWallet.png" />TrustWallet </a></td>
+				  </tr>
+				</tbody>
+			  </table>
+			
+			
+		</form>
+		<div class="gpress-login-other">
+			<a href="{{basePath}}admin/login">账号密码登录</a>
+			<a href="javascript:retrievepassword();">忘记密码</a>
+			<a href="https://gitee.com/gpress/gpress" target="_blank">联系我们</a>
 		</div>
-	</section>
-</body>
-<script type="text/javascript">
-	function encrypt() {
-		document.getElementById('password').value = sha3_512(document.getElementById('password').value)
-	}
-	$(function() {
-		let msg = $('#message').val()
-		if (msg) {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '400px',
-				title: '提示',
-				content: msg,
-				type: 'red',
-				buttons: { '确定': function() {} }
-			})
-		}
-		//console.log(window);
-	})
+	</div>
+	<script>
+		var layer;
+		layui.use(function () {
+			layer = layui.layer;
+			//消息提示
+			let msg = document.getElementById('message').value;
+			if (msg) {
+				layer.msg(msg);
+			}
+		});
 
-	function getMetamask(provider, type) {
+	// 忘记密码
+    function retrievepassword(){
+		layer.alert(' 1.还原 gpressdatadir/install_config.json </br> 2.还原 gpressdatadir/template/install.html </br> 3.重启gpress,重新安装初始化管理员账号密码,数据不会丢失.');
+	}
+    // 钱包登录
+    function walletLogin(provider, type) {
 		if (provider) {
 			provider.request({
 				method: 'eth_requestAccounts',
 				params: [],
 			}).then(accounts => {
 				let account = accounts[0]
-				//console.log(account);
 				personalSign(provider, account, type)
 			})
 		} else {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '400px',
-				title: '提示',
-				content: '请安装对应钱包',
-				type: 'red',
-				buttons: { '确定': function() {} }
-			})
+			layer.alert("请安装对应钱包");
 		}
 	}
 
@@ -102,68 +127,32 @@
 
 	async function personalSign(provider, accounts, type) {
 		let jsonObject = {}
-		const response = await fetch('/admin/random', {
+		const response = await fetch('{{basePath}}admin/random', {
 			method: 'post',
 			body: JSON.stringify(jsonObject),
 			headers: { 'Content-Type': 'application/json' }
 		})
 		let res = await response.json()
-		//console.log(res);
+		
 		if (res.statusCode == 1) {
 			let arrayboj
 			const hexString = stringToHex(res.data)
 			arrayboj = [res.data, accounts]
-			//console.log(arrayboj);
+			
 			provider.request({
 				method: 'personal_sign',
 				params: arrayboj,
 			}).then(result => {
-				$('#signature').val(result)
-				$('#chainlogin').submit()
+				document.getElementById("signature").value=result;
+				document.getElementById("chainlogin").submit()
 			})
 		} else {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '400px',
-				title: '提示',
-				content: res.message,
-				type: 'red',
-				buttons: { '确定': function() {} }
-			})
+			layer.alert(res.message);
 		}
 	}
 
+	</script>
 
-	// async function login(result) {
-	// 	$('#signature').val(result);
-	// 	const form = document.querySelector('#chainlogin');
-	// 	const formData = new FormData(form);
-	// 	const jsonObject = {};
-	// 	for (const [key, value] of formData.entries()) {
-	// 		const fieldType = document.querySelector('#signature').value
-	// 		//console.log(fieldType);
-	// 		jsonObject[key] = value
-	// 	}
-	// 	//console.log(jsonObject);
-	// 	const response = await fetch(form.action, {
-	// 		method: form.method,
-	// 		body: JSON.stringify(jsonObject),
-	// 		headers: { 'Content-Type': 'application/json' }
-	// 	})
-	// 	let res = await response.json()
-	// 	//console.log(res);
-	// 	if (res.statusCode == 1) {
-	// 	} else {
-	// 		$.confirm({
-	// 			useBootstrap: false,
-	// 			boxWidth: '400px',
-	// 			title: '提示',
-	// 			content: res.message,
-	// 			type: 'red',
-	// 			buttons: { '确定': function () { } }
-	// 		})
-	// 	}
-	// }
-</script>
+</body>
 
 </html>
