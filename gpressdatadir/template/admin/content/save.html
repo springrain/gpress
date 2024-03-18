@@ -239,10 +239,12 @@
 			var field = data.field; // 获取表单字段值
 			field.sortNo = field.sortNo - 0;
 			field.status = field.status - 0;
-			field.markdown = cherry.getMarkdown();
 			field.content = content;
 			field.code = "";
 			field.categoryName = $("#categoryID").find("option:selected").text();
+			if (content=="") {
+				field.markdown = cherry.getMarkdown();
+			}
 			//表单对象
 			const form = document.getElementById('gpress-form');
 			$.ajax({
