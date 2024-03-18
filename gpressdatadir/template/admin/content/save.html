@@ -83,10 +83,9 @@
 	<div class="layui-col-md3">
 	   <label class="layui-form-label">封面图</label>
 	   <div class="layui-input-block">
-		<button type="button" class="layui-btn" id="button-upload-demo-btn">
+		<button type="button" class="layui-btn" id="button-upload-thumbnail">
 			<i class="layui-icon layui-icon-upload"></i> 图片上传
 		  </button>
-		 <input type="hidden" name="thumbnail" id="thumbnail" value="">
 	   </div>
 	</div>
 	<div class="layui-col-md3">
@@ -134,7 +133,23 @@
 	layui.use(function () {
 		var form = layui.form;
 		var layer = layui.layer;
+		var upload = layui.upload;
 		var $ = layui.jquery;
+   
+		// 缩略图
+		var thumbnail = "";
+		// 上传文件
+		upload.render({
+			elem: '#button-upload-thumbnail',
+			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
+			size: 5*1024, // 限制文件大小,单位 KB
+			done: function (res) {
+				if (res.statusCode==1){
+					thumbnail = res.data;
+				}
+				console.log(res);
+			}
+		});
 
 		// cherry markdown 编辑器
 		var cherry = new Cherry({
@@ -239,6 +254,7 @@
 			var field = data.field; // 获取表单字段值
 			field.sortNo = field.sortNo - 0;
 			field.status = field.status - 0;
+			field.thumbnail = thumbnail;
 			field.content = content;
 			field.code = "";
 			field.categoryName = $("#categoryID").find("option:selected").text();
