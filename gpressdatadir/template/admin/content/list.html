@@ -75,18 +75,18 @@
 								{{end}}
 							</td>
 							<td>
-								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs">
+								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs" title="预览">
 									<a href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}" target="_blank">
 										<i class="layui-icon layui-icon-eye"></i>
 									</a>
 								</button>
-								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs">
+								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs" title="编辑">
 									<a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">
 										<i class="layui-icon layui-icon-edit"></i>
 									</a>
 								</button>
 								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs"
-									onclick="deleteFunc('{{$v.Id}}','{{basePath}}admin/{{$.UrlPathParam}}/delete');">
+									onclick="deleteFunc('{{$v.Id}}','{{basePath}}admin/{{$.UrlPathParam}}/delete');" title="删除">
 									<i class="layui-icon layui-icon-delete"></i>
 								</button>
 							</td>
