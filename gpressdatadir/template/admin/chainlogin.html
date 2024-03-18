@@ -62,7 +62,7 @@
 		<input type="hidden" id="message" value="{{.message}}">
 		<div class="login_logo"><img src="{{basePath}}public/logo.png"></div>
 		<div><h2 class="gpress-login-other">区块链登录</h2></div>
-		<form class="layui-form" action="{{basePath}}admin/chainlogin" method="post">
+		<form class="layui-form" id="chainlogin" action="{{basePath}}admin/chainlogin" method="post">
 			<input type="hidden" id="signature" name="signature" value="">
 			<table class="layui-table">
 				<tbody>
@@ -137,16 +137,16 @@
 		let res = await response.json()
 		
 		if (res.statusCode == 1) {
-			let arrayboj
-			const hexString = stringToHex(res.data)
-			arrayboj = [res.data, accounts]
+			//let arrayboj
+            //const hexString = stringToHex(res.data)
+			let arrayboj = [res.data, accounts];
 			
 			provider.request({
-				method: 'personal_sign',
-				params: arrayboj,
+               method: 'personal_sign',
+               params: arrayboj,
 			}).then(result => {
 				document.getElementById("signature").value=result;
-				document.getElementById("chainlogin").submit()
+				document.getElementById("chainlogin").submit();
 			})
 		} else {
 			layer.alert(res.message);
