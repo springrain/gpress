@@ -2,7 +2,25 @@
 {{ $convertJson := convertJson  $category }}
 {{template "admin/header.html"}}
 <title>内容导航 - GPRESS</title>
+<style>
+	table {
+		width: 100%;
+		flex: 1;
+		overflow: auto;
+	}
+	table td {
+	width: fit-content;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	vertical-align: middle !important;
+	max-width: 200px;
+}
+</style>
 {{template "admin/bodystart.html"}}
+
+
 
 <div class="layui-row layui-col-space5">
 	<div class="layui-col-md3">
@@ -25,11 +43,11 @@
 						</div>
 					</div>
 				</form>
-				<table class="layui-table" id="table_list" lay-filter="parse-table-list">
+				<table class="layui-table table-content" id="table_list" lay-filter="parse-table-list">
 					<thead>
 						<tr>
 							<th width="25%">ID</th>
-							<th width="29%">标题</th>
+							<th width="29%">文章标题</th>
 							<th width="10%">导航菜单</th>
 							<th width="7%">排序</th>
 							<th width="12%">状态</th>
@@ -41,9 +59,9 @@
 						{{ range $i,$v := .Data }}
 						<tr>
 							<!-- 获取每一列的值 -->
-							<td><a href="{{basePath}}post/{{.Id}}" target="_blank">{{ .Id }}</a></td>
-							<td> {{ .Title }}</td>
-							<td> {{ .CategoryName }}</td>
+							<td title="{{ .Id }}"><a href="{{basePath}}post/{{.Id}}" target="_blank">{{ .Id }}</a></td>
+							<td title="{{ .Title }}"> {{ .Title }}</td>
+							<td title="{{ .CategoryName }}"> {{ .CategoryName }}</td>
 							<td> {{ .SortNo }}</td>
 							<td>
 								{{if eq .Status 0 }}
