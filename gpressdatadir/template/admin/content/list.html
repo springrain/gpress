@@ -2,114 +2,48 @@
 {{ $convertJson := convertJson  $category }}
 {{template "admin/header.html"}}
 <title>内容导航 - GPRESS</title>
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/tree.css">
 {{template "admin/bodystart.html"}}
-<div class="welcome-wrapper" style="position: relative;">
-  
-	<!-- 分页隐藏域 -->
-	<input type="hidden" id="totalCount" value="{{.Page.TotalCount}}">
-	<input type="hidden" id="pageCount" value="{{.Page.PageCount}}">
-  <input type="hidden" id="nodeId" value="">
 
-  <div class="dropdown-content" id="dropdown">
-    <a href="{{basePath}}admin/content/save?categoryID="  id="addContentLink">新增内容</a>
-    <a href="{{basePath}}admin/category/save?pid=" id="addSubNavLink">新增子导航</a>
-    <a href="{{basePath}}admin/category/update?id=" id="editNavLink">编辑导航</a>
-    <a id="" type="button" class="deleteNavLink">删除导航</a>
-  </div>
-	<div class="left">
-    
-		<div class="section" style="padding: 0 0 0 10px !important">
-			<div class="container">
-				<div class="searchMenu">
-					<div class="field-body">
-						<div class="field">
-							<div class="control">
-								<!-- <a href="{{basePath}}admin/content/list" class="button is-success is-small"
-                                   type="submit">全部</a> -->
-								<a href="{{basePath}}admin/category/save" class="button is-success is-small"
-								   type="submit">+新增一级导航</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="tree" id="tree">
-					<details open="">
-						<summary class="tree-item">
-							<a id="all_tree_a" href="/admin/content/list?pageNo=1"><i class="tree-item"></i>全部内容</a>
-				        </summary>
-					</details>
-				</div>
-			</div>
+<div class="layui-row layui-col-space5">
+	<div class="layui-col-md3">
+		<div class="layui-panel" style="height: 100%; padding: 5px;">
+			<div>导航菜单</div>
 		</div>
-		</section>
 	</div>
-
-	<div class="right">
-
-		<section class="section" style="padding: 0 10px 0 0 !important;">
-
-			<div class="container">
-				<!-- 搜索表单 -->
-				<form id="listForm" class="field is-horizontal" action="{{basePath}}admin/{{.UrlPathParam}}/list"
-					  method="GET">
-					<div class="field-body">
-						<div class="field">
-							<div class="control">
-								<input class="input is-small" type="text" name="q" id="q" placeholder="输入搜索内容...">
-								<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
-								<input type="hidden" id="comCode" name="comCode" value="">
-							</div>
+	<div class="layui-col-md9">
+		<div style="height: 100%;">
+				<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
+					<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
+					<input type="hidden" id="comCode" name="comCode" value="">
+					<div class="layui-input-group">
+						<input type="text" id="q" name="q" placeholder="搜索" class="layui-input">
+						<div class="layui-input-split layui-input-suffix" style="cursor: pointer;">
+							<i class="layui-icon layui-icon-search" onclick="submitListForm();"></i>
 						</div>
-						<div class="field">
-							<div class="control">
-								<button class="button is-success is-small" type="submit">搜索</button>
-								<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="button is-success is-small"
-								   type="submit">+新增</a>
-							</div>
+						<div class="layui-input-suffix">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="layui-btn layui-bg-blue">新增内容</a>
 						</div>
 					</div>
 				</form>
-
-				<!-- 列表 -->
-				<div class="table-content">
-					<table class="table is-hoverable is-fullwidth">
-						<thead>
+				<table class="layui-table" id="table_list" lay-filter="parse-table-list">
+					<thead>
 						<tr>
-							<th>操作</th>
-							<th>ID</th>
-							<th>标题</th>
-							<th>排序</th>
-							<th>状态</th>
-							<th>导航菜单</th>
-							<th>tag标签</th>
-							<th>摘要</th>
-							<th>keyword</th>
-							<th>description</th>
-							<th>作者</th>
-							
+							<th width="25%">ID</th>
+							<th width="31%">标题</th>
+							<th width="10%">导航菜单</th>
+							<th width="7%">排序</th>
+							<th width="11%">状态</th>
+							<th width="16%">操作</th>
 						</tr>
-						</thead>
-						<tbody>
+					</thead>
+					<tbody>
 						<!-- 循环所有的数据 -->
 						{{ range $i,$v := .Data }}
 						<tr>
-							<td>
-								<div style="margin-bottom: 10px;">
-									<a class="button is-success is-light is-small"
-									   href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">编辑</a>
-									<a class="button is-link is-light is-small"
-									   href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}"
-									   target="_blank">预览</a>
-									<input type="button" class="button is-danger is-small"
-										   onclick="deleteFunc(this.id,'{{basePath}}admin/{{$.UrlPathParam}}/delete')"
-										   id="{{.Id}}" value="删除" />
-								</div>
-
-							</td>
 							<!-- 获取每一列的值 -->
 							<td><a href="{{basePath}}post/{{.Id}}" target="_blank">{{ .Id }}</a></td>
 							<td> {{ .Title }}</td>
+							<td> {{ .CategoryName }}</td>
 							<td> {{ .SortNo }}</td>
 							<td>
 								{{if eq .Status 0 }}
@@ -122,149 +56,94 @@
 								未知
 								{{end}}
 							</td>
-							<td> {{ .CategoryName }}</td>
-							<td> {{ .Tag }}</td>
-							<td> {{ .Summary }}</td>
-							<td> {{ .Keyword }}</td>
-							<td> {{ .Description }}</td>
-							<td> {{ .Author }}</td>
+							<td>
+								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs">
+									<a href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{.Id}}" target="_blank">
+										<i class="layui-icon layui-icon-eye"></i>
+									</a>
+								</button>
+								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs">
+									<a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}">
+										<i class="layui-icon layui-icon-edit"></i>
+									</a>
+								</button>
+								<button type="button" class="layui-btn layui-btn-primary layui-btn-xs"
+									onclick="deleteFunc('{{$v.Id}}','{{basePath}}admin/{{$.UrlPathParam}}/delete');">
+									<i class="layui-icon layui-icon-delete"></i>
+								</button>
+							</td>
 						</tr>
 						{{end }}
-						</tbody>
-					</table>
-				</div>
-				<!-- 分页条 -->
-				<div class="page"></div>
+					</tbody>
+				</table>
+				<div id="div-list-page"></div>
 			</div>
-		</section>
 	</div>
-</div>
-<!--
-<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
-<script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js" type="application/javascript"></script>
--->
+
+  </div>
+{{template "admin/bodyend.html"}}
 
 <script>
-	// 加载分页
-	initPage()
-    var nodeId = ''
-	const query = window.location.search;
-	const params=new URLSearchParams(query)
-	var q=params.get("q")
-	if(q){
-		$("#q").val(q)
-	}
-	var comCode=params.get("comCode")
-	if(comCode&&comCode!=""){
-		$("#comCode").val(comCode)
-	}
-	// 渲染树形菜单结构
-	function renderTree(container, data) {
-		const details = container;
-		data.forEach(node => {
-			const details2 = $('<details open>');
-			const summary = document.createElement('summary');
-            summary.id = node.id;
-			summary.className = 'tree-item';
-			const a = document.createElement('a');
-			a.id="tree_a_"+node.id;
-			a.href= "{{basePath}}"+"admin/content/list?comCode="+node.comCode+"&pageNo=1"
-			a.innerHTML=`<i class="tree-item"></i>${node.name}`
-			summary.append(a)
+	var layer;
+	var $;
+	layui.use(function () {
+		//var table = layui.table;
+		layer = layui.layer;
+		$ = layui.jquery;
+		var laypage = layui.laypage;
 
-			const dropdown = document.createElement('div');
-			dropdown.className = 'dropdown';
-			summary.append(dropdown)
-
-			const button = document.createElement('button');
-			button.className = 'dropbtn';
-			button.style = 'border:none;background:transparent';
-			button.innerHTML = `<i class="iconfont icon-gengduocaozuo icon-handle"></i>`
-
-			dropdown.append(button)
-			details2.append(summary)
-
-			if (node.children) {
-				renderTree(details2, node.children);
-			}
-
-			details.append(details2);
-
-		});
-
-		container.append(details);
-	}
-
-	// 平行数据组装树形结构数据
-	function buildTree(data) {
-		const roots = data.filter(item => !item.pid);// 找到没有父节点的项，即顶级节点
-		// 递归构建树
-		function buildHierarchy(parent) {
-			const children = data.filter(item => item.pid === parent.id);
-			if (children.length > 0) {
-				parent.children = children;
-				children.forEach(child => buildHierarchy(child));
-			}
+		const query = window.location.search;
+		const params=new URLSearchParams(query)
+		var q=params.get("q")
+		if(q){
+			$("#q").val(q)
 		}
-		// 为每个顶级节点构建树
-		roots.forEach(root => buildHierarchy(root));
-		return roots;
-	}
+		var comCode=params.get("comCode")
+		if(comCode&&comCode!=""){
+			$("#comCode").val(comCode)
+		}
 
-	const categoryData = JSON.parse("{{ $convertJson }}");
-	const treeData = buildTree(categoryData.data);
-
-	$(document).ready(function(){
-		// 将树形结构渲染到页面上
-		const treeContainer = $('#tree');
-		renderTree(treeContainer, treeData);
-
-		$('a[type="button"]').on('click', function() {
-			var buttonId = $(this).attr('id');
-			var basePath = '{{basePath}}admin/category/delete';
-			// 调用 deleteFunc 函数
-			deleteFunc(buttonId, basePath);
-		});
-		
-		//选中高亮
-		if(comCode&&comCode!=""){//被选中
-			var codes=comCode.split(",");
-			for(i = 0; i < codes.length; i++) {
-                var code=codes[i];
-				if(code!=""){
-					$("#tree_a_"+code).css("color", "#3e8ed0")
+		// 普通用法
+		laypage.render({
+			elem: 'div-list-page',
+			count: "{{.Page.TotalCount}}",
+			limit: "{{.Page.PageSize}}",
+			curr: "{{.Page.PageNo}}",
+			theme: '#1890ff',
+			layout: ['prev', 'page', 'next', 'count', 'skip'], // 功能布局
+			jump: function (obj) {
+				let pageNo = document.getElementById("pageNo").value - 0;
+				if (pageNo != obj.curr) {
+					document.getElementById("pageNo").value = obj.curr;
+					submitListForm();
 				}
-             }
-           
-		}else{
-			$("#all_tree_a").css("color", "#3e8ed0")
-		}
+			}
+		});
+	});
 
-    $('.dropdown').mouseenter(function(){
-      $('#dropdown').hide()
-      var parentOffset = $(this).parent().offset();
-      var top = parentOffset.top + $(this).parent().outerHeight()-20;
-      var left = $(this)[0].offsetLeft+30;
+	function deleteFunc(id, url) {
+		layer.confirm('确认删除?', {
+			icon: 3,
+			title:"确认",
+			btn: ['确定', '取消'] //按钮
+		}, function () {
+			$.ajax({
+				type: 'post',
+				url: url, 
+				data: { "id": id },
+				success: function (res) {
+					if (res.statusCode === 1) {
+						layer.msg("删除成功",function(){
+							location.reload();
+						});
+					}
+				}
+			});
+		});
+	}
 
-      $('#dropdown').css({
-          top: top + 'px',
-          left: left + 'px'
-      });
-      nodeId = $(this).parent()[0].id
-      $('#addContentLink').attr('href', "{{basePath}}admin/content/save?categoryID=" + nodeId);
-      $('#addSubNavLink').attr('href', "{{basePath}}admin/category/save?pid=" + nodeId);
-      $('#editNavLink').attr('href', "{{basePath}}admin/category/update?id=" + nodeId);
-      $('.deleteNavLink').attr('id',nodeId);
+	function submitListForm(){
+		document.getElementById("listForm").submit();
+	}
 
-      $('#dropdown').show()
-    })
-
-    $('#dropdown').mouseleave(function(){
-      $('#dropdown').hide()
-    })
-    $('details a').mouseleave(function(){
-      $('#dropdown').hide()
-    })
-	})
 </script>
-{{template "admin/bodyend.html"}}
