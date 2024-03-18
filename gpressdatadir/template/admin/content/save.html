@@ -1,8 +1,8 @@
 {{template "admin/header.html"}}
 <title>新增内容 - GPRESS</title>
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.css" />
-<link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet" />
-<script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
+<link href="{{basePath}}admin/js/wangeditor/wangeditor5.min.css" rel="stylesheet" />
+<script src="{{basePath}}admin/js/wangeditor/wangeditor5.min.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
 
@@ -113,15 +113,17 @@
 	  <div class="layui-form-item">
 		<label class="layui-form-label">文章内容</label>
 			<div class="layui-input-block">
-				<input type="radio" name="foobar" value="0" title="富文本" />
-                <input type="radio" name="foobar"  value="1" title="Markdown" checked /> 
-			<button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交保存</button>
+				<input type="radio" name="contentType" value="0" title="Markdown" checked lay-filter="contentType" /> 
+				<input type="radio" name="contentType" value="1" title="富文本"  lay-filter="contentType" />
+			    <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交保存</button>
 			</div>
 	</div>
 	<div class="layui-form-item">
-
-		<div id="markdown-container" style="max-height: 600px;"></div>
-
+		<div id="markdown-container"></div>
+		<div id="editor—wrapper" style="display: none;">
+			<div id="toolbar-container"><!-- 工具栏 --></div>
+			<div id="editor-container"><!-- 编辑器 --></div>
+		</div>
 	</div>
 
 </form>
@@ -134,71 +136,107 @@ var form = layui.form;
 var layer = layui.layer;
 var $ =layui.jquery;
 
+// cherry markdown 编辑器
+var cherry=new Cherry({
+    id: 'markdown-container', 
+    value: '', 
+    fileUpload:function(file, callback) {
+		var formdata = new FormData(); // FormData对象，来发送二进制文件。
+		formdata.append('file', file); // 将文件追加到 formdata对象中
+		$.ajax({
+			type: 'post',
+			url: '{{basePath}}admin/upload',
+			data: formdata,
+			processData: false,
+			contentType: false,
+			success(res) {
+			  callback(res.data);
+		    },
+			error(err) {},
+		});
+	},
+    toolbars: {
+        // 定义顶部工具栏
+        toolbar: [
+            'undo', 'redo', '|',
+            // 把字体样式类按钮都放在加粗按钮下面
+            {bold:['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby']},
+            'color', 'size', '|', 'header', 'list', 'panel', '|',
+            // 把插入类按钮都放在插入按钮下面
+            {insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'drawIo']},
+            'graph'
+        ],
+        // 定义侧边栏，默认为空
+        //sidebar: ['theme', 'mobilePreview', 'copy'],
+        // 定义顶部右侧工具栏，默认为空
+        toolbarRight: ['fullScreen'],
+        // 定义选中文字时弹出的“悬浮工具栏”，默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
+        bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'color','size',],
+        // 定义光标出现在行首位置时出现的"提示工具栏"，默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
+        //float: ['table', 'code', 'graph'],
+    },
+});
 
-let fullScreen = Cherry.createMenuHook('全屏', 'full')
-		window.cherryObj = new Cherry({
-			id: 'markdown-container',
-			toolbars: {
-				toolbar: [
-					'bold',
-					'italic',
-					'strikethrough',
-					'|',
-					'color',
-					'header',
-					'|',
-					'list',
-					{
-						insert: [
-							'image',
-							'link',
-							'hr',
-							'br',
-							'code',
-							'formula',
-							'toc',
-							'table',
-							'line-table',
-							'bar-table',
-						],
-					},
-					'|',
-					'full',
-				],
-				customMenu: {
-					// 注入编辑器的导航中
-					// 对象 key 可以作为导航项的名字（需要保证唯一），在上方的配置中使用
-					full: fullScreen,
-				},
-			},
-			fileUpload(file, callback) {
-				var formdata = new FormData() // FormData对象，来发送二进制文件。
-				formdata.append('file', file) // 将文件追加到 formdata对象中
-				$.ajax({
-					type: 'post',
-					url: '/admin/upload',
-					data: formdata,
-					processData: false,
-					contentType: false,
-					success(res) {
-						callback(res.data)
-					},
-					error(err) {},
-				})
-			},
-		})
-		$('.cherry-toolbar-全屏').click(function (e) {
-			if ($('#markdown-container').hasClass('full-screen')) {
-				$('.cherry-toolbar-全屏').html('全屏')
-				$('#markdown-container').removeClass('full-screen')
-			} else {
-				$('.cherry-toolbar-全屏').html('退出全屏')
-				$('#markdown-container').addClass('full-screen')
-			}
-		})
+// 内容类型
+form.on('radio(contentType)', function(data){
+	var elem = data.elem; // 获得 radio 原始 DOM 对象
+   // var checked = elem.checked; // 获得 radio 选中状态
+    var current = elem.value; // 获得 radio 值
+		if (current == 0) {
+			$('#markdown-container').show()
+			$('#editor—wrapper').hide()
+			
+		} else {
+			$('#markdown-container').hide()
+			$('#editor—wrapper').show()
+			cherry.value="";
+		}
+	})
 
 
 
+
+    // 富文本编辑器
+    const { createEditor, createToolbar } = window.wangEditor
+	var content="";
+	const editorConfig = {
+		placeholder: '请输入内容...',
+		MENU_CONF: {},
+		onChange(editor) {
+			content = editor.getHtml()
+			// 也可以同步到 <textarea>
+		},
+	}
+	editorConfig.MENU_CONF['uploadImage'] = {
+		server: '{{basePath}}admin/upload',
+		fieldName: 'file',
+		customInsert(res, insertFn) {
+			// 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
+			insertFn(res.data)
+		},
+		onSuccess(file, res) {
+			console.log(res, '--上传成功---')
+		},
+		onFailed(file, res) {
+			layer.msg("上传失败!");
+		},
+		onError(file, err, res) {
+			console.log('--上传错误---')
+		},
+	}
+	const editor = createEditor({
+		selector: '#editor-container',
+		html: '<p></p>',
+		config: editorConfig,
+		mode: 'default', // or 'simple'
+	})
+	const toolbar = createToolbar({
+		editor,
+		selector: '#toolbar-container',
+		config: {},
+		//config: { excludeKeys: 'group-video' },
+		mode: 'default', // or 'simple'
+	})	
 
 
 // 提交事件
@@ -206,6 +244,12 @@ form.on('submit(gpress-form-ajax-update)', function(data){
   var field = data.field; // 获取表单字段值
   field.sortNo=field.sortNo-0;
   field.status=field.status-0;
+  field.markdown=cherry.getMarkdown();
+  field.content=content;
+  field.code="";
+  field.categoryName=$("#categoryID").find("option:selected").text();
+
+
   const form = document.getElementById('gpress-form');
   $.ajax({
 	  url:form.action,
