@@ -11,121 +11,127 @@
 {{ $pageTemplate := pageTemplate }}
 
 <div class="layui-panel" style="padding: 5px;">
-<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
-	<div class="layui-form-item">
-         <div class="layui-col-md3">
-			<label class="layui-form-label">ID</label>
-			<div class="layui-input-block">
-			  <input type="text" name="id" lay-verify="required" lay-reqtext="请填写ID" autocomplete="off" class="layui-input" value="{{generateStringID}}">
+	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
+		<div class="layui-form-item">
+			<div class="layui-col-md3">
+				<label class="layui-form-label">ID</label>
+				<div class="layui-input-block">
+					<input type="text" name="id" lay-verify="required" lay-reqtext="请填写ID" autocomplete="off"
+						class="layui-input" value="{{generateStringID}}">
+				</div>
 			</div>
-		 </div>
-		 <div class="layui-col-md3">
-			<label class="layui-form-label">文章标题</label>
-			<div class="layui-input-block">
-			  <input type="text" name="title" lay-verify="required" lay-reqtext="请填写文章标题" autocomplete="off" class="layui-input" value="">
+			<div class="layui-col-md3">
+				<label class="layui-form-label">文章标题</label>
+				<div class="layui-input-block">
+					<input type="text" name="title" lay-verify="required" lay-reqtext="请填写文章标题" autocomplete="off"
+						class="layui-input" value="">
+				</div>
 			</div>
-		 </div>
-		 <div class="layui-col-md3">
-			<label class="layui-form-label">摘要</label>
-			<div class="layui-input-block">
-			  <input type="text" name="summary" autocomplete="off" class="layui-input" value="">
+			<div class="layui-col-md3">
+				<label class="layui-form-label">摘要</label>
+				<div class="layui-input-block">
+					<input type="text" name="summary" autocomplete="off" class="layui-input" value="">
+				</div>
 			</div>
-		 </div>
-		 <div class="layui-col-md3">
-			<label class="layui-form-label">keyword</label>
-			<div class="layui-input-block">
-			  <input type="text" name="keyword" autocomplete="off" class="layui-input" value="">
+			<div class="layui-col-md3">
+				<label class="layui-form-label">keyword</label>
+				<div class="layui-input-block">
+					<input type="text" name="keyword" autocomplete="off" class="layui-input" value="">
+				</div>
 			</div>
-		 </div>
-	</div>
+		</div>
 
-	<div class="layui-form-item">
-		<div class="layui-col-md3">
-		   <label class="layui-form-label">导航菜单</label>
-		   <div class="layui-input-block">
-			<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单" >
-				<option value="">请选择</option>
-				{{ range $index,$obj := $category.Data }}
-				<option value="{{$obj.Id}}">{{$obj.Name}}</option>
-				{{end}}
-			</select>
-		   </div>
-		</div>
-		<div class="layui-col-md3">
-		   <label class="layui-form-label">页面模版</label>
-		   <div class="layui-input-block">
-			 <select  name="templateID" id="templateID" >
-				<option value="">默认(content.html)</option>
-				{{ range $index,$obj := $pageTemplate }}
-				<option value="{{$obj.Id}}">{{$obj.Name}}</option>
-				{{end}}
-			</select>
+		<div class="layui-form-item">
+			<div class="layui-col-md3">
+				<label class="layui-form-label">导航菜单</label>
+				<div class="layui-input-block">
+					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单">
+						<option value="">请选择</option>
+						{{ range $index,$obj := $category.Data }}
+						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
+						{{end}}
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">页面模版</label>
+				<div class="layui-input-block">
+					<select name="templateID" id="templateID">
+						<option value="">默认(content.html)</option>
+						{{ range $index,$obj := $pageTemplate }}
+						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
+						{{end}}
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">状态</label>
+				<div class="layui-input-block">
+					<select name="status" id="status">
+						<option value="1">公开</option>
+						<option value="0">列表不显示</option>
+						<option value="2">私密</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">排序</label>
+				<div class="layui-input-block">
+					<input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off"
+						class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">
+				</div>
 			</div>
 		</div>
-		<div class="layui-col-md3">
-		   <label class="layui-form-label">状态</label>
-		   <div class="layui-input-block">
-			<select name="status" id="status">
-				<option value="1">公开</option>
-				<option value="0">列表不显示</option>
-				<option value="2">私密</option>
-			</select>
-		   </div>
-		</div>
-		<div class="layui-col-md3">
-		   <label class="layui-form-label">排序</label>
-		   <div class="layui-input-block">
-			<input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off" class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">		   </div>
-		</div>
-   </div>
 
-   <div class="layui-form-item">
-	<div class="layui-col-md3">
-	   <label class="layui-form-label">封面图</label>
-	   <div class="layui-input-block">
-		<button type="button" class="layui-btn" id="button-upload-thumbnail">
-			<i class="layui-icon layui-icon-upload"></i> 图片上传
-		  </button>
-	   </div>
-	</div>
-	<div class="layui-col-md3">
-	   <label class="layui-form-label">description</label>
-	   <div class="layui-input-block">
-		 <input type="text" name="description" autocomplete="off" class="layui-input" value="">
-	   </div>
-	</div>
-	<div class="layui-col-md3">
-	   <label class="layui-form-label">作者</label>
-	   <div class="layui-input-block">
-		 <input type="text" name="author" autocomplete="off" class="layui-input" value="">
-	   </div>
-	</div>
-	<div class="layui-col-md3">
-	   <label class="layui-form-label">tag标签</label>
-	   <div class="layui-input-block">
-		 <input type="text" name="tag" autocomplete="off" class="layui-input" value="">
-	   </div>
-	</div>
-</div>
-	
-
-	  <div class="layui-form-item">
-		<label class="layui-form-label">文章内容</label>
+		<div class="layui-form-item">
+			<div class="layui-col-md3">
+				
+				<label class="layui-form-label">封面图</label>
+				<div class="layui-input-block">
+					<button type="button" class="layui-btn" id="button-upload-thumbnail">
+						<i class="layui-icon layui-icon-upload"></i> 上传封面
+					</button>
+					<img height="38px" src="" id="img_thumbnail" />
+				</div>
+			        
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">description</label>
+				<div class="layui-input-block">
+					<input type="text" name="description" autocomplete="off" class="layui-input" value="">
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">作者</label>
+				<div class="layui-input-block">
+					<input type="text" name="author" autocomplete="off" class="layui-input" value="">
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">tag标签</label>
+				<div class="layui-input-block">
+					<input type="text" name="tag" autocomplete="off" class="layui-input" value="">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">文章内容</label>
 			<div class="layui-input-block">
-				<input type="radio" name="contentType" value="0" title="Markdown" checked lay-filter="contentType" /> 
-				<input type="radio" name="contentType" value="1" title="富文本"  lay-filter="contentType" />
-			    <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交保存</button>
+				<input type="radio" name="contentType" value="0" title="Markdown" checked lay-filter="contentType" />
+				<input type="radio" name="contentType" value="1" title="富文本" lay-filter="contentType" />
+				<button type="submit" class="layui-btn layui-bg-blue" lay-submit
+					lay-filter="gpress-form-ajax-update">提交保存</button>
 			</div>
-	</div>
-	<div class="layui-form-item">
-		<div id="markdown-container"></div>
-		<div id="editor—wrapper" style="display: none;">
-			<div id="toolbar-container"><!-- 工具栏 --></div>
-			<div id="editor-container"><!-- 编辑器 --></div>
 		</div>
-	</div>
+		<div class="layui-form-item">
+			<div id="markdown-container"></div>
+			<div id="editor—wrapper" style="display: none;">
+				<div id="toolbar-container"><!-- 工具栏 --></div>
+				<div id="editor-container"><!-- 编辑器 --></div>
+			</div>
+		</div>
 
-</form>
+	</form>
 </div>
 {{template "admin/bodyend.html"}}
 
@@ -142,13 +148,28 @@
 		upload.render({
 			elem: '#button-upload-thumbnail',
 			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
-			size: 5*1024, // 限制文件大小,单位 KB
+			size: 5 * 1024, // 限制文件大小,单位 KB
 			done: function (res) {
-				if (res.statusCode==1){
+				if (res.statusCode == 1) {
 					thumbnail = res.data;
+					$("#img_thumbnail").attr("src", thumbnail);
 				}
 				console.log(res);
 			}
+		});
+
+		$("#img_thumbnail").click(function () {
+			layer.photos({
+				photos: {
+					"title": "封面图",
+					"start": 0,
+					"data": [{
+					  "src": thumbnail,
+					}]
+				},
+				//toolbar: false,
+				footer: false // 是否显示底部栏 --- 2.8.16+
+			});
 		});
 
 		// cherry markdown 编辑器
