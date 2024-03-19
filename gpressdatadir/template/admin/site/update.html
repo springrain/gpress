@@ -98,7 +98,7 @@
 			size: 5 * 1024, // 限制文件大小,单位 KB
 			done: function (res) {
 				if (res.statusCode == 1) {
-					$("#img_logo").attr("src",  basePath+res.data);
+					$("#img_logo").attr("src",  res.data);
 					$("#logo").val(res.data);
 				}
 				console.log(res);
@@ -112,7 +112,7 @@
 			size: 5 * 1024, // 限制文件大小,单位 KB
 			done: function (res) {
 				if (res.statusCode == 1) {
-					$("#img_favicon").attr("src",  basePath+res.data);
+					$("#img_favicon").attr("src",  res.data);
 					$("#favicon").val(res.data);
 				}
 				console.log(res);
