@@ -20,14 +20,15 @@ package main
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"encoding/asn1"
-	"encoding/json"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+	"golang.org/x/crypto/ripemd160"
 )
 
 func verifySecp256k1Signature(senderAddress string, signatureData string, signature string) (bool, error) {
@@ -71,7 +72,7 @@ func verifySecp256k1Signature(senderAddress string, signatureData string, signat
 
 // XuperChain使用NIST标准的公钥
 func verifyXuperSignature(chainAddress string, sig, msg []byte) (valid bool, err error) {
-	k := &ecdsa.PublicKey{}
+	/*k := &ecdsa.PublicKey{}
 	err = json.Unmarshal([]byte(chainAddress), k)
 	if err != nil {
 		return false, err //json有问题
@@ -81,8 +82,8 @@ func verifyXuperSignature(chainAddress string, sig, msg []byte) (valid bool, err
 
 	// 判断是否是NIST标准的公钥
 	isNistCurve := checkKeyCurve(k)
-	if !isNistCurve {
-		return false, fmt.Errorf("this cryptography curve[%s] has not been supported yet", k.Params().Name)
+	if isNistCurve == false {
+		return false, fmt.Errorf("this cryptography curve[%s] has not been supported yet.", k.Params().Name)
 	}
 
 	r, s, err := unmarshalECDSASignature(sig)
@@ -90,7 +91,41 @@ func verifyXuperSignature(chainAddress string, sig, msg []byte) (valid bool, err
 		return false, fmt.Errorf("failed to unmarshal the ecdsa signature [%s]", err)
 	}
 
-	return ecdsa.Verify(k, msg, r, s), nil
+	return ecdsa.Verify(k, msg, r, s), nil*/
+
+	s2 := string(sig)
+	signature, e := hex.DecodeString(s2)
+	if e != nil {
+		return false, err
+	}
+
+	r := new(big.Int).SetBytes(signature[:32])
+	s := new(big.Int).SetBytes(signature[32:64])
+	publicKeyX := new(big.Int).SetBytes(signature[64:96])
+	publicKeyY := new(big.Int).SetBytes(signature[96:128])
+	data := signature[128:]
+	if string(msg) != string(data) { //数据不一致
+		return false, errors.New("原始数据不一致")
+	}
+
+	/*x := new(big.Int)
+	y := new(big.Int)
+	e = x.UnmarshalText(publicKeyX)
+	if e != nil {
+		return false, e
+	}
+	e = y.UnmarshalText(publicKeyY)
+	if e != nil {
+		return false, e
+	}*/
+	pub := ecdsa.PublicKey{Curve: elliptic.P256(), X: publicKeyX, Y: publicKeyY}
+	pubKey := &pub
+	verifyAddress, _ := verifyAddressUsingPublicKey(chainAddress, pubKey)
+	if !verifyAddress {
+		return false, errors.New("签名中的公钥和address不匹配")
+	}
+
+	return ecdsa.Verify(pubKey, data, r, s), nil
 }
 
 // 判断是否是NIST标准的公钥
@@ -131,7 +166,7 @@ type ECDSASignature struct {
 	func MarshalPublicKey(publicKey *ecdsa.PublicKey) []byte {
 		return elliptic.Marshal(publicKey.Curve, publicKey.X, publicKey.Y)
 	}
-*/
+
 func unmarshalECDSASignature(rawSig []byte) (*big.Int, *big.Int, error) {
 	sig := new(ECDSASignature)
 	_, err := asn1.Unmarshal(rawSig, sig)
@@ -155,6 +190,92 @@ func unmarshalECDSASignature(rawSig []byte) (*big.Int, *big.Int, error) {
 	}
 
 	return sig.R, sig.S, nil
+}
+*/
+// 验证钱包地址是否和指定的公钥match
+// 如果成功，返回true和对应的密码学标记位；如果失败，返回false和默认的密码学标记位0
+func verifyAddressUsingPublicKey(address string, pub *ecdsa.PublicKey) (bool, uint8) {
+	//base58反解回byte[]数组
+	slice := base58Decode(address)
+	//检查是否是合法的base58编码
+	if len(slice) < 1 {
+		return false, 0
+	}
+	//拿到密码学标记位
+	byteVersion := slice[:1]
+	nVersion := uint8(byteVersion[0])
+
+	realAddress, error := getAddressFromPublicKey(pub)
+	if error != nil {
+		return false, 0
+	}
+
+	if realAddress == address {
+		return true, nVersion
+	}
+
+	return false, 0
+}
+
+// 返回33位长度的地址
+func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
+	//using SHA256 and Ripemd160 for hash summary
+	data := elliptic.Marshal(pub.Curve, pub.X, pub.Y)
+	outputSha256 := hashUsingSha256(data)
+	OutputRipemd160 := hashUsingRipemd160(outputSha256)
+
+	//暂时只支持一个字节长度，也就是uint8的密码学标志位
+	// 判断是否是nist标准的私钥
+	nVersion := 1
+
+	switch pub.Params().Name {
+	case "P-256": // NIST
+	case "SM2-P-256": // 国密
+		nVersion = 2
+	default: // 不支持的密码学类型
+		return "", fmt.Errorf("This cryptography[%v] has not been supported yet.", pub.Params().Name)
+	}
+
+	bufVersion := []byte{byte(nVersion)}
+
+	strSlice := make([]byte, len(bufVersion)+len(OutputRipemd160))
+	copy(strSlice, bufVersion)
+	copy(strSlice[len(bufVersion):], OutputRipemd160)
+
+	//using double SHA256 for future risks
+	checkCode := doubleSha256(strSlice)
+	simpleCheckCode := checkCode[:4]
+
+	slice := make([]byte, len(strSlice)+len(simpleCheckCode))
+	copy(slice, strSlice)
+	copy(slice[len(strSlice):], simpleCheckCode)
+
+	//使用base58编码，手写不容易出错。
+	//相比Base64，Base58不使用数字"0"，字母大写"O"，字母大写"I"，和字母小写"l"，以及"+"和"/"符号。
+	strEnc := base58Encode(slice)
+
+	return strEnc, nil
+}
+func hashUsingSha256(data []byte) []byte {
+	h := sha256.New()
+	h.Write(data)
+	out := h.Sum(nil)
+
+	return out
+}
+
+// 执行2次SHA256，这是为了防止SHA256算法被攻破。
+func doubleSha256(data []byte) []byte {
+	return hashUsingSha256(hashUsingSha256(data))
+}
+
+// Ripemd160，这种hash算法可以缩短长度
+func hashUsingRipemd160(data []byte) []byte {
+	h := ripemd160.New()
+	h.Write(data)
+	out := h.Sum(nil)
+
+	return out
 }
 
 /*
