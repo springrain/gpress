@@ -49,30 +49,23 @@
 				</div>
 				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">Logo</label>
-					<div class="layui-input-block">
-						<div class="layui-inline">
-					  <input type="text" name="logo" id="logo" autocomplete="off" class="layui-input" value="{{.Data.Logo}}">
-					</div>
-					<div class="layui-inline">
-					  <button type="button" class="layui-btn" id="button-upload-logo">
-						<i class="layui-icon layui-icon-upload"></i> 上传图片
-					</button>
-					<img height="38px" src="{{.Data.Logo}}" id="img_logo" style="padding-left: 10px;" />
-				</div>	
-				</div>
+					<div class="layui-input-block" style="display: flex;justify-content: space-between;align-items: center;">
+					  <input type="text" name="logo" id="logo" autocomplete="off" class="layui-input" value="{{.Data.Logo}}"> &nbsp;
+						<button type="button" class="layui-btn" id="button-upload-logo">
+							<i class="layui-icon layui-icon-upload"></i> 上传图片
+						</button> &nbsp;
+						<img height="38px" src="{{.Data.Logo}}" id="img_logo"/>
+				   </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">Favicon</label>
-					<div class="layui-input-block">
-					<div class="layui-inline">
-					  <input type="text" name="favicon" id="favicon" autocomplete="off" class="layui-input" value="{{.Data.Favicon}}">
-					</div>
-					<div class="layui-inline">
+					<div class="layui-input-block" style="display: flex;justify-content: space-between;align-items: center;">
+					  <input type="text" name="favicon" id="favicon" autocomplete="off" class="layui-input" value="{{.Data.Favicon}}"> &nbsp;
 					  <button type="button" class="layui-btn" id="button-upload-favicon">
 						<i class="layui-icon layui-icon-upload"></i> 上传图片
-					</button>
-					<img height="38px" src="{{.Data.Favicon}}" id="img_favicon" style="padding-left: 10px;" />
-				</div>	
+					</button> &nbsp;
+					<img height="38px" src="{{.Data.Favicon}}" id="img_favicon" />
+				
 				</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
