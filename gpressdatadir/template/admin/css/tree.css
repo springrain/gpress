@@ -10,7 +10,7 @@
     outline: 0;
     padding-left: 22px;
     list-style: none;
-    background: repeating-linear-gradient(90deg, #c0c4cc 0 1px, transparent 0px 2px) 0px 50%/22px 1px no-repeat;
+    background: repeating-linear-gradient(90deg, #c0c4cc 0 1px, transparent 0px 2px) 0px 50%/18px 1px no-repeat;
     /* background: linear-gradient(#c0c4cc,#c0c4cc) 0px 50%/20px 1px no-repeat; */
 }
 
