@@ -38,7 +38,7 @@ func verifySecp256k1Signature(senderAddress string, signatureData string, signat
 	// 将发送者地址解码为以太坊地址类型
 	sender := common.HexToAddress(senderAddress)
 
-	// 计算消息的哈希，包括 MetaMask 的消息前缀
+	// 计算消息的哈希,包括 MetaMask 的消息前缀
 	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(signatureData), signatureData)
 	messageBytes := []byte(prefix)
 	messageHash := ethcrypto.Keccak256Hash(messageBytes)
@@ -155,7 +155,7 @@ type ECDSASignature struct {
 	}
 
 // use DER-encoded ASN.1 octet standard to represent the signature
-// 与比特币算法一样，基于DER-encoded ASN.1 octet标准，来表达使用椭圆曲线签名算法返回的结果
+// 与比特币算法一样,基于DER-encoded ASN.1 octet标准,来表达使用椭圆曲线签名算法返回的结果
 
 	func MarshalECDSASignature(r, s *big.Int) ([]byte, error) {
 		return asn1.Marshal(ECDSASignature{r, s})
@@ -193,7 +193,7 @@ func unmarshalECDSASignature(rawSig []byte) (*big.Int, *big.Int, error) {
 }
 */
 // 验证钱包地址是否和指定的公钥match
-// 如果成功，返回true和对应的密码学标记位；如果失败，返回false和默认的密码学标记位0
+// 如果成功,返回true和对应的密码学标记位；如果失败,返回false和默认的密码学标记位0
 func verifyAddressUsingPublicKey(address string, pub *ecdsa.PublicKey) (bool, uint8) {
 	//base58反解回byte[]数组
 	slice := base58Decode(address)
@@ -232,7 +232,7 @@ func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	outputSha256 := hashUsingSha256(data)
 	OutputRipemd160 := hashUsingRipemd160(outputSha256)
 
-	//暂时只支持一个字节长度，也就是uint8的密码学标志位
+	//暂时只支持一个字节长度,也就是uint8的密码学标志位
 	// 判断是否是nist标准的私钥
 	nVersion := 1
 
@@ -258,8 +258,8 @@ func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	copy(slice, strSlice)
 	copy(slice[len(strSlice):], simpleCheckCode)
 
-	//使用base58编码，手写不容易出错。
-	//相比Base64，Base58不使用数字"0"，字母大写"O"，字母大写"I"，和字母小写"l"，以及"+"和"/"符号。
+	//使用base58编码,手写不容易出错。
+	//相比Base64,Base58不使用数字"0",字母大写"O",字母大写"I",和字母小写"l",以及"+"和"/"符号。
 	strEnc := base58Encode(slice)
 
 	return strEnc, nil
@@ -272,12 +272,12 @@ func hashUsingSha256(data []byte) []byte {
 	return out
 }
 
-// 执行2次SHA256，这是为了防止SHA256算法被攻破。
+// 执行2次SHA256,这是为了防止SHA256算法被攻破。
 func doubleSha256(data []byte) []byte {
 	return hashUsingSha256(hashUsingSha256(data))
 }
 
-// Ripemd160，这种hash算法可以缩短长度
+// Ripemd160,这种hash算法可以缩短长度
 func hashUsingRipemd160(data []byte) []byte {
 	h := ripemd160.New()
 	h.Write(data)
@@ -306,7 +306,7 @@ func hashUsingRipemd160(data []byte) []byte {
 			sigMap[s2[:dIndex]] = strings.Trim(strings.TrimSpace(s2[dIndex+1:]), `"`)
 		}
 		sigByte, _ := json.Marshal(sigMap)
-		// 解析签名字符串，提取相关信息
+		// 解析签名字符串,提取相关信息
 		signature := &Signature{}
 		err := json.Unmarshal(sigByte, signature)
 		if err != nil {
@@ -347,7 +347,7 @@ func hashUsingRipemd160(data []byte) []byte {
 
 	func getRSAPublicKeyPem(publicKeyID string) (*rsa.PublicKey, error) {
 		// 根据公钥 ID 获取对应的公钥
-		// 这里使用假数据，实际使用时需要替换为真实的公钥获取逻辑
+		// 这里使用假数据,实际使用时需要替换为真实的公钥获取逻辑
 		//publicKeyPEM := "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr9HicDyHYlpGVYVHrm7j\nU7Nq4z9SeynK8UUi+JoBWuotChg2oSDQtWuj+zdQSKM3g27+sqNNw/BuZp85BVT6\n8PRyamTHjVrZPj6JIC+A/EGeJTqycODoMTDTTdz3evxBUbPAH7By91VrMNE5i8zl\nJ40IqAYYNLjmUdvQliGmGpX/xmPAfIeJ/mMQ3kCq/2uSICrL1ORicAB/qqXgyPsB\nWZCTYOOdJsV9bbbhAQUqRjevZrRIdaVcrIObxTDY0VgtBJgsElGNxbnb/g4vfPgy\nWdi/E0qLSRyayml8lGZhPccgY3PnqGO765X/j0tra/I4JIjLC0AOV0nLs0fLmH72\nEwIDAQAB\n-----END PUBLIC KEY-----\n"
 		publicKeyPEM, err := responseJsonValue(publicKeyID, "publicKey.publicKeyPem", publicKeyID)
 		if err != nil {
