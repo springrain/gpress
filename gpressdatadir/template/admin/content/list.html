@@ -2,6 +2,7 @@
 {{ $convertJson := convertJson  $category }}
 {{template "admin/header.html"}}
 <title>内容导航 - GPRESS</title>
+<link href="{{basePath}}admin/css/tree.css" rel="stylesheet">
 <style>
 	table {
 		width: 100%;
@@ -26,6 +27,133 @@
 	<div class="layui-col-md3">
 		<div class="layui-panel" style="height: 100%; padding: 5px;">
 			<div>导航菜单</div>
+
+			<div class="tree" id="tree">
+				<details open>
+					<summary>
+						项目1
+					</summary>
+					<details open>
+						<summary>
+							文件夹
+						</summary>
+						<details>
+							<summary>
+								sdd
+							</summary>
+						</details>
+					</details>
+					<details>
+						<summary>
+							chrome test
+						</summary>
+					</details>
+				</details>
+				<details>
+					<summary>
+						项目2
+					</summary>
+					<details>
+						<summary>
+							文件夹2-1
+						</summary>
+						<details>
+							<summary>
+								文件夹2-1-1
+							</summary>
+							<details>
+								<summary>
+									文件夹2-1-1-1
+								</summary>
+								<details>
+									<summary>
+										文件夹2-1-1-1-1
+									</summary>
+									<details>
+										<summary>
+											文件夹2-1-1-1-1-1
+										</summary>
+									</details>
+								</details>
+							</details>
+						</details>
+					</details>
+				</details>
+				<details>
+					<summary>
+						文件夹1
+					</summary>
+					<details>
+						<summary>
+							文件夹
+						</summary>
+					</details>
+					<details>
+						<summary>
+							文件夹2
+						</summary>
+					</details>
+				</details>
+				<details>
+					<summary>
+						项目3
+					</summary>
+					<details>
+						<summary>
+							文件夹1
+						</summary>
+						<details>
+							<summary>
+								1
+							</summary>
+							<details>
+								<summary>
+									文件夹2
+								</summary>
+							</details>
+						</details>
+					</details>
+					<details>
+						<summary>
+							文件夹
+						</summary>
+					</details>
+					<details>
+						<summary>
+							文件夹
+						</summary>
+					</details>
+					<details>
+						<summary>
+							文件夹
+						</summary>
+					</details>
+					<details>
+						<summary>
+							文件夹的副本
+						</summary>
+					</details>
+					<details>
+						<summary>
+							点点点
+						</summary>
+					</details>
+					<details>
+						<summary>
+							hewei
+						</summary>
+						<details>
+							<summary>
+								hewei02
+							</summary>
+						</details>
+					</details>
+				</details>
+			</div>
+
+
+
+
 		</div>
 	</div>
 	<div class="layui-col-md9">
