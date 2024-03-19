@@ -144,6 +144,14 @@
 		var layer = layui.layer;
 		var upload = layui.upload;
 		var $ = layui.jquery;
+
+		const query = window.location.search;
+		const params=new URLSearchParams(query)
+		var categoryID=params.get("categoryID")
+		if(categoryID){
+			$("#categoryID option[value='"+categoryID+"']").attr("selected", true);
+			form.render();
+		}
    
 		// 缩略图
 		var thumbnail = "";
@@ -268,7 +276,6 @@
 			config: { excludeKeys: ['todo','divider','redo'] },
 			mode: 'default', // or 'simple'
 		})
-		console.log( toolbar.getConfig().toolbarKeys) // 当前菜单排序和分组
 
 		// 切换 富文本 和 Markdown
 		form.on('radio(contentType)', function (data) {
