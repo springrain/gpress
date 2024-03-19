@@ -187,7 +187,7 @@
 			id: 'markdown-container',
 			value: '',
 			fileUpload: function (file, callback) {
-				var formdata = new FormData(); // FormData对象，来发送二进制文件。
+				var formdata = new FormData(); // FormData对象,来发送二进制文件.
 				formdata.append('file', file); // 将文件追加到 formdata对象中
 				$.ajax({
 					type: 'post',
@@ -212,13 +212,13 @@
 					{ insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'drawIo'] },
 					'graph'
 				],
-				// 定义侧边栏，默认为空
+				// 定义侧边栏,默认为空
 				//sidebar: ['theme', 'mobilePreview', 'copy'],
-				// 定义顶部右侧工具栏，默认为空
+				// 定义顶部右侧工具栏,默认为空
 				toolbarRight: ['fullScreen'],
-				// 定义选中文字时弹出的“悬浮工具栏”，默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
+				// 定义选中文字时弹出的“悬浮工具栏”,默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
 				bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'color', 'size',],
-				// 定义光标出现在行首位置时出现的"提示工具栏"，默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
+				// 定义光标出现在行首位置时出现的"提示工具栏",默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
 				//float: ['table', 'code', 'graph'],
 			},
 		});
@@ -234,11 +234,13 @@
 				// 也可以同步到 <textarea>
 			},
 		}
-		editorConfig.MENU_CONF['uploadImage'] = {
+		var editorUploadConfig = {
 			server: '{{basePath}}admin/upload',
 			fieldName: 'file',
+			// 单个文件的最大体积限制,默认为 10M
+			maxFileSize: 100 * 1024 * 1024, // 100M
 			customInsert(res, insertFn) {
-				// 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
+				// 自定义返回数据结构.不用按照wangeditor默认规定的服务器返回的数据结构
 				insertFn(res.data)
 			},
 			onSuccess(file, res) {
@@ -250,7 +252,9 @@
 			onError(file, err, res) {
 				console.log('--上传错误---')
 			},
-		}
+		};
+		editorConfig.MENU_CONF['uploadImage'] = editorUploadConfig;
+		editorConfig.MENU_CONF['uploadVideo'] = editorUploadConfig;
 		const editor = createEditor({
 			selector: '#editor-container',
 			html: '<p></p>',
@@ -260,10 +264,11 @@
 		const toolbar = createToolbar({
 			editor,
 			selector: '#toolbar-container',
-			config: {},
-			//config: { excludeKeys: 'group-video' },
+			//config: {},
+			config: { excludeKeys: ['todo','divider','redo'] },
 			mode: 'default', // or 'simple'
 		})
+		console.log( toolbar.getConfig().toolbarKeys) // 当前菜单排序和分组
 
 		// 切换 富文本 和 Markdown
 		form.on('radio(contentType)', function (data) {
