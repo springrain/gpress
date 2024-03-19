@@ -85,21 +85,13 @@
 
 			{{ if .showCaptcha }}
 			<div class="layui-form-item">
-				<div class="layui-row">
-					<div class="layui-col-xs8">
-						<div class="layui-input-wrap">
-							<div class="layui-input-prefix">
-								<i class="layui-icon layui-icon-vercode"></i>
-							</div>
-							<input type="text" name="answer" value="" lay-verify="required" placeholder="验证码"
-								lay-reqtext="请填写验证码" autocomplete="off" class="layui-input">
-						</div>
+				<div class="layui-input-wrap" style="display: flex;justify-content: space-between;align-items: center;">
+					<div class="layui-input-prefix">
+						<i class="layui-icon layui-icon-vercode"></i>
 					</div>
-					<div class="layui-col-xs4">
-						<div style="margin-left: 16px;">
-							<img width="120px" src="{{ safeURL .captchaBase64 }}" />
-						</div>
-					</div>
+					<input type="text" name="answer" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码"
+						autocomplete="off" class="layui-input">
+						&nbsp; <img height="38px" src="{{ safeURL .captchaBase64 }}" />
 				</div>
 			</div>
 			{{ end }}
