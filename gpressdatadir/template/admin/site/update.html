@@ -54,7 +54,7 @@
 						<button type="button" class="layui-btn" id="button-upload-logo">
 							<i class="layui-icon layui-icon-upload"></i> 上传图片
 						</button> &nbsp;
-						<img height="38px" src="{{.Data.Logo}}" id="img_logo"/>
+						<img height="38px" src="{{basePath}}{{.Data.Logo}}" id="img_logo"/>
 				   </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
@@ -64,7 +64,7 @@
 					  <button type="button" class="layui-btn" id="button-upload-favicon">
 						<i class="layui-icon layui-icon-upload"></i> 上传图片
 					</button> &nbsp;
-					<img height="38px" src="{{.Data.Favicon}}" id="img_favicon" />
+					<img height="38px" src="{{basePath}}{{.Data.Favicon}}" id="img_favicon" />
 				
 				</div>
 				</div>
@@ -98,7 +98,7 @@
 			size: 5 * 1024, // 限制文件大小,单位 KB
 			done: function (res) {
 				if (res.statusCode == 1) {
-					$("#img_logo").attr("src",  res.data);
+					$("#img_logo").attr("src",  basePath+res.data);
 					$("#logo").val(res.data);
 				}
 				console.log(res);
@@ -112,7 +112,7 @@
 			size: 5 * 1024, // 限制文件大小,单位 KB
 			done: function (res) {
 				if (res.statusCode == 1) {
-					$("#img_favicon").attr("src",  res.data);
+					$("#img_favicon").attr("src",  basePath+res.data);
 					$("#favicon").val(res.data);
 				}
 				console.log(res);
