@@ -156,7 +156,7 @@
 		var content = "";
 		if("{{.Data.Markdown}}"==""){//不是markdown格式
 			content="{{.Data.Content}}";
-			$(":radio[name='contentType']").val(1);
+			$("input:radio[name='contentType'][value='1']").attr("checked",true);  
 			$('#markdown-container').hide()
 			$('#editor—wrapper').show()
 		}
