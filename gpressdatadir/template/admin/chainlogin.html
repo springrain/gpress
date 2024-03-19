@@ -68,7 +68,7 @@
 				<tbody>
 				  <tr>
 					<td width="50%"><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/metamask.png" />MetaMask </a></td>
-					<td width="50%"><a href="javascript:walletLogin(window.ethereum,'xuper');"> <img src="{{basePath}}public/wallet/x-pocket.png" />X-Pocket&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
+					<td width="50%"><a href="javascript:walletLogin(window.xuper);"> <img src="{{basePath}}public/wallet/x-pocket.png" />X-Pocket&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
 				  </tr>
 				  <tr>
 					<td><a href="javascript:walletLogin(window.bitkeep && window.bitkeep.ethereum);"> <img src="{{basePath}}public/wallet/bitkeep.png" />Bitkeep&nbsp;&nbsp;&nbsp;&nbsp; </a></td>
@@ -105,14 +105,14 @@
 		layer.alert(' 1.还原 gpressdatadir/install_config.json </br> 2.还原 gpressdatadir/template/install.html </br> 3.重启gpress,重新安装初始化管理员账号密码,数据不会丢失.',{title:"忘记密码"});
 	}
     // 钱包登录
-    function walletLogin(provider, type) {
+    function walletLogin(provider) {
 		if (provider) {
 			provider.request({
 				method: 'eth_requestAccounts',
 				params: [],
 			}).then(accounts => {
 				let account = accounts[0]
-				personalSign(provider, account, type)
+				personalSign(provider, account)
 			})
 		} else {
 			layer.alert("请安装对应钱包");
@@ -127,7 +127,7 @@
 		return hex
 	}
 
-	async function personalSign(provider, accounts, type) {
+	async function personalSign(provider, accounts) {
 		let jsonObject = {}
 		const response = await fetch('{{basePath}}admin/random', {
 			method: 'post',
@@ -145,6 +145,7 @@
                method: 'personal_sign',
                params: arrayboj,
 			}).then(result => {
+				alert(result);
 				document.getElementById("signature").value=result;
 				document.getElementById("chainlogin").submit();
 			})
