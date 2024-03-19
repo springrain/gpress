@@ -220,7 +220,15 @@ func verifyAddressUsingPublicKey(address string, pub *ecdsa.PublicKey) (bool, ui
 // 返回33位长度的地址
 func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	//using SHA256 and Ripemd160 for hash summary
-	data := elliptic.Marshal(pub.Curve, pub.X, pub.Y)
+	//data := elliptic.Marshal(pub.Curve, pub.X, pub.Y)
+	// 将ECDSA公钥转换为ECDH公钥
+	ecdhPublicKey, err := pub.ECDH()
+	if err != nil {
+		return "", err
+	}
+	// 替换废弃的 elliptic.Marshal 函数
+	data := ecdhPublicKey.Bytes()
+
 	outputSha256 := hashUsingSha256(data)
 	OutputRipemd160 := hashUsingRipemd160(outputSha256)
 
@@ -233,7 +241,7 @@ func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	case "SM2-P-256": // 国密
 		nVersion = 2
 	default: // 不支持的密码学类型
-		return "", fmt.Errorf("This cryptography[%v] has not been supported yet.", pub.Params().Name)
+		return "", fmt.Errorf("this cryptography[%v] has not been supported yet", pub.Params().Name)
 	}
 
 	bufVersion := []byte{byte(nVersion)}
