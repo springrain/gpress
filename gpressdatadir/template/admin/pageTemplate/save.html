@@ -70,11 +70,11 @@ form.on('submit(gpress-form-ajax-update)', function(data){
 			layer.confirm('保存成功,是否继续添加?', {
 			icon: 3,
 			title:"确认",
-			btn: ['继续添加', '返回列表'] //按钮
+			btn: ['返回列表','继续添加' ] //按钮
 			}, function () {
-				location.reload();
-			},function () {
 				window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list';
+			},function () {
+				location.reload();
 			});
 		  }else{
 			  layer.msg("保存失败!");
