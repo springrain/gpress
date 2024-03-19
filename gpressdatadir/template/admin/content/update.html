@@ -1,553 +1,334 @@
 {{template "admin/header.html"}}
-<title>更新内容 - GPRESS</title>
-<link rel="stylesheet" type="text/css" href="{{basePath}}admin/css/cherry-markdown.min.css">
-{{template "admin/bodystart.html"}}
+<title>修改内容 - GPRESS</title>
+<link rel="stylesheet" type="text/css" href="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.css" />
+<link href="{{basePath}}admin/js/wangeditor/wangeditor5.min.css" rel="stylesheet" />
+<script src="{{basePath}}admin/js/wangeditor/wangeditor5.min.js"></script>
+<script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
+{{template "admin/bodystart.html"}} 
 
 {{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }}
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+{{ $pageTemplate := pageTemplate }} 
 
-<style>
-	.code-line .number{
-		background-color: transparent;
-		font-size: 12px;
-		padding: 0;
-		vertical-align: unset;
-		margin-right: 0;
-	}
-	.title{
-		font-size: 12px;
-	}
-</style>
-<section class="section">
-	<input type="hidden" id="content" value="{{.Data.Content}}">
-	<input type="hidden" id="markdown" value="{{.Data.Markdown}}">
-	<input type="hidden" id="thumbnail" value="{{.Data.Thumbnail}}">
-	<input type="hidden" id="id" value="{{.Data.Id}}">
-	<input type="hidden" id="categoryName" value="{{.Data.CategoryName}}">
-	<input type="hidden" id="categoryID" value="{{.Data.CategoryID}}">
-	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
-
-	<div class="container">
-		<div class="table-content">
-			<div class="column">
-				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
-					<div class="tile is-ancestor">
-						<div class="tile is-4">
-							<!-- 1/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										ID
-									</div>
-									<div class="right">
-										<input class="input is-small" type="text" disabled value="{{.Data.Id}}">
-									</div>
-								</li>
-							</ul>
-						</div>
-						<div class="tile is-4">
-							<!-- This tile will take the rest: 2/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										文章标题
-									</div>
-									<div class="right">
-										<input class="input is-small" type="text" name="title" value="{{.Data.Title}}" id="title" />
-									</div>
-								</li>
-							</ul>
-						</div>
-						<div class="tile is-4">
-							<!-- 1/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										摘要
-									</div>
-									<div class="right">
-										<input class="input is-small" type="text" name="summary" value="{{.Data.Summary}}" id="summary">
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="tile is-ancestor">
-						<div class="tile is-4">
-							<!-- This tile will take the rest: 2/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										keyword
-									</div>
-									<div class="right">
-										<input class="input is-small" type="text" name=keyword value="{{.Data.Keyword}}" id="keyword">
-									</div>
-								</li>
-							</ul>
-						</div>
-
-
-						<div class="tile is-4">
-							<!-- 1/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										页面模版
-									</div>
-									<div class="select is-small">
-										<select id="templateSelect">
-											<option value="">默认(content.html)</option>
-											{{ range $index,$obj := $pageTemplate }}
-											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-											{{end}}
-										</select>
-									</div>
-								</li>
-							</ul>
-						</div>
-
-						<div class="tile is-4">
-							<!-- 1/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										tag标签
-									</div>
-									<div class="right">
-										<input class="input is-small" type="text" name="tag" value="{{.Data.Tag}}" id="tag">
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="tile is-ancestor">
-						<div class="tile is-4">
-							<!-- This tile will take the rest: 2/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">description</div>
-									<div class="right">
-										<input class="input is-small" type="text" name="description" id="description" value="{{.Data.Description}}" />
-									</div>
-								</li>
-							</ul>
-						</div>
-						<div class="tile">
-							<!-- This tile will take the rest: 2/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										导航菜单
-									</div>
-									<div class="select is-small">
-										<select id="navSelect">
-											<option value="">请选择</option>
-											{{ range $index,$obj := $category.Data }}
-											<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-											{{end}}
-										</select>
-									</div>
-								</li>
-							</ul>
-						</div>
-						<div class="tile is-4">
-							<!-- This tile will take the rest: 2/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										作者
-									</div>
-									<div class="right">
-										<input class="input is-small" type="text" name="author" value="{{.Data.Author}}" id="author">
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="tile is-ancestor">
-						<div class="tile is-4">
-							<!-- 1/3 -->
-							<ul class="save-ul">
-								<li style="align-items: flex-start;">
-									<div class="left">
-										封面图
-									</div>
-									<div class="right">
-										<div class="upload-modlue">
-											<div class="upload-box">
-												<i class="iconfont icon-shangchuan"></i>
-												<p>上传图片</p>
-												<input class="input is-small" type="file" id="fileInput">
-											</div>
-											<div class="img-box">
-												<div class="img-preview">
-													<img src="{{.Data.Thumbnail}}" id="img">
-													<div class="delete-btn">
-														<i class="iconfont icon-shanchu"></i>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</li>
-							</ul>
-						</div>
-						<div class="tile is-4">
-							<!-- 1/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										状态
-									</div>
-									<div class="select is-small">
-										<select name="status" id="status">
-											<option value="1">公开</option>
-											<option value="0">列表不显示</option>
-											<option value="2">私密</option>
-										</select>
-									</div>
-								</li>
-							</ul>
-						</div>
-						<div class="tile is-4">
-							<!-- This tile will take the rest: 2/3 -->
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										排序
-									</div>
-									<div class="right">
-										<input class="input is-small" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="tile is-ancestor">
-						<div class="tile is-8">
-							<ul class="save-ul">
-								<li>
-									<div class="left">
-										文章内容
-									</div>
-									<div class="right">
-										<div class="control">
-											<label class="radio">
-												<input type="radio" value="0" name="foobar" checked>
-												富文本
-											</label>
-											<label class="radio">
-												<input type="radio" value="1" name="foobar">
-												Markdown
-											</label>
-                                             &nbsp;&nbsp;&nbsp;&nbsp;
-											<button type="submit" class="button is-success is-small">提交</button>
-											<button type="reset" class="button is-info is-light is-small">重置</button>
-										</div>
-
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="tile is-ancestor">
-						<div class="tile is-12">
-							<ul class="save-ul">
-								<li id="editor-show" style="align-items: flex-start;height: 420px;width: 1500px; margin-left: 0px">
-									<div class="right flex1">
-										<div id="editor—wrapper">
-											<div id="toolbar-container">
-												<!-- 工具栏 -->
-											</div>
-											<div id="editor-container" style="height: 400px;">
-												<!-- 编辑器 -->
-											</div>
-										</div>
-									</div>
-								</li>
-								<li id="markdown-show" style="align-items: flex-start;display: none;">
-									<div class="right flex1" style="height: 420px;width: 1500px; margin-left: 0px">
-										<div id="markdown-container"></div>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="field is-grouped" style="padding-left: 190px;">
-						<div class="control">
-							<button type="submit" class="button is-success is-small">提交</button>
-						</div>
-						<div class="control">
-							<button type="reset" class="button is-info is-light is-small">重置</button>
-						</div>
-					</div>
-				</form>
+<div class="layui-panel" style="padding: 5px;">
+	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
+		<div class="layui-form-item">
+			<div class="layui-col-md3">
+				<label class="layui-form-label">ID</label>
+				<div class="layui-input-block">
+					<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
+					<input type="text" autocomplete="off" class="layui-input"  disabled value="{{.Data.Id}}" />
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">文章标题</label>
+				<div class="layui-input-block">
+					<input type="text" name="title" lay-verify="required" lay-reqtext="请填写文章标题" autocomplete="off"
+						class="layui-input" value="{{.Data.Title}}">
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">摘要</label>
+				<div class="layui-input-block">
+					<input type="text" name="summary" autocomplete="off" class="layui-input" value="{{.Data.Summary}}">
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">keyword</label>
+				<div class="layui-input-block">
+					<input type="text" name="keyword" autocomplete="off" class="layui-input" value="{{.Data.Keyword}}">
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
-<link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet">
-<script src="https://cdn.staticfile.org/wangeditor5/5.1.23/index.min.js"></script>
-<script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown.min.js"></script>
+
+		<div class="layui-form-item">
+			<div class="layui-col-md3">
+				<label class="layui-form-label">导航菜单</label>
+				<div class="layui-input-block">
+					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单">
+						<option value="">请选择</option>
+						{{ range $index,$obj := $category.Data }}
+						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
+						{{end}}
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">页面模版</label>
+				<div class="layui-input-block">
+					<select name="templateID" id="templateID">
+						<option value="">默认(content.html)</option>
+						{{ range $index,$obj := $pageTemplate }}
+						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
+						{{end}}
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">状态</label>
+				<div class="layui-input-block">
+					<select name="status" id="status">
+						<option value="1">公开</option>
+						<option value="0">列表不显示</option>
+						<option value="2">私密</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">排序</label>
+				<div class="layui-input-block">
+					<input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off"
+						class="layui-input" value="{{.Data.SortNo}}">
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-col-md3">
+				
+				<label class="layui-form-label">封面图</label>
+				<div class="layui-input-block">
+					<button type="button" class="layui-btn" id="button-upload-thumbnail">
+						<i class="layui-icon layui-icon-upload"></i> 上传封面
+					</button>
+					
+					<img height="38px" src="{{.Data.Thumbnail}}" id="img_thumbnail" style="padding-left: 10px;" />
+					<i id="i_delete_thumbnail" class="layui-icon layui-icon-delete" style="font-size: 20px;display: none;"></i> 
+				   
+				</div>
+			        
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">description</label>
+				<div class="layui-input-block">
+					<input type="text" name="description" autocomplete="off" class="layui-input" value="{{.Data.Description}}">
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">作者</label>
+				<div class="layui-input-block">
+					<input type="text" name="author" autocomplete="off" class="layui-input" value="{{.Data.Author}}">
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">tag标签</label>
+				<div class="layui-input-block">
+					<input type="text" name="tag" autocomplete="off" class="layui-input" value="{{.Data.Tag}}">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">文章内容</label>
+			<div class="layui-input-block">
+				<input type="radio" name="contentType" value="0" title="Markdown" checked lay-filter="contentType" />
+				<input type="radio" name="contentType" value="1" title="富文本" lay-filter="contentType" />
+				<button type="submit" class="layui-btn layui-bg-blue" lay-submit
+					lay-filter="gpress-form-ajax-update">提交修改</button>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div id="markdown-container"></div>
+			<div id="editor—wrapper" style="display: none;">
+				<div id="toolbar-container"><!-- 工具栏 --></div>
+				<div id="editor-container"><!-- 编辑器 --></div>
+			</div>
+		</div>
+
+	</form>
+</div>
+{{template "admin/bodyend.html"}}
+
 <script>
-    $("#status").val("{{.Data.Status}}")
+	layui.use(function () {
+		var form = layui.form;
+		var layer = layui.layer;
+		var upload = layui.upload;
+		var $ = layui.jquery;
+   
+		//选中导航菜单
+		$("#categoryID option[value='{{.Data.CategoryID}}']").attr("selected", true);
+		//选中模板
+		$("#templateID option[value='{{.Data.TemplateID}}']").attr("selected", true);
+		//选中状态
+		$("#status option[value='{{.Data.Status}}']").attr("selected", true);
 
-	let categoryID = $('#categoryID').val()
-	let categoryName = $('#categoryName').val()
-	let templateID = $('#templateID').val()
-	let templateName = $('#templateName').val()
-	let content = ''
-	let thumbnail = $('#thumbnail').val()
-	
-	$('#navSelect').val(categoryID)
-	$('#templateSelect').val(templateID)
-	
-	$('#templateSelect').change(function(e) {
-		templateID = $('#templateSelect').val()
-		templateName = $('#templateSelect option:selected').text()
-	})
-	$('#navSelect').change(function(e) {
-		categoryID = $('#navSelect').val()
-		categoryName = $('#navSelect option:selected').text()
-	})
-
-	// 图片上传
-	if (thumbnail) {
-		$('.upload-box').hide()
-		$('.img-box').show()
-	}
-	$('#fileInput').change(function(e) {
-		let file = e.target.files[0]
-		if (!/image\/\w+/.test(file.type)) {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '300px',
-				title: '提示',
-				content: '请上传图片格式！',
-				type: 'red',
-				buttons: { '确定': function() {} }
-			})
-			return false
+		// 缩略图
+		var thumbnail = "{{.Data.Thumbnail}}";
+		var content = "";
+		if("{{.Data.Markdown}}"==""){//不是markdown格式
+			content="{{.Data.Content}}";
+			$(":radio[name='contentType']").val(1);
+			$('#markdown-container').hide()
+			$('#editor—wrapper').show()
 		}
-		var formdata = new FormData() // FormData对象，来发送二进制文件。
-		formdata.append('file', e.currentTarget.files[0]) // 将文件追加到 formdata对象中
-		$.ajax({
-			type: 'post',
-			url: '/admin/upload',
-			data: formdata,
-			processData: false,
-			contentType: false,
-			success(res) {
-				thumbnail = res.data
-				$('#img').attr('src', thumbnail) //将img的src属性的值赋值
-				$('.upload-box').hide()
-				$('.img-box').show()
-			},
-			error(err) {
-				$.confirm({
-					useBootstrap: false,
-					boxWidth: '400px',
-					title: '提示',
-					content: '上传失败！',
-					type: 'red',
-					buttons: { '确定': function() {} }
-				})
+		// 渲染全部表单
+		form.render(); 
+
+		// 上传文件
+		upload.render({
+			elem: '#button-upload-thumbnail',
+			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
+			size: 5 * 1024, // 限制文件大小,单位 KB
+			done: function (res) {
+				if (res.statusCode == 1) {
+					thumbnail = res.data;
+					$("#img_thumbnail").attr("src", thumbnail);
+					$("#i_delete_thumbnail").show();
+				}
+				console.log(res);
 			}
+		});
+
+		$("#i_delete_thumbnail").click(function () {
+			thumbnail="";
+			$("#img_thumbnail").attr("src", "");
+			$("#i_delete_thumbnail").hide();
 		})
-	})
 
-	// 删除图片
-	$('.delete-btn').click(function() {
-		thumbnail = ''
-		$('#fileInput').val('')
-		$('#img').attr('src', '')
-		$('.upload-box').show()
-		$('.img-box').hide()
-	})
-
-	// markdown编辑器
-	$(document).ready(function() {
-		let fullScreen = Cherry.createMenuHook('全屏', 'full')
-		window.cherryObj = new Cherry({
-			id: 'markdown-container',
-			value: $('#markdown').val(),
-			toolbars: {
-				toolbar: ['bold', 'italic', 'strikethrough', '|', 'color', 'header', '|', 'list', {
-					insert: ['image', 'link', 'hr', 'br', 'code', 'formula',
-						'toc', 'table', 'line-table', 'bar-table',
-					]
-				}, '|', 'full'],
-				customMenu: {
-					// 注入编辑器的导航中
-					// 对象 key 可以作为导航项的名字（需要保证唯一），在上方的配置中使用
-					'full': fullScreen,
+		$("#img_thumbnail").click(function () {
+			layer.photos({
+				photos: {
+					"title": "封面图",
+					"start": 0,
+					"data": [{
+					  "src": thumbnail,
+					}]
 				},
-			},
-			fileUpload(file, callback) {
-				var formdata = new FormData() // FormData对象，来发送二进制文件。
-				formdata.append('file', file) // 将文件追加到 formdata对象中
+				//toolbar: false,
+				footer: false // 是否显示底部栏 --- 2.8.16+
+			});
+		});
+
+		// cherry markdown 编辑器
+		var cherry = new Cherry({
+			id: 'markdown-container',
+			value: '{{.Data.Markdown}}',
+			fileUpload: function (file, callback) {
+				var formdata = new FormData(); // FormData对象，来发送二进制文件。
+				formdata.append('file', file); // 将文件追加到 formdata对象中
 				$.ajax({
 					type: 'post',
-					url: '/admin/upload',
+					url: '{{basePath}}admin/upload',
 					data: formdata,
 					processData: false,
 					contentType: false,
 					success(res) {
-						callback(res.data)
+						callback(res.data);
 					},
-					error(err) {}
-				})
+					error(err) { },
+				});
 			},
+			toolbars: {
+				// 定义顶部工具栏
+				toolbar: [
+					'undo', 'redo', '|',
+					// 把字体样式类按钮都放在加粗按钮下面
+					{ bold: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby'] },
+					'color', 'size', '|', 'header', 'list', 'panel', '|',
+					// 把插入类按钮都放在插入按钮下面
+					{ insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'drawIo'] },
+					'graph'
+				],
+				// 定义侧边栏，默认为空
+				//sidebar: ['theme', 'mobilePreview', 'copy'],
+				// 定义顶部右侧工具栏，默认为空
+				toolbarRight: ['fullScreen'],
+				// 定义选中文字时弹出的“悬浮工具栏”，默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
+				bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'color', 'size',],
+				// 定义光标出现在行首位置时出现的"提示工具栏"，默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
+				//float: ['table', 'code', 'graph'],
+			},
+		});
+
+		// 富文本编辑器
+		const { createEditor, createToolbar } = window.wangEditor
+		
+		const editorConfig = {
+			placeholder: '请输入内容...',
+			MENU_CONF: {},
+			onChange(editor) {
+				content = editor.getHtml()
+				// 也可以同步到 <textarea>
+			},
+		}
+		editorConfig.MENU_CONF['uploadImage'] = {
+			server: '{{basePath}}admin/upload',
+			fieldName: 'file',
+			customInsert(res, insertFn) {
+				// 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
+				insertFn(res.data)
+			},
+			onSuccess(file, res) {
+				console.log(res, '--上传成功---')
+			},
+			onFailed(file, res) {
+				layer.msg("上传失败!");
+			},
+			onError(file, err, res) {
+				console.log('--上传错误---')
+			},
+		}
+		const editor = createEditor({
+			selector: '#editor-container',
+			html: content,
+			config: editorConfig,
+			mode: 'default', // or 'simple'
 		})
-		$('.cherry-toolbar-全屏').click(function(e) {
-			if ($('#markdown-container').hasClass('full-screen')) {
-				$('.cherry-toolbar-全屏').html('全屏')
-				$('#markdown-container').removeClass('full-screen')
+		const toolbar = createToolbar({
+			editor,
+			selector: '#toolbar-container',
+			config: {},
+			//config: { excludeKeys: 'group-video' },
+			mode: 'default', // or 'simple'
+		})
+
+		// 切换 富文本 和 Markdown
+		form.on('radio(contentType)', function (data) {
+			var elem = data.elem; // 获得 radio 原始 DOM 对象
+			// var checked = elem.checked; // 获得 radio 选中状态
+			var current = elem.value; // 获得 radio 值
+			if (current == 0) {
+				$('#markdown-container').show()
+				$('#editor—wrapper').hide()
 			} else {
-				$('.cherry-toolbar-全屏').html('退出全屏')
-				$('#markdown-container').addClass('full-screen')
+				$('#markdown-container').hide()
+				$('#editor—wrapper').show()
 			}
 		})
-	})
 
-	// 单选切换
-	$('input[name=\'foobar\']').click(function(e) {
-		let current = $('input[name=\'foobar\']:checked').val()
-		if (current == 0) {
-			$('#editor-show').show()
-			$('#markdown-show').hide()
-		} else {
-			$('#markdown-show').show()
-			$('#editor-show').hide()
-		}
-	})
-	
-	// 判断markdown是否有值，有值优先显示markdown编辑器
-	if($('#markdown').val()){
-		$('#markdown-show').show()
-		$('#editor-show').hide()
-		$('input:radio[value=1]').attr('checked','true')
-}
 
-	// 判断markdown是否有值，有值优先显示markdown编辑器
-	if ($('#markdown').val()) {
-		$('#markdown-show').show()
-		$('#editor-show').hide()
-		$('input:radio[value=1]').attr('checked', 'true')
-	}
-
-	// 富文本编辑器
-	const {
-		createEditor,
-		createToolbar
-	} = window.wangEditor
-	const editorConfig = {
-		placeholder: '请输入内容...',
-		MENU_CONF: {},
-		onChange(editor) {
-			content = editor.getHtml()
-			// 也可以同步到 <textarea>
-		}
-	}
-	editorConfig.MENU_CONF['uploadImage'] = {
-		server: '/admin/upload',
-		fieldName: 'file',
-		customInsert(res, insertFn) { // 自定义返回数据结构。不用按照wangeditor默认规定的服务器返回的数据结构
-			insertFn(res.data)
-		},
-		onSuccess(file, res) {
-			console.log(res, '--上传成功---')
-		},
-		onFailed(file, res) {
-			$.dialog({
-				title: '提示',
-				useBootstrap: false,
-				boxWidth: '400px',
-				content: '上传失败',
-			})
-		},
-		onError(file, err, res) {
-			console.log('--上传错误---')
-		},
-	}
-	const editor = createEditor({
-		selector: '#editor-container',
-		html: $('#content').val(),
-		config: editorConfig,
-		mode: 'default', // or 'simple'
-	})
-	const toolbar = createToolbar({
-		editor,
-		selector: '#toolbar-container',
-		config: {},
-		mode: 'default', // or 'simple'
-	})
-
-	// 保存提交
-	const form = document.getElementById('gpress-form')
-	form.addEventListener('submit', async event => {
-		event.preventDefault()
-		const formData = new FormData(form)
-		const jsonObject = {
-			status: $('#status').val()-0,
-			id: $('#id').val(),
-			title: $('#title').val(),
-			summary: $('#summary').val(),
-			keyword: $('#keyword').val(),
-			categoryID: categoryID,
-			categoryName: categoryName,
-			templateID: templateID,
-			tag: $('#tag').val(),
-			description: $('#description').val(),
-			author: $('#author').val(),
-			thumbnail: thumbnail,
-			sortNo: $('#sortNo').val()-0,
-			content: content,
-			markdown: cherryObj.getMarkdown(),
-		}
-		if(jsonObject.title==""||jsonObject.categoryID==""){
-			//alert("文章标题和导航菜单不能为空");
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '300px',
-				title: '提示',
-				content: '文章标题 和 导航菜单 不能为空',
-				type: 'red',
-				buttons: { 确定: function () {} },
-			})
-			return false;
-		}
-		const response = await fetch(form.action, {
-			method: form.method,
-			body: JSON.stringify(jsonObject),
-			headers: { 'Content-Type': 'application/json' }
-		})
-		let res = await response.json()
-		if (res.statusCode == 1) {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '400px',
-				title: '提示',
-				content: '修改成功！',
-				type: 'green',
-				buttons: {
-					'确定': function() {
-						window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list'
+		// 提交事件
+		form.on('submit(gpress-form-ajax-update)', function (data) {
+			var field = data.field; // 获取表单字段值
+			field.sortNo = field.sortNo - 0;
+			field.status = field.status - 0;
+			field.thumbnail = thumbnail;
+			field.content = content;
+			field.code = "";
+			field.categoryName = $("#categoryID").find("option:selected").text();
+			if (content=="") {
+				field.markdown = cherry.getMarkdown();
+			}
+			//表单对象
+			const form = document.getElementById('gpress-form');
+			$.ajax({
+				url: form.action,
+				type: form.method,
+				contentType: "application/json;charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify(field),
+				error: function () {
+					layer.msg("修改错误,请重试!");
+				},
+				success: function (result) {
+					if (result.statusCode == 1) {
+						layer.msg("修改成功")
+					} else {
+						layer.msg("修改失败!");
 					}
 				}
-			})
-		} else {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '400px',
-				title: '提示',
-				content: res.message,
-				type: 'red',
-				buttons: { '确定': function() {} }
-			})
-		}
-	})
+			});
+			return false; // 阻止默认 form 跳转
+		});
+	});
 </script>
 
-{{template "admin/bodyend.html"}}
