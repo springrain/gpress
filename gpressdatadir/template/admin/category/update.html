@@ -2,182 +2,144 @@
 <title>更新导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }}
+{{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }}
 {{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
-
-<style>
-	.code-line .number{
-		background-color: transparent;
-		font-size: 12px;
-		padding: 0;
-		vertical-align: unset;
-	}
-</style>
-
-<section class="section">
-	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
-
-	<div class="container">
-		<div class="table-content">
-			<div class="column">
-				<form id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
-					<ul class="save-ul">
-                      
-                        <li>
-							<div class="left">
-								ID
-							</div>
-							<div class="right">
-								<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
-								<input class="input is-small" type="text" disabled value="{{.Data.Id}}">
-							</div>
-						</li>
-
-						<li>
-							<div class="left">
-								导航名称
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="name" value="{{.Data.Name}}" id="name" />
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								跳转路径
-							</div>
-							<div class="right">
-								<input class="input is-small" type="text" name="hrefURL" value="{{.Data.HrefURL}}" id="hrefURL">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								跳转方式
-							</div>
-							<div class="select is-small">
-								<select name="hrefTarget" id="hrefTarget">
-									<option value="">默认</option>
-									<option value="_blank">_blank</option>
-									<option value="_parent">_parent</option>
-									<option value="_self">_self</option>
-									<option value="_top">_top</option>
-								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								父级导航
-							</div>
-							<div class="right">
-								<input  type="hidden"  name="pid"  value="{{.Data.Pid}}">
-								<input class="input is-small" type="text" value="{{$categoryName.Name}}" disabled>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								页面模版
-							</div>
-							<div class="select is-small">
-								<select id="templateSelect">
-									<option value="">默认(category.html)</option>
-									{{ range $index,$obj := $pageTemplate }}
-									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
-									{{end}}
-								</select>
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								排序
-							</div>
-							<div class="right">
-								<input class="input is-small" type="number" name="sortNo" value="{{.Data.SortNo}}" id="sortNo">
-							</div>
-						</li>
-						<li>
-							<div class="left">
-								状态
-							</div>
-							<div class="select is-small">
-								<select name="status" id="status">
-								  <option value="1">公开</option>
-								  <option value="0">列表不显示</option>
-								  <option value="2">私密</option>
-								</select>
-							</div>
-						</li>
-					</ul>
-
-					<div class="field is-grouped" style="padding-left: 190px;">
-						<div class="control">
-							<button type="submit" class="button is-success is-small">提交</button>
-						</div>
-						<div class="control">
-							<button type="reset" class="button is-info is-light is-small">重置</button>
-						</div>
-					</div>
-				</form>
+<div class="layui-card layui-panel">
+	<div class="layui-card-header">
+	  更新导航菜单
+	</div>
+	<div class="layui-card-body">
+	  <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
+		  <div class="layui-form-item layui-col-md6">
+			<label class="layui-form-label">ID</label>
+			<div class="layui-input-block">
+			  <input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
+			  <input type="text" class="layui-input" disabled value="{{.Data.Id}}" />
+			</div>
+		  </div>
+		  <div class="layui-form-item layui-col-md6">
+			<label class="layui-form-label">导航名称</label>
+			<div class="layui-input-block">
+			  <input type="text" name="name" lay-verify="required" lay-reqtext="请填写导航名称" autocomplete="off" class="layui-input" value="{{.Data.Name}}" />
 			</div>
 		</div>
+
+		<div class="layui-form-item layui-col-md6">
+		  <label class="layui-form-label">跳转路径</label>
+		  <div class="layui-input-block">
+			<input type="text" name="hrefURL" autocomplete="off" class="layui-input"  value="{{.Data.HrefURL}}" />
+		  </div>
+		</div>
+
+		<div class="layui-form-item layui-col-md6">
+		  <label class="layui-form-label">跳转路径</label>
+		  <div class="layui-input-block">
+			  <select name="hrefTarget" id="hrefTarget">
+				  <option value="">默认</option>
+				  <option value='_blank'>_blank</option>
+				  <option value='_parent'>_parent</option>
+				  <option value='_self'>_self</option>
+				  <option value='_top'>_top</option>
+			  </select>
+		  </div>
+		</div>
+
+		<div class="layui-form-item layui-col-md6">
+		  <label class="layui-form-label">父级导航</label>
+		  <div class="layui-input-block">
+			<input  type="hidden"  name="pid"  value="{{$categoryName.Id}}">
+			<input type="text"  autocomplete="off" class="layui-input" value="{{$categoryName.Name}}" disabled>
+		  </div>
+		</div>
+
+		<div class="layui-form-item layui-col-md6">
+		  <label class="layui-form-label">页面模版</label>
+		  <div class="layui-input-block">
+			  <select name="templateID" id="templateID">
+				  <option value="">默认(category.html)</option>
+				  {{ range $index,$obj := $pageTemplate }}
+				  <option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+				  {{end}}
+			  </select>
+		  </div>
+		</div>
+
+		<div class="layui-form-item layui-col-md6">
+			<label class="layui-form-label">排序</label>
+			<div class="layui-input-block">
+			  <input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off" class="layui-input" value="{{.Data.SortNo}}" />
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-col-md6">
+		  <label class="layui-form-label">状态</label>
+		  <div class="layui-input-block">
+			  <select name="status" id="status">
+				  <option value="1">公开</option>
+				  <option value="0">列表不显示</option>
+				  <option value="2">私密</option>
+			  </select>
+		  </div>
+		</div>		  
+
+		  <div class="layui-form-item">
+			  <div class="layui-input-block">
+				<button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交修改</button>
+			  </div>
+		  </div>
+	  </form>
 	</div>
-</section>
+  </div>
+{{template "admin/bodyend.html"}}
 
 <script>
-	 $("#status").val("{{.Data.Status}}")
-	 $("#hrefTarget").val("{{.Data.HrefTarget}}")
-	 
-	let templateID = $('#templateID').val()
-	$('#templateSelect').val(templateID)
-	
-	$('#templateSelect').change(function(e) {
-		templateID = $('#templateSelect').val()
-	})
-	
-	// 保存提交
-	const form = document.getElementById('gpress-form')
-	form.addEventListener('submit', async event => {
-		event.preventDefault()
-		const formData = new FormData(form)
-		const jsonObject = {}
-		for (const [key, value] of formData.entries()) {
-			const fieldType = document.querySelector(key)
-							jsonObject[key] = value
-		}
-		jsonObject.sortNo = jsonObject.sortNo-0
-		jsonObject.status = jsonObject.status-0
-		jsonObject.templateID = templateID
-		jsonObject.id = $('#id').val()
-		console.log(jsonObject)
-		const response = await fetch(form.action, {
-			method: form.method,
-			body: JSON.stringify(jsonObject),
-			headers: { 'Content-Type': 'application/json' }
-		})
-		let res = await response.json()
-		if (res.statusCode == 1) {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '400px',
-				title: '提示',
-				content: '修改成功！',
-				type: 'green',
-				buttons: {
-					'确定': function() {
-						window.location.href = '{{basePath}}admin/content/list'
+layui.use(function(){
+var form = layui.form;
+var layer = layui.layer;
+var $ =layui.jquery;
+
+//选中跳转方式
+$("#hrefTarget option[value='{{.Data.HrefTarget}}']").attr("selected", true);
+//选中模板
+$("#templateID option[value='{{.Data.TemplateID}}']").attr("selected", true);
+//选中状态
+$("#status option[value='{{.Data.Status}}']").attr("selected", true);
+
+// 渲染全部表单
+form.render(); 
+
+// 提交事件
+form.on('submit(gpress-form-ajax-update)', function(data){
+  var field = data.field; // 获取表单字段值
+  field.sortNo=field.sortNo-0;
+  field.status=field.status-0;
+  field.timeout=field.timeout-0;
+  const form = document.getElementById('gpress-form');
+  $.ajax({
+	  url:form.action,
+	  type:form.method,
+	  contentType: "application/json;charset=utf-8",
+	  dataType:"json",
+	  data:JSON.stringify(field),
+	  error:function(){
+		  layer.msg("修改错误,请重试!");
+	  },
+	  success: function (result) {
+					if (result.statusCode == 1) {
+						layer.confirm('修改成功,是否继续修改?', {
+							icon: 3,
+							title: "确认",
+							btn: ['返回列表', '继续修改'] //按钮
+						}, function () {
+							window.location.href = '{{basePath}}admin/content/list';
+						});
+					} else {
+						layer.msg("修改失败!");
 					}
 				}
-			})
-		} else {
-			$.confirm({
-				useBootstrap: false,
-				boxWidth: '400px',
-				title: '提示',
-				content: res.message,
-				type: 'red',
-				buttons: { '确定': function() {} }
-			})
-		}
-	})
+  });
+  return false; // 阻止默认 form 跳转
+});
+});
 </script>
-
-{{template "admin/bodyend.html"}}
