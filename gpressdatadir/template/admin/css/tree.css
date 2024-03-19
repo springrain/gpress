@@ -8,9 +8,9 @@
 
 .tree summary {
     outline: 0;
-    padding-left: 12px;
+    padding-left: 22px;
     list-style: none;
-    background: repeating-linear-gradient(90deg, #c0c4cc 0 1px, transparent 0px 2px) 0px 50%/12px 1px no-repeat;
+    background: repeating-linear-gradient(90deg, #c0c4cc 0 1px, transparent 0px 2px) 0px 50%/22px 1px no-repeat;
     /* background: linear-gradient(#c0c4cc,#c0c4cc) 0px 50%/20px 1px no-repeat; */
 }
 
@@ -23,8 +23,8 @@
 }
 
 .tree details {
-    padding-left: 18px;
-    background: repeating-linear-gradient(#c0c4cc 0 1px, transparent 0px 2px) 18px 0px/1px 100% no-repeat;
+    padding-left: 28px;
+    background: repeating-linear-gradient(#c0c4cc 0 1px, transparent 0px 2px) 28px 0px/1px 100% no-repeat;
     /* background: linear-gradient(#c0c4cc, #c0c4cc) 40px 0px/1px 100% no-repeat; */
 }
 
@@ -71,10 +71,10 @@
     flex-shrink: 0;
     margin-right: 10px;
     border: 1px solid #c0c4cc;
-    background: linear-gradient(#5f5f5f, #5f5f5f) 50%/1px 9px no-repeat,
-        linear-gradient(#5f5f5f, #5f5f5f) 50%/9px 1px no-repeat;
+    background: linear-gradient(#5f5f5f, #5f5f5f) 55%/1px 9px no-repeat,
+        linear-gradient(#5f5f5f, #5f5f5f) 55%/9px 1px no-repeat;
 }
 
 .tree details[open]>summary::before {
-    background: linear-gradient(#5f5f5f, #5f5f5f) 50%/9px 1px no-repeat;
+    background: linear-gradient(#5f5f5f, #5f5f5f) 55%/9px 1px no-repeat;
 }
