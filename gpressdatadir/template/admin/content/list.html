@@ -1,5 +1,5 @@
-{{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }}
-{{ $convertJson := convertJson  $category }}
+{{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }}
+{{ $convertJson := convertJson  $category.Data }}
 {{template "admin/header.html"}}
 <title>内容导航 - GPRESS</title>
 <link href="{{basePath}}admin/css/tree.css" rel="stylesheet">
@@ -26,134 +26,16 @@
 <div class="layui-row layui-col-space5">
 	<div class="layui-col-md3">
 		<div class="layui-panel" style="height: 100%; padding: 5px;">
-			<div>导航菜单</div>
-
-			<div class="tree" id="tree">
-				<details open>
-					<summary>
-						项目1
-					</summary>
-					<details open>
-						<summary>
-							文件夹
-						</summary>
-						<details>
-							<summary>
-								sdd
-							</summary>
-						</details>
-					</details>
-					<details>
-						<summary>
-							chrome test
-						</summary>
-					</details>
-				</details>
-				<details>
-					<summary>
-						项目2
-					</summary>
-					<details>
-						<summary>
-							文件夹2-1
-						</summary>
-						<details>
-							<summary>
-								文件夹2-1-1
-							</summary>
-							<details>
-								<summary>
-									文件夹2-1-1-1
-								</summary>
-								<details>
-									<summary>
-										文件夹2-1-1-1-1
-									</summary>
-									<details>
-										<summary>
-											文件夹2-1-1-1-1-1
-										</summary>
-									</details>
-								</details>
-							</details>
-						</details>
-					</details>
-				</details>
-				<details>
-					<summary>
-						文件夹1
-					</summary>
-					<details>
-						<summary>
-							文件夹
-						</summary>
-					</details>
-					<details>
-						<summary>
-							文件夹2
-						</summary>
-					</details>
-				</details>
-				<details>
-					<summary>
-						项目3
-					</summary>
-					<details>
-						<summary>
-							文件夹1
-						</summary>
-						<details>
-							<summary>
-								1
-							</summary>
-							<details>
-								<summary>
-									文件夹2
-								</summary>
-							</details>
-						</details>
-					</details>
-					<details>
-						<summary>
-							文件夹
-						</summary>
-					</details>
-					<details>
-						<summary>
-							文件夹
-						</summary>
-					</details>
-					<details>
-						<summary>
-							文件夹
-						</summary>
-					</details>
-					<details>
-						<summary>
-							文件夹的副本
-						</summary>
-					</details>
-					<details>
-						<summary>
-							点点点
-						</summary>
-					</details>
-					<details>
-						<summary>
-							hewei
-						</summary>
-						<details>
-							<summary>
-								hewei02
-							</summary>
-						</details>
-					</details>
-				</details>
+			<div class="layui-form-item" style="text-align: center;padding: 10px;">
+				<a href="{{basePath}}admin/category/save" class="layui-btn layui-bg-blue">+新增一级导航</a>
 			</div>
 
-
-
-
+			<div class="tree" id="tree">
+				<details open="">
+					<summary id="全部内容" class="tree-item"><a id="all_tree_a" href="/admin/content/list?comCode=&pageNo=1">全部内容</a>
+					</summary>
+				</details>
+			</div>
 		</div>
 	</div>
 	<div class="layui-col-md9">
@@ -237,6 +119,13 @@
 		layer = layui.layer;
 		$ = layui.jquery;
 		var laypage = layui.laypage;
+		
+		
+
+		const categoryData = JSON.parse("{{ $convertJson }}");
+	    const treeData = buildTree(categoryData);
+		// 将树形结构渲染到页面上
+		renderTree($('#tree'), treeData);
 
 		const query = window.location.search;
 		const params=new URLSearchParams(query)
@@ -248,6 +137,24 @@
 		if(comCode&&comCode!=""){
 			$("#comCode").val(comCode)
 		}
+		
+		//选中高亮
+		if(comCode&&comCode!=""){//被选中
+			var codes=comCode.split(",");
+			for(i = 0; i < codes.length; i++) {
+                var code=codes[i];
+				console.log(code)
+				if(code!=""){
+					$("#tree_a_"+code).css("color", "#3e8ed0")
+				}
+             }
+           
+		}else{
+			$("#all_tree_a").css("color", "#3e8ed0")
+		}
+
+
+
 
 		// 普通用法
 		laypage.render({
@@ -290,6 +197,51 @@
 
 	function submitListForm(){
 		document.getElementById("listForm").submit();
+	}
+// 渲染树形菜单结构
+function renderTree(container, data) {
+		const details = container;
+		data.forEach(node => {
+			const detailsHtml = $(
+`<details open="">
+	<summary id="${node.id}" class="tree-item">
+		<a id="tree_a_${node.id}" 
+			href="/admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> <span class="operate"><a
+				href="/admin/content/save?categoryID=${node.id}">
+				<i class="layui-icon layui-icon-file" title="新增内容"></i>
+			</a>
+			<a href="/admin/category/save?pid=${node.id}"><i class="layui-icon layui-icon-add-circle"
+					title="新增子导航"></i></a>
+			<a href="/admin/category/update?id=${node.id}"><i class="layui-icon layui-icon-edit" title="编辑导航"></i></a>
+			<i class="layui-icon layui-icon-delete" title="删除导航"
+				onclick="deleteFunc('${node.id}','/admin/category/delete');"></i>
+		</span>
+	</summary>
+</details>
+`);
+
+			if (node.children) {
+				renderTree(detailsHtml, node.children);
+			}
+			details.append(detailsHtml);
+		});
+		container.append(details);
+	}
+
+	// 平行数据组装树形结构数据
+	function buildTree(data) {
+		const roots = data.filter(item => !item.pid);// 找到没有父节点的项，即顶级节点
+		// 递归构建树
+		function buildHierarchy(parent) {
+			const children = data.filter(item => item.pid === parent.id);
+			if (children.length > 0) {
+				parent.children = children;
+				children.forEach(child => buildHierarchy(child));
+			}
+		}
+		// 为每个顶级节点构建树
+		roots.forEach(root => buildHierarchy(root));
+		return roots;
 	}
 
 </script>

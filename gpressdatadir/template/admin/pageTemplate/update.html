@@ -66,15 +66,19 @@
 			error:function(){
 				layer.msg("修改错误,请重试!");
 			},
-			success:function(result){
-				if (result.statusCode == 1) {
-					layer.msg("修改成功!",function(){
-					  window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list';
-					});
-				}else{
-					layer.msg("修改失败!");
+			success: function (result) {
+					if (result.statusCode == 1) {
+						layer.confirm('修改成功,是否继续修改?', {
+							icon: 3,
+							title: "确认",
+							btn: ['返回列表', '继续修改'] //按钮
+						}, function () {
+							window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list';
+						});
+					} else {
+						layer.msg("修改失败!");
+					}
 				}
-			}
 		});
         return false; // 阻止默认 form 跳转
 	  });
