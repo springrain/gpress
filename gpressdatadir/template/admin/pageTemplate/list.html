@@ -17,7 +17,7 @@
 }
 </style>
 {{template "admin/bodystart.html"}}
-<div class="layui-card layui-panel">
+<div class="layui-card layui-panel" style="height: 100%;">
 	<div class="layui-card-body">
 		<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
 			<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
