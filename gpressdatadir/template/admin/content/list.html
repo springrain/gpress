@@ -18,6 +18,9 @@
 	vertical-align: middle !important;
 	max-width: 200px;
 }
+.layui-panel{
+	height: auto;
+}
 </style>
 {{template "admin/bodystart.html"}}
 
@@ -119,6 +122,7 @@
 		layer = layui.layer;
 		$ = layui.jquery;
 		var laypage = layui.laypage;
+		var dropdown = layui.dropdown;
 		
 		
 
@@ -153,7 +157,27 @@
 			$("#all_tree_a").css("color", "#1e9fff")
 		}
 
-
+  // 导航菜单下来事件绑定
+  dropdown.render({
+    elem: '.tips-dropdown',
+    trigger: 'click', 
+    data: [{id:"1",title:'新增内容'},{id:"2",title:'新增子导航'},{id:"3",title:'编辑导航'},{id:"4",title:'删除导航'}],
+	click: function(data, othis){
+		let categoryId=this.elem.attr("id");
+		if(data.id=="1"){
+		  window.location.href = basePath+'admin/content/save?categoryID='+categoryId;
+		}else if(data.id=="2"){
+		  window.location.href = basePath+'admin/category/save?pid='+categoryId;
+		}else if(data.id=="3"){
+		  window.location.href = basePath+'admin/category/update?id='+categoryId;
+		}else if(data.id=="4"){
+			deleteFunc(categoryId,basePath+'admin/category/delete');
+		}
+		//console.log(data.id); // 当前所点击的菜单项对应的数据
+		//console.log(othis); // 当前所点击的菜单项元素对象
+		//console.log(this.elem.attr("id")); // 当前组件绑定的目标元素对象，批量绑定中常用
+    }
+  });
 
 
 		// 普通用法
@@ -172,6 +196,11 @@
 				}
 			}
 		});
+
+
+
+
+
 	});
 
 	function deleteFunc(id, url) {
@@ -205,8 +234,14 @@ function renderTree(container, data) {
 			const detailsHtml = $(
 `<details open="">
 	<summary id="${node.id}" class="tree-item">
-		<a id="tree_a_${node.id}" 
-			href="/admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> <span class="operate"><a
+		<a id="tree_a_${node.id}" href="/admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> 
+		<i class="layui-icon layui-icon-tips tips-dropdown" id="${node.id}" ></i>
+	</summary>
+</details>
+`);
+
+/*
+		<span class="operate"><a
 				href="/admin/content/save?categoryID=${node.id}">
 				<i class="layui-icon layui-icon-file" title="新增内容"></i>
 			</a>
@@ -216,9 +251,8 @@ function renderTree(container, data) {
 			<i class="layui-icon layui-icon-delete" title="删除导航"
 				onclick="deleteFunc('${node.id}','/admin/category/delete');"></i>
 		</span>
-	</summary>
-</details>
-`);
+
+*/
 
 			if (node.children) {
 				renderTree(detailsHtml, node.children);

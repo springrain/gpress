@@ -10,7 +10,7 @@
 {{ $maxSortNo:=  selectOne "content" "max(sortNo) as sortNo from content" }} 
 {{ $pageTemplate := pageTemplate }}
 
-<div class="layui-panel" style="padding: 5px;">
+<div class="layui-panel" style="padding: 5px;height: 100%;">
 	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
