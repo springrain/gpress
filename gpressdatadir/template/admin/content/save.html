@@ -6,7 +6,7 @@
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
 
-{{ $category := selectList "category" "" 1 20 "* FROM category order by sortNo desc" }} 
+{{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
 {{ $maxSortNo:=  selectOne "content" "max(sortNo) as sortNo from content" }} 
 {{ $pageTemplate := pageTemplate }}
 
