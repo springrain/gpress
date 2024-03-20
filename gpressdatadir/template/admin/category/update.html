@@ -5,7 +5,7 @@
 {{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }}
 {{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
 {{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
-<div class="layui-card layui-panel">
+<div class="layui-card layui-panel" style="height: 100%;">
 	<div class="layui-card-header">
 	  更新导航菜单
 	</div>
