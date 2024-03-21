@@ -34,10 +34,10 @@ var sqliteStatus = checkSQLiteStatus()
 var installed = isInstalled()
 
 // 加载配置文件
-var config = loadInstallConfig()
+var config, site = loadInstallConfig()
 
 // 使用的主题
-var themePath = "/theme/" + config.Theme + "/"
+var themePath = "/theme/" + site.Theme + "/"
 
 // 服务器url路径
 var httpServerPath = "http://"

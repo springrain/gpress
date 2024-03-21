@@ -162,7 +162,7 @@ func genStaticFile() error {
 	}
 
 	//遍历当前使用的模板文件夹,压缩文本格式的文件
-	err = filepath.Walk(templateDir+"theme/"+config.Theme+"/", func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(templateDir+"theme/"+site.Theme+"/", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}

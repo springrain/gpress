@@ -1,5 +1,6 @@
 {{template "admin/header.html"}}
 <title>更新站点信息 - GPRESS</title>
+{{ $themeName := themeName }} 
 {{template "admin/bodystart.html"}}
         <div class="layui-card layui-panel" style="height: 100%;">
           <div class="layui-card-header">
@@ -35,6 +36,17 @@
 					<input type="text" name="domain" autocomplete="off" class="layui-input" value="{{.Data.Domain}}">
 				  </div>
 				</div>
+				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">主题</label>
+					<div class="layui-input-block">
+
+						<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
+							{{ range $index,$obj := $themeName }}
+							<option value='{{$obj}}'>{{$obj}}</option>
+							{{end}}
+						</select>
+					</div>
+				</div>	
 				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">keyword</label>
 					<div class="layui-input-block">
@@ -90,7 +102,10 @@
 	  var layer = layui.layer;
 	  var $ = layui.jquery;
       var upload = layui.upload;
-	
+	      //选中导航菜单
+		  $("#theme option[value='{{.Data.Theme}}']").attr("selected", true);
+
+
 		// 上传logo
 		upload.render({
 			elem: '#button-upload-logo',
@@ -119,6 +134,8 @@
 			}
 		});
 
+	  // 渲染全部表单
+	  form.render(); 
 
 
 	  // 提交事件
@@ -138,7 +155,7 @@
 			},
 			success:function(result){
 				if (result.statusCode == 1) {
-					layer.msg("修改成功!");
+					layer.msg("站点信息修改成功,请 刷新站点 ");
 				}else{
 					layer.msg("修改失败!");
 				}
