@@ -1,11 +1,11 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />
 
 ## 介绍  
-国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存     
+国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存.     
 <img src="gpressdatadir/public/index.png" width="600px">
 
 ## 开发环境
-默认端口660  
+默认端口660,后台管理地址 http://127.0.0.1:660/admin/login    
 需要先解压```gpressdatadir/dict.zip```      
 运行 ```go run --tags "fts5" .```     
 打包: ```go build --tags "fts5" -ldflags "-w -s"```  
@@ -105,7 +105,6 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | jwtSecret   | string      | jwt密钥     | 随机生成     |
 | jwttokenKey | string      | jwt的key    |  默认 jwttoken  |
 | serverPort  | string      | IP:端口     |  默认 :660  |
-| theme       | string      | 主题名称     |  默认 default  |
 | timeout     | int         | jwt超时时间秒|  默认 1800  |
 | proxy       | string      | http代理地址 |             |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
