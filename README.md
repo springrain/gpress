@@ -1,15 +1,15 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />
 
 ## 介绍  
-国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存   
+国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存     
+<img src="gpressdatadir/public/index.png" width="600px">
+
+## 开发环境
 默认端口660  
 需要先解压```gpressdatadir/dict.zip```      
 运行 ```go run --tags "fts5" .```     
 打包: ```go build --tags "fts5" -ldflags "-w -s"```  
 
-<img src="gpressdatadir/public/index.png" width="600px">
-
-## 开发环境
 开发环境需要配置CGO编译,设置```set CGO_ENABLED=1```,下载[mingw64](https://github.com/niXman/mingw-builds-binaries/releases)和[cmake](https://cmake.org/download/),并把bin配置到环境变量,注意把```mingw64/bin/mingw32-make.exe``` 改名为 ```make.exe```  
 注意修改vscode的launch.json,增加 ``` ,"buildFlags": "--tags=fts5" ``` 用于调试fts5    
 test需要手动测试:``` go test -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress ```  
