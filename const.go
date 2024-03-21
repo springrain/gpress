@@ -51,6 +51,9 @@ const (
 	// 模板的路径
 	templateDir = datadir + "template/"
 
+	// 主题的路径
+	themeDir = templateDir + "theme/"
+
 	// 静态化文件目录,网站生成的静态html
 	staticHtmlDir = datadir + "statichtml/"
 
