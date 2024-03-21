@@ -25,17 +25,16 @@
 					  <input type="text" name="basePath"  autocomplete="off" class="layui-input" value="{{.Data.BasePath}}">
 					</div>
 				</div>
-
+				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">jwt key</label>
+					<div class="layui-input-block">
+					  <input type="text" name="jwttokenKey" lay-verify="required" lay-reqtext="请填写jwt key" autocomplete="off" class="layui-input" value="{{.Data.JwttokenKey}}">
+					</div>
+				  </div>
 				<div class="layui-form-item layui-col-md6">
 				  <label class="layui-form-label">jwt密钥</label>
 				  <div class="layui-input-block">
-					<input type="text" name="jwtSecret" lay-verify="required" lay-reqtext="请填写jwt密钥" autocomplete="off" class="layui-input" value="{{.Data.JwtSecret}}">
-				  </div>
-				</div>
-				<div class="layui-form-item layui-col-md6">
-				  <label class="layui-form-label">jwt key</label>
-				  <div class="layui-input-block">
-					<input type="text" name="jwttokenKey" lay-verify="required" lay-reqtext="请填写jwt key" autocomplete="off" class="layui-input" value="{{.Data.JwttokenKey}}">
+					<input type="password" name="jwtSecret" lay-verify="required" lay-reqtext="请填写jwt密钥" autocomplete="off" class="layui-input" value="{{.Data.JwtSecret}}" lay-affix="eye">
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">

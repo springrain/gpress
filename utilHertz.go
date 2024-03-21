@@ -194,12 +194,14 @@ func updateInstall(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	/*
+		// install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
+		err = os.Rename(datadir+"install_config.json", datadir+"install_config.json."+randStringId)
+		if err != nil {
+			return err
+		}
+	*/
 
-	// install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
-	err = os.Rename(datadir+"install_config.json", datadir+"install_config.json."+randStringId)
-	if err != nil {
-		return err
-	}
 	// 更改安装状态
 	installed = true
 	return nil
