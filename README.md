@@ -4,9 +4,12 @@
 国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存   
 默认端口660  
 需要先解压```gpressdatadir/dict.zip```      
-运行 ```go run --tags "fts5" .```   
+运行 ```go run --tags "fts5" .```     
+打包: ```go build --tags "fts5" -ldflags "-w -s"```  
 
+<img src="gpressdatadir/public/index.png" width="600px">
 
+## 开发环境
 开发环境需要配置CGO编译,设置```set CGO_ENABLED=1```,下载[mingw64](https://github.com/niXman/mingw-builds-binaries/releases)和[cmake](https://cmake.org/download/),并把bin配置到环境变量,注意把```mingw64/bin/mingw32-make.exe``` 改名为 ```make.exe```  
 注意修改vscode的launch.json,增加 ``` ,"buildFlags": "--tags=fts5" ``` 用于调试fts5    
 test需要手动测试:``` go test -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress ```  
@@ -19,9 +22,6 @@ mkdir build && cd build
 cmake .. -G "Unix Makefiles" -DBUILD_TEST_EXAMPLE=OFF -DCMAKE_INSTALL_PREFIX=release -DCMAKE_CXX_FLAGS="-static-libgcc -static-libstdc++" -DCMAKE_EXE_LINKER_FLAGS="-Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic"
 make && make install
 ```
-
-## 说明
-国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存 
 
 ## 静态化
 后台 ```刷新站点``` 功能会生成静态html文件到 ```statichtml``` 目录,同时生成```gzip_static```文件,需要把正在使用的主题的 ```css,js,image```和```gpressdatadir/public```目录复制到 ```statichtml```目录下,也可以用Nginx反向代理指定目录.    
@@ -112,7 +112,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  列表不显示(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
 
 ### 用户(表名:user)
 后台只有一个用户.
@@ -127,7 +127,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  列表不显示(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
 
 ### 站点信息(site)
 站点的信息,例如 title,logo,keywords,description等
@@ -148,7 +148,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  列表不显示(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
 
 ### 页面模板(表名:pageTemplate)
 | columnName    | 类型         | 说明    | 是否分词 |  备注       | 
@@ -160,7 +160,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  列表不显示(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
 
 ### 导航菜单(表名:category)
 | columnName    | 类型         | 说明    |  备注       | 
@@ -178,7 +178,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  列表不显示(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
 
 ### 文章内容(表名:content)
 | columnName  | 类型        | 说明        | 是否分词 |  备注                  | 
@@ -205,5 +205,5 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
 | createUser  | string      | 创建人       | -       |  初始化 system          |
 | sortNo      | int         | 排序         | -       |  正序                   |
-| status      | int         | 状态     | -       |  列表不显示(0),公开(1),私密(2)  |
+| status      | int         | 状态     | -       |  链接访问(0),公开(1),私密(2)  |
 
