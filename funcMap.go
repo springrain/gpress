@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"errors"
 	"html/template"
+	"os"
 	"regexp"
 	"strings"
 
@@ -53,6 +54,7 @@ var funcMap = template.FuncMap{
 	"contains":         contains,
 	"generateStringID": FuncGenerateStringID,
 	"treeCategory":     funcTreeCategory,
+	"themeName":        funcThemeName,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -319,6 +321,20 @@ func funcTreeCategory(sql string, values ...interface{}) []Category {
 	treeCategory := sliceCategory2Tree(categorys)
 
 	return treeCategory
+}
+
+func funcThemeName() []string {
+	themeNames := make([]string, 0)
+	files, err := os.ReadDir(themeDir)
+	if err != nil {
+		return themeNames
+	}
+	for _, file := range files {
+		if file.IsDir() {
+			themeNames = append(themeNames, file.Name())
+		}
+	}
+	return themeNames
 }
 
 func convertJson(obj interface{}) (string, error) {
