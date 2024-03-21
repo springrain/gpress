@@ -29,34 +29,40 @@ import (
 )
 
 // 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入表,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
-func loadInstallConfig() Config {
+func loadInstallConfig() (Config, Site) {
+	var site = Site{Theme: "default"}
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
-	if installed { // 如果已经安装,需要从表读取配置,这里暂时返回defaultConfig
+	if installed { // 已经安装,需要表读取配置
+		finder := zorm.NewSelectFinder(tableSiteName).Append("WHERE id=?", "gpress_site")
+		_, err := zorm.QueryRow(context.Background(), finder, &site)
+		if err != nil {
+			return defaultConfig, site
+		}
 		config, err := findConfig()
 		if err != nil {
-			return defaultConfig
+			return defaultConfig, site
 		}
-		return config
+		return config, site
 	}
 	// 打开文件
 	jsonFile, err := os.Open(datadir + "install_config.json")
 	if err != nil {
 		FuncLogError(defaultErr)
-		return defaultConfig
+		return defaultConfig, site
 	}
 	// 关闭文件
 	defer jsonFile.Close()
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
 		FuncLogError(defaultErr)
-		return defaultConfig
+		return defaultConfig, site
 	}
 	configJson := Config{}
 	// Decode从输入流读取下一个json编码值并保存在v指向的值里
 	err = json.Unmarshal([]byte(byteValue), &configJson)
 	if err != nil {
 		FuncLogError(defaultErr)
-		return defaultConfig
+		return defaultConfig, site
 	}
 
 	if configJson.JwtSecret == "" { // 如果没有配置jwtSecret,产生随机字符串
@@ -68,7 +74,7 @@ func loadInstallConfig() Config {
 
 	configJson.Id = defaultConfig.Id
 
-	return configJson
+	return configJson, site
 }
 
 var defaultConfig = Config{
@@ -76,8 +82,8 @@ var defaultConfig = Config{
 	BasePath: "/",
 	// 默认的加密Secret
 	// JwtSecret:   "gpress+jwtSecret-2023",
-	JwtSecret:   randStr(32),
-	Theme:       "default",
+	JwtSecret: randStr(32),
+	//Theme:       "default",
 	JwttokenKey: "jwttoken", // jwt的key
 	Timeout:     1800,       // 半个小时超时
 	ServerPort:  ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660

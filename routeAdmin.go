@@ -259,7 +259,7 @@ func init() {
 
 		c.HTML(http.StatusOK, "admin/content/list.html", nil)
 	})
-	// 重新加载资源包含模板和对应的静态文件
+	// 刷新站点,重新加载资源包含模板和对应的静态文件
 	adminGroup.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
 		err := loadTemplate()
 		if err != nil {
