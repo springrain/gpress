@@ -187,10 +187,12 @@ func updateInstall(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
-	randStringId := FuncGenerateStringID()
+	//如果文件存在就删除
+	if pathExist(templateDir + "admin/install.html.bak") {
+		os.Remove(templateDir + "admin/install.html.bak")
+	}
 	// 删除 install 文件
-	err = os.Rename(templateDir+"admin/install.html", templateDir+"admin/install.html."+randStringId)
+	err = os.Rename(templateDir+"admin/install.html", templateDir+"admin/install.html.bak")
 	if err != nil {
 		return err
 	}
