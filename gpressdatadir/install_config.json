@@ -2,7 +2,6 @@
  "serverPort":":660",
  "timeout":1800,
  "jwttokenKey":"jwttoken",
- "theme":"default",
  "jwtSecret":"",
  "basePath":"/",
  "proxy":""

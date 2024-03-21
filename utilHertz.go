@@ -61,7 +61,12 @@ func loadTemplate() error {
 	if err != nil {
 		return err
 	}
+	finder := zorm.NewSelectFinder(tableSiteName).Append("WHERE id=?", "gpress_site")
+	_, err = zorm.QueryRow(context.Background(), finder, &site)
 
+	if err != nil {
+		return err
+	}
 	//声明新的template
 	loadTmpl := template.New(appName).Delims("", "").Funcs(funcMap)
 
@@ -73,7 +78,7 @@ func loadTemplate() error {
 		return err
 	}
 	//遍历用户配置的主题模板
-	err = walkTemplateDir(loadTmpl, templateDir+"theme/"+config.Theme+"/", templateDir+"theme/"+config.Theme+"/", &staticFileMap, false)
+	err = walkTemplateDir(loadTmpl, templateDir+"theme/"+site.Theme+"/", templateDir+"theme/"+site.Theme+"/", &staticFileMap, false)
 	if err != nil {
 		FuncLogError(err)
 		return err

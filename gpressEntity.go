@@ -40,7 +40,7 @@ type Config struct {
 	ServerPort string `column:"serverPort" json:"serverPort,omitempty"`
 
 	// Theme 主题
-	Theme string `column:"theme" json:"theme,omitempty"`
+	//Theme string `column:"theme" json:"theme,omitempty"`
 
 	// Timeout 超时时间,单位秒
 	Timeout int `column:"timeout" json:"timeout,omitempty"`
