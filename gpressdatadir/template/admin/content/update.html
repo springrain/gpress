@@ -10,7 +10,7 @@
 {{ $pageTemplate := pageTemplate }} 
 
 <div class="layui-panel" style="padding: 5px;height: 100%;">
-	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
+	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST" style="height:100%;display: flex;flex-direction: column;">
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
 				<label class="layui-form-label">ID</label>
@@ -125,13 +125,16 @@
 					lay-filter="gpress-form-ajax-update">提交修改</button>
 			</div>
 		</div>
-		<div class="layui-form-item">
-			<div id="markdown-container"></div>
-			<div id="editor-wrapper" style="display: none;overflow: auto;">
+		<div class="layui-form-item" style="flex:1">
+			<div id="markdown-container" style="height: 100%;"></div>
+            <div id="editor-wrapper" style="display: none;height: 100%;">
+			<div style="display: flex;height: 100%;overflow: auto;flex-direction: column;">
 				<div id="toolbar-container"><!-- 工具栏 --></div>
-				<div id="editor-container"><!-- 编辑器 --></div>
+				<div id="editor-container" style="flex:1"><!-- 编辑器 --></div>
 			</div>
+		    </div>
 		</div>
+
 
 	</form>
 </div>
