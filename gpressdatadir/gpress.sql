@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS config (
 		jwttokenKey      TEXT NOT NULL,
 		serverPort       TEXT NOT NULL,
 		timeout          INT  NOT NULL,
+		maxRequestBodySize INT,
 		proxy            TEXT NULL,
 		createTime       TEXT,
 		updateTime       TEXT,
