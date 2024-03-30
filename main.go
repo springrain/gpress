@@ -43,7 +43,7 @@ var themePath = "/theme/" + site.Theme + "/"
 var httpServerPath = "http://"
 
 // hertz对象,可以在其他地方使用
-var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.BasePath))
+var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.BasePath), server.WithMaxRequestBodySize(config.MaxRequestBodySize))
 
 func init() {
 	if !sqliteStatus { // 表状态检查失败

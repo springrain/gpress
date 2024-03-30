@@ -84,9 +84,10 @@ var defaultConfig = Config{
 	// JwtSecret:   "gpress+jwtSecret-2023",
 	JwtSecret: randStr(32),
 	//Theme:       "default",
-	JwttokenKey: "jwttoken", // jwt的key
-	Timeout:     1800,       // 半个小时超时
-	ServerPort:  ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
+	MaxRequestBodySize: 20 * 1024 * 1024,
+	JwttokenKey:        "jwttoken", // jwt的key
+	Timeout:            1800,       // 半个小时超时
+	ServerPort:         ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
 }
 
 // insertConfig 插入config
@@ -119,6 +120,9 @@ func findConfig() (Config, error) {
 
 	if config.BasePath == "" {
 		config.BasePath = "/"
+	}
+	if config.MaxRequestBodySize == 0 {
+		config.MaxRequestBodySize = 20 * 1024 * 1024
 	}
 
 	return config, nil
