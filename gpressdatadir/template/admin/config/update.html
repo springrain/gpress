@@ -49,6 +49,12 @@
 					<div class="layui-input-block">
 					  <input type="number" name="timeout" lay-verify="required" lay-reqtext="请填写超时时间" autocomplete="off" class="layui-input" value="{{.Data.Timeout}}">
 					</div>
+				</div>	
+				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">最大的请求</label>
+					<div class="layui-input-block">
+					  <input type="number" name="maxRequestBodySize"  autocomplete="off" class="layui-input" value="{{.Data.MaxRequestBodySize}}">
+					</div>
 				</div>				
 				<div class="layui-form-item">
 					<div class="layui-input-block">
@@ -72,6 +78,7 @@
 		field.sortNo=field.sortNo-0;
 		field.status=field.status-0;
 		field.timeout=field.timeout-0;
+		field.maxRequestBodySize=field.maxRequestBodySize-0;
 		const form = document.getElementById('gpress-form');
 		$.ajax({
 			url:form.action,

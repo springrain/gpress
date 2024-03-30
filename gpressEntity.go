@@ -42,6 +42,9 @@ type Config struct {
 	// Theme 主题
 	//Theme string `column:"theme" json:"theme,omitempty"`
 
+	// MaxRequestBodySize 最大请求
+	MaxRequestBodySize int `column:"maxRequestBodySize" json:"maxRequestBodySize,omitempty"`
+
 	// Timeout 超时时间,单位秒
 	Timeout int `column:"timeout" json:"timeout,omitempty"`
 
