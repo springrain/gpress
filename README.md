@@ -1,7 +1,13 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />
 
 ## 介绍  
-国产内容平台,Hertz + Go template + FTS5全文检索,兼容hugo生态,使用wasm扩展插件,只需200M内存.     
+Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容hugo生态,使用Wasm扩展插件,只需200M内存  
+    
+**作为静态站点：** gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:[even](gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default)、[doks](gitee.com/gpress/gpress-doks)、[book](gitee.com/gpress/gpress-book)、[geekdoc](gitee.com/gpress/gpress-geekdoc)......   
+**作为动态站点：** gpress功能简单,只有7个菜单,6张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索......  
+**作为Web3：** gpress已支持以太坊和百度超级链账户体系,会基于Wasm持续迭代去中心功能,让数据自由一点点......  
+**作为后浪：** 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......  
+个人博客 [jiagou.com](jiagou.com/post/about) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
 <img src="gpressdatadir/public/index.png" width="600px">
 
 ## 开发环境
@@ -106,6 +112,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | jwttokenKey | string      | jwt的key    |  默认 jwttoken  |
 | serverPort  | string      | IP:端口     |  默认 :660  |
 | timeout     | int         | jwt超时时间秒|  默认 1800  |
+| maxRequestBodySize| int   | 最大请求|  默认 20M  |
 | proxy       | string      | http代理地址 |             |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
