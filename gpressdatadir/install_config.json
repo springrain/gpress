@@ -4,5 +4,6 @@
  "jwttokenKey":"jwttoken",
  "jwtSecret":"",
  "basePath":"/",
- "proxy":""
+ "proxy":"",
+ "maxRequestBodySize":20971520
 }
