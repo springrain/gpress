@@ -1,5 +1,5 @@
 name: CI
-
+### 手动触发,目前Linux编译暂时不能使用,需要手动编译
 on:
   workflow_dispatch:
 
