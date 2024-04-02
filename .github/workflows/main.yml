@@ -1,5 +1,5 @@
 name: CI
-### 手动触发,目前Linux glibc版本不兼容,需要手动编译
+### 手动触发,目前Linux glibc版本不兼容,需要手动编译.两层压缩包
 on:
   workflow_dispatch:
 
@@ -76,12 +76,12 @@ jobs:
           fi          
           
           mv ./gpressdatadir ./build/temp/gpress/
+          cd ./build/temp && zip -r gpress.zip ./gpress
           
-
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: gpress-${{matrix.goos}}-${{matrix.goarch}}
-          path: ${{ github.workspace }}/build/temp
+          path: ${{ github.workspace }}/build/temp/gpress.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
