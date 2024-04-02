@@ -99,7 +99,7 @@ location / {
 
 ```  
 ## 阿里云计算巢
-[点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以独立购买阿里云的服务器,进行部署.选择最低配置的 ```ecs.t6-c2m1.large``` 规格就可以了,2核1G内存,一年100元左右.  
+[点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以独立购买阿里云的服务器,进行部署.选择```张家口机房```最低配置的 ```ecs.t6-c2m1.large``` 规格````1核2G```就够用了,一年100元左右,性价比高.  
 
 ## 表结构  
 ID默认使用时间戳(23位)+随机数(9位),全局唯一.  
