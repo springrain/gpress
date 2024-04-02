@@ -33,11 +33,11 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 - 编辑导航: 编辑该导航
 - 删除导航: 删除该导航  
 新增子导航的功能界面如下:  
-<img src="image/009.png" width="600px">    
-编辑导航的功能界面如下:  
-<img src="image/010.png" width="600px">  
-删除导航的功能界面如下:  
-<img src="image/011.png" width="600px">  
+<img src="image/009.png" width="600px">      
+编辑导航的功能界面如下:    
+<img src="image/010.png" width="600px">    
+删除导航的功能界面如下:    
+<img src="image/011.png" width="600px">    
 
 ## 新增/修改内容
 内容管理是gpress的重要功能,新增内容主要设置内容的ID,标题和归属的导航菜单,ID会出现在URL中,且不可更改,例如 ID为```about```,访问路径为```http://127.0.0.1:660/post/about```.内容有```Markdown```和```富文本```两种格式,根据场景选择使用.
@@ -125,11 +125,11 @@ location / {
 }
 
 ```  
-<img src="image/018.png" width="600px">  
+<img src="image/018.png" width="600px">    
 
 ## 设置
-用于系统设置,需要重启gpress才能生效.
-<img src="image/019.png" width="600px">  
+用于系统设置,需要重启gpress才能生效.  
+<img src="image/019.png" width="600px">    
 
 ## 退出
 退出管理后台
