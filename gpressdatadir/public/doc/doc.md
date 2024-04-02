@@ -15,9 +15,9 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 
 ## 登录
 浏览器访问 ```http://127.0.0.1:660/admin/login```,正常显示登录页面,输入安装时设置的账号密码.
-<img src="image/004.png" width="600px">
+<img src="image/004.png" width="600px">  
 同时支持使用区块链钱包进行授权登录  
-<img src="image/005.png" width="600px">
+<img src="image/005.png" width="600px">  
 
 ## 内容导航
 登录之后,默认查看内容导航功能,左侧是导航菜单,右侧是文章内容  
