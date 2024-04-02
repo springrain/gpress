@@ -10,7 +10,9 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 个人博客 [jiagou.com](jiagou.com/post/about) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
 <img src="gpressdatadir/public/index.png" width="600px">
 
-## 开发环境
+## 开发环境  
+gprss使用了 ```https://github.com/wangfenjin/simple``` 作为FTS5的全文检索扩展,编译好的libsimple文件放到 ```gpressdatadir/fts5``` 目录下,如果gpress启动报错连不上数据库,请检查libsimple文件是否正确,如果需要重新编译libsimple,请参考 https://github.com/wangfenjin/simple.  
+
 默认端口660,后台管理地址 http://127.0.0.1:660/admin/login    
 需要先解压```gpressdatadir/dict.zip```      
 运行 ```go run --tags "fts5" .```     
@@ -96,6 +98,8 @@ location / {
 }
 
 ```  
+## 阿里云计算巢
+[点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以独立购买阿里云的服务器,进行部署.选择最低配置的 ```ecs.t6-c2m1.large``` 规格就可以了,2核1G内存,一年100元左右.  
 
 ## 表结构  
 ID默认使用时间戳(23位)+随机数(9位),全局唯一.  
