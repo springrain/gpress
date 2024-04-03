@@ -252,6 +252,9 @@ type PageTemplate struct {
 	// TemplatePath 模板路径
 	TemplatePath string `column:"templatePath" json:"templatePath,omitempty"`
 
+	// Theme 主题名称
+	Theme string `column:"theme" json:"theme,omitempty"`
+
 	// 创建时间
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 
