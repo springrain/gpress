@@ -37,6 +37,7 @@
 					<th>ID</th>
 					<th>模板名称</th>
 					<th>模板路径</th>
+					<th>主题</th>
 					<th>更新时间</th>
 					<th>排序</th>
 					<th>操作</th>
@@ -50,6 +51,7 @@
 					<td title="{{ .Id }}"><a href="{{basePath}}admin/{{$.UrlPathParam}}/look?id={{$v.Id}}"> {{ .Id }} </a></td>
 					<td title="{{ .Name }}"> {{ .Name }}</td>
 					<td title="{{ .TemplatePath }}"> {{ .TemplatePath }}</td>
+					<td title="{{ .Theme }}"> {{ .Theme }}</td>
 					<td> {{ .UpdateTime }}</td>
 					<td> {{ .SortNo }}</td>
 					<td>

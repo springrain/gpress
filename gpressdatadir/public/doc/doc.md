@@ -199,6 +199,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | id          | string      | 主键        | 否       |    -  |
 | name        | string      | 模板名称     | 否       |    -  |
 | templatePath| string      | 模板路径     | 否       |    -  |
+| theme       | string      | 主题名称     | 否       |    -  |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |

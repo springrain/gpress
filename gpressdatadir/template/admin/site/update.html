@@ -39,7 +39,6 @@
 				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">主题 &nbsp;<i class="layui-icon layui-icon-tips" title="主题在gpressdatadir/template/theme目录下"></i></label>
 					<div class="layui-input-block">
-
 						<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
 							{{ range $index,$obj := $themeName }}
 							<option value='{{$obj}}'>{{$obj}}</option>
@@ -102,12 +101,12 @@
 	  var layer = layui.layer;
 	  var $ = layui.jquery;
       var upload = layui.upload;
-	      //选中导航菜单
-		  $("#theme option[value='{{.Data.Theme}}']").attr("selected", true);
+	  //选中导航菜单
+	  $("#theme option[value='{{.Data.Theme}}']").attr("selected", true);
 
 
-		// 上传logo
-		upload.render({
+	  // 上传logo
+	  upload.render({
 			elem: '#button-upload-logo',
 			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
 			size: 5 * 1024, // 限制文件大小,单位 KB
@@ -118,7 +117,7 @@
 				}
 				console.log(res);
 			}
-		});
+	});
 
 		// 上传favicon
 		upload.render({
