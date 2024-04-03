@@ -1,4 +1,5 @@
 {{template "admin/header.html"}}
+{{ $themeName := themeName }} 
 <title>更新页面模板 - GPRESS</title>
 <script type="text/javascript" src="{{basePath}}admin/js/sha3.min.js"></script>
 {{template "admin/bodystart.html"}}
@@ -30,6 +31,16 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">主题 &nbsp;<i class="layui-icon layui-icon-tips" title="主题在gpressdatadir/template/theme目录下"></i></label>
+					<div class="layui-input-block">
+						<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
+							{{ range $index,$obj := $themeName }}
+							<option value='{{$obj}}'>{{$obj}}</option>
+							{{end}}
+						</select>
+					</div>
+				  </div>
+				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">排序</label>
 					<div class="layui-input-block">
 					  <input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off" class="layui-input" value="{{.Data.SortNo}}">
@@ -50,6 +61,10 @@
 	  var form = layui.form;
 	  var layer = layui.layer;
 	  var $ =layui.jquery;
+	  //选中导航菜单
+	  $("#theme option[value='{{.Data.Theme}}']").attr("selected", true);
+	  // 渲染全部表单
+	  form.render(); 
 	  // 提交事件
 	  form.on('submit(gpress-form-ajax-update)', function(data){
 		var field = data.field; // 获取表单字段值

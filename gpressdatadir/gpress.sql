@@ -50,8 +50,9 @@ INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTempla
 
 CREATE TABLE IF NOT EXISTS pageTemplate (
 		id TEXT PRIMARY KEY     NOT NULL,
-		name         TEXT  NOT NULL,
-		templatePath         TEXT   NOT NULL,
+		name              TEXT  NOT NULL,
+		templatePath      TEXT   NOT NULL,
+		theme             TEXT  NOT NULL,
 		createTime        TEXT,
 		updateTime        TEXT,
 		createUser        TEXT,

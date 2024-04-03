@@ -1,7 +1,7 @@
 {{template "admin/header.html"}}
 <title>新增页面模版 - GPRESS</title>
 {{template "admin/bodystart.html"}}
-
+{{ $themeName := themeName }} 
 {{ $maxSortNo:=  selectOne "pageTemplate" "max(sortNo) as sortNo from pageTemplate" }} 
 <div class="layui-card layui-panel" style="height: 100%;">
 	<div class="layui-card-header">
@@ -29,6 +29,16 @@
 			  <input type="text" name="templatePath" lay-verify="required" lay-reqtext="请填写模板路径" autocomplete="off" class="layui-input" value="">
 			</div>
 		  </div>
+		  <div class="layui-form-item layui-col-md6">
+			<label class="layui-form-label">主题 &nbsp;<i class="layui-icon layui-icon-tips" title="主题在gpressdatadir/template/theme目录下"></i></label>
+			<div class="layui-input-block">
+				<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
+					{{ range $index,$obj := $themeName }}
+					<option value='{{$obj}}'>{{$obj}}</option>
+					{{end}}
+				</select>
+			</div>
+		  </div>	
 		  <div class="layui-form-item layui-col-md6">
 			  <label class="layui-form-label">排序</label>
 			  <div class="layui-input-block">
