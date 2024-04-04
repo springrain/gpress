@@ -8,28 +8,31 @@
 <div class="layui-col-space10" style="height: 100%;">
 	<div class="layui-col-md4" style="height: 100%;">
 		<div class="layui-panel" style="height: 100%; padding: 5px;overflow: auto;">
-			<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="POST" style="text-align: center;padding-top: 5px;">
-				<input type="hidden" id="file"  value="" />
-			  <div class="layui-form-item">
-				<div class="layui-inline">
-				<button type="button" class="layui-btn" id="button-upload-theme">
+			<input type="hidden" id="file"  value="" />
+			<div class="layui-form-item">
+			<div class="layui-inline">
+				<button type="button" class="layui-btn" id="button-upload-theme" title="仅支持zip格式">
 					<i class="layui-icon layui-icon-upload"></i> 上传主题
 				</button>
-				</div>
-				<div class="layui-inline">
-				<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="layui-btn layui-bg-blue">保存修改</a>
-			    </div>  
 			</div>
-			</form>
-			
-			<div class="tree" id="tree">
-
+			<div class="layui-inline">
+				<button type="button" class="layui-btn layui-bg-blue">
+					<i class="layui-icon layui-icon-theme"></i> 主题市场
+				</button>
 			</div>
+			<div class="layui-inline">
+				<button onclick="updateContent();" type="button" class="layui-btn layui-bg-blue">保存文件</button>
+			</div>  
 		</div>
+			
+		<div class="tree" id="tree">
+		</div>
+
+	  </div>
 	</div>
 	<div class="layui-col-md8" style="height: 100%;">
 		<div style="height: 100%;padding:0px;">
-			<textarea id="fileContent" placeholder="文件内容" style="height: 100%;" class="layui-textarea">{{.ExtMap.file}}</textarea>
+			<textarea id="content" placeholder="文件内容" style="height: 100%;" class="layui-textarea">{{.ExtMap.file}}</textarea>
 		</div>
 	</div>
 
@@ -55,7 +58,7 @@
 		const params = new URLSearchParams(query)
 		var file = params.get("file")
 		if (file && file != "") {
-			$("#id").val(file)
+			$("#file").val(file)
 		}
 
 		//选中高亮
@@ -78,63 +81,27 @@
 			// 上传文件
 			upload.render({
 			elem: '#button-upload-theme',
-			url: '{{basePath}}{{.UrlPathParam}}/uploadTheme', // 此处配置你自己的上传接口即可
+			url: '{{basePath}}admin/{{.UrlPathParam}}/uploadTheme', // 此处配置你自己的上传接口即可
 			size: 10 * 1024, // 限制文件大小,单位 KB
 			accept: 'file',
 			exts: 'zip',
 			acceptMime: 'application/zip',
+			text: { // 自定义提示文本
+			"data-format-error": "仅支持zip格式", // 数据格式错误的提示
+			"check-error": "仅支持zip格式", // 文件格式校验失败的提示
+			},
 			done: function (res) {
 				if (res.statusCode == 1) {
-					
+				  layer.msg("上传成功",function(){
+				    location.reload();
+				  });
+				}else{
+					layer.msg("上传错误!");
 				}
-				console.log(res);
+				
 			}
 		});
-
-		// 导航菜单下来事件绑定
-		dropdown.render({
-			elem: '.tips-dropdown',
-			trigger: 'hover',
-			data: [{ id: "1", title: '新增文件' },{ id: "2", title: '新增目录' }, { id: "3", title: '重命名' }, { id: "4", title: '删除' }],
-			click: function (data, othis) {
-				let categoryId = this.elem.attr("id");
-				if (data.id == "1") {
-					window.location.href = basePath + 'admin/{{.UrlPathParam}}/save?categoryID=' + categoryId;
-				} else if (data.id == "2") {
-					window.location.href = basePath + 'admin/{{.UrlPathParam}}/update?pid=' + categoryId;
-				} else if (data.id == "3") {
-					deleteFunc(categoryId, basePath + 'admin/{{.UrlPathParam}}/delete');
-				}else if (data.id == "4") {
-					deleteFunc(categoryId, basePath + 'admin/{{.UrlPathParam}}/delete');
-				}
-				//console.log(data.id); // 当前所点击的菜单项对应的数据
-				//console.log(othis); // 当前所点击的菜单项元素对象
-				//console.log(this.elem.attr("id")); // 当前组件绑定的目标元素对象，批量绑定中常用
-			}
-		});
-
 	});
-
-	function deleteFunc(id, url) {
-		layer.confirm('确认删除?', {
-			icon: 3,
-			title: "确认",
-			btn: ['确定', '取消'] //按钮
-		}, function () {
-			$.ajax({
-				type: 'post',
-				url: url,
-				data: { "id": id },
-				success: function (res) {
-					if (res.statusCode === 1) {
-						layer.msg("删除成功", function () {
-							location.reload();
-						});
-					}
-				}
-			});
-		});
-	}
 
 	function submitListForm() {
 		document.getElementById("listForm").submit();
@@ -147,7 +114,6 @@
 				`<details id="details_${node.id}">
 					<summary class="tree-item">
 						<a id="tree_a_${node.id}" href="javascript:showFileContent('${node.id}','${node.fileType}');">${node.name}</a> 
-						<i class="layui-icon layui-icon-tips tips-dropdown" id="${node.id}" ></i>
 					</summary>
 				</details>`
 			);
@@ -182,6 +148,28 @@
 			return false;
 		}
 		window.location.href = basePath + 'admin/{{.UrlPathParam}}/list?file=' + nodeId;
+	}
+
+    function updateContent(){
+      var file=$("#file").val();
+	  var content=$("#content").val();
+	  $.ajax({
+			url: basePath+"admin/themeTemplate/update",
+			type: "POST",
+			contentType: "application/json;charset=utf-8",
+			dataType: "json",
+			data: JSON.stringify({"filePath":file,"fileContent":content}),
+			error: function () {
+				layer.msg("修改错误,请重试!");
+			},
+			success: function (result) {
+				if (result.statusCode == 1) {
+					layer.msg("修改成功");
+				} else {
+					layer.msg("修改失败!");
+				}
+			}
+		});
 	}
 
 </script>

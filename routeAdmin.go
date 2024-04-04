@@ -296,6 +296,38 @@ func init() {
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
 
+	//上传主题文件
+	adminGroup.POST("/themeTemplate/uploadTheme", func(ctx context.Context, c *app.RequestContext) {
+		fileHeader, err := c.FormFile("file")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
+			return
+		}
+		ext := filepath.Ext(fileHeader.Filename)
+		if ext != ".zip" { //不是zip
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
+			return
+		}
+		path := themeDir + fileHeader.Filename
+		err = c.SaveUploadedFile(fileHeader, path)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
+			return
+		}
+		//解压压缩包
+		err = unzip(path, themeDir)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+			c.Abort() // 终止后续调用
+			return
+		}
+		os.Remove(path)
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
+	})
+
 	// 内容预览
 	adminGroup.GET("/content/look", funcContentPreview)
 	// 栏目预览
@@ -306,6 +338,9 @@ func init() {
 
 	// 查询主题模板
 	adminGroup.GET("/themeTemplate/list", funcThemeTemplateList)
+
+	// 修改主题模板文件
+	adminGroup.POST("/themeTemplate/update", funcThemeTemplatePost)
 
 	// 通用list列表,先都使用get方法
 	adminGroup.GET("/:urlPathParam/list", funcList)
@@ -527,6 +562,40 @@ func funcThemeTemplateList(ctx context.Context, c *app.RequestContext) {
 	}
 	responseData.ExtMap["file"] = string(fileContent)
 	c.HTML(http.StatusOK, listFile, responseData)
+}
+
+func funcThemeTemplatePost(ctx context.Context, c *app.RequestContext) {
+	themeTemplate := ThemeTemplate{}
+	c.Bind(&themeTemplate)
+	filePath := filepath.ToSlash(themeTemplate.FilePath)
+	if filePath == "" || strings.Contains(filePath, "..") {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0})
+		c.Abort() // 终止后续调用
+		return
+	}
+	if !pathExist(themeDir + filePath) {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0})
+		c.Abort() // 终止后续调用
+		return
+	}
+
+	//打开文件
+	file, err := os.OpenFile(themeDir+filePath, os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0})
+		c.Abort() // 终止后续调用
+		return
+	}
+	defer file.Close() // 确保在函数结束时关闭文件
+
+	// 写入内容
+	_, err = file.WriteString(themeTemplate.FileContent)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0})
+		c.Abort() // 终止后续调用
+		return
+	}
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1})
 }
 
 // funcUpdatePre 修改页面
