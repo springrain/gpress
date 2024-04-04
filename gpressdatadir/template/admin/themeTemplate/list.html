@@ -16,7 +16,7 @@
 				</button>
 			</div>
 			<div class="layui-inline">
-				<button type="button" class="layui-btn layui-bg-blue">
+				<button onclick="themeMarket()" type="button" class="layui-btn layui-bg-blue">
 					<i class="layui-icon layui-icon-theme"></i> 主题市场
 				</button>
 			</div>
@@ -40,10 +40,12 @@
 <script>
 	var layer;
 	var $;
+	var table;
 	layui.use(function () {
 		layer = layui.layer;
 		var upload = layui.upload;
 		$ = layui.jquery;
+		table=layui.table;
 
 		var dropdown = layui.dropdown;
 		const categoryData = JSON.parse("{{ $convertJson }}");
@@ -170,4 +172,39 @@
 		});
 	}
 
+function themeMarket(){
+// 已知数据渲染
+var inst = table.render({
+    elem: '#ID-table-themeMarket',
+	url: 'https://www.gpress.cn/themes.json', // 此处为静态模拟数据，实际使用时需换成真实接口
+    cols: [[ //标题栏
+      {field: 'id', title: 'ID', width: 80},
+      {field: 'themeName', title: '主题名称', width: 100},
+	  {field: 'star', title: 'star', width: 80,sort: true},
+      {field: 'themeVersion', title: '版本', width: 80},
+      {field: 'themeType', title: '主题分类', width: 100},
+      {field: 'gpressVersion', title: '兼容版本', width: 100},
+      {field: 'screenshot', title: '预览图', width: 80, templet: function(d){return '<img src="'+d.screenshot+'" width="70px" />';}},
+	  {field: 'gitURL', title: '源码', width: 80, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > 查看 </a>';}},
+	  {field: 'download', title: '下载', width: 80, templet: function(d){return '<a target="_blank" href="'+d.download+'" > 下载 </a>';}}
+    ]],
+    //data: [],
+    //skin: 'line', // 表格风格
+    //even: true,
+    page: true, // 是否显示分页
+    //limits: [5, 10, 15],
+    limit: 5 // 每页默认显示的数量
+    });
+
+	layer.open({
+        type: 1,
+		title:"主题市场",
+        area: ['800px', '600px'], // 宽高
+        content: $('#ID-themeMarket-layer-wrapper'), 
+      });
+}
 </script>
+
+<div id="ID-themeMarket-layer-wrapper" style="display: none;">
+	<table class="layui-hide" id="ID-table-themeMarket"></table>
+</div>
