@@ -380,4 +380,7 @@ type ThemeTemplate struct {
 
 	// FilePath 模板路径
 	FilePath string `json:"filePath,omitempty"`
+
+	// FileContent 文件内容
+	FileContent string `json:"fileContent,omitempty"`
 }
