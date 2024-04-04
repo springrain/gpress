@@ -2,7 +2,7 @@
 <title>新增页面模版 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 {{ $themeName := themeName }} 
-{{ $maxSortNo:=  selectOne "pageTemplate" "max(sortNo) as sortNo from pageTemplate" }} 
+{{ $maxSortNo:=  selectOne "themeTemplate" "max(sortNo) as sortNo from themeTemplate" }} 
 <div class="layui-card layui-panel" style="height: 100%;">
 	<div class="layui-card-header">
 	  新增页面模版

@@ -48,18 +48,6 @@ CREATE TABLE IF NOT EXISTS category (
 INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateID,templateID,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',web,',NULL,NULL,NULL,'',NULL,'Web','web');
 INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateID,templateID,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',about,',NULL,NULL,NULL,'','/post/about','About','about');
 
-CREATE TABLE IF NOT EXISTS pageTemplate (
-		id TEXT PRIMARY KEY     NOT NULL,
-		name              TEXT  NOT NULL,
-		templatePath      TEXT   NOT NULL,
-		theme             TEXT  NOT NULL,
-		createTime        TEXT,
-		updateTime        TEXT,
-		createUser        TEXT,
-		sortNo            int NOT NULL,
-		status            int NOT NULL
-	 ) strict ;
-
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
 		moduleID         TEXT  ,

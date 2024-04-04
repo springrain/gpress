@@ -1,11 +1,11 @@
 {{template "admin/header.html"}}
 {{ $themeName := themeName }} 
-<title>更新页面模板 - GPRESS</title>
+<title>更新主题模板 - GPRESS</title>
 <script type="text/javascript" src="{{basePath}}admin/js/sha3.min.js"></script>
 {{template "admin/bodystart.html"}}
         <div class="layui-card layui-panel" style="height: 100%;">
           <div class="layui-card-header">
-            更新页面模板
+            更新主题模板
           </div>
           <div class="layui-card-body">
             <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">

@@ -52,8 +52,8 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 ## 用户信息
 修改管理员的账号信息,功能界面如下:  
 <img src="image/015.png" width="600px">
-## 页面模板
-页面模板的增删改查功能,管理主题中的自定义模板文件,修改内容和栏目时,可以应用自定义的模板文件.  
+## 主题模板
+主题模板的增删改查功能,管理主题中的自定义模板文件,修改内容和栏目时,可以应用自定义的模板文件.  
 <img src="image/016.png" width="600px">  
 <img src="image/017.png" width="600px">  
 
@@ -193,19 +193,6 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | sortNo      | int         | 排序         |  正序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
 
-### 页面模板(表名:pageTemplate)
-| columnName    | 类型         | 说明    | 是否分词 |  备注       | 
-| ----------- | ----------- | ----------- | ------- | ----------- |
-| id          | string      | 主键        | 否       |    -  |
-| name        | string      | 模板名称     | 否       |    -  |
-| templatePath| string      | 模板路径     | 否       |    -  |
-| theme       | string      | 主题名称     | 否       |    -  |
-| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
-| createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
-
 ### 导航菜单(表名:category)
 | columnName    | 类型         | 说明    |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
@@ -217,7 +204,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | moduleID    | string      | module表ID   |  导航菜单下的文章默认使用的模型字段 |
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
 | templateID  | string      | 模板Id       | 当前导航页的模板  |
-| childTemplateID  | string | 子页面模板Id  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| childTemplateID  | string | 子主题模板Id  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |

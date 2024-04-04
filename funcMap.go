@@ -23,6 +23,7 @@ import (
 	"errors"
 	"html/template"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -41,9 +42,8 @@ var funcMap = template.FuncMap{
 	"relURL":   funcRelURL,
 	"site":     funcSite,
 	//"category":     funcCategory,
-	"pageTemplate": funcPageTemplate,
-	"selectList":   funcSelectList,
-	"selectOne":    funcSelectOne,
+	"selectList": funcSelectList,
+	"selectOne":  funcSelectOne,
 	//"md5":      funcMD5,
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
@@ -55,6 +55,7 @@ var funcMap = template.FuncMap{
 	"generateStringID": FuncGenerateStringID,
 	"treeCategory":     funcTreeCategory,
 	"themeName":        funcThemeName,
+	"themeTemplate":    funcThemeTemplate,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -114,15 +115,26 @@ func funcCategory() ([]Category, error) {
 }
 */
 
-// 页面模板
-func funcPageTemplate() ([]PageTemplate, error) {
-	finder := zorm.NewSelectFinder(tablePageTemplateName)
-	finder.Append(" order by sortNo desc")
-	page := zorm.NewPage()
-	page.PageSize = 200
+// 主题模板,themeName值为 ".",查询当前正在使用的模板.suffix 过滤文件后缀
+func funcThemeTemplate() ([]ThemeTemplate, error) {
+	list := make([]ThemeTemplate, 0)
 
-	list := make([]PageTemplate, 0)
-	err := zorm.Query(context.Background(), finder, &list, page)
+	matches, err := filepath.Glob(themeDir + site.Theme + "/*.html")
+	if err != nil {
+		return list, err
+	}
+
+	// 遍历匹配到的文件路径,并打印
+	for _, match := range matches {
+		path := filepath.ToSlash(match)
+		path = path[strings.Index(path, themeDir)+len(themeDir):]
+		path = path[strings.Index(path, "/")+1:]
+		themeTemplate := ThemeTemplate{}
+		themeTemplate.Name = path
+		themeTemplate.FilePath = path
+		list = append(list, themeTemplate)
+	}
+
 	return list, err
 }
 
@@ -209,10 +221,6 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 		data := make([]Site, 0)
 		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
-	case tablePageTemplateName:
-		data := make([]PageTemplate, 0)
-		zorm.Query(ctx, finder, &data, page)
-		responseData.Data = data
 	case tableCategoryName:
 		page.PageSize = 100
 		data := make([]Category, 0)
@@ -273,14 +281,6 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 			selectOneData = data[0]
 		} else {
 			selectOneData = Site{}
-		}
-	case tablePageTemplateName:
-		data := make([]PageTemplate, 0)
-		zorm.Query(ctx, finder, &data, page)
-		if len(data) > 0 {
-			selectOneData = data[0]
-		} else {
-			selectOneData = PageTemplate{}
 		}
 	case tableCategoryName:
 		data := make([]Category, 0)
