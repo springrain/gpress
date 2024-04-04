@@ -37,8 +37,7 @@ const (
 	tableUserName = "user"
 	// site  站点信息
 	tableSiteName = "site"
-	// 页面模板
-	tablePageTemplateName = "pageTemplate"
+
 	// 导航菜单
 	tableCategoryName = "category"
 

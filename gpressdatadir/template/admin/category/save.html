@@ -2,8 +2,7 @@
 <title>新增导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+{{ $themeTemplate := themeTemplate }} <!-- 模版数据 -->
 
 {{ $categoryName := selectOne "category" "* from category WHERE id=?" .QueryStringMap.pid }}
 
@@ -61,8 +60,8 @@
 			<div class="layui-input-block">
 				<select name="templateID" id="templateID">
 					<option value="">默认(category.html)</option>
-					{{ range $index,$obj := $pageTemplate }}
-					<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+					{{ range $index,$obj := $themeTemplate }}
+					<option value='{{$obj.Name}}'>{{$obj.Name}}</option>
 					{{end}}
 				</select>
 			</div>

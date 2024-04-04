@@ -4,7 +4,7 @@
 Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容hugo生态,使用Wasm扩展插件,只需200M内存  
     
 **作为静态站点：** gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:[even](gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default)、[doks](gitee.com/gpress/gpress-doks)、[book](gitee.com/gpress/gpress-book)、[geekdoc](gitee.com/gpress/gpress-geekdoc)......   
-**作为动态站点：** gpress功能简单,只有7个菜单,6张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索......  
+**作为动态站点：** gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索......  
 **作为Web3：** gpress已支持以太坊和百度超级链账户体系,会基于Wasm持续迭代去中心功能,让数据自由一点点......  
 **作为后浪：** 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......  
 **帮助文档：** [点击查看帮助文档](./gpressdatadir/public/doc/doc.md)    
@@ -161,19 +161,6 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | sortNo      | int         | 排序         |  正序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
 
-### 页面模板(表名:pageTemplate)
-| columnName    | 类型         | 说明    | 是否分词 |  备注       | 
-| ----------- | ----------- | ----------- | ------- | ----------- |
-| id          | string      | 主键        | 否       |    -  |
-| name        | string      | 模板名称     | 否       |    -  |
-| templatePath| string      | 模板路径     | 否       |    -  |
-| theme       | string      | 主题名称     | 否       |    -  |
-| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
-| createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
-
 ### 导航菜单(表名:category)
 | columnName    | 类型         | 说明    |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
@@ -185,7 +172,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | moduleID    | string      | module表ID   |  导航菜单下的文章默认使用的模型字段 |
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
 | templateID  | string      | 模板Id       | 当前导航页的模板  |
-| childTemplateID  | string | 子页面模板Id  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| childTemplateID  | string | 子主题模板Id  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
