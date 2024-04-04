@@ -22,8 +22,6 @@
 </style>
 {{template "admin/bodystart.html"}}
 
-
-
 <div class="layui-col-space10" style="height: 100%;">
 	<div class="layui-col-md3" style="height: 100%;">
 		<div class="layui-panel" style="height: 100%; padding: 5px;overflow: auto;">
@@ -121,61 +119,58 @@
 		$ = layui.jquery;
 		var laypage = layui.laypage;
 		var dropdown = layui.dropdown;
-		
-		
-
 		const categoryData = JSON.parse("{{ $convertJson }}");
-	    const treeData = buildTree(categoryData);
+		const treeData = buildTree(categoryData);
 		// 将树形结构渲染到页面上
 		renderTree($('#tree'), treeData);
 
 		const query = window.location.search;
-		const params=new URLSearchParams(query)
-		var q=params.get("q")
-		if(q){
+		const params = new URLSearchParams(query)
+		var q = params.get("q")
+		if (q) {
 			$("#q").val(q)
 		}
-		var comCode=params.get("comCode")
-		if(comCode&&comCode!=""){
+		var comCode = params.get("comCode")
+		if (comCode && comCode != "") {
 			$("#comCode").val(comCode)
 		}
-		
+
 		//选中高亮
-		if(comCode&&comCode!=""){//被选中
-			var codes=comCode.split(",");
-			for(i = 0; i < codes.length; i++) {
-                var code=codes[i];
-				console.log(code)
-				if(code!=""){
-					$("#tree_a_"+code).css("color", "#1e9fff")
+		if (comCode && comCode != "") {//被选中
+			var codes = comCode.split(",");
+			for (i = 0; i < codes.length; i++) {
+				var code = codes[i];
+				//console.log(code)
+				if (code != "") {
+					document.getElementById("tree_a_" + code).style="color:#1e9fff";
 				}
-             }
-           
-		}else{
-			$("#all_tree_a").css("color", "#1e9fff")
+			}
+
+		} else {
+			document.getElementById("all_tree_a").style="color:#1e9fff";
 		}
 
-  // 导航菜单下来事件绑定
-  dropdown.render({
-    elem: '.tips-dropdown',
-    trigger: 'hover', 
-    data: [{id:"1",title:'新增内容'},{id:"2",title:'新增子导航'},{id:"3",title:'编辑导航'},{id:"4",title:'删除导航'}],
-	click: function(data, othis){
-		let categoryId=this.elem.attr("id");
-		if(data.id=="1"){
-		  window.location.href = basePath+'admin/content/save?categoryID='+categoryId;
-		}else if(data.id=="2"){
-		  window.location.href = basePath+'admin/category/save?pid='+categoryId;
-		}else if(data.id=="3"){
-		  window.location.href = basePath+'admin/category/update?id='+categoryId;
-		}else if(data.id=="4"){
-			deleteFunc(categoryId,basePath+'admin/category/delete');
-		}
-		//console.log(data.id); // 当前所点击的菜单项对应的数据
-		//console.log(othis); // 当前所点击的菜单项元素对象
-		//console.log(this.elem.attr("id")); // 当前组件绑定的目标元素对象，批量绑定中常用
-    }
-  });
+		// 导航菜单下来事件绑定
+		dropdown.render({
+			elem: '.tips-dropdown',
+			trigger: 'hover',
+			data: [{ id: "1", title: '新增内容' }, { id: "2", title: '新增子导航' }, { id: "3", title: '编辑导航' }, { id: "4", title: '删除导航' }],
+			click: function (data, othis) {
+				let categoryId = this.elem.attr("id");
+				if (data.id == "1") {
+					window.location.href = basePath + 'admin/content/save?categoryID=' + categoryId;
+				} else if (data.id == "2") {
+					window.location.href = basePath + 'admin/category/save?pid=' + categoryId;
+				} else if (data.id == "3") {
+					window.location.href = basePath + 'admin/category/update?id=' + categoryId;
+				} else if (data.id == "4") {
+					deleteFunc(categoryId, basePath + 'admin/category/delete');
+				}
+				//console.log(data.id); // 当前所点击的菜单项对应的数据
+				//console.log(othis); // 当前所点击的菜单项元素对象
+				//console.log(this.elem.attr("id")); // 当前组件绑定的目标元素对象，批量绑定中常用
+			}
+		});
 
 
 		// 普通用法
@@ -194,26 +189,21 @@
 				}
 			}
 		});
-
-
-
-
-
 	});
 
 	function deleteFunc(id, url) {
 		layer.confirm('确认删除?', {
 			icon: 3,
-			title:"确认",
+			title: "确认",
 			btn: ['确定', '取消'] //按钮
 		}, function () {
 			$.ajax({
 				type: 'post',
-				url: url, 
+				url: url,
 				data: { "id": id },
 				success: function (res) {
 					if (res.statusCode === 1) {
-						layer.msg("删除成功",function(){
+						layer.msg("删除成功", function () {
 							location.reload();
 						});
 					}
@@ -222,35 +212,35 @@
 		});
 	}
 
-	function submitListForm(){
+	function submitListForm() {
 		document.getElementById("listForm").submit();
 	}
-// 渲染树形菜单结构
-function renderTree(container, data) {
+	// 渲染树形菜单结构
+	function renderTree(container, data) {
 		const details = container;
 		data.forEach(node => {
 			const detailsHtml = $(
-`<details open="">
-	<summary id="${node.id}" class="tree-item">
-		<a id="tree_a_${node.id}" href="/admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> 
-		<i class="layui-icon layui-icon-tips tips-dropdown" id="${node.id}" ></i>
-	</summary>
-</details>
-`);
+				`<details id="details_${node.id}" open="">
+					<summary class="tree-item">
+						<a id="tree_a_${node.id}" href="/admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> 
+						<i class="layui-icon layui-icon-tips tips-dropdown" id="${node.id}" ></i>
+					</summary>
+				</details>`
+			);
 
-/*
-		<span class="operate"><a
-				href="/admin/content/save?categoryID=${node.id}">
-				<i class="layui-icon layui-icon-file" title="新增内容"></i>
-			</a>
-			<a href="/admin/category/save?pid=${node.id}"><i class="layui-icon layui-icon-add-circle"
-					title="新增子导航"></i></a>
-			<a href="/admin/category/update?id=${node.id}"><i class="layui-icon layui-icon-edit" title="编辑导航"></i></a>
-			<i class="layui-icon layui-icon-delete" title="删除导航"
-				onclick="deleteFunc('${node.id}','/admin/category/delete');"></i>
-		</span>
-
-*/
+			/*
+					<span class="operate"><a
+							href="/admin/content/save?categoryID=${node.id}">
+							<i class="layui-icon layui-icon-file" title="新增内容"></i>
+						</a>
+						<a href="/admin/category/save?pid=${node.id}"><i class="layui-icon layui-icon-add-circle"
+								title="新增子导航"></i></a>
+						<a href="/admin/category/update?id=${node.id}"><i class="layui-icon layui-icon-edit" title="编辑导航"></i></a>
+						<i class="layui-icon layui-icon-delete" title="删除导航"
+							onclick="deleteFunc('${node.id}','/admin/category/delete');"></i>
+					</span>
+			
+			*/
 
 			if (node.children) {
 				renderTree(detailsHtml, node.children);
