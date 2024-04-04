@@ -9,7 +9,7 @@
 	<div class="layui-col-md4" style="height: 100%;">
 		<div class="layui-panel" style="height: 100%; padding: 5px;overflow: auto;">
 			<input type="hidden" id="file"  value="" />
-			<div class="layui-form-item">
+		  <div class="layui-form-item" style="padding: 5px;text-align: center;">
 			<div class="layui-inline">
 				<button type="button" class="layui-btn" id="button-upload-theme" title="仅支持zip格式">
 					<i class="layui-icon layui-icon-upload"></i> 上传主题
@@ -23,7 +23,7 @@
 			<div class="layui-inline">
 				<button onclick="updateContent();" type="button" class="layui-btn layui-bg-blue">保存文件</button>
 			</div>  
-		</div>
+		  </div>
 			
 		<div class="tree" id="tree">
 		</div>
@@ -31,9 +31,7 @@
 	  </div>
 	</div>
 	<div class="layui-col-md8" style="height: 100%;">
-		<div style="height: 100%;padding:0px;">
 			<textarea id="content" placeholder="文件内容" style="height: 100%;" class="layui-textarea">{{.ExtMap.file}}</textarea>
-		</div>
 	</div>
 
   </div>
