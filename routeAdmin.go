@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/hex"
 	"net/http"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -303,6 +304,9 @@ func init() {
 	// 查询Content列表,根据CategoryId like
 	adminGroup.GET("/content/list", funcContentList)
 
+	// 查询主题模板
+	adminGroup.GET("/themeTemplate/list", funcThemeTemplateList)
+
 	// 通用list列表,先都使用get方法
 	adminGroup.GET("/:urlPathParam/list", funcList)
 	//adminGroup.POST("/:urlPathParam/list", funcList)
@@ -459,6 +463,72 @@ func funcContentList(ctx context.Context, c *app.RequestContext) {
 	c.HTML(http.StatusOK, listFile, responseData)
 }
 
+// funcThemeTemplateList 所有的主题文件列表
+func funcThemeTemplateList(ctx context.Context, c *app.RequestContext) {
+	urlPathParam := "themeTemplate"
+	var responseData ResponseData
+	extMap := make(map[string]interface{})
+	extMap["file"] = ""
+	responseData.ExtMap = extMap
+	list := make([]ThemeTemplate, 0)
+
+	//遍历当前使用的模板文件夹
+	err := filepath.Walk(themeDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// 分隔符统一为 / 斜杠
+		path = filepath.ToSlash(path)
+		path = path[strings.Index(path, themeDir)+len(themeDir):]
+		if path == "" {
+			return err
+		}
+		//获取文件后缀
+		ext := filepath.Ext(path)
+		ext = strings.ToLower(ext)
+		pid := filepath.ToSlash(filepath.Dir(path))
+		if pid == "." {
+			pid = ""
+		}
+
+		themeTemplate := ThemeTemplate{}
+		themeTemplate.FilePath = path
+		themeTemplate.Pid = pid
+		themeTemplate.Id = path
+		themeTemplate.FileSuffix = ext
+		themeTemplate.Name = info.Name()
+		if info.IsDir() {
+			themeTemplate.FileType = "dir"
+		} else {
+			themeTemplate.FileType = "file"
+		}
+		list = append(list, themeTemplate)
+		return nil
+	})
+
+	responseData.UrlPathParam = urlPathParam
+	responseData.Data = list
+	responseData.ERR = err
+	//优先使用自定义模板文件
+	listFile := "admin/" + urlPathParam + "/list.html"
+
+	filePath := c.Query("file")
+	if filePath == "" || strings.Contains(filePath, "..") {
+		c.HTML(http.StatusOK, listFile, responseData)
+		return
+	}
+	filePath = filepath.ToSlash(filePath)
+	fileContent, err := os.ReadFile(themeDir + filePath)
+	if err != nil {
+		responseData.ERR = err
+		c.HTML(http.StatusOK, listFile, responseData)
+		return
+	}
+	responseData.ExtMap["file"] = string(fileContent)
+	c.HTML(http.StatusOK, listFile, responseData)
+}
+
 // funcUpdatePre 修改页面
 func funcUpdatePre(ctx context.Context, c *app.RequestContext) {
 	funcTableById(ctx, c, "update.html")
@@ -497,12 +567,6 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 		entity = ptrObj
 	case tableSiteName:
 		ptrObj := &Site{}
-		err = c.Bind(ptrObj)
-		id = ptrObj.Id
-		ptrObj.UpdateTime = now
-		entity = ptrObj
-	case tablePageTemplateName:
-		ptrObj := &PageTemplate{}
 		err = c.Bind(ptrObj)
 		id = ptrObj.Id
 		ptrObj.UpdateTime = now
@@ -636,19 +700,6 @@ func funcSaveTable(ctx context.Context, c *app.RequestContext, urlPathParam stri
 		entity = ptrObj
 	case tableSiteName:
 		ptrObj := &Site{}
-		err = c.Bind(ptrObj)
-		if ptrObj.Id == "" {
-			ptrObj.Id = FuncGenerateStringID()
-		}
-		if ptrObj.CreateTime == "" {
-			ptrObj.CreateTime = now
-		}
-		if ptrObj.UpdateTime == "" {
-			ptrObj.UpdateTime = now
-		}
-		entity = ptrObj
-	case tablePageTemplateName:
-		ptrObj := &PageTemplate{}
 		err = c.Bind(ptrObj)
 		if ptrObj.Id == "" {
 			ptrObj.Id = FuncGenerateStringID()

@@ -68,7 +68,7 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 
 	data["UrlPathParam"] = urlPathParam
-	templateFile, err := findPageTemplate(ctx, tableCategoryName, urlPathParam)
+	templateFile, err := findThemeTemplate(ctx, tableCategoryName, urlPathParam)
 	if err != nil || templateFile == "" {
 		templateFile = "category.html"
 	}
@@ -96,7 +96,7 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	data["UrlPathParam"] = urlPathParam
 
-	templateFile, err := findPageTemplate(ctx, tableContentName, urlPathParam)
+	templateFile, err := findThemeTemplate(ctx, tableContentName, urlPathParam)
 	if err != nil || templateFile == "" {
 		templateFile = "content.html"
 	}

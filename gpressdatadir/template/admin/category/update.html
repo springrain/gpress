@@ -4,7 +4,7 @@
 
 {{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }}
 {{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+{{ $themeTemplate := themeTemplate }} <!-- 模版数据 -->
 <div class="layui-card layui-panel" style="height: 100%;">
 	<div class="layui-card-header">
 	  更新导航菜单
@@ -58,8 +58,8 @@
 		  <div class="layui-input-block">
 			  <select name="templateID" id="templateID">
 				  <option value="">默认(category.html)</option>
-				  {{ range $index,$obj := $pageTemplate }}
-				  <option value='{{$obj.Id}}'>{{$obj.Name}}</option>
+				  {{ range $index,$obj := $themeTemplate }}
+				  <option value='{{$obj.Name}}'>{{$obj.Name}}</option>
 				  {{end}}
 			  </select>
 		  </div>

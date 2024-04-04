@@ -238,49 +238,6 @@ func (entity *Content) GetPKColumnName() string {
 	return "id"
 }
 
-// PageTemplate 页面模板
-type PageTemplate struct {
-	// 引入默认的struct,隔离IEntityStruct的方法改动
-	zorm.EntityStruct
-
-	// Id 主键
-	Id string `column:"id" json:"id,omitempty"`
-
-	// Name 名称
-	Name string `column:"name" json:"name,omitempty"`
-
-	// TemplatePath 模板路径
-	TemplatePath string `column:"templatePath" json:"templatePath,omitempty"`
-
-	// Theme 主题名称
-	Theme string `column:"theme" json:"theme,omitempty"`
-
-	// 创建时间
-	CreateTime string `column:"createTime" json:"createTime,omitempty"`
-
-	// 创建人
-	CreateUser string `column:"createUser" json:"createUser,omitempty"`
-
-	// 修改时间
-	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
-
-	// 排序
-	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
-
-	// 状态
-	Status int `column:"status" json:"status,omitempty"`
-}
-
-// GetTableName 获取表名称
-// IEntityStruct 接口的方法,实体类需要实现!!!
-func (entity *PageTemplate) GetTableName() string {
-	return tablePageTemplateName
-}
-
-func (entity *PageTemplate) GetPKColumnName() string {
-	return "id"
-}
-
 // Site 站点信息
 type Site struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
@@ -402,4 +359,25 @@ func (entity *User) GetTableName() string {
 
 func (entity *User) GetPKColumnName() string {
 	return "id"
+}
+
+// ThemeTemplate 主题模板
+type ThemeTemplate struct {
+	// Id 主键,完整路径
+	Id string `json:"id,omitempty"`
+
+	// Pid 上级目录
+	Pid string `json:"pid,omitempty"`
+
+	// Name 名称,
+	Name string `json:"name,omitempty"`
+
+	// FileType 文件类型:dir(目录),file(文件)
+	FileType string `json:"fileType,omitempty"`
+
+	// FileSuffix 文件后缀
+	FileSuffix string `json:"fileSuffix,omitempty"`
+
+	// FilePath 模板路径
+	FilePath string `json:"filePath,omitempty"`
 }

@@ -4,7 +4,7 @@
 
 {{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
 
-{{ $pageTemplate := pageTemplate }} <!-- 模版数据 -->
+{{ $themeTemplate := themeTemplate }} <!-- 模版数据 -->
 
 <style>
 	.code-line .number{
@@ -69,7 +69,7 @@
 							<div class="select is-small">
 								<select id="templateSelect" disabled>
 									<option value="">默认(category.html)</option>
-									{{ range $index,$obj := $pageTemplate }}
+									{{ range $index,$obj := $themeTemplate }}
 									<option value='{{$obj.Id}}'>{{$obj.Name}}</option>
 									{{end}}
 								</select>
