@@ -8,14 +8,18 @@
 <div class="layui-col-space10" style="height: 100%;">
 	<div class="layui-col-md4" style="height: 100%;">
 		<div class="layui-panel" style="height: 100%; padding: 5px;overflow: auto;">
-			<div class="layui-form-item" style="text-align: center;padding: 10px;">
+			<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="POST" style="text-align: center;padding-top: 5px;">
+				<input type="hidden" id="file"  value="" />
+			  <div class="layui-form-item">
+				<div class="layui-inline">
 				<button type="button" class="layui-btn" id="button-upload-theme">
 					<i class="layui-icon layui-icon-upload"></i> 上传主题
 				</button>
-				<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="layui-btn layui-bg-blue">保存文件</a>
+				</div>
+				<div class="layui-inline">
+				<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="layui-btn layui-bg-blue">保存修改</a>
+			    </div>  
 			</div>
-			<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
-				<input type="hidden" id="comCode" name="comCode" value="">
 			</form>
 			
 			<div class="tree" id="tree">
@@ -37,12 +41,13 @@
 	var $;
 	layui.use(function () {
 		layer = layui.layer;
+		var upload = layui.upload;
 		$ = layui.jquery;
 
 		var dropdown = layui.dropdown;
 		const categoryData = JSON.parse("{{ $convertJson }}");
 		const treeData = buildTree(categoryData);
-		console.log(treeData)
+		
 		// 将树形结构渲染到页面上
 		renderTree($('#tree'), treeData);
 
@@ -69,6 +74,22 @@
 			}
 
 		}
+
+			// 上传文件
+			upload.render({
+			elem: '#button-upload-theme',
+			url: '{{basePath}}{{.UrlPathParam}}/uploadTheme', // 此处配置你自己的上传接口即可
+			size: 10 * 1024, // 限制文件大小,单位 KB
+			accept: 'file',
+			exts: 'zip',
+			acceptMime: 'application/zip',
+			done: function (res) {
+				if (res.statusCode == 1) {
+					
+				}
+				console.log(res);
+			}
+		});
 
 		// 导航菜单下来事件绑定
 		dropdown.render({
