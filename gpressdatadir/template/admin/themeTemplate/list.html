@@ -145,6 +145,12 @@
 
 	function showFileContent(nodeId,fileType){
 		if(fileType=="dir"){
+			var details=document.getElementById("details_"+nodeId);
+			if(!details.open){
+			  document.getElementById("details_"+nodeId).open="true";
+			}else{
+			  details.open=undefined;
+			}
 			return false;
 		}
 		window.location.href = basePath + 'admin/{{.UrlPathParam}}/list?file=' + nodeId;
