@@ -204,14 +204,13 @@ var inst = table.render({
 	//url: 'https://www.gpress.cn/themes.json', // 此处为静态模拟数据，实际使用时需换成真实接口
     data: themeData,
 	cols: [[ //标题栏
-      {field: 'themeName', title: '主题名称', width: 180},
-	  {field: 'star', title: 'star', width: 80,sort: true},
-      {field: 'themeVersion', title: '版本', width: 80},
+      {field: 'themeName', title: '主题名称', width: 150, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > '+d.themeName+' </a>';}},
+	  {field: 'star', title: 'star', width: 100,sort: true},
+      {field: 'themeVersion', title: '版本', width: 100},
       {field: 'themeType', title: '主题分类', width: 100},
       {field: 'gpressVersion', title: '兼容版本', width: 100},
-      {field: 'screenshot', title: '预览图', width: 80, templet: function(d){return '<img src="'+d.screenshot+'" onclick=showScreenshot("'+d.themeName+'","'+d.screenshot+'"); height="30px" />';}},
-	  {field: 'gitURL', title: '源码', width: 80, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > 查看 </a>';}},
-	  {field: 'download', title: '下载', width: 80, templet: function(d){return '<a target="_blank" href="'+d.download+'" > 下载 </a>';}}
+      {field: 'screenshot', title: '预览图', width: 100, templet: function(d){return '<img src="'+d.screenshot+'" onclick=showScreenshot("'+d.themeName+'","'+d.screenshot+'"); height="30px" />';}},
+	  {field: 'download', title: '下载', width: 85, templet: function(d){return '<a target="_blank" href="'+d.download+'" > 下载 </a>';}}
     ]],
     //skin: 'line', // 表格风格
     //even: true,
@@ -224,7 +223,7 @@ var inst = table.render({
         type: 1,
 		title:"主题市场",
 		shadeClose: true, 
-        area: ['900px', 'auto'], // 宽高
+        area: ['800px', 'auto'], // 宽高
         content: $('#ID-themeMarket-layer-wrapper'), 
       });
 }
