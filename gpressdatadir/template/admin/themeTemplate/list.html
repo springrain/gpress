@@ -209,7 +209,7 @@ var inst = table.render({
       {field: 'themeVersion', title: '版本', width: 80},
       {field: 'themeType', title: '主题分类', width: 100},
       {field: 'gpressVersion', title: '兼容版本', width: 100},
-      {field: 'screenshot', title: '预览图', width: 80, templet: function(d){return '<img src="'+d.screenshot+'" width="70px" />';}},
+      {field: 'screenshot', title: '预览图', width: 80, templet: function(d){return '<img src="'+d.screenshot+'" onclick=showScreenshot("'+d.themeName+'","'+d.screenshot+'"); height="30px" />';}},
 	  {field: 'gitURL', title: '源码', width: 80, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > 查看 </a>';}},
 	  {field: 'download', title: '下载', width: 80, templet: function(d){return '<a target="_blank" href="'+d.download+'" > 下载 </a>';}}
     ]],
@@ -228,6 +228,23 @@ var inst = table.render({
         content: $('#ID-themeMarket-layer-wrapper'), 
       });
 }
+
+function showScreenshot(title,src){
+   layer.photos({
+    photos: { // 图片层的数据源
+    "title": title, // 相册标题
+    "start": 0, // 初始显示的图片序号，默认 0
+    "data": [   // 相册包含的图片，数组格式
+      {
+        "src": src, // 原图地址
+      },
+      // …
+    ]
+  }
+  
+});
+}
+
 </script>
 
 <div id="ID-themeMarket-layer-wrapper" style="display: none;padding: 20px;">
