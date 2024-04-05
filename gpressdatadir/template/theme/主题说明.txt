@@ -1,4 +1,14 @@
 主题的目录,默认使用default
 
-先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default,主题区分 PC,WAP,WEiXIN  三种平台,可以使用不同的模板,默认模板文件名保持一致,首页默认是index.html
-需要设置到 Site里
+每个主题下都有 info.json,用户服务器获取主题的信息,格式如下:
+{
+    "id":"0001",
+    "themeName":"gpress-doks",
+    "star":"1",
+    "themeVersion":"v1.0.0",
+    "themeType":"文档",
+    "gpressVersion":"v1.0.0",
+    "screenshot":"",
+    "gitURL":"https://gitee.com/gpress/gpress-doks",
+    "download":"https://gitee.com/gpress/gpress-doks/repository/archive/master.zip"
+}
