@@ -170,16 +170,41 @@
 				}
 			}
 		});
-	}
+    }
 
+
+var themeData;
 function themeMarket(){
-// 已知数据渲染
+	if(!!themeData){
+	  layer.open({
+        type: 1,
+		title:"主题市场",
+		shadeClose: true, 
+        area: ['800px', 'auto'], // 宽高
+        content: $('#ID-themeMarket-layer-wrapper'), 
+      });
+	  return;
+	}
+		$.ajax({
+			url:'https://www.gpress.cn/json/themes.json',
+			type:"get",
+			async: false,
+			contentType:"application/json;charset=utf-8",
+			dataType:"json",
+			crossDomain: true, // 明确告诉jQuery请求是跨域的  
+			success:function(result){
+				themeData=result;
+			}
+		})
+    
+
+// 数据渲染
 var inst = table.render({
     elem: '#ID-table-themeMarket',
-	url: 'https://www.gpress.cn/themes.json', // 此处为静态模拟数据，实际使用时需换成真实接口
-    cols: [[ //标题栏
-      {field: 'id', title: 'ID', width: 80},
-      {field: 'themeName', title: '主题名称', width: 100},
+	//url: 'https://www.gpress.cn/themes.json', // 此处为静态模拟数据，实际使用时需换成真实接口
+    data: themeData,
+	cols: [[ //标题栏
+      {field: 'themeName', title: '主题名称', width: 180},
 	  {field: 'star', title: 'star', width: 80,sort: true},
       {field: 'themeVersion', title: '版本', width: 80},
       {field: 'themeType', title: '主题分类', width: 100},
@@ -188,7 +213,6 @@ var inst = table.render({
 	  {field: 'gitURL', title: '源码', width: 80, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > 查看 </a>';}},
 	  {field: 'download', title: '下载', width: 80, templet: function(d){return '<a target="_blank" href="'+d.download+'" > 下载 </a>';}}
     ]],
-    //data: [],
     //skin: 'line', // 表格风格
     //even: true,
     page: true, // 是否显示分页
@@ -199,12 +223,13 @@ var inst = table.render({
 	layer.open({
         type: 1,
 		title:"主题市场",
-        area: ['800px', '600px'], // 宽高
+		shadeClose: true, 
+        area: ['900px', 'auto'], // 宽高
         content: $('#ID-themeMarket-layer-wrapper'), 
       });
 }
 </script>
 
-<div id="ID-themeMarket-layer-wrapper" style="display: none;">
+<div id="ID-themeMarket-layer-wrapper" style="display: none;padding: 20px;">
 	<table class="layui-hide" id="ID-table-themeMarket"></table>
 </div>
