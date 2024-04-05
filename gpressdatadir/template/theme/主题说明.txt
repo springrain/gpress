@@ -8,7 +8,7 @@
     "themeVersion":"v1.0.0",
     "themeType":"文档",
     "gpressVersion":"v1.0.0",
-    "screenshot":"",
+    "screenshot":"https://themes.gohugo.io/themes/hugo-book/screenshot_huec729d04f241cf6d25145f0e39e6c0fd_189080_750x500_fill_catmullrom_top_3.png",
     "gitURL":"https://gitee.com/gpress/gpress-doks",
     "download":"https://gitee.com/gpress/gpress-doks/repository/archive/master.zip"
 }
