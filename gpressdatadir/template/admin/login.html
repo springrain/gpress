@@ -116,6 +116,13 @@
 			let msg = document.getElementById('message').value;
 			if (msg) {
 				layer.msg(msg);
+			}else{
+				const query = window.location.search;
+				const params = new URLSearchParams(query)
+				var message = params.get("message")
+				if (message && message != "") {
+					layer.msg(msg);
+				}
 			}
 			// 提交事件
 			form.on('submit(gpress-login)', function (data) {

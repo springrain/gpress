@@ -55,7 +55,10 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 ## 主题模板
 主题模板的增删改查功能,管理主题中的自定义模板文件,修改内容和栏目时,可以应用自定义的模板文件.  
 <img src="image/016.png" width="600px">  
+支持上传主题zip压缩包,用于新增主题.   
 <img src="image/017.png" width="600px">  
+可以从```主题市场```中下载主题,进行安装  
+<img src="image/018.png" width="600px">  
 
 ## 刷新站点
 模板更改时需要刷新站点才能生效,同时刷新站点会生成静态文件,用于```Nginx```静态化访问.
@@ -125,11 +128,11 @@ location / {
 }
 
 ```  
-<img src="image/018.png" width="600px">    
+<img src="image/019.png" width="600px">    
 
 ## 设置
 用于系统设置,需要重启gpress才能生效.  
-<img src="image/019.png" width="600px">    
+<img src="image/020.png" width="600px">    
 
 ## 退出
 退出管理后台
