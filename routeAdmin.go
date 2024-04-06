@@ -98,7 +98,7 @@ func init() {
 		sha3Bytes := sha3.Sum512([]byte(user.Password))
 		user.Password = hex.EncodeToString(sha3Bytes[:])
 
-		loginHtml := "admin/login"
+		loginHtml := "admin/login?message=恭喜您,成功安装gpress,现在请登录"
 		if user.ChainAddress != "" && user.ChainType != "" { //如果使用了address作为登录方式
 			user.Account = ""
 			user.UserName = ""
