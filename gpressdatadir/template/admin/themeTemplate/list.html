@@ -30,8 +30,10 @@
 
 	  </div>
 	</div>
-	<div class="layui-col-md8" style="height: 100%;">
-			<textarea id="content" placeholder="文件内容" style="height: 100%;" class="layui-textarea">{{.ExtMap.file}}</textarea>
+	<div class="layui-col-md8" style="height: 100%;position: relative;">
+		<div style="position: absolute;left: 5px;right: 5px;top: 5px;bottom: -5px;">
+			<textarea id="content" placeholder="左侧选择要修改的文件,这里显示文件内容,进行编辑修改,点击 保存文件 按钮,保存修改的内容." style="height: 100%;  border-color: #16b777;box-shadow: 0 0 0 3px rgba(22,183,119,.08);" class="layui-textarea">{{.ExtMap.file}}</textarea>
+		</div>
 	</div>
 
   </div>
@@ -158,6 +160,10 @@
 
     function updateContent(){
       var file=$("#file").val();
+	  if(file==""){
+		layer.msg("请选择要修改的文件");
+		return false;
+	  }
 	  var content=$("#content").val();
 	  $.ajax({
 			url: basePath+"admin/themeTemplate/update",
