@@ -58,7 +58,7 @@
 		  <div class="layui-form-item layui-col-md6">
 			<label class="layui-form-label">页面模版</label>
 			<div class="layui-input-block">
-				<select name="templateID" id="templateID">
+				<select name="templateFile" id="templateFile">
 					<option value="">默认(category.html)</option>
 					{{ range $index,$obj := $themeTemplate }}
 					<option value='{{$obj.Name}}'>{{$obj.Name}}</option>

@@ -15,7 +15,7 @@
 	}
 </style>
 <section class="section">
-	<input type="hidden" id="templateID" value="{{.Data.TemplateID}}">
+	<input type="hidden" id="templateFile" value="{{.Data.TemplateFile}}">
 
 	<div class="container">
 		<div class="table-content">
@@ -116,11 +116,11 @@
 </section>
 <link href="https://cdn.staticfile.org/wangeditor5/5.1.23/css/style.min.css" rel="stylesheet">
 <script>
-	let templateID = $('#templateID').val()
-	$('#templateSelect').val(templateID)
+	let templateFile = $('#templateFile').val()
+	$('#templateSelect').val(templateFile)
 	
 	$('#templateSelect').change(function(e) {
-		templateID = $('#templateSelect').val()
+		templateFile = $('#templateSelect').val()
 	})
 </script>
 
