@@ -55,7 +55,7 @@
 			<div class="layui-col-md3">
 				<label class="layui-form-label">页面模版</label>
 				<div class="layui-input-block">
-					<select name="templateID" id="templateID">
+					<select name="templateFile" id="templateFile">
 						<option value="">默认(content.html)</option>
 						{{ range $index,$obj := $themeTemplate }}
 						<option value="{{$obj.Name}}">{{$obj.Name}}</option>
@@ -150,7 +150,7 @@
 		//选中导航菜单
 		$("#categoryID option[value='{{.Data.CategoryID}}']").attr("selected", true);
 		//选中模板
-		$("#templateID option[value='{{.Data.TemplateID}}']").attr("selected", true);
+		$("#templateFile option[value='{{.Data.TemplateFile}}']").attr("selected", true);
 		//选中状态
 		$("#status option[value='{{.Data.Status}}']").attr("selected", true);
 

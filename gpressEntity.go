@@ -110,11 +110,11 @@ type Category struct {
 	// ComCode 代码全路径
 	ComCode string `column:"comCode" json:"comCode,omitempty"`
 
-	// TemplateID 模板ID
-	TemplateID string `column:"templateID" json:"templateID,omitempty"`
+	// TemplateFile 模板文件
+	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
 
-	// ChildTemplateID 模板ID
-	ChildTemplateID string `column:"childTemplateID" json:"childTemplateID,omitempty"`
+	// ChildTemplateFile 模板文件
+	ChildTemplateFile string `column:"childTemplateFile" json:"childTemplateFile,omitempty"`
 
 	// CreateTime 创建时间
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`
@@ -184,8 +184,8 @@ type Content struct {
 	// ComCode 代码全路径
 	ComCode string `column:"comCode" json:"comCode,omitempty"`
 
-	// TemplateID 模板ID
-	TemplateID string `column:"templateID" json:"templateID,omitempty"`
+	// TemplateFile 模板文件
+	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
 
 	// Author 文章作者
 	Author string `column:"author" json:"author,omitempty"`

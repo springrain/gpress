@@ -56,7 +56,7 @@
 		<div class="layui-form-item layui-col-md6">
 		  <label class="layui-form-label">页面模版</label>
 		  <div class="layui-input-block">
-			  <select name="templateID" id="templateID">
+			  <select name="templateFile" id="templateFile">
 				  <option value="">默认(category.html)</option>
 				  {{ range $index,$obj := $themeTemplate }}
 				  <option value='{{$obj.Name}}'>{{$obj.Name}}</option>
@@ -102,7 +102,7 @@ var $ =layui.jquery;
 //选中跳转方式
 $("#hrefTarget option[value='{{.Data.HrefTarget}}']").attr("selected", true);
 //选中模板
-$("#templateID option[value='{{.Data.TemplateID}}']").attr("selected", true);
+$("#templateFile option[value='{{.Data.TemplateFile}}']").attr("selected", true);
 //选中状态
 $("#status option[value='{{.Data.Status}}']").attr("selected", true);
 
