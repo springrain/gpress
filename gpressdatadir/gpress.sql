@@ -37,16 +37,16 @@ CREATE TABLE IF NOT EXISTS category (
 		themePC        TEXT,
 		moduleID        TEXT,
 		comCode        TEXT,
-		templateID        TEXT,
-		childTemplateID        TEXT,
+		templateFile        TEXT,
+		childTemplateFile        TEXT,
 		createTime        TEXT,
 		updateTime        TEXT,
 		createUser        TEXT,
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateID,templateID,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',web,',NULL,NULL,NULL,'',NULL,'Web','web');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateID,templateID,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',about,',NULL,NULL,NULL,'','/post/about','About','about');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',web,',NULL,NULL,NULL,'',NULL,'Web','web');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',about,',NULL,NULL,NULL,'','/post/about','About','about');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS content (
 		categoryID           TEXT,
 		categoryName           TEXT,
 		comCode        TEXT,
-		templateID           TEXT,
+		templateFile           TEXT,
 		author           TEXT,
 		tag           TEXT,
 		toc           TEXT,
@@ -131,7 +131,7 @@ CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
 			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.categoryName,new.summary,new.toc,new.tag,new.author);
 		END;
 
-INSERT INTO content (status,sortNo,createUser,updateTime,createTime,thumbnail,markdown,content,summary,toc,tag,author,templateID,comCode,categoryName,categoryID,subtitle,hrefURL,description,keyword,title,moduleID,id)
+INSERT INTO content (status,sortNo,createUser,updateTime,createTime,thumbnail,markdown,content,summary,toc,tag,author,templateFile,comCode,categoryName,categoryID,subtitle,hrefURL,description,keyword,title,moduleID,id)
             VALUES (0,100,NULL,'2024-04-06 20:28:38','2023-06-27 22:43:53',NULL,'本站服务器配置:ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .  
 使用gpress迁移了hugo的even主题和markdown文件.  
 
@@ -327,8 +327,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | pid         | string      | 父导航ID     | 父导航ID  |
 | moduleID    | string      | module表ID   |  导航菜单下的文章默认使用的模型字段 |
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
-| templateID  | string      | 模板Id       | 当前导航页的模板  |
-| childTemplateID  | string | 子主题模板Id  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| templateFile  | string      | 模板文件       | 当前导航页的模板  |
+| childTemplateFile  | string | 子主题模板文件  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
@@ -352,7 +352,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | categoryName| string      | 导航菜单,逗号(,)隔开| 是| 使用 jieba 分词器.      |
 | categoryID  | string      | 导航ID       | 否      | -                       |
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
-| templateID  | string      | 模板Id       | 否      | 模板                    |
+| templateFile  | string      | 模板文件       | 否      | 模板                    |
 | content     | string      | 文章内容     | 否      |                         |
 | markdown    | string      | Markdown内容 | 否      |                         |
 | thumbnail   | string      | 封面图       | 否      |                         |
@@ -773,15 +773,15 @@ nginx 配置示例如下:</p>
 <td>逗号隔开的全路径</td>
 </tr>
 <tr>
-<td>templateID</td>
+<td>templateFile</td>
 <td>string</td>
-<td>模板Id</td>
+<td>模板文件</td>
 <td>当前导航页的模板</td>
 </tr>
 <tr>
-<td>childTemplateID</td>
+<td>childTemplateFile</td>
 <td>string</td>
-<td>子主题模板Id</td>
+<td>子主题模板文件</td>
 <td>子页面默认使用的模板,子页面如果不设置,默认使用这个模板</td>
 </tr>
 <tr>
@@ -927,9 +927,9 @@ nginx 配置示例如下:</p>
 <td></td>
 </tr>
 <tr>
-<td>templateID</td>
+<td>templateFile</td>
 <td>string</td>
-<td>模板Id</td>
+<td>模板文件</td>
 <td>否</td>
 <td>模板</td>
 </tr>
