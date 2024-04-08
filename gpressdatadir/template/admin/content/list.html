@@ -68,8 +68,8 @@
 						{{ range $i,$v := .Data }}
 						<tr>
 							<!-- 获取每一列的值 -->
-							<td title="{{ .Id }}"><a href="{{basePath}}post/{{.Id}}" target="_blank">{{ .Id }}</a></td>
-							<td title="{{ .Title }}"> {{ .Title }}</td>
+							<td title="{{ .Id }}"><a href="{{basePath}}post/{{.Id}}" style="cursor: pointer;" target="_blank">{{ .Id }}</a></td>
+							<td title="{{ .Title }}"><a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}" style="cursor: pointer;"> {{ .Title }} </a></td>
 							<td title="{{ .CategoryName }}"> {{ .CategoryName }}</td>
 							<td> {{ .SortNo }}</td>
 							<td>
