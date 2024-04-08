@@ -206,8 +206,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | pid         | string      | 父导航ID     | 父导航ID  |
 | moduleID    | string      | module表ID   |  导航菜单下的文章默认使用的模型字段 |
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
-| templateID  | string      | 模板Id       | 当前导航页的模板  |
-| childTemplateID  | string | 子主题模板Id  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| templateFile  | string      | 模板文件       | 当前导航页的模板  |
+| childTemplateFile  | string | 子主题模板文件  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
@@ -231,7 +231,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | categoryName| string      | 导航菜单,逗号(,)隔开| 是| 使用 jieba 分词器.      |
 | categoryID  | string      | 导航ID       | 否      | -                       |
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
-| templateID  | string      | 模板Id       | 否      | 模板                    |
+| templateFile  | string      | 模板文件       | 否      | 模板                    |
 | content     | string      | 文章内容     | 否      |                         |
 | markdown    | string      | Markdown内容 | 否      |                         |
 | thumbnail   | string      | 封面图       | 否      |                         |

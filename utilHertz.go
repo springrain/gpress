@@ -380,8 +380,8 @@ func pathExist(path string) bool {
 */
 
 func findThemeTemplate(ctx context.Context, tableName string, urlPathParam string) (string, error) {
-	//finder := zorm.NewFinder().Append("select p.templatePath from themeTemplate p, "+tableName+" t WHERE t.templateID=p.id and t.id=?", urlPathParam)
-	finder := zorm.NewSelectFinder(tableName, "templateID").Append(" WHERE id=?", urlPathParam)
+	//finder := zorm.NewFinder().Append("select p.templatePath from themeTemplate p, "+tableName+" t WHERE t.templateFile=p.id and t.id=?", urlPathParam)
+	finder := zorm.NewSelectFinder(tableName, "templateFile").Append(" WHERE id=?", urlPathParam)
 	templatePath := ""
 	flag, err := zorm.QueryRow(ctx, finder, &templatePath)
 	if err != nil {
