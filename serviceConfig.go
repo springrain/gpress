@@ -86,7 +86,7 @@ var defaultConfig = Config{
 	//Theme:       "default",
 	MaxRequestBodySize: 20 * 1024 * 1024,
 	JwttokenKey:        "jwttoken", // jwt的key
-	Timeout:            1800,       // 半个小时超时
+	Timeout:            7200,       // 两小时超时
 	ServerPort:         ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
 }
 
