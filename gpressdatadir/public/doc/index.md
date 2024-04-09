@@ -151,7 +151,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | jwtSecret   | string      | jwt密钥     | 随机生成     |
 | jwttokenKey | string      | jwt的key    |  默认 jwttoken  |
 | serverPort  | string      | IP:端口     |  默认 :660  |
-| timeout     | int         | jwt超时时间秒|  默认 1800  |
+| timeout     | int         | jwt超时时间秒|  默认 7200  |
 | maxRequestBodySize| int   | 最大请求|  默认 20M  |
 | proxy       | string      | http代理地址 |             |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
