@@ -56,6 +56,7 @@ var funcMap = template.FuncMap{
 	"treeCategory":     funcTreeCategory,
 	"themeName":        funcThemeName,
 	"themeTemplate":    funcThemeTemplate,
+	"version":          funcVersion,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -395,4 +396,8 @@ func sliceCategory2Tree(categorys []Category) []Category {
 
 	return treeCategory
 
+}
+
+func funcVersion() string {
+	return version
 }
