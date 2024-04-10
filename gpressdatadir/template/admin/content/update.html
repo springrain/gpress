@@ -125,16 +125,13 @@
 					lay-filter="gpress-form-ajax-update">提交修改</button>
 			</div>
 		</div>
-		<div class="layui-form-item" style="flex:1">
-			<div id="markdown-container" style="height: 100%;"></div>
-            <div id="editor-wrapper" style="display: none;height: 100%;">
-			<div style="display: flex;height: 100%;overflow: auto;flex-direction: column;">
+		<div id="markdown-container" style="height: 100%;"></div>
+        <div id="editor-wrapper" style="display: none;height: 100%;">
+		    <div style="display: flex;height: 100%;overflow: auto;flex-direction: column;">
 				<div id="toolbar-container"><!-- 工具栏 --></div>
 				<div id="editor-container" style="flex:1"><!-- 编辑器 --></div>
 			</div>
-		    </div>
 		</div>
-
 
 	</form>
 </div>
@@ -225,24 +222,39 @@
 			toolbars: {
 				// 定义顶部工具栏
 				toolbar: [
-					'undo', 'redo', '|',
-					// 把字体样式类按钮都放在加粗按钮下面
-					{ bold: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby'] },
-					'color', 'size', '|', 'header', 'list', 'panel', '|',
-					// 把插入类按钮都放在插入按钮下面
-					{insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'drawIo'] },
-				    'graph','togglePreview', 'settings', 'export'
+				'bold',
+				'italic',
+				{
+					strikethrough: ['strikethrough', 'underline', 'sub', 'sup', 'ruby', 'customMenuAName'],
+				},
+				'size',
+				'|',
+				'color',
+				'header',
+				'|',
+				'ol',
+				'ul',
+				'checklist',
+				'panel',
+				'justify',
+				'detail',
+				'|',
+				'formula',
+				{
+					insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
+				},
+                'graph','togglePreview', 'settings', 'export'
 				],
 				// 定义侧边栏,默认为空
 				// sidebar: ['theme', 'mobilePreview', 'copy'],
 				// 定义顶部右侧工具栏,默认为空
 				toolbarRight: ['fullScreen'],
-				/*
+				//显示目录
 				toc: {
-				  updateLocationHash: false, // 要不要更新URL的hash
+				  updateLocationHash: true, // 要不要更新URL的hash
 				  defaultModel: 'full', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题
 				},
-				*/
+				
 				// 定义选中文字时弹出的“悬浮工具栏”,默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
 				bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'color', 'size','settings'],
 				// 定义光标出现在行首位置时出现的"提示工具栏",默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
