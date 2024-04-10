@@ -190,7 +190,7 @@ func init() {
 		// c.HTML(http.StatusOK, "admin/index.html", nil)
 		c.SetCookie(config.JwttokenKey, jwttoken, config.Timeout, "/", "", protocol.CookieSameSiteStrictMode, false, true)
 		errorLoginCount.Store(0)
-		c.Redirect(http.StatusOK, cRedirecURI("admin/content/list"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/index"))
 	})
 
 	// 后台管理员使用区块链账号登录
@@ -258,7 +258,7 @@ func init() {
 			return
 		}
 
-		c.HTML(http.StatusOK, "admin/content/list.html", nil)
+		c.HTML(http.StatusOK, "admin/index.html", nil)
 	})
 	// 刷新站点,重新加载资源包含模板和对应的静态文件
 	adminGroup.GET("/reload", func(ctx context.Context, c *app.RequestContext) {
