@@ -71,7 +71,7 @@ func genSearchDataJson() error {
 	}
 
 	//压缩文件
-	err = doGzipFile(searchDataJsonFile+CompressedFileSuffix, bytes.NewReader(dataBytes))
+	err = doGzipFile(searchDataJsonFile+compressedFileSuffix, bytes.NewReader(dataBytes))
 
 	return err
 }
@@ -191,7 +191,7 @@ func genStaticFile() error {
 		defer readFile.Close()
 		reader := bufio.NewReader(readFile)
 		//压缩文件
-		err = doGzipFile(path+CompressedFileSuffix, reader)
+		err = doGzipFile(path+compressedFileSuffix, reader)
 
 		return err
 	})
@@ -235,7 +235,7 @@ func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, 
 		return bodyHash, err
 	}
 	// 压缩gzip文件
-	err = doGzipFile(filePath+"index.html"+CompressedFileSuffix, bytes.NewReader(body))
+	err = doGzipFile(filePath+"index.html"+compressedFileSuffix, bytes.NewReader(body))
 	return bodyHash, err
 }
 
