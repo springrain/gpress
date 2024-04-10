@@ -70,5 +70,8 @@ const (
 	searchDataJsonFile = datadir + "public/search-data.json"
 
 	// 静态文件压缩后缀,兼容Nginx gzip_static
-	CompressedFileSuffix = ".gz"
+	compressedFileSuffix = ".gz"
+
+	//版本号
+	version = "1.0.2"
 )
