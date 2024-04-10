@@ -272,7 +272,7 @@ func hStaticFS(relativePath, root string) {
 			return []byte(path)
 		},
 		Compress:             true,
-		CompressedFileSuffix: CompressedFileSuffix,
+		CompressedFileSuffix: compressedFileSuffix,
 	}
 	handler := appFS.NewRequestHandler()
 
