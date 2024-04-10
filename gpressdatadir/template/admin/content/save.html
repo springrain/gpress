@@ -195,7 +195,9 @@
 		// cherry markdown 编辑器
 		var cherry = new Cherry({
 			id: 'markdown-container',
-			value: '',
+			value: '{{.Data.Markdown}}',
+			autoSave2Textarea: true,
+            defaultModel: 'edit&preview',
 			fileUpload: function (file, callback) {
 				var formdata = new FormData(); // FormData对象,来发送二进制文件.
 				formdata.append('file', file); // 将文件追加到 formdata对象中
@@ -219,17 +221,24 @@
 					{ bold: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby'] },
 					'color', 'size', '|', 'header', 'list', 'panel', '|',
 					// 把插入类按钮都放在插入按钮下面
-					{ insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'drawIo'] },
-					'graph'
+					{insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'drawIo'] },
+				    'graph','togglePreview', 'settings', 'export'
 				],
 				// 定义侧边栏,默认为空
-				//sidebar: ['theme', 'mobilePreview', 'copy'],
+				// sidebar: ['theme', 'mobilePreview', 'copy'],
 				// 定义顶部右侧工具栏,默认为空
 				toolbarRight: ['fullScreen'],
+				/*
+				toc: {
+				  updateLocationHash: false, // 要不要更新URL的hash
+				  defaultModel: 'full', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题
+				},
+				*/
 				// 定义选中文字时弹出的“悬浮工具栏”,默认为 ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'quote', '|', 'size', 'color']
-				bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'color', 'size',],
+				bubble: ['bold', 'italic', 'underline', 'strikethrough', 'sub', 'sup', 'ruby', '|', 'color', 'size','settings'],
 				// 定义光标出现在行首位置时出现的"提示工具栏",默认为 ['h1', 'h2', 'h3', '|', 'checklist', 'quote', 'table', 'code']
-				//float: ['table', 'code', 'graph'],
+				float: [],
+				autoScrollByHashAfterInit: true,
 			},
 		});
 
