@@ -73,5 +73,5 @@ const (
 	compressedFileSuffix = ".gz"
 
 	//版本号
-	version = "1.0.2"
+	version = "v1.0.2"
 )
