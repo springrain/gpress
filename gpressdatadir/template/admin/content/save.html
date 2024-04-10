@@ -11,7 +11,7 @@
 {{ $themeTemplate := themeTemplate }}
 
 <div class="layui-panel" style="padding: 5px;height: 100%;">
-	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST" style="height:100%;display: flex;flex-direction: column;">
+	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST" onsubmit="return false;" style="height:100%;display: flex;flex-direction: column;">
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
 				<label class="layui-form-label">ID</label>
@@ -231,7 +231,6 @@
 				'justify',
 				'detail',
 				'|',
-				'formula',
 				{
 					insert: ['image', 'audio', 'video', 'link', 'hr', 'br', 'code', 'formula', 'toc', 'table', 'pdf', 'word', 'ruby'],
 				},
