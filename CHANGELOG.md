@@ -1,6 +1,7 @@
 v1.0.2
 - templateID 更名为 templateFile
 - 修改示例数据
+- 优化后台管理页面
 - 完善文档,注释
 
 v1.0.1
