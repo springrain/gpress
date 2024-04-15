@@ -1,3 +1,8 @@
+v1.0.3
+- 增加seq标签,用于循环数字
+- 迁移wordpress的[generatepress](https://gitee.com/gpress/wp-generatepress)主题
+- 完善文档,注释
+
 v1.0.2
 - templateID 更名为 templateFile
 - 修改示例数据

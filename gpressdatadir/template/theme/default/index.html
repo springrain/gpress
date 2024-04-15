@@ -40,7 +40,8 @@
 
 
 </section>
-  
+
+{{if gt $selectList.Page.PageCount 1}}
 <nav class="pagination">
   {{$currPageNo := $selectList.Page.PageNo}}
   {{if lt $currPageNo 1}}
@@ -63,6 +64,6 @@
     </a>
     {{end}}   
 </nav>
-        
+{{end}}      
 
   {{template "bodyend.html" }}
