@@ -57,6 +57,7 @@ var funcMap = template.FuncMap{
 	"themeName":        funcThemeName,
 	"themeTemplate":    funcThemeTemplate,
 	"version":          funcVersion,
+	"seq":              funcSeq,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -400,4 +401,13 @@ func sliceCategory2Tree(categorys []Category) []Category {
 
 func funcVersion() string {
 	return version
+}
+
+// seq 函数用于生成一个数字序列，这里是一个模拟的实现
+func funcSeq(start, end int) []int {
+	nums := make([]int, 0)
+	for i := start; i <= end; i++ {
+		nums = append(nums, i)
+	}
+	return nums
 }
