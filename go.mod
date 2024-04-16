@@ -9,7 +9,7 @@ require (
 	github.com/ethereum/go-ethereum v1.13.14
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/mojocn/base64Captcha v1.3.6
-	github.com/tetratelabs/wazero v1.7.0
+	github.com/tetratelabs/wazero v1.7.1
 	github.com/yuin/goldmark v1.7.1
 	github.com/yuin/goldmark-emoji v1.0.2
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
