@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS site (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,siteThemeWEIXIN,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2024<span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','/public/favicon.png','/public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容hugo生态,使用Wasm扩展插件,只需200M内存','gpress,web3,hugo,wordpress,以太坊,百度超级链','jiagou.com','架构','jiagou','gpress_site');
+INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,siteThemeWEIXIN,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2024<span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','/public/favicon.png','/public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','jiagou.com','架构','jiagou','gpress_site');
 
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
 		title, 
@@ -164,7 +164,7 @@ INSERT INTO content (
                         '2023-06-27 22:43:53',
                         NULL,
                         '本站服务器配置:ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .  
-使用[gpress](https://gitee.com/gpress/gpress)迁移了[hugo](https://github.com/gohugoio/hugo)的[even](https://github.com/olOwOlo/hugo-theme-even)主题和markdown文件.  
+使用[gpress](https://gitee.com/gpress/gpress)迁移了[Hugo](https://github.com/gohugoio/hugo)的[even](https://github.com/olOwOlo/hugo-theme-even)主题和markdown文件.  
 
 我所见识过的一切都将消失一空,就如眼泪消逝在雨中......  
 不妨大胆一些,大胆一些......  
@@ -186,7 +186,7 @@ INSERT INTO content (
 <li><a href="https://gitee.com/chunanyong/gowe">gowe</a></li>
 </ul>
 ',
-                        '本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......	不妨大胆一些,大胆一些......',
+                        '本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用Hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......	不妨大胆一些,大胆一些......',
                         '',
                         NULL,
                         'springrain',
@@ -210,7 +210,7 @@ INSERT INTO content (
                         '2024-04-06 20:31:32',
                         '',
                         '# 介绍  
-Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容hugo生态,使用Wasm扩展插件,只需200M内存  
+Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo生态,使用Wasm扩展插件,只需200M内存  
     
 **作为静态站点：** gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:[even](gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default)、[doks](gitee.com/gpress/gpress-doks)、[book](gitee.com/gpress/gpress-book)、[geekdoc](gitee.com/gpress/gpress-geekdoc)......   
 **作为动态站点：** gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索......  
@@ -311,7 +311,7 @@ location / {
 # 阿里云计算巢
 [点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以单独购买阿里云最低配服务器,进行部署.选择```张家口机房```,规格```ecs.t6-c4m1.large```,配置```2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M```,一年100元,五年200元左右.  ',
                         '<h1 id="介绍">介绍</h1>
-<p>Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容hugo生态,使用Wasm扩展插件,只需200M内存</p>
+<p>Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo生态,使用Wasm扩展插件,只需200M内存</p>
 <p><strong>作为静态站点：</strong> gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:<a href="gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default">even</a>、<a href="gitee.com/gpress/gpress-doks">doks</a>、<a href="gitee.com/gpress/gpress-book">book</a>、<a href="gitee.com/gpress/gpress-geekdoc">geekdoc</a>......<br>
 <strong>作为动态站点：</strong> gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索......<br>
 <strong>作为Web3：</strong> gpress已支持以太坊和百度超级链账户体系,会基于Wasm持续迭代去中心功能,让数据自由一点点......<br>
