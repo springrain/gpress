@@ -1,6 +1,6 @@
 v1.0.3
 - 增加seq标签,用于循环数字
-- 迁移wordpress主题:[generatepress](https://gitee.com/gpress/wp-generatepress)、[astra](https://wpastra.com)
+- 迁移WordPress主题:[generatepress](https://gitee.com/gpress/wp-generatepress)、[astra](https://wpastra.com)
 - 完善文档,注释
 
 v1.0.2
