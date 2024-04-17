@@ -101,7 +101,7 @@ func genStaticFile() error {
 	//删除整个目录
 	os.RemoveAll(staticHtmlDir)
 	//生成首页index网页
-	fileHash, err := writeStaticHtml(httpServerPath, staticHtmlDir, "")
+	fileHash, _, err := writeStaticHtml("", "")
 	if fileHash == "" || err != nil {
 		return err
 	}
@@ -122,17 +122,22 @@ func genStaticFile() error {
 			tagsMap[tag] = true
 		}
 		postId := contents[i].Id
-		postURL := httpServerPath + "post/" + postId
-		fileHash, err := writeStaticHtml(postURL, staticHtmlDir+"post/"+postId+"/", "")
+		//postURL := httpServerPath + "post/" + postId
+		fileHash, success, err := writeStaticHtml("post/"+postId, "")
 		if fileHash == "" || err != nil {
 			continue
 		}
-		sitemapFile.WriteString("<url><loc>" + domain + "/post/" + postId + "/index.html</loc></url>")
-		fileHash, err = writeStaticHtml(httpServerPath+"page/"+strconv.Itoa(i+1), staticHtmlDir+"page/"+strconv.Itoa(i+1)+"/", prvePageFileHash)
+		if success {
+			sitemapFile.WriteString("<url><loc>" + domain + "/post/" + postId + "/index.html</loc></url>")
+		}
+
+		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash)
 		if fileHash == "" || err != nil {
 			continue
 		}
-		sitemapFile.WriteString("<url><loc>" + domain + "/page/" + strconv.Itoa(i+1) + "/index.html</loc></url>")
+		if success {
+			sitemapFile.WriteString("<url><loc>" + domain + "/page/" + strconv.Itoa(i+1) + "/index.html</loc></url>")
+		}
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
 	}
@@ -145,19 +150,22 @@ func genStaticFile() error {
 	}
 	for i := 0; i < len(categoryIds); i++ {
 		categoryId := categoryIds[i]
-		categoryURL := httpServerPath + "category/" + categoryId
 		//生成栏目首页index
-		fileHash, err := writeStaticHtml(categoryURL, staticHtmlDir+"category/"+categoryId+"/", "")
+		fileHash, success, err := writeStaticHtml("category/"+categoryId, "")
 		if fileHash == "" || err != nil {
 			return err
 		}
-		sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/index.html</loc></url>")
+		if success {
+			sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/index.html</loc></url>")
+		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, err := writeStaticHtml(httpServerPath+"category/"+categoryId+"/page/"+strconv.Itoa(j+1), staticHtmlDir+"category/"+categoryId+"/page/"+strconv.Itoa(j+1)+"/", prvePageFileHash)
+			fileHash, success, err := writeStaticHtml("category/"+categoryId+"/page/"+strconv.Itoa(j+1), prvePageFileHash)
 			if fileHash == "" || err != nil {
 				continue
 			}
-			sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
+			if success {
+				sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
+			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
 		}
@@ -165,19 +173,22 @@ func genStaticFile() error {
 
 	//生成tag的静态页
 	for tag := range tagsMap {
-		tagURL := httpServerPath + "tag/" + tag
 		//生成栏目首页index
-		fileHash, err := writeStaticHtml(tagURL, staticHtmlDir+"tag/"+tag+"/", "")
+		fileHash, success, err := writeStaticHtml("tag/"+tag, "")
 		if fileHash == "" || err != nil {
 			return err
 		}
-		sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/index.html</loc></url>")
+		if success {
+			sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/index.html</loc></url>")
+		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, err := writeStaticHtml(httpServerPath+"tag/"+tag+"/page/"+strconv.Itoa(j+1), staticHtmlDir+"tag/"+tag+"/page/"+strconv.Itoa(j+1)+"/", prvePageFileHash)
+			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash)
 			if fileHash == "" || err != nil {
 				continue
 			}
-			sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
+			if success {
+				sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
+			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
 		}
@@ -234,33 +245,41 @@ func genStaticFile() error {
 }
 
 // writeStaticHtml 写入静态html
-func writeStaticHtml(httpurl string, filePath string, fileHash string) (string, error) {
+func writeStaticHtml(urlFilePath string, fileHash string) (string, bool, error) {
+	httpurl := httpServerPath + urlFilePath
+	filePath := staticHtmlDir + urlFilePath
+	if urlFilePath != "" {
+		filePath = filePath + "/"
+	}
 	response, err := http.Get(httpurl)
 	if err != nil {
-		return "", err
+		return "", false, err
 	}
 	// 读取资源数据 body: []byte
 	body, err := io.ReadAll(response.Body)
 	// 关闭资源流
 	response.Body.Close()
 	if err != nil {
-		return "", err
+		return "", false, err
 	}
 	//计算hash
 	bytehex := sha3.Sum256(body)
 	bodyHash := hex.EncodeToString(bytehex[:])
 	if bodyHash == fileHash { //如果hash一致,不再生成文件
-		return bodyHash, nil
+		return bodyHash, false, nil
 	}
 	// 写入文件
 	os.MkdirAll(filePath, os.ModePerm)
 	err = os.WriteFile(filePath+"index.html", body, os.ModePerm)
 	if err != nil {
-		return bodyHash, err
+		return bodyHash, false, err
 	}
 	// 压缩gzip文件
 	err = doGzipFile(filePath+"index.html"+compressedFileSuffix, bytes.NewReader(body))
-	return bodyHash, err
+	if err != nil {
+		return bodyHash, false, err
+	}
+	return bodyHash, true, nil
 }
 
 // doGzipFile 压缩gzip文件
