@@ -1,7 +1,7 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />
 
 ## 介绍  
-Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo生态,使用Wasm扩展插件,只需200M内存  
+Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存  
     
 **作为静态站点：** gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:[even](https://gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default)、[doks](https://gitee.com/gpress/gpress-doks)、[book](https://gitee.com/gpress/gpress-book)、[geekdoc](https://gitee.com/gpress/gpress-geekdoc)......   
 **作为动态站点：** gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索.兼容WordPress主题生态,已迁移多款WordPress主题:[generatepress](https://gitee.com/gpress/wp-generatepress)、[astra](https://gitee.com/gpress/wp-astra)......  
