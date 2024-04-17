@@ -82,6 +82,14 @@ func genStaticFile() error {
 	defer genStaticHtmlLock.Unlock()
 	ctx := context.Background()
 	contents := make([]Content, 0)
+	domain := ""
+	if site.Domain != "" {
+		if strings.HasPrefix(site.Domain, "http://") || strings.HasPrefix(site.Domain, "https://") {
+			domain = site.Domain
+		} else { //默认使用https协议
+			domain = "https://" + site.Domain
+		}
+	}
 	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<2 order by sortNo desc")
 	err := zorm.Query(ctx, f_post, &contents, nil)
 	if err != nil {
@@ -97,6 +105,14 @@ func genStaticFile() error {
 	if fileHash == "" || err != nil {
 		return err
 	}
+	//创建sitemap.xml
+	sitemapFile, err := os.OpenFile(staticHtmlDir+"sitemap.xml", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		return err
+	}
+	defer sitemapFile.Close() // 确保在函数结束时关闭文件
+	sitemapFile.WriteString(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
+	sitemapFile.WriteString("<url><loc>" + domain + "/index.html" + "</loc></url>")
 	//上一个分页
 	prvePageFileHash := ""
 	//生成文章的静态网页
@@ -111,10 +127,12 @@ func genStaticFile() error {
 		if fileHash == "" || err != nil {
 			continue
 		}
+		sitemapFile.WriteString("<url><loc>" + domain + "/post/" + postId + "/index.html</loc></url>")
 		fileHash, err = writeStaticHtml(httpServerPath+"page/"+strconv.Itoa(i+1), staticHtmlDir+"page/"+strconv.Itoa(i+1)+"/", prvePageFileHash)
 		if fileHash == "" || err != nil {
 			continue
 		}
+		sitemapFile.WriteString("<url><loc>" + domain + "/page/" + strconv.Itoa(i+1) + "/index.html</loc></url>")
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
 	}
@@ -133,11 +151,13 @@ func genStaticFile() error {
 		if fileHash == "" || err != nil {
 			return err
 		}
+		sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/index.html</loc></url>")
 		for j := 0; j < len(contents); j++ {
 			fileHash, err := writeStaticHtml(httpServerPath+"category/"+categoryId+"/page/"+strconv.Itoa(j+1), staticHtmlDir+"category/"+categoryId+"/page/"+strconv.Itoa(j+1)+"/", prvePageFileHash)
 			if fileHash == "" || err != nil {
 				continue
 			}
+			sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
 		}
@@ -151,15 +171,19 @@ func genStaticFile() error {
 		if fileHash == "" || err != nil {
 			return err
 		}
+		sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/index.html</loc></url>")
 		for j := 0; j < len(contents); j++ {
 			fileHash, err := writeStaticHtml(httpServerPath+"tag/"+tag+"/page/"+strconv.Itoa(j+1), staticHtmlDir+"tag/"+tag+"/page/"+strconv.Itoa(j+1)+"/", prvePageFileHash)
 			if fileHash == "" || err != nil {
 				continue
 			}
+			sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
 		}
 	}
+	//结束写入sitemap文件
+	sitemapFile.WriteString("</urlset>")
 
 	//遍历当前使用的模板文件夹,压缩文本格式的文件
 	err = filepath.Walk(templateDir+"theme/"+site.Theme+"/", func(path string, info os.FileInfo, err error) error {
