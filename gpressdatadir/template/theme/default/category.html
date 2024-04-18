@@ -5,7 +5,7 @@
 
 {{ if eq .userType 1}}
   {{ $contentSQL ="id,title,hrefURL,updateTime FROM content WHERE categoryID=? order by sortNo desc" }}
-  {{ $categorySQL = "name FROM category WHERE id=? order by sortNo desc"}}
+  {{ $categorySQL = "name,keyword,description FROM category WHERE id=? order by sortNo desc"}}
 {{end}}
 
 {{ $selectList := selectList "content" .q .pageNo 20 $contentSQL .UrlPathParam }}
