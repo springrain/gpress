@@ -6,7 +6,7 @@ require (
 	gitee.com/chunanyong/zorm v1.7.5
 	github.com/alecthomas/chroma/v2 v2.13.0
 	github.com/cloudwego/hertz v0.8.1
-	github.com/ethereum/go-ethereum v1.13.14
+	github.com/ethereum/go-ethereum v1.13.15
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/mojocn/base64Captcha v1.3.6
 	github.com/tetratelabs/wazero v1.7.1
