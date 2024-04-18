@@ -1,6 +1,6 @@
 <!-- 查询 content 列表 -->
 {{ $contentSQL :="id,title,hrefURL,updateTime FROM content WHERE status=1 and categoryID=? order by sortNo desc" }}
-{{ $categorySQL := "name FROM category WHERE id=? and status<2 order by sortNo desc"}}
+{{ $categorySQL := "name,keyword,description FROM category WHERE id=? and status<2 order by sortNo desc"}}
 
 
 {{ if eq .userType 1}}
@@ -16,8 +16,8 @@
 <html lang="zh-cn">
 <head>
   <title>{{ $nav.Name }}</title>
-  <meta name="description" content="{{ $site.Description }}" />
-  <meta name="keyword" content="{{ $site.Keyword }}" />
+  <meta name="description" content="{{ $nav.Description }}" />
+  <meta name="keyword" content="{{ $nav.Keyword }}" />
 
 {{template "bodystart.html"  }}
 
