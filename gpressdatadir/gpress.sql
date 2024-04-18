@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS category (
 		comCode        TEXT,
 		templateFile        TEXT,
 		childTemplateFile        TEXT,
+		keyword           TEXT,
+		description           TEXT,
 		createTime        TEXT,
 		updateTime        TEXT,
 		createUser        TEXT,

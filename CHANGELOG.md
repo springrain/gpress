@@ -1,5 +1,5 @@
 v1.0.3
-- 静态化生成sitemap.xml
+- 栏目页自定义keyword,description,静态化生成sitemap.xml
 - 增加seq标签,用于循环数字
 - 迁移WordPress主题:[generatepress](https://gitee.com/gpress/wp-generatepress)、[astra](https://wpastra.com)
 - 完善文档,注释
