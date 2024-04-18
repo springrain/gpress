@@ -26,10 +26,24 @@
 		</div>
 
 		<div class="layui-form-item layui-col-md6">
-		  <label class="layui-form-label">跳转路径</label>
+			<label class="layui-form-label">keyword</label>
+			<div class="layui-input-block">
+			  <input type="text" name="keyword" autocomplete="off" class="layui-input"  value="{{.Data.Keyword}}" />
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-col-md6">
+		  <label class="layui-form-label">description</label>
 		  <div class="layui-input-block">
-			<input type="text" name="hrefURL" autocomplete="off" class="layui-input"  value="{{.Data.HrefURL}}" />
+			<input type="text" name="description" autocomplete="off" class="layui-input"  value="{{.Data.Description}}" />
 		  </div>
+		</div>
+
+		<div class="layui-form-item layui-col-md6">
+			<label class="layui-form-label">跳转路径</label>
+			<div class="layui-input-block">
+			  <input type="text" name="hrefURL" autocomplete="off" class="layui-input"  value="{{.Data.HrefURL}}" />
+			</div>
 		</div>
 
 		<div class="layui-form-item layui-col-md6">

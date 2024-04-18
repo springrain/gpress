@@ -116,6 +116,12 @@ type Category struct {
 	// ChildTemplateFile 模板文件
 	ChildTemplateFile string `column:"childTemplateFile" json:"childTemplateFile,omitempty"`
 
+	// Keyword 关键字
+	Keyword string `column:"keyword" json:"keyword,omitempty"`
+
+	// Description 栏目描述
+	Description string `column:"description" json:"description,omitempty"`
+
 	// CreateTime 创建时间
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 
@@ -166,7 +172,7 @@ type Content struct {
 	// Keyword 关键字
 	Keyword string `column:"keyword" json:"keyword,omitempty"`
 
-	// Description 站点描述
+	// Description 页面描述
 	Description string `column:"description" json:"description,omitempty"`
 
 	// HrefURL 自身页面路径
