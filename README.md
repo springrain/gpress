@@ -174,6 +174,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | comCode     | string      | 逗号隔开的全路径 | 逗号隔开的全路径  |
 | templateFile  | string      | 模板文件       | 当前导航页的模板  |
 | childTemplateFile  | string | 子主题模板文件  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| keyword     | string      | 导航关键字   | 是      |        |
+| description | string      | 导航描述     | 是      |        |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
@@ -186,8 +188,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | id          | string      | 主键         | 否      |    -                   |
 | moduleID    | string      | 模型ID       | 否      |  文章使用的模型字段     |
 | title       | string      | 文章标题     | 是      |    使用 jieba 分词器    |
-| keyword     | string      | 关键字       | 是      |    使用 jieba 分词器    |
-| description | string      | 站点描述     | 是      |    使用 jieba 分词器    |
+| keyword     | string      | 内容关键字   | 是      |    使用 jieba 分词器    |
+| description | string      | 内容描述     | 是      |    使用 jieba 分词器    |
 | hrefURL     | string      | 自身页面路径 | 否      |    -                    |
 | subtitle    | string      | 副标题       | 是      |      使用 jieba 分词器  |
 | author      | string      | 作者         | 是      |      使用 jieba 分词器  |
