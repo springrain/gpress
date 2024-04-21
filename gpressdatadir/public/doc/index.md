@@ -138,4 +138,4 @@ location / {
 退出管理后台
 
 ## 阿里云计算巢
-[点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以单独购买阿里云最低配服务器,进行部署.选择```张家口机房```,规格```ecs.t6-c4m1.large```,配置```2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M```,一年100元,五年200元左右.     
+[点击部署gpress到阿里云计算巢](https://computenest.aliyun.com/services/detail?serviceId=service-d4000c9b22c54e5cbffe&source=5176.11533457&userCode=wxx3qwtk),也可以单独购买阿里云最低配服务器,进行部署.选择```张家口机房```,规格```ecs.t6-c4m1.large```,配置```2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M```,一年100元,五年200元左右.      
