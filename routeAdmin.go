@@ -615,7 +615,7 @@ func funcUpdateTable(ctx context.Context, c *app.RequestContext, urlPathParam st
 	var err error
 	var now = time.Now().Format("2006-01-02 15:04:05")
 	id := ""
-	mastUpdateColumn := []string{"status"}
+	mastUpdateColumn := []string{"status", "summary"}
 	switch urlPathParam {
 	case tableConfigName:
 		ptrObj := &Config{}
