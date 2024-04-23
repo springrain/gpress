@@ -1,6 +1,6 @@
 {{ $site:=site }}
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList "content" .q .pageNo 20 "id,title,hrefURL,categoryID,categoryName,summary,updateTime FROM content WHERE status=1 order by sortNo desc"  }}
+{{ $selectList := selectList "content" .q .pageNo 20 "* FROM content WHERE status=1 order by sortNo desc"  }}
 
 <!DOCTYPE html>
 <html lang="zh-cn">
