@@ -8,7 +8,7 @@
 
 {{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
 {{ $maxSortNo:=  selectOne "content" "max(sortNo) as sortNo from content" }} 
-{{ $themeTemplate := themeTemplate }}
+{{ $themeTemplate := themeTemplate "content" }}
 
 <div class="layui-panel" style="padding: 5px;height: 100%;">
 	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST" onsubmit="return false;" style="height:100%;display: flex;flex-direction: column;">
