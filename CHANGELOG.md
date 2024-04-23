@@ -1,3 +1,7 @@
+v1.0.4
+- 感谢 @lifj22 的[issue](https://gitee.com/gpress/gpress/issues/I9J1RH),导航模板category开头,内容模板content开头
+- 完善文档,注释
+
 v1.0.3
 - 栏目页自定义keyword,description,静态化生成sitemap.xml
 - 增加seq标签,用于循环数字
