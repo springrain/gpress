@@ -117,11 +117,11 @@ func funcCategory() ([]Category, error) {
 }
 */
 
-// 主题模板,themeName值为 ".",查询当前正在使用的模板.suffix 过滤文件后缀
-func funcThemeTemplate() ([]ThemeTemplate, error) {
+// funcThemeTemplate 主题模板,prefix 过滤文件前缀
+func funcThemeTemplate(prefix string) ([]ThemeTemplate, error) {
 	list := make([]ThemeTemplate, 0)
 
-	matches, err := filepath.Glob(themeDir + site.Theme + "/*.html")
+	matches, err := filepath.Glob(themeDir + site.Theme + "/" + prefix + "*.html")
 	if err != nil {
 		return list, err
 	}
