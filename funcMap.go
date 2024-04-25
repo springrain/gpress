@@ -48,7 +48,8 @@ var funcMap = template.FuncMap{
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
 	//"themeFile":  funcThemeFile,
-	"convertJson":      convertJson,
+	"convertJson":      funcConvertJson,
+	"convertMap":       funcConvertMap,
 	"hasPrefix":        hasPrefix,
 	"hasSuffix":        hasSuffix,
 	"contains":         contains,
@@ -339,14 +340,24 @@ func funcThemeName() []string {
 	return themeNames
 }
 
-func convertJson(obj interface{}) (string, error) {
-	// 将 Person 对象转换为 JSON 字符串
+func funcConvertJson(obj interface{}) (string, error) {
+	// 将对象转换为 JSON 字符串
 	jsonData, err := json.Marshal(obj)
 	if err != nil {
 		return "{}", nil
 	}
 	s := string(jsonData)
 	return s, nil
+}
+
+func funcConvertMap(jsonStr string) (map[string]interface{}, error) {
+
+	obj := make(map[string]interface{})
+	err := json.Unmarshal([]byte(jsonStr), &obj)
+	if err != nil {
+		return obj, nil
+	}
+	return obj, nil
 }
 
 func hasPrefix(s, prefix string) bool {
