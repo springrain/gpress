@@ -1,5 +1,5 @@
 {{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }}
-{{ $convertJson := convertJson  $category.Data }}
+{{ $convertJson := convertType  $category.Data "object" "json" }}
 {{template "admin/header.html"}}
 <title>内容导航 - GPRESS</title>
 <link href="{{basePath}}admin/css/tree.css" rel="stylesheet">

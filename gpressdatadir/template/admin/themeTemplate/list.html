@@ -1,4 +1,4 @@
-{{ $convertJson := convertJson $.Data }}
+{{ $convertJson := convertType $.Data "object" "json"  }}
 {{template "admin/header.html"}}
 <title>主题模板 - GPRESS</title>
 <link href="{{basePath}}admin/css/tree.css" rel="stylesheet">
