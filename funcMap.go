@@ -25,6 +25,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"gitee.com/chunanyong/zorm"
@@ -32,15 +33,15 @@ import (
 
 var funcMap = template.FuncMap{
 
-	"basePath": funcBasePath,
-	"addInt":   funcAddInt,
-	"addFloat": funcAddFloat,
-	"T":        funcT,
-	"safeHTML": funcSafeHTML,
-	"safeURL":  funcSafeURL,
-	"hrefURL":  funcHrefURL,
-	"relURL":   funcRelURL,
-	"site":     funcSite,
+	"basePath":    funcBasePath,
+	"addInt":      funcAddInt,
+	"addFloat":    funcAddFloat,
+	"convertType": funcConvertType,
+	"safeHTML":    funcSafeHTML,
+	"safeURL":     funcSafeURL,
+	"hrefURL":     funcHrefURL,
+	"relURL":      funcRelURL,
+	"site":        funcSite,
 	//"category":     funcCategory,
 	"selectList": funcSelectList,
 	"selectOne":  funcSelectOne,
@@ -48,8 +49,8 @@ var funcMap = template.FuncMap{
 	//"sass":       funcSass,
 	//"themePath":  funcThemePath,
 	//"themeFile":  funcThemeFile,
-	"convertJson":      funcConvertJson,
-	"convertMap":       funcConvertMap,
+	//"convertType":      funcConvertJson,
+	//"convertMap":       funcConvertMap,
 	"hasPrefix":        hasPrefix,
 	"hasSuffix":        hasSuffix,
 	"contains":         contains,
@@ -66,9 +67,31 @@ func funcBasePath() string {
 	return config.BasePath
 }
 
-// funcT 多语言i18n适配,例如 {{ T "nextPage" }}
-func funcT(key string) (string, error) {
-	return key, nil
+// funcConvertType 多语言i18n适配,例如 {{ T "nextPage" }}
+func funcConvertType(value interface{}, sourceType string, targetType string) (interface{}, error) {
+	// json字符串转成Map
+	if sourceType == "json" && targetType == "object" {
+		obj := make(map[string]interface{})
+		jsonStr := value.(string)
+		json.Unmarshal([]byte(jsonStr), &obj)
+		return obj, nil
+	} else if sourceType == "object" && targetType == "json" { //对象转成json字符串
+		jsonData, err := json.Marshal(value)
+		if err != nil {
+			return "{}", nil
+		}
+		s := string(jsonData)
+		return s, nil
+	} else if sourceType == "string" && targetType == "int" { //字符串转int
+		valueStr := value.(string)
+		valueInt, _ := strconv.Atoi(valueStr)
+		return valueInt, nil
+	} else if sourceType == "int" && targetType == "string" { //int转字符串
+		valueInt := value.(int)
+		valueStr := strconv.Itoa(valueInt)
+		return valueStr, nil
+	}
+	return nil, nil
 }
 
 // funcSafeHTML 转义html字符串
@@ -340,26 +363,27 @@ func funcThemeName() []string {
 	return themeNames
 }
 
-func funcConvertJson(obj interface{}) (string, error) {
-	// 将对象转换为 JSON 字符串
-	jsonData, err := json.Marshal(obj)
-	if err != nil {
-		return "{}", nil
+/*
+	func funcConvertJson(obj interface{}) (string, error) {
+		// 将对象转换为 JSON 字符串
+		jsonData, err := json.Marshal(obj)
+		if err != nil {
+			return "{}", nil
+		}
+		s := string(jsonData)
+		return s, nil
 	}
-	s := string(jsonData)
-	return s, nil
-}
 
 func funcConvertMap(jsonStr string) (map[string]interface{}, error) {
 
-	obj := make(map[string]interface{})
-	err := json.Unmarshal([]byte(jsonStr), &obj)
-	if err != nil {
+		obj := make(map[string]interface{})
+		err := json.Unmarshal([]byte(jsonStr), &obj)
+		if err != nil {
+			return obj, nil
+		}
 		return obj, nil
 	}
-	return obj, nil
-}
-
+*/
 func hasPrefix(s, prefix string) bool {
 	return strings.HasPrefix(s, prefix)
 }
