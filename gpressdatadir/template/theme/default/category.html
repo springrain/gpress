@@ -1,6 +1,6 @@
 <!-- 查询 content 列表 -->
 {{ $contentSQL :="* FROM content WHERE status in (1,2) and categoryID=? order by  status desc,sortNo desc" }}
-{{ $categorySQL := "* FROM category WHERE id=? and status<3 order by sortNo desc"}}
+{{ $categorySQL := "* FROM category WHERE id=? and status<3 order by status desc, sortNo desc"}}
 
 
 {{ if eq .userType 1}}
