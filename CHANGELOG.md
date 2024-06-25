@@ -1,6 +1,7 @@
 v1.0.4
 - 统一类型转换方法 convertType, 方便扩展
 - 感谢 @lifj22 的[issue](https://gitee.com/gpress/gpress/issues/I9J1RH),导航模板category开头,内容模板content开头
+- status字段增加置顶(2),原私密(2)修改为私密(3)
 - 完善文档,注释
 
 v1.0.3
