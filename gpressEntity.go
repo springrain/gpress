@@ -63,7 +63,7 @@ type Config struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),私密(2)
+	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -134,7 +134,7 @@ type Category struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),私密(2)
+	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 
 	Leaf []Category `json:"leaf,omitempty"`
@@ -226,7 +226,7 @@ type Content struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),私密(2)
+	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -300,7 +300,7 @@ type Site struct {
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),私密(2)
+	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 }
 

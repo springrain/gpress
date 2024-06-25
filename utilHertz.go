@@ -347,7 +347,7 @@ func pathExist(path string) bool {
 		page := zorm.NewPage()
 		page.PageNo = 1
 		page.PageSize = 500
-		finder1 := zorm.NewSelectFinder(tableCategoryName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
+		finder1 := zorm.NewSelectFinder(tableCategoryName, "id,hrefURL").Append(" WHERE status in (1,2) and hrefURL!=?", "").Append("order by  status desc,sortNo desc")
 		categoryMaps, err := zorm.QueryMap(ctx, finder1, page)
 		if err != nil {
 			return err
@@ -361,7 +361,7 @@ func pathExist(path string) bool {
 			}
 		}
 
-		finder2 := zorm.NewSelectFinder(tableContentName, "id,hrefURL").Append(" WHERE status=1 and hrefURL!=?", "").Append("order by sortNo desc")
+		finder2 := zorm.NewSelectFinder(tableContentName, "id,hrefURL").Append(" WHERE status in (1,2) and hrefURL!=?", "").Append("order by status desc, sortNo desc")
 		contentMaps, err := zorm.QueryMap(ctx, finder2, page)
 		if err != nil {
 			return err

@@ -132,7 +132,7 @@ func funcSite() (Site, error) {
 // 导航信息
 func funcCategory() ([]Category, error) {
 	finder := zorm.NewSelectFinder(tableCategoryName)
-	finder.Append(" WHERE status=1 order by sortNo desc")
+	finder.Append(" WHERE status in (1,2) order by status desc, sortNo desc")
 	page := zorm.NewPage()
 	page.PageSize = 200
 	list := make([]Category, 0)

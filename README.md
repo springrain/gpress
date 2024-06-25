@@ -124,7 +124,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 用户(表名:user)
 后台只有一个用户.
@@ -139,7 +139,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 站点信息(site)
 站点的信息,例如 title,logo,keywords,description等
@@ -160,7 +160,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 导航菜单(表名:category)
 | columnName    | 类型         | 说明    |  备注       | 
@@ -180,7 +180,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
 | sortNo      | int         | 排序         |  正序  |
-| status      | int         | 状态     |  链接访问(0),公开(1),私密(2)  |
+| status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 文章内容(表名:content)
 | columnName  | 类型        | 说明        | 是否分词 |  备注                  | 
@@ -207,5 +207,5 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | updateTime  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
 | createUser  | string      | 创建人       | -       |  初始化 system          |
 | sortNo      | int         | 排序         | -       |  正序                   |
-| status      | int         | 状态     | -       |  链接访问(0),公开(1),私密(2)  |
+| status      | int         | 状态     | -       |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
