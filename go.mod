@@ -3,9 +3,9 @@ module gitee.com/gpress/gpress
 go 1.22
 
 require (
-	gitee.com/chunanyong/zorm v1.7.6
+	gitee.com/chunanyong/zorm v1.7.7
 	github.com/alecthomas/chroma/v2 v2.14.0
-	github.com/cloudwego/hertz v0.9.1
+	github.com/cloudwego/hertz v0.9.2
 	github.com/ethereum/go-ethereum v1.14.7
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/mojocn/base64Captcha v1.3.6
