@@ -1,5 +1,5 @@
-gitee.com/chunanyong/zorm v1.7.6 h1:BPrTtFGAQln8EMdMIHHIuzjeVzLCMilANH/yFf++GKc=
-gitee.com/chunanyong/zorm v1.7.6/go.mod h1:Sk+vofBqQXgNrDTe+nWhV6iMXhiBObFHdCo1MfvAdi8=
+gitee.com/chunanyong/zorm v1.7.7 h1:84iZMdF9tQ6ZC/lLOsrbK1EzGfITtyahgazkeKSfXpU=
+gitee.com/chunanyong/zorm v1.7.7/go.mod h1:Sk+vofBqQXgNrDTe+nWhV6iMXhiBObFHdCo1MfvAdi8=
 github.com/alecthomas/assert/v2 v2.7.0 h1:QtqSACNS3tF7oasA8CU6A6sXZSBDqnm7RfpLl9bZqbE=
 github.com/alecthomas/assert/v2 v2.7.0/go.mod h1:Bze95FyfUr7x34QZrjL+XP+0qgp/zg8yS+TtBj1WA3k=
 github.com/alecthomas/chroma/v2 v2.2.0/go.mod h1:vf4zrexSH54oEjJ7EdB65tGNHmH3pGZmVkgTP5RHvAs=
@@ -30,8 +30,8 @@ github.com/chromedp/chromedp v0.9.1 h1:CC7cC5p1BeLiiS2gfNNPwp3OaUxtRMBjfiw3E3k6d
 github.com/chromedp/chromedp v0.9.1/go.mod h1:DUgZWRvYoEfgi66CgZ/9Yv+psgi+Sksy5DTScENWjaQ=
 github.com/chromedp/sysutil v1.0.0 h1:+ZxhTpfpZlmchB58ih/LBHX52ky7w2VhQVKQMucy3Ic=
 github.com/chromedp/sysutil v1.0.0/go.mod h1:kgWmDdq8fTzXYcKIBqIYvRRTnYb9aNS9moAV0xufSww=
-github.com/cloudwego/hertz v0.9.1 h1:+jK9A6MDNTUVy6q/zSOlhbnp1fFMiOaPIsq0jlOfjZE=
-github.com/cloudwego/hertz v0.9.1/go.mod h1:cs8dH6unM4oaJ5k9m6pqbgLBPqakGWMG0+cthsxitsg=
+github.com/cloudwego/hertz v0.9.2 h1:VbqddZ5RuvcgxzfxvXcmTiRisGYoo0+WnHGeDJKhjqI=
+github.com/cloudwego/hertz v0.9.2/go.mod h1:cs8dH6unM4oaJ5k9m6pqbgLBPqakGWMG0+cthsxitsg=
 github.com/cloudwego/netpoll v0.6.0 h1:JRMkrA1o8k/4quxzg6Q1XM+zIhwZsyoWlq6ef+ht31U=
 github.com/cloudwego/netpoll v0.6.0/go.mod h1:xVefXptcyheopwNDZjDPcfU6kIjZXZ4nY550k1yH9eQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
