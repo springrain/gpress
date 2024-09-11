@@ -1,4 +1,8 @@
 v1.0.5
+- 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/5),解决sliceCategory2Tree三层及以上层数异常问题
+- 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/4),解决AES-CBC模式加解密 部分文本异常
+- 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/3),解决非法压缩包上传未删除问题
+- 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/2),解决初始化DB副作用
 - 完善文档,注释
 
 v1.0.4
