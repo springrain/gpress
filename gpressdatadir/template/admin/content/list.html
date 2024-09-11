@@ -208,6 +208,12 @@
 						layer.msg("删除成功", function () {
 							location.reload();
 						});
+					}else{
+						var message="删除失败!"
+						if(!!res.message){
+							message=message+res.message
+						}
+						layer.msg(message);
 					}
 				}
 			});
