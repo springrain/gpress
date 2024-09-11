@@ -317,6 +317,34 @@ func TestECDH(t *testing.T) {
 	fmt.Printf("解密后的数据: %s\n", decryptedText)
 }
 
+func pad(in []byte) []byte {
+	padding := 16 - (len(in) % 16)
+	for i := 0; i < padding; i++ {
+		in = append(in, byte(padding))
+	}
+	return in
+}
+
+func unPad(in []byte) []byte {
+	if len(in) == 0 {
+		return nil
+	}
+
+	padding := in[len(in)-1]
+	if int(padding) > len(in) || padding > aes.BlockSize {
+		return nil
+	} else if padding == 0 {
+		return nil
+	}
+
+	for i := len(in) - 1; i > len(in)-int(padding)-1; i-- {
+		if in[i] != padding {
+			return nil
+		}
+	}
+	return in[:len(in)-int(padding)]
+}
+
 // 使用AES-CBC模式加密数据
 func encryptAES(key, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
@@ -324,6 +352,7 @@ func encryptAES(key, plaintext []byte) ([]byte, error) {
 		return nil, err
 	}
 
+	plaintext = pad(plaintext)
 	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
 	iv := ciphertext[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
@@ -348,6 +377,7 @@ func decryptAES(key, ciphertext []byte) ([]byte, error) {
 	plaintext := make([]byte, len(ciphertext))
 	mode := cipher.NewCBCDecrypter(block, iv)
 	mode.CryptBlocks(plaintext, ciphertext)
+	plaintext = unPad(plaintext)
 
 	return plaintext, nil
 }
