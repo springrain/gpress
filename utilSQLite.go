@@ -20,6 +20,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"os"
 	"runtime"
 
@@ -48,7 +49,12 @@ var dbDaoConfig = zorm.DataSourceConfig{
 
 // 初始化 sqlite数据库
 func checkSQLiteStatus() bool {
-
+	const failSuffix = ".fail"
+	if failDB := datadir + "gpress.db" + failSuffix; pathExist(failDB) {
+		fmt.Println(fmt.Sprintf("请手动确认 [%s] 是否需要恢复 \n "+
+			"恢复-重命名为gpress.db 不恢复-删除这个文件", failDB))
+		return false
+	}
 	defaultFtsFile := datadir + "fts5/libsimple"
 
 	//CPU架构
@@ -69,6 +75,9 @@ func checkSQLiteStatus() bool {
 	var err error
 	dbDao, err = zorm.NewDBDao(&dbDaoConfig)
 	if dbDao == nil || err != nil { //数据库初始化失败
+		if db := datadir + "gpress.db"; pathExist(db) {
+			_ = os.Rename(db, db+failSuffix)
+		}
 		return false
 	}
 
