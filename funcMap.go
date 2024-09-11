@@ -25,6 +25,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -396,41 +397,44 @@ func contains(s, substr string) bool {
 }
 
 func sliceCategory2Tree(categorys []Category) []Category {
-	categorysMap := make(map[string]*Category)
-	for i := 0; i < len(categorys); i++ {
-		c1 := categorys[i]
-		var category *Category
-		for j := 0; j < len(categorys); j++ {
-			if c1.Pid == categorys[j].Id {
-				category = &categorys[j]
-				break
-			}
-		}
-
-		if category != nil { //找到了上级
-			delete(categorysMap, c1.Id)
-			if category.Leaf == nil {
-				category.Leaf = make([]Category, 0)
-			}
-			category.Leaf = append(category.Leaf, c1)
-			categorysMap[category.Id] = category
-		} else {
-			categorysMap[c1.Id] = &c1
-		}
-
+	categorysMap := make(map[string]Category, len(categorys))
+	for _, v := range categorys {
+		categorysMap[v.Id] = v
 	}
-
-	//重新排序获取
-	treeCategory := make([]Category, 0)
-	for i := 0; i < len(categorys); i++ {
-		id := categorys[i].Id
-		c, has := categorysMap[id]
-		if has {
-			treeCategory = append(treeCategory, *c)
+	for {
+		record := map[string]struct{}{}
+		for _, v := range categorysMap {
+			record[v.Pid] = struct{}{}
+		}
+		leafs := make([]Category, 0, 10)
+		for _, v := range categorysMap {
+			if v.Pid == "" { // 根节点
+				continue
+			}
+			if _, ok := record[v.Id]; !ok {
+				leafs = append(leafs, v)
+			}
+		}
+		if len(leafs) == 0 {
+			break
+		}
+		for _, leaf := range leafs {
+			parent := categorysMap[leaf.Pid]
+			parent.Leaf = append(parent.Leaf, leaf)
+			categorysMap[parent.Id] = parent
+			delete(categorysMap, leaf.Id)
 		}
 	}
 
-	return treeCategory
+	rootCategories := make([]Category, 0, len(categorysMap))
+	for _, v := range categorysMap {
+		rootCategories = append(rootCategories, v)
+	}
+
+	sort.Slice(rootCategories, func(i, j int) bool {
+		return rootCategories[i].CreateTime > rootCategories[j].CreateTime
+	})
+	return rootCategories
 
 }
 
