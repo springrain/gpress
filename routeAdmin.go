@@ -317,6 +317,9 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
+		defer func() {
+			_ = os.Remove(path)
+		}()
 		//解压压缩包
 		err = unzip(path, themeDir)
 		if err != nil {
@@ -324,7 +327,7 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
-		os.Remove(path)
+
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
 	})
 
