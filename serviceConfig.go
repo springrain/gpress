@@ -91,12 +91,21 @@ var defaultConfig = Config{
 }
 
 // insertConfig 插入config
-func insertConfig(ctx context.Context, configStruct Config) error {
+func insertConfig(ctx context.Context, configStruct *Config) error {
+
+	//数据库存在config,不更新数据库,更新config变量
+	finder := zorm.NewSelectFinder(tableConfigName).Append("WHERE id=?", "gpress_config")
+	c := &Config{}
+	has, err := zorm.QueryRow(ctx, finder, c)
+	if has && err == nil && configStruct != nil && c.Id != "" {
+		*configStruct = *c
+		return err
+	}
+
 	// 清空配置,重新创建
 	deleteAll(ctx, tableConfigName)
-
-	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
-		return zorm.Insert(ctx, &configStruct)
+	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		return zorm.Insert(ctx, configStruct)
 	})
 
 	return err
