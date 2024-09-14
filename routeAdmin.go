@@ -293,7 +293,7 @@ func init() {
 			c.Abort() // 终止后续调用
 			return
 		}
-		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: path})
 	})
 
 	//上传主题文件
@@ -328,7 +328,7 @@ func init() {
 			return
 		}
 
-		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: funcBasePath() + path})
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Data: path})
 	})
 
 	// 内容预览
