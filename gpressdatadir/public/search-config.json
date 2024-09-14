@@ -1,5 +1,5 @@
 {
-  "dataFile": "/public/search-data.json",
+  "dataFile": "public/search-data.json",
   "indexConfig": null,
   "showParent": true,
   "showDescription": true
