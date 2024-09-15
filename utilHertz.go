@@ -225,6 +225,7 @@ type ResponseData struct {
 	ERR error `json:"err,omitempty"`
 }
 
+/*
 func responData2Map(responseData ResponseData) map[string]interface{} {
 	result := make(map[string]interface{}, 0)
 	result["statusCode"] = responseData.StatusCode
@@ -237,6 +238,7 @@ func responData2Map(responseData ResponseData) map[string]interface{} {
 	result["err"] = responseData.ERR
 	return result
 }
+*/
 
 var realPathMap sync.Map
 
@@ -247,25 +249,24 @@ func initHStaticFS() {
 	h.StaticFS("/", &app.FS{
 		Root: "./",
 		PathRewrite: func(c *app.RequestContext) []byte {
-			localFilePath := "/" + c.Param("filepath")
-			realPathMap.Range(func(key, value interface{}) bool {
-				relativePath, ok := key.(string)
-				if !ok {
-					return true
+			relativePath := "/" + c.Param("filepath")
+			key := relativePath
+			parts := strings.Split(relativePath, "/")
+			if len(parts) > 2 {
+				key = "/" + parts[1] + "/"
+				if strings.HasPrefix(relativePath, "/admin/") {
+					key = key + parts[2] + "/"
 				}
-				root, ok := value.(string)
-				if !ok {
-					return true
-				}
-				if strings.HasPrefix(localFilePath, relativePath) {
-					localFilePath = strings.TrimSuffix(root, "/") + localFilePath
-					return false
-				}
-				return true
-			})
+			}
+
+			localDir, ok := realPathMap.Load(key)
+			if !ok {
+				return []byte("/" + default404File)
+			}
+			localFilePath := strings.TrimSuffix(localDir.(string), "/") + relativePath
 			return []byte(localFilePath)
 		},
-		Compress:             true,
+		Compress:             false,
 		CompressedFileSuffix: compressedFileSuffix,
 	})
 }

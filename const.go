@@ -69,6 +69,8 @@ const (
 
 	searchDataJsonFile = datadir + "public/search-data.json"
 
+	default404File = datadir + "404.html"
+
 	// 静态文件压缩后缀,兼容Nginx gzip_static
 	compressedFileSuffix = ".gz"
 
