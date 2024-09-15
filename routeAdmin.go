@@ -53,6 +53,7 @@ func initAdminGroup() *route.RouterGroup {
 			return dec.Decode(v)
 		})
 	*/
+	initHStaticFS()
 	// 初始化模板
 	err := initTemplate()
 	if err != nil { // 初始化模板异常

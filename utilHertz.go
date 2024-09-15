@@ -25,7 +25,6 @@ import (
 	"html/template"
 	"math/big"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -46,8 +45,6 @@ func initTemplate() error {
 	err := loadTemplate()
 	// 设置模板
 	h.SetHTMLTemplate(tmpl)
-	// 设置默认的静态文件,实际路径会拼接为 datadir/public
-	hStaticFS("/public", datadir)
 	// gpress只负责生成静态html文件,使用Nginx读取静态文件
 	//hStaticFS("/statichtml", datadir)
 	return err
@@ -87,7 +84,7 @@ func loadTemplate() error {
 	//增加静态文件夹
 	for k, v := range staticFileMap {
 		//staticFS2 := http.Dir(v)
-		hStaticFS(k, v)
+		updateHStaticFSPath(k, v)
 		//h.Handle("GET", k+"/*filepath", http.FileServer(staticFS2))
 	}
 
@@ -241,56 +238,52 @@ func responData2Map(responseData ResponseData) map[string]interface{} {
 	return result
 }
 
-var realHandlerFuncMap sync.Map
+var realPathMap sync.Map
 
-func hStaticFS(relativePath, root string) {
-	basePath := funcBasePath()
-	filePath := ""
-	if basePath == "/" || basePath == "" { //默认值
-		filePath = root + relativePath
-	} else if strings.HasPrefix(relativePath, basePath) { //去掉前缀
-		filePath = root + relativePath[len(basePath):]
-	} else {
-		filePath = root + relativePath
-	}
+func initHStaticFS() {
+	// 设置默认的静态文件,实际路径会拼接为 datadir/public
+	updateHStaticFSPath("/public", datadir)
 
-	if strings.Contains(relativePath, ":") || strings.Contains(relativePath, "*") {
-		panic("URL parameters can not be used when serving a static folder")
-	}
-
-	appFS := &app.FS{
-		Root: filePath,
+	h.StaticFS("/", &app.FS{
+		Root: "./",
 		PathRewrite: func(c *app.RequestContext) []byte {
-			path := "/" + c.Param("filepath")
-			//path := c.Param("filepath")
-			return []byte(path)
+			localFilePath := "/" + c.Param("filepath")
+			realPathMap.Range(func(key, value interface{}) bool {
+				relativePath, ok := key.(string)
+				if !ok {
+					return true
+				}
+				root, ok := value.(string)
+				if !ok {
+					return true
+				}
+				if strings.HasPrefix(localFilePath, relativePath) {
+					localFilePath = strings.TrimSuffix(root, "/") + localFilePath
+					return false
+				}
+				return true
+			})
+			return []byte(localFilePath)
 		},
 		Compress:             true,
 		CompressedFileSuffix: compressedFileSuffix,
+	})
+}
+
+func updateHStaticFSPath(relativePath, root string) {
+	if strings.Contains(relativePath, ":") || strings.Contains(relativePath, "*") {
+		panic("URL parameters can not be used when serving a static folder")
 	}
-	handler := appFS.NewRequestHandler()
-
-	urlPattern := path.Join(relativePath, "/*filepath")
-
-	_, ok := realHandlerFuncMap.Load(urlPattern)
-	//无论是否已经存在,都先更新到map里
-	realHandlerFuncMap.Store(urlPattern, handler)
-
-	if ok { //已经存在这个路由注册,只替换值,不添加路由
-		return
-	}
-	// 未添加的路由,添加到路由表里
-
-	//套壳实现动态替换路由,记录路径和handler的对应关系,然后通过套壳handler调用实际的handler
-	handlerFunc := func(c context.Context, ctx *app.RequestContext) {
-		realHandlerFunc, ok := realHandlerFuncMap.Load(urlPattern)
-		if !ok || realHandlerFunc == nil {
-			return
+	ensureSlashes := func(str string) string {
+		if !strings.HasPrefix(str, "/") {
+			str = "/" + str
 		}
-		realHandlerFunc.(app.HandlerFunc)(c, ctx)
+		if !strings.HasSuffix(str, "/") {
+			str += "/"
+		}
+		return str
 	}
-	h.GET(urlPattern, handlerFunc)
-	h.HEAD(urlPattern, handlerFunc)
+	realPathMap.Store(ensureSlashes(relativePath), ensureSlashes(root))
 }
 
 func cRedirecURI(uri string) []byte {
