@@ -174,7 +174,7 @@ func isInstalled() bool {
 // updateInstall 更新安装状态
 func updateInstall(ctx context.Context) error {
 	// 将config配置写入到表,写入前先把config表清空
-	err := insertConfig(ctx, &config)
+	err := insertConfig(ctx)
 	if err != nil {
 		return err
 	}
