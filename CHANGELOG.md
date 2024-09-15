@@ -1,4 +1,7 @@
 v1.0.5
+- 修复修改项目前缀造成访问异常的bug  
+- 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/7),优化静态路由配置，不用动态在更新路由  
+- 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/6),解压失败的情况 合理删除目录  
 - 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/5),解决sliceCategory2Tree三层及以上层数异常问题
 - 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/4),解决AES-CBC模式加解密 部分文本异常
 - 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/3),解决非法压缩包上传未删除问题
