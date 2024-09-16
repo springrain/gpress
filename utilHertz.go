@@ -246,6 +246,14 @@ func initHStaticFS() {
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
 	updateHStaticFSPath("/public", datadir)
 
+	//设置默认的 favicon.ico
+	site, err := funcSite()
+	if err == nil && site.Id != "" {
+		favicon := datadir + site.Favicon
+		h.StaticFile("/favicon.ico", favicon)
+	}
+
+	//映射静态文件
 	h.StaticFS("/", &app.FS{
 		Root: "./",
 		PathRewrite: func(c *app.RequestContext) []byte {
@@ -261,6 +269,10 @@ func initHStaticFS() {
 
 			localDir, ok := realPathMap.Load(key)
 			if !ok {
+				//  /xx 这样的根目录路径,在public目录中寻找
+				if len(parts) == 2 {
+					return []byte("/" + datadir + "public" + relativePath)
+				}
 				return []byte("/" + default404File)
 			}
 			localFilePath := strings.TrimSuffix(localDir.(string), "/") + relativePath
