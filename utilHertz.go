@@ -246,22 +246,9 @@ func initHStaticFS() {
 	// 设置默认的静态文件,实际路径会拼接为 datadir/public
 	updateHStaticFSPath("/public", datadir)
 
-	//404页面
-	error404html := default404File
-
 	//设置默认的 favicon.ico
-	site, err := funcSite()
-	if err == nil && site.Id != "" {
-		favicon := datadir + site.Favicon
-		h.StaticFile("/favicon.ico", favicon)
-
-		//主题中的404文件
-		theme404 := themeDir + site.Theme + "/404.html"
-		if pathExist(theme404) {
-			error404html = theme404
-		}
-
-	}
+	favicon := datadir + site.Favicon
+	h.StaticFile("/favicon.ico", favicon)
 
 	//映射静态文件
 	h.StaticFS("/", &app.FS{
@@ -283,7 +270,9 @@ func initHStaticFS() {
 				if len(parts) == 2 {
 					return []byte("/" + datadir + "public" + relativePath)
 				}
-				return []byte("/" + error404html)
+				//主题中的404文件
+				theme404 := themeDir + site.Theme + "/404.html"
+				return []byte("/" + theme404)
 			}
 			localFilePath := strings.TrimSuffix(localDir.(string), "/") + relativePath
 			return []byte(localFilePath)
