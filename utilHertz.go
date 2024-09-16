@@ -266,13 +266,7 @@ func initHStaticFS() {
 
 			localDir, ok := realPathMap.Load(key)
 			if !ok {
-				//  /xx 这样的根目录路径,在public目录中寻找
-				if len(parts) == 2 {
-					return []byte("/" + datadir + "public" + relativePath)
-				}
-				//主题中的404文件
-				theme404 := themeDir + site.Theme + "/404.html"
-				return []byte("/" + theme404)
+				return []byte("/" + datadir + "public" + relativePath)
 			}
 			localFilePath := strings.TrimSuffix(localDir.(string), "/") + relativePath
 			return []byte(localFilePath)
