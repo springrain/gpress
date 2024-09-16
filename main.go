@@ -37,7 +37,7 @@ var installed = isInstalled()
 var config, site = loadInstallConfig()
 
 // 使用的主题
-var themePath = "/theme/" + site.Theme + "/"
+//var themePath = "/theme/" + site.Theme + "/"
 
 // 服务器url路径
 var httpServerPath = "http://"
