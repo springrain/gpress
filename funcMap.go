@@ -118,7 +118,7 @@ func funcHrefURL(href string) (string, error) {
 
 // funcRelURL 拼接url路径的
 func funcRelURL(url string) (template.HTML, error) {
-	return funcSafeHTML(themePath + url)
+	return funcSafeHTML("/theme/" + site.Theme + "/" + url)
 }
 
 // 站点信息
