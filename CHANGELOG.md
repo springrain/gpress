@@ -1,5 +1,6 @@
 v1.0.5
 - 修复修改项目前缀造成访问异常的bug  
+- 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/8),eth验签从go-ethereum库切换到dcrd库
 - 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/7),优化静态路由配置，不用动态在更新路由  
 - 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/6),解压失败的情况 合理删除目录  
 - 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/5),解决sliceCategory2Tree三层及以上层数异常问题
