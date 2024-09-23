@@ -33,8 +33,8 @@ func loadInstallConfig() (Config, Site) {
 	var site = Site{Theme: "default"}
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
 	if installed { // 已经安装,需要表读取配置
-		finder := zorm.NewSelectFinder(tableSiteName).Append("WHERE id=?", "gpress_site")
-		_, err := zorm.QueryRow(context.Background(), finder, &site)
+		var err error
+		site, err = funcSite()
 		if err != nil {
 			return defaultConfig, site
 		}
