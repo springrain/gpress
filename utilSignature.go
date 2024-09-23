@@ -24,50 +24,62 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"math/big"
-
-	"github.com/ethereum/go-ethereum/common"
-	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+	dcrdEcdsa "github.com/decred/dcrd/dcrec/secp256k1/v4/ecdsa"
 	"golang.org/x/crypto/ripemd160"
+	"golang.org/x/crypto/sha3"
+	"math/big"
+	"strings"
 )
 
 func verifySecp256k1Signature(senderAddress string, signatureData string, signature string) (bool, error) {
-	// 将签名数据解码为字节数组
-	signatureBytes := common.FromHex(signature)
-
-	// 将发送者地址解码为以太坊地址类型
-	sender := common.HexToAddress(senderAddress)
-
-	// 计算消息的哈希,包括 MetaMask 的消息前缀
-	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(signatureData), signatureData)
-	messageBytes := []byte(prefix)
-	messageHash := ethcrypto.Keccak256Hash(messageBytes)
-
-	// 提取恢复 ID
-	recoveryID := signatureBytes[64]
-	if recoveryID != 27 && recoveryID != 28 {
-		return false, errors.New("invalid recovery ID")
-	}
-
-	// 修复恢复 ID 的值
-	if recoveryID == 27 {
-		signatureBytes[64] = 0
-	} else {
-		signatureBytes[64] = 1
-	}
-
-	// 使用签名数据验证消息哈希
-	signaturePublicKey, err := ethcrypto.SigToPub(messageHash.Bytes(), signatureBytes)
+	signatureBytes, err := fromHex(signature)
 	if err != nil {
 		return false, err
 	}
-
-	signerAddress := ethcrypto.PubkeyToAddress(*signaturePublicKey)
-	if signerAddress != sender {
-		return false, errors.New("signature verification failed")
+	if len(signatureBytes) < 65 {
+		return false, errors.New("invalid signature")
 	}
-	return true, nil
+	// 计算消息的哈希,包括 MetaMask 的消息前缀
+	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s",
+		len(signatureData), signatureData)
+	messageBytes := []byte(prefix)
+	messageHash := keccak256Hash(messageBytes)
+	r, s, v := signatureBytes[:32], signatureBytes[32:64], signatureBytes[64]
+	sig, err := hex.DecodeString(fmt.Sprintf("%x%x%x", v, r, s))
+	if err != nil {
+		return false, err
+	}
+	hash, err := hex.DecodeString(fmt.Sprintf("%x", messageHash))
+	if err != nil {
+		return false, err
+	}
+	dcrdPublicKey, _, err := dcrdEcdsa.RecoverCompact(sig, hash)
+	if err != nil {
+		return false, err
+	}
+	pubKeyBytes := dcrdPublicKey.SerializeUncompressed()[1:]
+	pubKeyHash := keccak256Hash(pubKeyBytes)
+	address := ""
+	if len(pubKeyHash) > 20 {
+		address = fmt.Sprintf("0x%x", pubKeyHash[len(pubKeyHash)-20:])
+	}
+	return strings.ToLower(address) == strings.ToLower(senderAddress), nil
+}
 
+func fromHex(s string) ([]byte, error) {
+	if len(s) >= 2 && s[0] == '0' && (s[1] == 'x' || s[1] == 'X') {
+		s = s[2:]
+	}
+	if len(s)%2 == 1 {
+		s = "0" + s
+	}
+	return hex.DecodeString(s)
+}
+
+func keccak256Hash(data []byte) []byte {
+	d := sha3.NewLegacyKeccak256()
+	d.Write(data)
+	return d.Sum(nil)
 }
 
 // XuperChain使用NIST标准的公钥
