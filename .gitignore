@@ -13,7 +13,7 @@ testTable/
 dict/
 natsdata/
 *.db
-
+*.db.fail
 .vscode/
 
 *.swp
