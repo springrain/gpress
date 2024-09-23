@@ -52,9 +52,8 @@ func initTemplate() error {
 
 // loadTemplate 用于更新重复加载
 func loadTemplate() error {
-	finder := zorm.NewSelectFinder(tableSiteName).Append("WHERE id=?", "gpress_site")
-	_, err := zorm.QueryRow(context.Background(), finder, &site)
-
+	var err error
+	site, err = funcSite()
 	if err != nil {
 		return err
 	}
