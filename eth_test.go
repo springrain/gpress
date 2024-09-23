@@ -30,10 +30,43 @@ import (
 	"log"
 	"math/big"
 	"testing"
-
-	"github.com/ethereum/go-ethereum/crypto"
-	"golang.org/x/crypto/sha3"
 )
+
+func TestEthSignature(t *testing.T) {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		panic(err)
+	}
+
+	message := "Some data"
+	msgHash := keccak256Hash([]byte(message))
+
+	r, s, err := ecdsa.Sign(rand.Reader, privateKey, msgHash)
+	if err != nil {
+		panic(err)
+	}
+
+	v := big.NewInt(0)
+	v.Add(v, big.NewInt(27))
+
+	fmt.Println(fmt.Sprintf("r %x", r.Bytes()))
+	fmt.Println(fmt.Sprintf("s %x", s.Bytes()))
+	fmt.Println(fmt.Sprintf("v %x", v.Bytes()))
+
+	sig, err := hex.DecodeString(fmt.Sprintf("%x%x%x", v.Bytes(), r.Bytes(), s.Bytes()))
+	if err != nil {
+		panic(err)
+	}
+	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)
+	messageBytes := []byte(prefix)
+	messageHash := keccak256Hash(messageBytes)
+	hash, err := hex.DecodeString(fmt.Sprintf("%x", messageHash))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("sig", fmt.Sprintf("%x", sig), len(sig))
+	fmt.Println("hash", fmt.Sprintf("%x", hash), len(hash))
+}
 
 func TestEth(t *testing.T) {
 
@@ -196,72 +229,6 @@ func generateAddress(publicKey *ecdsa.PublicKey) string {
 	return fmt.Sprintf("0x%x", address)
 }
 
-// https://www.jianshu.com/p/71a4454c74da
-// https://github.com/wenweih/bitcoin_address_protocol
-// https://studygolang.com/articles/25128
-
-// https://segmentfault.com/a/1190000018359512
-func TestEthBTCPrivateKey(t *testing.T) {
-	// 生成私钥
-	//privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	privateKey, err := crypto.HexToECDSA("3e5adb36d7975cfb4af7fd7adcba310d915ec529400806516a2a92df6a6010c5")
-	//privateKey, err := crypto.GenerateKey()
-
-	if err != nil {
-		fmt.Println("生成私钥出错：", err)
-		return
-	}
-
-	// 根据私钥生成公钥
-	publicKey := privateKey.PublicKey
-
-	// 计算公钥的keccak256哈希
-	keccak := sha3.NewLegacyKeccak256()
-	keccak.Write(publicKey.X.Bytes())
-	keccak.Write(publicKey.Y.Bytes())
-	ethHash := keccak.Sum(nil)
-
-	// 从哈希中提取最后的20个字节（40个十六进制字符）
-	ethAddress := hex.EncodeToString(ethHash[12:])
-
-	// 将私钥和公钥转换为十六进制字符串
-	privateKeyHex := hex.EncodeToString(privateKey.D.Bytes())
-	publicKeyHex := hex.EncodeToString(append(publicKey.X.Bytes(), publicKey.Y.Bytes()...))
-
-	// 打印结果
-	fmt.Println("私钥：", privateKeyHex)
-	fmt.Println("公钥：", publicKeyHex)
-	fmt.Println("以太坊地址：", "0x"+ethAddress)
-
-}
-func TestEth2(t *testing.T) {
-	// 生成以太坊私钥
-	privateKey, err := crypto.GenerateKey()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// 将私钥转换为字节切片
-	privateKeyBytes := crypto.FromECDSA(privateKey)
-
-	// 生成以太坊公钥
-	publicKey := privateKey.Public()
-	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-	if !ok {
-		log.Fatal("无法获取公钥")
-	}
-
-	// 将公钥转换为字节切片
-	publicKeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
-
-	// 生成以太坊地址
-	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
-
-	// 将私钥、公钥和地址打印出来
-	fmt.Println("私钥:", hex.EncodeToString(privateKeyBytes))
-	fmt.Println("公钥:", hex.EncodeToString(publicKeyBytes))
-	fmt.Println("地址:", address)
-}
 func TestEth3(t *testing.T) {
 	// MetaMask 签名数据
 	signature := "0x4acafcdd5ee478e14453a36c074dee7d142dca7ead7a2029a0c6b7a3e547ee46379018cd8fc661450c84fd90bcca34e2e0008a02b27eab7944a97947c0d8bfa71b"
