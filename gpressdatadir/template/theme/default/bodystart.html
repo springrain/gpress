@@ -25,16 +25,16 @@
 <link rel="mask-icon" href="{{basePath}}{{$site.Favicon}}" color="#5bbad5">
 
 <link rel="stylesheet" href="{{basePath}}css/even.css">
-<link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+<link rel="stylesheet" href="{{basePath}}js/jquery.fancybox.min.css">
 
 
 <!--[if lte IE 9]>
-  <script src="https://cdn.staticfile.org/classlist/1.2.20180112/classList.min.js"></script>
+  <script src="{{basePath}}js/classList.min.js"></script>
 <![endif]-->
 
 <!--[if lt IE 9]>
-  <script src="https://cdn.staticfile.org/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+  <script src="{{basePath}}js/html5shiv.min.js"></script>
+  <script src="{{basePath}}js/respond.min.js"></script>
 <![endif]-->
 
 </head>
@@ -104,7 +104,7 @@
 			<div class="content-wrapper">
 				<div id="content" class="content">
 
-<script type="text/javascript" src="https://cdn.staticfile.org/jquery/3.7.0/jquery.min.js"></script>
+<script type="text/javascript" src="{{basePath}}js/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#input-enter').val($('#search-q').val())
