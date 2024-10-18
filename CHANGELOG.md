@@ -1,3 +1,7 @@
+v1.0.6
+- 使用本地的js资源文件
+- 完善文档,注释
+
 v1.0.5
 - 修复修改项目前缀造成访问异常的bug  
 - 感谢 @soldier_of_love 的[pr](https://gitee.com/gpress/gpress/pulls/8),eth验签从go-ethereum库切换到dcrd库
