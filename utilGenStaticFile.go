@@ -112,7 +112,7 @@ func genStaticFile() error {
 	}
 	defer sitemapFile.Close() // 确保在函数结束时关闭文件
 	sitemapFile.WriteString(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
-	sitemapFile.WriteString("<url><loc>" + domain + "/index.html" + "</loc></url>")
+	sitemapFile.WriteString("<url><loc>" + domain + "</loc></url>")
 	//上一个分页
 	prvePageFileHash := ""
 	//生成文章的静态网页
@@ -128,7 +128,7 @@ func genStaticFile() error {
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/post/" + postId + "/index.html</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + "/post/" + postId + "</loc></url>")
 		}
 
 		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash)
@@ -136,7 +136,7 @@ func genStaticFile() error {
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/page/" + strconv.Itoa(i+1) + "/index.html</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + "/page/" + strconv.Itoa(i+1) + "</loc></url>")
 		}
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
@@ -156,7 +156,7 @@ func genStaticFile() error {
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/index.html</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
 			fileHash, success, err := writeStaticHtml("category/"+categoryId+"/page/"+strconv.Itoa(j+1), prvePageFileHash)
@@ -164,7 +164,7 @@ func genStaticFile() error {
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
@@ -179,7 +179,7 @@ func genStaticFile() error {
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/index.html</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
 			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash)
@@ -187,7 +187,7 @@ func genStaticFile() error {
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/page/" + strconv.Itoa(j+1) + "/index.html</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
