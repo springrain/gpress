@@ -165,7 +165,7 @@ INSERT INTO content (
                         '2024-04-11 11:02:40',
                         '2023-06-27 22:43:53',
                         NULL,
-                        '本站服务器配置:ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .  
+                        '本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .  
 使用[gpress](https://gitee.com/gpress/gpress)迁移了[Hugo](https://github.com/gohugoio/hugo)的[even](https://github.com/olOwOlo/hugo-theme-even)主题和markdown文件.  
 
 我所见识过的一切都将消失一空,就如眼泪消逝在雨中......  
@@ -176,7 +176,7 @@ INSERT INTO content (
 * [zorm](https://gitee.com/chunanyong/zorm)
 * [gpress](https://gitee.com/gpress/gpress)
 * [gowe](https://gitee.com/chunanyong/gowe)',
-                        '<p>本站服务器配置:ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .<br>
+                        '<p>本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .<br>
 使用<a href="https://gitee.com/gpress/gpress">gpress</a>迁移了<a href="https://github.com/gohugoio/hugo">hugo</a>的<a href="https://github.com/olOwOlo/hugo-theme-even">even</a>主题和markdown文件.</p>
 <p>我所见识过的一切都将消失一空,就如眼泪消逝在雨中......<br>
 不妨大胆一些,大胆一些......</p>
@@ -188,7 +188,7 @@ INSERT INTO content (
 <li><a href="https://gitee.com/chunanyong/gowe">gowe</a></li>
 </ul>
 ',
-                        '本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用Hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......	不妨大胆一些,大胆一些......',
+                        '本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9.使用Hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......	不妨大胆一些,大胆一些......',
                         '',
                         NULL,
                         'springrain',
@@ -215,7 +215,7 @@ INSERT INTO content (
 Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存  
     
 **作为静态站点：** gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:[even](gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default)、[doks](gitee.com/gpress/gpress-doks)、[book](gitee.com/gpress/gpress-book)、[geekdoc](gitee.com/gpress/gpress-geekdoc)......   
-**作为动态站点：** gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索......  
+**作为动态站点：** gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索.兼容WordPress主题生态,已迁移多款WordPress主题:[generatepress](https://gitee.com/gpress/wp-generatepress)、[astra](https://gitee.com/gpress/wp-astra)......   
 **作为Web3：** gpress已支持以太坊和百度超级链账户体系,会基于Wasm持续迭代去中心功能,让数据自由一点点......  
 **作为后浪：** 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......  
 **帮助文档：** [点击查看帮助文档](https://gitee.com/gpress/gpress/blob/master/gpressdatadir/public/doc/index.md)    
@@ -293,16 +293,16 @@ location / {
        break;
     }
 
-    #### gzip 静态压缩配置 开始####
+    ### 开启gzip静态压缩
     #gzip_static on;
-    ## 请求的是个目录,302重定向到 目录下的 index.html
-    #if ( -d $request_filename ) {
+    ### Nginx 1.26+ 不需要再进行302重定向到目录下的index.html,gzip_static也会生效.这段配置留作记录.
+    ##if ( -d $request_filename ) {
         ## 不是 / 结尾
-    #    rewrite [^\/]$ $uri/index.html redirect;
+    ##    rewrite [^\/]$ $uri/index.html redirect;
         ##以 / 结尾的
-    #    rewrite ^(.*) ${uri}index.html redirect;      
-    #}
-    #### gzip 静态压缩配置 结束####
+    ##    rewrite ^(.*) ${uri}index.html redirect;      
+    ##}
+
 
     
     root   /data/gpress/gpressdatadir/statichtml;
@@ -315,7 +315,7 @@ location / {
                         '<h1 id="介绍">介绍</h1>
 <p>Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存</p>
 <p><strong>作为静态站点：</strong> gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:<a href="gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default">even</a>、<a href="gitee.com/gpress/gpress-doks">doks</a>、<a href="gitee.com/gpress/gpress-book">book</a>、<a href="gitee.com/gpress/gpress-geekdoc">geekdoc</a>......<br>
-<strong>作为动态站点：</strong> gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索......<br>
+<strong>作为动态站点：</strong> gpress功能简单,只有7个菜单,5张表,5000行代码,使用SQLite,一键启动,只需200M内存,支持全文检索.兼容WordPress主题生态,已迁移多款WordPress主题:<a href="https://gitee.com/gpress/wp-generatepress">generatepress</a>、<a href="https://gitee.com/gpress/wp-astra">astra</a>......<br>
 <strong>作为Web3：</strong> gpress已支持以太坊和百度超级链账户体系,会基于Wasm持续迭代去中心功能,让数据自由一点点......<br>
 <strong>作为后浪：</strong> 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......<br>
 <strong>帮助文档：</strong> <a href="https://gitee.com/gpress/gpress/blob/master/gpressdatadir/public/doc/index.md">点击查看帮助文档</a></p>
@@ -386,16 +386,16 @@ nginx 配置示例如下:</p>
 </span></span><span class="line"><span class="cl">       break;
 </span></span><span class="line"><span class="cl">    }
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    #### gzip 静态压缩配置 开始####
+</span></span><span class="line"><span class="cl">    #### 开启gzip静态压缩
 </span></span><span class="line"><span class="cl">    #gzip_static on;
-</span></span><span class="line"><span class="cl">    ## 请求的是个目录,302重定向到 目录下的 index.html
-</span></span><span class="line"><span class="cl">    #if ( -d $request_filename ) {
+</span></span><span class="line"><span class="cl">    ### Nginx 1.26+ 不需要再进行302重定向到目录下的index.html,gzip_static也会生效.这段配置留作记录.
+</span></span><span class="line"><span class="cl">    ##if ( -d $request_filename ) {
 </span></span><span class="line"><span class="cl">        ## 不是 / 结尾
-</span></span><span class="line"><span class="cl">    #    rewrite [^\/]$ $uri/index.html redirect;
+</span></span><span class="line"><span class="cl">    ##    rewrite [^\/]$ $uri/index.html redirect;
 </span></span><span class="line"><span class="cl">        ##以 / 结尾的
-</span></span><span class="line"><span class="cl">    #    rewrite ^(.*) ${uri}index.html redirect;      
-</span></span><span class="line"><span class="cl">    #}
-</span></span><span class="line"><span class="cl">    #### gzip 静态压缩配置 结束####
+</span></span><span class="line"><span class="cl">    ##    rewrite ^(.*) ${uri}index.html redirect;      
+</span></span><span class="line"><span class="cl">    ##}
+</span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl">    root   /data/gpress/gpressdatadir/statichtml;
