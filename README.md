@@ -83,17 +83,16 @@ location / {
        break;
     }
 
-    #### gzip 静态压缩配置 开始####
+    ### 开启gzip静态压缩
     #gzip_static on;
-    ## 请求的是个目录,302重定向到 目录下的 index.html
-    #if ( -d $request_filename ) {
-        ## 不是 / 结尾
-    #    rewrite [^\/]$ $uri/index.html redirect;
-        ##以 / 结尾的
-    #    rewrite ^(.*) ${uri}index.html redirect;      
-    #}
-    #### gzip 静态压缩配置 结束####
 
+    ### Nginx 1.26+ 不需要再进行302重定向到目录下的index.html,gzip_static也会生效.这段配置留作记录.
+    ##if ( -d $request_filename ) {
+        ## 不是 / 结尾
+    ##    rewrite [^\/]$ $uri/index.html redirect;
+        ##以 / 结尾的
+    ##    rewrite ^(.*) ${uri}index.html redirect;      
+    ##}
     
     root   /data/gpress/gpressdatadir/statichtml;
     index  index.html index.htm;
