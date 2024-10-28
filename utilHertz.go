@@ -27,86 +27,92 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 	"time"
 
 	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/app/server/render"
 )
 
-var tmpl *template.Template = template.New(appName).Delims("", "").Funcs(funcMap)
+// 后台模板渲染
+var templateAdmin = template.New(appName+"-admin").Delims("", "").Funcs(funcMap)
+var htmlRenderAdmin = render.HTMLProduction{Template: templateAdmin}
 
-// initTemplate 初始化模板
-func initTemplate() error {
-	// h.SetFuncMap(funcMap)
-	// h.LoadHTMLFiles(themePath + "index.html")
-	// h.LoadHTMLGlob(datadir + "html/theme/default/*")
-	// 手动声明template对象,自己控制文件路径,默认是使用文件名,多个文件夹会存在问题
-	err := loadTemplate()
-	// 设置模板
-	h.SetHTMLTemplate(tmpl)
-	// gpress只负责生成静态html文件,使用Nginx读取静态文件
-	//hStaticFS("/statichtml", datadir)
-	return err
+// 前端模板渲染,分为pc/wap/wx三种客户端,默认是templateDefault
+var templateDefault = template.New(appName+"-default").Delims("", "").Funcs(funcMap)
+var htmlRender = render.HTMLProduction{Template: templateDefault}
+var templatePC = template.New(appName+"-pc").Delims("", "").Funcs(funcMap)
+var htmlRenderPC = render.HTMLProduction{Template: templatePC}
+var templateWAP = template.New(appName+"-wap").Delims("", "").Funcs(funcMap)
+var htmlRenderWAP = render.HTMLProduction{Template: templateWAP}
+var templateWX = template.New(appName+"-wx").Delims("", "").Funcs(funcMap)
+var htmlRenderWX = render.HTMLProduction{Template: templateWX}
+
+// cHtml 渲染前端页面
+func cHtml(c *app.RequestContext, code int, name string, obj interface{}) {
+	_, htmlRender := getTheme(c)
+	instance := htmlRender.Instance(name, obj)
+	c.Render(code, instance)
 }
 
-// loadTemplate 用于更新重复加载
+// cHtmlAdmin 渲染后台界面
+func cHtmlAdmin(c *app.RequestContext, code int, name string, obj interface{}) {
+	instance := htmlRenderAdmin.Instance(name, obj)
+	c.Render(code, instance)
+}
+
+// loadTemplate 加载页面模板
 func loadTemplate() error {
 	var err error
 	site, err = funcSite()
 	if err != nil {
 		return err
 	}
-	//声明新的template
-	loadTmpl := template.New(appName).Delims("", "").Funcs(funcMap)
 
-	staticFileMap := make(map[string]string)
 	//遍历后台admin模板
-	err = walkTemplateDir(loadTmpl, templateDir+"admin/", templateDir, &staticFileMap, true)
+	err = walkTemplateDir(templateAdmin, templateDir+"admin/", templateDir, true)
 	if err != nil {
-		FuncLogError(err)
+		FuncLogError(nil, err)
 		return err
 	}
-	//遍历用户配置的主题模板
-	err = walkTemplateDir(loadTmpl, themeDir+site.Theme+"/", themeDir+site.Theme+"/", &staticFileMap, false)
-	if err != nil {
-		FuncLogError(err)
-		return err
+
+	//遍历前端默认模板文件
+	if site.Theme != "" {
+		err = walkTemplateDir(templateDefault, themeDir+site.Theme+"/", themeDir+site.Theme+"/", false)
+		if err != nil {
+			FuncLogError(nil, err)
+			return err
+		}
 	}
-	//此处为hertz bug,已经调用了 h.SetHTMLTemplate(tmpl),但是c.HTMLRender依然是老的内存地址.所以这里暂时不改变指针地址
-	//https://github.com/cloudwego/hertz/issues/683
-	*tmpl = *loadTmpl
-
-	// 设置模板
-	//h.SetHTMLTemplate(tmpl)
-
-	//增加静态文件夹
-	for k, v := range staticFileMap {
-		//staticFS2 := http.Dir(v)
-		updateHStaticFSPath(k, v)
-		//h.Handle("GET", k+"/*filepath", http.FileServer(staticFS2))
+	if site.ThemePC != "" {
+		err = walkTemplateDir(templatePC, themeDir+site.ThemePC+"/", themeDir+site.ThemePC+"/", false)
+		if err != nil {
+			FuncLogError(nil, err)
+			return err
+		}
 	}
-
-	/*
-		// 直接映射 /statichtml,暂时不用每个都单独注册了
-		// 遍历处理静态化文件
-		filepath.Walk(statichtmlDir, func(path string, info os.FileInfo, err error) error {
-			if info.IsDir() { // 只处理文件
-				return nil
-			}
-			// 分隔符统一为 / 斜杠
-			path = filepath.ToSlash(path)
-			// 相对路径
-			relativePath := path[len(statichtmlDir)-1:]
-			// 设置静态化文件
-			h.StaticFile(relativePath, path)
-			return nil
-		})
-	*/
+	//遍历手机wap的模板文件
+	if site.ThemeWAP != "" {
+		err = walkTemplateDir(templateWAP, themeDir+site.ThemeWAP+"/", themeDir+site.ThemeWAP+"/", false)
+		if err != nil {
+			FuncLogError(nil, err)
+			return err
+		}
+	}
+	//遍历微信WX的模板文件
+	if site.ThemeWX != "" {
+		err = walkTemplateDir(templateWX, themeDir+site.ThemeWX+"/", themeDir+site.ThemeWX+"/", false)
+		if err != nil {
+			FuncLogError(nil, err)
+			return err
+		}
+	}
 	return nil
 }
 
-func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string, staticFileMap *map[string]string, isAdmin bool) error {
+// walkTemplateDir 遍历模板文件夹
+func walkTemplateDir(tmpl *template.Template, walkDir string, baseDir string, isAdmin bool) error {
+	loadTmpl := template.New(tmpl.Name()).Delims("", "").Funcs(funcMap)
 	//遍历模板文件夹
 	err := filepath.Walk(walkDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -114,35 +120,10 @@ func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string
 		}
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
-
 		if !isAdmin && strings.Contains(path, "/admin/") { //如果用户主题,但是包含admin目录,不解析
 			return nil
 		}
-
-		// 如果是静态资源
-		if strings.Contains(path, "/js/") || strings.Contains(path, "/css/") || strings.Contains(path, "/image/") {
-			relativePath := path[len(baseDir)-1:]
-			/*
-				// 直接映射静态文件夹
-				if !strings.HasSuffix(path, consts.FSCompressedFileSuffix) { // 过滤掉压缩包
-				    h.StaticFile(relativePath, path)
-				}
-			*/
-			if strings.Contains(relativePath, "/js/") { //如果是js文件夹
-				key := relativePath[:strings.Index(relativePath, "/js/")+4]
-				value := path[:strings.Index(path, key)]
-				(*staticFileMap)[key] = value
-			} else if strings.Contains(relativePath, "/css/") { //如果是css文件夹
-				key := relativePath[:strings.Index(relativePath, "/css/")+5]
-				value := path[:strings.Index(path, key)]
-				(*staticFileMap)[key] = value
-			} else if strings.Contains(relativePath, "/image/") { //如果是image文件夹
-				key := relativePath[:strings.Index(relativePath, "/image/")+7]
-				value := path[:strings.Index(path, key)]
-				(*staticFileMap)[key] = value
-			}
-
-		} else if strings.HasSuffix(path, ".html") { // 模板文件
+		if strings.HasSuffix(path, ".html") { // 模板文件
 			relativePath := path[len(baseDir):]
 			// 创建对应的模板
 			t := loadTmpl.New(relativePath)
@@ -158,15 +139,25 @@ func walkTemplateDir(loadTmpl *template.Template, walkDir string, baseDir string
 		}
 		return nil
 	})
+
+	//更新模板对象
+	*tmpl = *loadTmpl
+
 	return err
 }
 
 // isInstalled 是否已经安装过了
 func isInstalled() bool {
+	// 检查表状态
+	var sqliteStatus = checkSQLiteStatus()
+
 	// 依赖sqliteStatus变量,确保sqlite在isInstalled之前初始化
 	if !sqliteStatus {
-		FuncLogError(errors.New("sqliteStatus状态为false"))
+		err := errors.New("表检查失败,sqliteStatus状态为false")
+		FuncLogError(nil, err)
+		panic(err)
 	}
+
 	return !pathExist(templateDir + "admin/install.html")
 }
 
@@ -186,111 +177,48 @@ func updateInstall(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	/*
-		// install_config.json 重命名为 install_config.json_配置已失效_请通过后台设置管理
-		err = os.Rename(datadir+"install_config.json", datadir+"install_config.json."+randStringId)
-		if err != nil {
-			return err
-		}
-	*/
 
 	// 更改安装状态
 	installed = true
 	return nil
 }
 
-// ResponseData 返回数据包装器
-type ResponseData struct {
-	// 业务状态代码 // 异常 0, 成功 1,默认失败0,业务代码见说明
-	StatusCode int `json:"statusCode"`
-	// HttpCode http的状态码
-	// HttpCode int `json:"httpCode,omitempty"`
-	// 返回数据
-	Data interface{} `json:"data,omitempty"`
-
-	// 返回的信息内容,配合StatusCode
-	Message string `json:"message,omitempty"`
-	// 扩展的map,用于处理返回多个值的情况
-	ExtMap map[string]interface{} `json:"extMap,omitempty"`
-	// 列表的分页对象
-	Page *zorm.Page `json:"page,omitempty"`
-	// 查询条件的struct回传
-	QueryStringMap map[string]string `json:"queryStringMap,omitempty"`
-	// 表名称
-	UrlPathParam string `json:"urlPathParam,omitempty"`
-	// 表字段信息
-	// TableField []TableFieldStruct `json:"tableField,omitempty"`
-	// 响应错误
-	ERR error `json:"err,omitempty"`
-}
-
-/*
-func responData2Map(responseData ResponseData) map[string]interface{} {
-	result := make(map[string]interface{}, 0)
-	result["statusCode"] = responseData.StatusCode
-	result["data"] = responseData.Data
-	result["message"] = responseData.Message
-	result["extMap"] = responseData.ExtMap
-	result["page"] = responseData.Page
-	result["queryString"] = responseData.QueryStringMap
-	result["UrlPathParam"] = responseData.UrlPathParam
-	result["err"] = responseData.ERR
-	return result
-}
-*/
-
-var realPathMap sync.Map
-
-func initHStaticFS() {
-	// 设置默认的静态文件,实际路径会拼接为 datadir/public
-	updateHStaticFSPath("/public", datadir)
-
+// initStaticFS 初始化静态文件
+func initStaticFS() {
+	//设置默认的静态文件,实际路径会拼接为 datadir/public
+	h.Static("/public", datadir)
 	//设置默认的 favicon.ico
-	favicon := datadir + site.Favicon
-	h.StaticFile("/favicon.ico", favicon)
+	h.StaticFile("/favicon.ico", datadir+site.Favicon)
+	//后台管理的静态文件
+	h.Static("/admin/js", templateDir)
+	h.Static("/admin/css", templateDir)
+	h.Static("/admin/image", templateDir)
 
-	//映射静态文件
+	//映射其他静态文件
 	h.StaticFS("/", &app.FS{
-		Root: "./",
+		Root:     "./",
+		Compress: false, //不使用hertz的压缩.gz,程序控制压缩.gz
+		//CompressedFileSuffix: compressedFileSuffix,
 		PathRewrite: func(c *app.RequestContext) []byte {
-			relativePath := "/" + c.Param("filepath")
+			relativePath := c.Param("filepath")
 			key := relativePath
 			parts := strings.Split(relativePath, "/")
-			if len(parts) > 2 {
-				key = "/" + parts[1] + "/"
-				if strings.HasPrefix(relativePath, "/admin/") {
-					key = key + parts[2] + "/"
-				}
+			if len(parts) > 1 {
+				key = parts[0]
+			}
+			switch key {
+			case "js", "css", "image": //处理静态文件,根据浏览器获取对应的主题
+				theme, _ := getTheme(c)
+				return []byte("/" + themeDir + theme + "/" + relativePath)
+			default:
+				return []byte("/" + datadir + "public/" + relativePath)
 			}
 
-			localDir, ok := realPathMap.Load(key)
-			if !ok {
-				return []byte("/" + datadir + "public" + relativePath)
-			}
-			localFilePath := strings.TrimSuffix(localDir.(string), "/") + relativePath
-			return []byte(localFilePath)
 		},
-		Compress:             false,
-		CompressedFileSuffix: compressedFileSuffix,
 	})
 }
 
-func updateHStaticFSPath(relativePath, root string) {
-	if strings.Contains(relativePath, ":") || strings.Contains(relativePath, "*") {
-		panic("URL parameters can not be used when serving a static folder")
-	}
-	ensureSlashes := func(str string) string {
-		if !strings.HasPrefix(str, "/") {
-			str = "/" + str
-		}
-		if !strings.HasSuffix(str, "/") {
-			str += "/"
-		}
-		return str
-	}
-	realPathMap.Store(ensureSlashes(relativePath), ensureSlashes(root))
-}
-
+// cRedirecURI 重定向到uri,拼接上basePath
 func cRedirecURI(uri string) []byte {
 	return []byte(config.BasePath + uri)
 }
@@ -331,62 +259,68 @@ func pathExist(path string) bool {
 	return false
 }
 
-/*
-// registerHrefRoute 注册category 和 content的自定义路由,最多500个
-
-	func registerHrefRoute() error {
-		ctx := context.Background()
-		page := zorm.NewPage()
-		page.PageNo = 1
-		page.PageSize = 500
-		finder1 := zorm.NewSelectFinder(tableCategoryName, "id,hrefURL").Append(" WHERE status in (1,2) and hrefURL!=?", "").Append("order by  status desc,sortNo desc")
-		categoryMaps, err := zorm.QueryMap(ctx, finder1, page)
-		if err != nil {
-			return err
-		}
-		for _, categoryMap := range categoryMaps {
-			id := categoryMap["id"].(string)
-			hrefURL := categoryMap["hrefURL"].(string)
-			err := hrefURLRoute("category/"+id, hrefURL)
-			if err != nil {
-				return err
-			}
-		}
-
-		finder2 := zorm.NewSelectFinder(tableContentName, "id,hrefURL").Append(" WHERE status in (1,2) and hrefURL!=?", "").Append("order by status desc, sortNo desc")
-		contentMaps, err := zorm.QueryMap(ctx, finder2, page)
-		if err != nil {
-			return err
-		}
-		for _, contentMap := range contentMaps {
-			id := contentMap["id"].(string)
-			hrefURL := contentMap["hrefURL"].(string)
-			err := hrefURLRoute("post/"+id, hrefURL)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-
-}
-*/
-
+// findThemeTemplate 从数据库查询模板文件
 func findThemeTemplate(ctx context.Context, tableName string, urlPathParam string) (string, error) {
-	//finder := zorm.NewFinder().Append("select p.templatePath from themeTemplate p, "+tableName+" t WHERE t.templateFile=p.id and t.id=?", urlPathParam)
 	finder := zorm.NewSelectFinder(tableName, "templateFile").Append(" WHERE id=?", urlPathParam)
 	templatePath := ""
-	flag, err := zorm.QueryRow(ctx, finder, &templatePath)
+	has, err := zorm.QueryRow(ctx, finder, &templatePath)
 	if err != nil {
-		FuncLogError(err)
+		FuncLogError(ctx, err)
 		return "", err
 
 	}
-	if !flag {
+	if !has {
 		return "", err
 	}
-	t := tmpl.Lookup(templatePath)
-	if t == nil { //模板不存在
-		templatePath = ""
-	}
 	return templatePath, err
+}
+
+// getTheme 根据Cookie和User-Agent获取配置的 theme
+func getTheme(c *app.RequestContext) (string, render.HTMLRender) {
+	//优先cookie,其次请求头
+	userAgentByte := c.Cookie("User-Agent")
+	if len(userAgentByte) == 0 {
+		userAgentByte = c.GetHeader("User-Agent")
+	}
+	if len(userAgentByte) == 0 {
+		return site.Theme, htmlRender
+	}
+	userAgent := strings.ToLower(string(userAgentByte))
+
+	if site.ThemeWX != "" && (strings.Contains(userAgent, "weixin") || strings.Contains(userAgent, "wechat") || strings.Contains(userAgent, "micromessenger")) { // 微信
+		return site.ThemeWX, htmlRenderWX
+	} else if site.ThemeWAP != "" && (strings.Contains(userAgent, "android") || strings.Contains(userAgent, "phone") || strings.Contains(userAgent, "harmonyos") || strings.Contains(userAgent, "mobile") || strings.Contains(userAgent, "blackberry") || strings.Contains(userAgent, "ipod")) {
+		return site.ThemeWAP, htmlRenderWAP
+	} else if site.ThemePC != "" && (strings.Contains(userAgent, "windows") || strings.Contains(userAgent, "linux") || strings.Contains(userAgent, "macintosh") || strings.Contains(userAgent, "ipad") || strings.Contains(userAgent, "tablet")) {
+		return site.ThemePC, htmlRenderPC
+	}
+	return site.Theme, htmlRender
+
+}
+
+// ResponseData 返回数据包装器
+type ResponseData struct {
+	// StatusCode 业务状态代码 // 异常 0, 成功 1,默认失败0,业务代码见说明
+	StatusCode int `json:"statusCode"`
+
+	// Data 返回数据
+	Data interface{} `json:"data,omitempty"`
+
+	// Message 返回的信息内容,配合StatusCode
+	Message string `json:"message,omitempty"`
+
+	// ExtMap 扩展的map,用于处理返回多个值的情况
+	ExtMap map[string]interface{} `json:"extMap,omitempty"`
+
+	// 列表的分页对象
+	Page *zorm.Page `json:"page,omitempty"`
+
+	// QueryStringMap 查询条件的struct回传
+	QueryStringMap map[string]string `json:"queryStringMap,omitempty"`
+
+	// UrlPathParam 表名称
+	UrlPathParam string `json:"urlPathParam,omitempty"`
+
+	// ERR 响应错误
+	ERR error `json:"err,omitempty"`
 }

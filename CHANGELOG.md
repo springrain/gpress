@@ -1,6 +1,10 @@
 v1.0.6
 - 使用本地的js资源文件
 - Nginx 1.26+ 不需要再进行302重定向到目录下的index.html,gzip_static也会生效
+- 根据Cookie和User-Agent请求头,为pc,wap,weixin配置不同的主题,并支持HarmonyOS
+- site表中siteThemeWEIXIN字段名修改为themeWX
+- 修复上传文件路径异常的问题
+- 调整后台管理功能实现
 - 完善文档,注释
 
 v1.0.5

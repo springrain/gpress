@@ -18,7 +18,7 @@
 package main
 
 import (
-	"log"
+	"context"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
@@ -26,7 +26,9 @@ import (
 func init() {
 	// 设置默认的日志显示信息,显示文件和行号
 	// Set the default log display information, display file and line number.
-	log.SetFlags(log.Llongfile | log.LstdFlags)
+	// log.SetFlags(log.Llongfile | log.LstdFlags)
+	// 设置日志级别
+	hlog.SetLevel(hlog.LevelError)
 }
 
 // LogCallDepth 记录日志调用层级,用于定位到业务层代码
@@ -35,17 +37,17 @@ var LogCallDepth = 4
 
 // FuncLogError 记录error日志
 // FuncLogError Record error log
-var FuncLogError func(err error) = defaultLogError
+var FuncLogError func(ctx context.Context, err error) = defaultLogError
 
-// FuncLogPanic  记录panic日志,默认使用"ZormErrorLog"实现
-// FuncLogPanic Record panic log, using "Zorm Error Log" by default
-var FuncLogPanic func(err error) = defaultLogPanic
+// FuncLogPanic  记录panic日志,默认使用"defaultLogPanic"实现
+// FuncLogPanic Record panic log, using "defaultLogPanic" by default
+var FuncLogPanic func(ctx context.Context, err error) = defaultLogPanic
 
-func defaultLogError(err error) {
+func defaultLogError(ctx context.Context, err error) {
 	//log.Output(LogCallDepth, fmt.Sprintln(err))
 	hlog.Error(err)
 }
 
-func defaultLogPanic(err error) {
-	defaultLogError(err)
+func defaultLogPanic(ctx context.Context, err error) {
+	defaultLogError(ctx, err)
 }

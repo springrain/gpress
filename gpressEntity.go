@@ -57,13 +57,13 @@ type Config struct {
 	// UpdateTime 更新时间
 	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
 
-	// CreateUser  创建人,初始化 system
+	// CreateUser 创建人,初始化 system
 	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
+	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -119,7 +119,7 @@ type Category struct {
 	// Keyword 关键字
 	Keyword string `column:"keyword" json:"keyword,omitempty"`
 
-	// Description 栏目描述
+	// Description 导航菜单描述
 	Description string `column:"description" json:"description,omitempty"`
 
 	// CreateTime 创建时间
@@ -128,13 +128,13 @@ type Category struct {
 	// UpdateTime 更新时间
 	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
 
-	// CreateUser  创建人,初始化 system
+	// CreateUser 创建人,初始化 system
 	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
+	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 
 	Leaf []Category `json:"leaf,omitempty"`
@@ -220,13 +220,13 @@ type Content struct {
 	// UpdateTime 更新时间
 	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
 
-	// CreateUser  创建人,初始化 system
+	// CreateUser 创建人,初始化 system
 	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
+	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -276,8 +276,8 @@ type Site struct {
 	// ThemeWAP WAP主题WAP
 	ThemeWAP string `column:"themeWAP" json:"themeWAP,omitempty"`
 
-	// SiteThemeWEIXIN 微信主题
-	SiteThemeWEIXIN string `column:"siteThemeWEIXIN" json:"siteThemeWEIXIN,omitempty"`
+	// ThemeWX 微信主题
+	ThemeWX string `column:"themeWX" json:"themeWX,omitempty"`
 
 	// Logo 站点logo
 	Logo string `column:"logo" json:"logo,omitempty"`
@@ -294,13 +294,13 @@ type Site struct {
 	// UpdateTime 更新时间
 	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
 
-	// CreateUser  创建人,初始化 system
+	// CreateUser 创建人,初始化 system
 	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 
 	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	// 状态 链接访问(0),公开(1),置顶(2),私密(3)
+	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 }
 
@@ -341,19 +341,19 @@ type User struct {
 	// ChainAddress 链address
 	ChainAddress string `column:"chainAddress" json:"chainAddress,omitempty"`
 
-	// CreateTime
+	// CreateTime 创建时间
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 
-	// UpdateTime
+	// UpdateTime 更新时间
 	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
 
-	// 创建人
+	// CreateUser 创建人,初始化 system
 	CreateUser string `column:"createUser" json:"createUser,omitempty"`
 
-	//排序
+	// SortNo 排序
 	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
 
-	//状态
+	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 }
 

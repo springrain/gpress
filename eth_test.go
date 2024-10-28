@@ -191,7 +191,7 @@ func parsePublicKey(publicKeyHex string) (*ecdsa.PublicKey, error) {
 		return nil, err
 	}
 
-	// 由于以太坊的公钥前面有一个字节的标志位，需要去掉
+	// 由于以太坊的公钥前面有一个字节的标志位,需要去掉
 	publicKey := &ecdsa.PublicKey{
 		Curve: elliptic.P256(),
 		X:     new(big.Int).SetBytes(publicKeyBytes[1:33]),

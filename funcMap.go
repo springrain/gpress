@@ -32,8 +32,8 @@ import (
 	"gitee.com/chunanyong/zorm"
 )
 
+// funcMap 模板的函数Map
 var funcMap = template.FuncMap{
-
 	"basePath":    funcBasePath,
 	"addInt":      funcAddInt,
 	"addFloat":    funcAddFloat,
@@ -41,8 +41,8 @@ var funcMap = template.FuncMap{
 	"safeHTML":    funcSafeHTML,
 	"safeURL":     funcSafeURL,
 	"hrefURL":     funcHrefURL,
-	"relURL":      funcRelURL,
-	"site":        funcSite,
+	//"relURL":      funcRelURL,
+	"site": funcSite,
 	//"category":     funcCategory,
 	"selectList": funcSelectList,
 	"selectOne":  funcSelectOne,
@@ -107,6 +107,7 @@ func funcSafeURL(html string) (template.URL, error) {
 	return ss, nil
 }
 
+// funcHrefURL 获取跳转的href URL
 func funcHrefURL(href string) (string, error) {
 	href = strings.TrimSpace(href)
 	if strings.HasPrefix(href, "http") { //http协议开头
@@ -116,31 +117,20 @@ func funcHrefURL(href string) (string, error) {
 	return funcBasePath() + href, nil
 }
 
+/*
 // funcRelURL 拼接url路径的
 func funcRelURL(url string) (template.HTML, error) {
 	return funcSafeHTML("/theme/" + site.Theme + "/" + url)
 }
+*/
 
-// 站点信息
+// funcSite 站点信息
 func funcSite() (Site, error) {
 	finder := zorm.NewSelectFinder(tableSiteName).Append(" WHERE id=?", "gpress_site")
 	site := Site{}
 	_, err := zorm.QueryRow(context.Background(), finder, &site)
 	return site, err
 }
-
-/*
-// 导航信息
-func funcCategory() ([]Category, error) {
-	finder := zorm.NewSelectFinder(tableCategoryName)
-	finder.Append(" WHERE status in (1,2) order by status desc, sortNo desc")
-	page := zorm.NewPage()
-	page.PageSize = 200
-	list := make([]Category, 0)
-	err := zorm.Query(context.Background(), finder, &list, page)
-	return list, err
-}
-*/
 
 // funcThemeTemplate 主题模板,prefix 过滤文件前缀
 func funcThemeTemplate(prefix string) ([]ThemeTemplate, error) {
@@ -165,17 +155,12 @@ func funcThemeTemplate(prefix string) ([]ThemeTemplate, error) {
 	return list, err
 }
 
-/*
-var analyzerMap = map[string]string{commaAnalyzerName: "逗号分词器", gseAnalyzerName: "默认分词器", keywordAnalyzerName: "不分词", numericAnalyzerName: "数字分词器", datetimeAnalyzerName: "日期分词器"}
-
-	func funcAnalyzer() map[string]string {
-		return analyzerMap
-	}
-*/
-
+// funcAddInt int类型相加
 func funcAddInt(x, y int) int {
 	return x + y
 }
+
+// funcAddFloat float类型相加
 func funcAddFloat(x, y float64) float64 {
 	return x + y
 }
@@ -193,6 +178,8 @@ func findOrderByIndex(strsql *string) []int {
 	loc := orderByRegexp.FindStringIndex(*strsql)
 	return loc
 }
+
+// funcSelectList 查询列表数据
 func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql string, values ...interface{}) (ResponseData, error) {
 	responseData := ResponseData{StatusCode: 0}
 	sql = strings.TrimSpace(sql)
@@ -270,6 +257,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 	return responseData, nil
 }
 
+// funcSelectOne 查询一条数据
 func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (interface{}, error) {
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
@@ -335,6 +323,7 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 	return selectOneData, nil
 }
 
+// funcTreeCategory 导航菜单的树形结构
 func funcTreeCategory(sql string, values ...interface{}) []Category {
 	ctx := context.Background()
 	categorys := make([]Category, 0)
@@ -350,6 +339,7 @@ func funcTreeCategory(sql string, values ...interface{}) []Category {
 	return treeCategory
 }
 
+// funcThemeName 获取目录下的主题名称
 func funcThemeName() []string {
 	themeNames := make([]string, 0)
 	files, err := os.ReadDir(themeDir)
@@ -364,38 +354,22 @@ func funcThemeName() []string {
 	return themeNames
 }
 
-/*
-	func funcConvertJson(obj interface{}) (string, error) {
-		// 将对象转换为 JSON 字符串
-		jsonData, err := json.Marshal(obj)
-		if err != nil {
-			return "{}", nil
-		}
-		s := string(jsonData)
-		return s, nil
-	}
-
-func funcConvertMap(jsonStr string) (map[string]interface{}, error) {
-
-		obj := make(map[string]interface{})
-		err := json.Unmarshal([]byte(jsonStr), &obj)
-		if err != nil {
-			return obj, nil
-		}
-		return obj, nil
-	}
-*/
+// hasPrefix 是否某字符串开头
 func hasPrefix(s, prefix string) bool {
 	return strings.HasPrefix(s, prefix)
 }
 
+// hasSuffix 是否某字符串结尾
 func hasSuffix(s, suffix string) bool {
 	return strings.HasSuffix(s, suffix)
 }
+
+// contains 是否包含某字符串
 func contains(s, substr string) bool {
 	return strings.Contains(s, substr)
 }
 
+// sliceCategory2Tree 导航菜单数组转树形结构
 func sliceCategory2Tree(categorys []Category) []Category {
 	categorysMap := make(map[string]Category, len(categorys))
 	for _, v := range categorys {
@@ -438,11 +412,12 @@ func sliceCategory2Tree(categorys []Category) []Category {
 
 }
 
+// funcVersion 版本号
 func funcVersion() string {
 	return version
 }
 
-// seq 函数用于生成一个数字序列，这里是一个模拟的实现
+// funcSeq 用于生成一个数字序列,这里是一个模拟的实现
 func funcSeq(start, end int) []int {
 	nums := make([]int, 0)
 	for i := start; i <= end; i++ {
