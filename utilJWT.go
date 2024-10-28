@@ -35,7 +35,6 @@ type Header struct {
 
 type Payload struct {
 	// 定义您需要加入的有效载荷字段
-	// 这里只作为示例，可以根据实际需求进行定义
 	UserId  string `json:"userId"`
 	Expires int64  `json:"exp"`
 }
@@ -83,6 +82,7 @@ func newJWTToken(userId string) (string, error) {
 	return jwtString, err
 }
 
+// userIdByToken 根据token字符串,查询UserId
 func userIdByToken(tokenString string) (string, error) {
 	if tokenString == "" {
 		return "", errors.New("token is nil")
@@ -135,7 +135,6 @@ func userIdByToken(tokenString string) (string, error) {
 	}
 
 	// 检查有效载荷中的过期时间
-	// 根据您的需求进行适当的时间验证
 	if payload.Expires < time.Now().Unix() {
 		return "", errors.New("JWT signature is expires")
 	}

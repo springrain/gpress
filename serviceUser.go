@@ -23,6 +23,7 @@ import (
 	"gitee.com/chunanyong/zorm"
 )
 
+// insertUser 插入用户
 func insertUser(ctx context.Context, user User) error {
 	// 清空用户,只能有一个管理员
 	deleteAll(ctx, tableUserName)
@@ -36,6 +37,7 @@ func insertUser(ctx context.Context, user User) error {
 	return err
 }
 
+// findUserId 查询用户ID
 func findUserId(ctx context.Context, account string, password string) (string, error) {
 	finder := zorm.NewSelectFinder(tableUserName, "id").Append(" WHERE account=? and password=?", account, password)
 	userId := ""
@@ -43,6 +45,7 @@ func findUserId(ctx context.Context, account string, password string) (string, e
 	return userId, err
 }
 
+// findUserAddress 查询用户区块链Address
 func findUserAddress(ctx context.Context) (string, string, string, error) {
 	finder := zorm.NewSelectFinder(tableUserName, "id,chainType,chainAddress")
 	userMap, err := zorm.QueryRowMap(ctx, finder)

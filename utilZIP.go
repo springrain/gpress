@@ -17,7 +17,7 @@ func unzip(zipPath, destDir string) (err error) {
 	}
 	defer r.Close()
 
-	// 创建解压目录，如果不存在
+	// 创建解压目录,如果不存在
 	if _, err := os.Stat(destDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(destDir, 0644); err != nil {
 			return err
@@ -38,7 +38,7 @@ func unzip(zipPath, destDir string) (err error) {
 		// 构造文件路径
 		filePath := filepath.Join(destDir, f.Name)
 
-		// 如果文件是目录，则创建目录
+		// 如果文件是目录,则创建目录
 		if f.FileInfo().IsDir() {
 			once.Do(func() {
 				if _, err := os.Stat(filePath); err != nil {

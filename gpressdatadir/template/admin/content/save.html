@@ -164,7 +164,7 @@
 			done: function (res) {
 				if (res.statusCode == 1) {
 					thumbnail = res.data;
-					$("#img_thumbnail").attr("src", thumbnail);
+					$("#img_thumbnail").attr("src", basePath+thumbnail);
 					$("#i_delete_thumbnail").show();
 				}
 				console.log(res);
@@ -183,7 +183,7 @@
 					"title": "封面图",
 					"start": 0,
 					"data": [{
-					  "src": thumbnail,
+					  "src": basePath+thumbnail,
 					}]
 				},
 				//toolbar: false,
@@ -207,7 +207,7 @@
 					processData: false,
 					contentType: false,
 					success(res) {
-						callback(res.data);
+						callback(basePath+res.data);
 					},
 					error(err) { },
 				});
@@ -273,7 +273,7 @@
 			maxFileSize: 100 * 1024 * 1024, // 100M
 			customInsert(res, insertFn) {
 				// 自定义返回数据结构.不用按照wangeditor默认规定的服务器返回的数据结构
-				insertFn(res.data)
+				insertFn(basePath+res.data)
 			},
 			onSuccess(file, res) {
 				console.log(res, '--上传成功---')

@@ -18,17 +18,16 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">名称</label>
+					<div class="layui-input-block">
+					  <input type="text" name="name" lay-verify="required" autocomplete="off" lay-reqtext="请填写名称" class="layui-input" value="{{.Data.Name}}">
+					</div>
+				</div>
+				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">标题</label>
 					<div class="layui-input-block">
 					  <input type="text" name="title" lay-verify="required" autocomplete="off" lay-reqtext="请填写标题" class="layui-input"  value="{{.Data.Title}}">
 					</div>
-				</div>
-
-				<div class="layui-form-item layui-col-md6">
-				  <label class="layui-form-label">名称</label>
-				  <div class="layui-input-block">
-					<input type="text" name="name" lay-verify="required" autocomplete="off" lay-reqtext="请填写名称" class="layui-input" value="{{.Data.Name}}">
-				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
 				  <label class="layui-form-label">域名</label>
@@ -37,9 +36,39 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">主题 &nbsp;<i class="layui-icon layui-icon-tips" title="主题在gpressdatadir/template/theme目录下"></i></label>
+					<label class="layui-form-label">默认主题 &nbsp;<i class="layui-icon layui-icon-tips" title="默认渲染的主题,所有主题都在gpressdatadir/template/theme目录下"></i></label>
 					<div class="layui-input-block">
 						<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
+							{{ range $index,$obj := $themeName }}
+							<option value='{{$obj}}'>{{$obj}}</option>
+							{{end}}
+						</select>
+					</div>
+				</div>	
+				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">PC主题 &nbsp;<i class="layui-icon layui-icon-tips" title="PC浏览器访问时,使用此主题渲染"></i></label>
+					<div class="layui-input-block">
+						<select name="themePC" id="themePC" lay-verify="required" lay-reqtext="请选择主题">
+							{{ range $index,$obj := $themeName }}
+							<option value='{{$obj}}'>{{$obj}}</option>
+							{{end}}
+						</select>
+					</div>
+				</div>	
+				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">手机主题 &nbsp;<i class="layui-icon layui-icon-tips" title="手机浏览器访问时,使用此主题渲染"></i></label>
+					<div class="layui-input-block">
+						<select name="themeWAP" id="themeWAP" lay-verify="required" lay-reqtext="请选择主题">
+							{{ range $index,$obj := $themeName }}
+							<option value='{{$obj}}'>{{$obj}}</option>
+							{{end}}
+						</select>
+					</div>
+				</div>	
+				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">微信主题 &nbsp;<i class="layui-icon layui-icon-tips" title="微信访问时,使用此主题渲染"></i></label>
+					<div class="layui-input-block">
+						<select name="themeWX" id="themeWX" lay-verify="required" lay-reqtext="请选择主题">
 							{{ range $index,$obj := $themeName }}
 							<option value='{{$obj}}'>{{$obj}}</option>
 							{{end}}
@@ -103,6 +132,9 @@
       var upload = layui.upload;
 	  //选中导航菜单
 	  $("#theme option[value='{{.Data.Theme}}']").attr("selected", true);
+	  $("#themePC option[value='{{.Data.ThemePC}}']").attr("selected", true);
+	  $("#themeWAP option[value='{{.Data.ThemeWAP}}']").attr("selected", true);
+	  $("#themeWX option[value='{{.Data.ThemeWX}}']").attr("selected", true);
 
 
 	  // 上传logo

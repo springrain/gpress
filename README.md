@@ -94,7 +94,8 @@ location / {
     ##    rewrite ^(.*) ${uri}index.html redirect;      
     ##}
     
-    root   /data/gpress/gpressdatadir/statichtml;
+    ### 当前在用主题(default)的静态文件目录
+    root   /data/gpress/gpressdatadir/statichtml/default;
     index  index.html index.htm;
 }
 
@@ -152,7 +153,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | theme       | string      | 默认主题     | 默认使用default  |
 | themePC     | string      | PC主题      | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
 | themeWAP    | string      | 手机主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
-| themeWEIXIN | string      | 微信主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
+| themeWX     | string      | 微信主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
 | logo        | string      | logo       |     -  |
 | favicon     | string      | Favicon    |     -  |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |

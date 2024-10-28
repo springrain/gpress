@@ -42,16 +42,11 @@ var dbDaoConfig = zorm.DataSourceConfig{
 	SlowSQLMillis:         -1,
 }
 
-// 全局存放 表对象,启动之后,所有的表都通过这个map获取,一个表只能打开一次,类似数据库连接,用一个对象操作
-//var TableMap map[string]bleve.Table = make(map[string]bleve.Table)
-
-//var TableMap sync.Map
-
-// 初始化 sqlite数据库
+// checkSQLiteStatus 初始化sqlite数据库,并检查是否成功
 func checkSQLiteStatus() bool {
 	const failSuffix = ".fail"
 	if failDB := datadir + "gpress.db" + failSuffix; pathExist(failDB) {
-		FuncLogError(fmt.Errorf("请确认[%s]是否需要手动重命名为[gpress.db],不需要请手动删除[%s]", failDB, failDB))
+		FuncLogError(nil, fmt.Errorf("请确认[%s]是否需要手动重命名为[gpress.db],不需要请手动删除[%s]", failDB, failDB))
 		return false
 	}
 	defaultFtsFile := datadir + "fts5/libsimple"
@@ -121,6 +116,7 @@ func checkSQLiteStatus() bool {
 	return true
 }
 
+// tableExist 数据表是否存在
 func tableExist(tableName string) bool {
 	finder := zorm.NewSelectFinder("sqlite_master", "count(*)").Append("WHERE type=? and name=?", "table", tableName)
 	count := 0
@@ -128,46 +124,7 @@ func tableExist(tableName string) bool {
 	return count > 0
 }
 
-/*
-// 保存新表
-func saveEntityMap(ctx context.Context, newTable zorm.IEntityMap) (ResponseData, error) {
-
-	responseData := ResponseData{StatusCode: 1}
-
-	id := ""
-	newId, ok := newTable.GetDBFieldMap()["id"]
-	if ok {
-		id = newId.(string)
-	}
-	if id == "" {
-		id = FuncGenerateStringID()
-	}
-
-	newTable.Set("id", id)
-
-	if newTable.GetDBFieldMap()["sortNo"] == 0 {
-		count, _ := selectTableCount(ctx, newTable.GetTableName())
-		newTable.Set("sortNo", count)
-	}
-
-	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
-		_, err := zorm.InsertEntityMap(ctx, newTable)
-		return nil, err
-	})
-
-	if err != nil {
-		FuncLogError(err)
-		responseData.StatusCode = 304
-		responseData.Message = "建立表异常"
-		return responseData, err
-	}
-	responseData.StatusCode = 200
-	responseData.Message = "保存成功"
-	responseData.Data = id
-	return responseData, err
-}
-*/
-
+// updateTable 更新表数据
 func updateTable(ctx context.Context, newMap zorm.IEntityMap) error {
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		_, err := zorm.UpdateEntityMap(ctx, newMap)
@@ -175,6 +132,8 @@ func updateTable(ctx context.Context, newMap zorm.IEntityMap) error {
 	})
 	return err
 }
+
+// deleteById 根据Id删除数据
 func deleteById(ctx context.Context, tableName string, id string) error {
 	finder := zorm.NewDeleteFinder(tableName).Append(" WHERE id=?", id)
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
@@ -184,6 +143,8 @@ func deleteById(ctx context.Context, tableName string, id string) error {
 
 	return err
 }
+
+// deleteAll 删除所有数据
 func deleteAll(ctx context.Context, tableName string) error {
 	finder := zorm.NewDeleteFinder(tableName)
 	_, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
@@ -194,6 +155,7 @@ func deleteAll(ctx context.Context, tableName string) error {
 	return err
 }
 
+// execNativeSQL 执行SQL语句
 func execNativeSQL(ctx context.Context, nativeSQL string) (bool, error) {
 	finder := zorm.NewFinder().Append(nativeSQL)
 	finder.InjectionCheck = false
@@ -205,13 +167,4 @@ func execNativeSQL(ctx context.Context, nativeSQL string) (bool, error) {
 		return false, err
 	}
 	return true, nil
-}
-
-func selectTableCount(ctx context.Context, tableName string) (int, error) {
-
-	finder := zorm.NewSelectFinder(tableName, "count(*)")
-	count := 0
-	_, err := zorm.QueryRow(ctx, finder, &count)
-
-	return count, err
 }
