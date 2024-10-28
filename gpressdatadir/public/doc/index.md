@@ -53,7 +53,7 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 修改管理员的账号信息,功能界面如下:  
 <img src="image/015.png" width="600px">
 ## 主题模板
-主题模板的增删改查功能,管理主题中的自定义模板文件,修改内容和栏目时,可以应用自定义的模板文件.  
+主题模板的增删改查功能,管理主题中的自定义模板文件,修改内容和导航菜单时,可以应用自定义的模板文件.  
 <img src="image/016.png" width="600px">  
 支持上传主题zip压缩包,用于新增主题.   
 <img src="image/017.png" width="600px">  
@@ -111,19 +111,19 @@ location / {
        break;
     }
 
-    #### gzip 静态压缩配置 开始####
+    ### 开启gzip静态压缩
     #gzip_static on;
-    ## 请求的是个目录,302重定向到 目录下的 index.html
-    #if ( -d $request_filename ) {
-        ## 不是 / 结尾
-    #    rewrite [^\/]$ $uri/index.html redirect;
-        ##以 / 结尾的
-    #    rewrite ^(.*) ${uri}index.html redirect;      
-    #}
-    #### gzip 静态压缩配置 结束####
 
+    ### Nginx 1.26+ 不需要再进行302重定向到目录下的index.html,gzip_static也会生效.这段配置留作记录.
+    ##if ( -d $request_filename ) {
+        ## 不是 / 结尾
+    ##    rewrite [^\/]$ $uri/index.html redirect;
+        ##以 / 结尾的
+    ##    rewrite ^(.*) ${uri}index.html redirect;      
+    ##}
     
-    root   /data/gpress/gpressdatadir/statichtml;
+    ### 当前在用主题(default)的静态文件目录
+    root   /data/gpress/gpressdatadir/statichtml/default;
     index  index.html index.htm;
 }
 
@@ -138,4 +138,4 @@ location / {
 退出管理后台
 
 ## 阿里云计算巢
-[点击部署gpress到阿里云计算巢](hhttps://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以单独购买阿里云最低配服务器,进行部署.选择```张家口机房```,规格```ecs.t6-c4m1.large```,配置```2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M```,一年100元,五年200元左右.      
+[点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以单独购买阿里云最低配服务器,进行部署.选择```张家口机房```,规格```ecs.t6-c4m1.large```,配置```2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M```,一年100元,五年200元左右.    

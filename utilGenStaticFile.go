@@ -49,10 +49,11 @@ func genSearchDataJson() error {
 	defer searchDataLock.Unlock()
 
 	finder := zorm.NewSelectFinder(tableContentName, "id,title,hrefURL,summary,createTime,tag,categoryName,content,description").Append("WHERE status in (1,2) order by status desc, sortNo desc")
-	page := zorm.NewPage()
-	page.PageSize = 2000
+	finder.SelectTotalCount = false
+	//page := zorm.NewPage()
+	//page.PageSize = 10000
 	datas := make([]Content, 0)
-	err := zorm.Query(context.Background(), finder, &datas, page)
+	err := zorm.Query(context.Background(), finder, &datas, nil)
 	if err != nil {
 		return err
 	}
@@ -80,8 +81,77 @@ func genSearchDataJson() error {
 func genStaticFile() error {
 	genStaticHtmlLock.Lock()
 	defer genStaticHtmlLock.Unlock()
+
 	ctx := context.Background()
 	contents := make([]Content, 0)
+
+	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<3 order by status desc, sortNo desc")
+	err := zorm.Query(ctx, f_post, &contents, nil)
+	if err != nil {
+		return err
+	}
+	//生成导航菜单的静态网页
+	categoryIds := make([]string, 0)
+	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status<3 order by status desc,sortNo desc")
+	err = zorm.Query(ctx, f_category, &categoryIds, nil)
+	if err != nil {
+		return err
+	}
+	//删除整个目录
+	os.RemoveAll(staticHtmlDir)
+
+	// 生成 default,pc,wap,weixin 等平台的静态文件
+	useThemes := map[string]bool{}
+	useThemes[""] = true
+	err = genStaticFileByTheme(contents, categoryIds, site.Theme, "")
+	if err != nil {
+		FuncLogError(ctx, err)
+		//return err
+	}
+	useThemes[site.Theme] = true
+	_, has := useThemes[site.ThemePC]
+	//生成PC模板的静态网页
+	if !has {
+		err = genStaticFileByTheme(contents, categoryIds, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+		if err != nil {
+			FuncLogError(ctx, err)
+			//return err
+		}
+		useThemes[site.ThemePC] = true
+	}
+
+	// 生成手机WAP模板的静态网页
+	_, has = useThemes[site.ThemeWAP]
+	if !has {
+		err = genStaticFileByTheme(contents, categoryIds, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
+		if err != nil {
+			FuncLogError(ctx, err)
+			//return err
+		}
+		useThemes[site.ThemeWAP] = true
+	}
+	//生成微信WX模板的静态网页
+	_, has = useThemes[site.ThemeWX]
+	if !has {
+		err = genStaticFileByTheme(contents, categoryIds, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
+		if err != nil {
+			FuncLogError(ctx, err)
+			//return err
+		}
+		useThemes[site.ThemeWX] = true
+	}
+
+	// 重新生成 search-data.json
+	err = genSearchDataJson()
+	if err != nil {
+		FuncLogError(ctx, err)
+	}
+
+	return err
+}
+
+// genStaticFileByTheme 根据主题模板,生成静态文件
+func genStaticFileByTheme(contents []Content, categoryIds []string, theme string, userAgent string) error {
 	domain := ""
 	if site.Domain != "" {
 		if strings.HasPrefix(site.Domain, "http://") || strings.HasPrefix(site.Domain, "https://") {
@@ -90,23 +160,14 @@ func genStaticFile() error {
 			domain = "https://" + site.Domain
 		}
 	}
-	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<3 order by status desc, sortNo desc")
-	err := zorm.Query(ctx, f_post, &contents, nil)
-	if err != nil {
-		return err
-	}
-
 	tagsMap := make(map[string]bool, 0)
-
-	//删除整个目录
-	os.RemoveAll(staticHtmlDir)
 	//生成首页index网页
-	fileHash, _, err := writeStaticHtml("", "")
+	fileHash, _, err := writeStaticHtml("", "", theme, userAgent)
 	if fileHash == "" || err != nil {
 		return err
 	}
 	//创建sitemap.xml
-	sitemapFile, err := os.OpenFile(staticHtmlDir+"sitemap.xml", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	sitemapFile, err := os.OpenFile(staticHtmlDir+theme+"/sitemap.xml", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return err
 	}
@@ -123,7 +184,7 @@ func genStaticFile() error {
 		}
 		postId := contents[i].Id
 		//postURL := httpServerPath + "post/" + postId
-		fileHash, success, err := writeStaticHtml("post/"+postId, "")
+		fileHash, success, err := writeStaticHtml("post/"+postId, "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			continue
 		}
@@ -131,7 +192,7 @@ func genStaticFile() error {
 			sitemapFile.WriteString("<url><loc>" + domain + "/post/" + postId + "</loc></url>")
 		}
 
-		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash)
+		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent)
 		if fileHash == "" || err != nil {
 			continue
 		}
@@ -141,17 +202,11 @@ func genStaticFile() error {
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
 	}
-	//生成栏目的静态网页
-	categoryIds := make([]string, 0)
-	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status<3 order by status desc,sortNo desc")
-	err = zorm.Query(ctx, f_category, &categoryIds, nil)
-	if err != nil {
-		return err
-	}
+
 	for i := 0; i < len(categoryIds); i++ {
 		categoryId := categoryIds[i]
-		//生成栏目首页index
-		fileHash, success, err := writeStaticHtml("category/"+categoryId, "")
+		//生成导航菜单首页index
+		fileHash, success, err := writeStaticHtml("category/"+categoryId, "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			return err
 		}
@@ -159,7 +214,7 @@ func genStaticFile() error {
 			sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml("category/"+categoryId+"/page/"+strconv.Itoa(j+1), prvePageFileHash)
+			fileHash, success, err := writeStaticHtml("category/"+categoryId+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
 			if fileHash == "" || err != nil {
 				continue
 			}
@@ -173,8 +228,8 @@ func genStaticFile() error {
 
 	//生成tag的静态页
 	for tag := range tagsMap {
-		//生成栏目首页index
-		fileHash, success, err := writeStaticHtml("tag/"+tag, "")
+		//生成导航菜单首页index
+		fileHash, success, err := writeStaticHtml("tag/"+tag, "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			return err
 		}
@@ -182,7 +237,7 @@ func genStaticFile() error {
 			sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash)
+			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
 			if fileHash == "" || err != nil {
 				continue
 			}
@@ -197,7 +252,7 @@ func genStaticFile() error {
 	sitemapFile.WriteString("</urlset>")
 
 	//遍历当前使用的模板文件夹,压缩文本格式的文件
-	err = filepath.Walk(templateDir+"theme/"+site.Theme+"/", func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(templateDir+"theme/"+theme+"/", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -230,31 +285,33 @@ func genStaticFile() error {
 
 		return err
 	})
-	if err != nil {
-		FuncLogError(err)
-		return err
-	}
-	// 重新生成 search-data.json
-	err = genSearchDataJson()
-	if err != nil {
-		FuncLogError(err)
-	}
-	// TODO 复制主题里的css,js,image 和公共的public文件夹到statichtml根目录
-
 	return err
 }
 
 // writeStaticHtml 写入静态html
-func writeStaticHtml(urlFilePath string, fileHash string) (string, bool, error) {
+func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgent string) (string, bool, error) {
 	httpurl := httpServerPath + urlFilePath
-	filePath := staticHtmlDir + urlFilePath
+	filePath := staticHtmlDir + theme + "/" + urlFilePath
 	if urlFilePath != "" {
 		filePath = filePath + "/"
 	}
-	response, err := http.Get(httpurl)
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", httpurl, nil)
+	if err != nil {
+
+		return "", false, err
+	}
+
+	// 设置请求头
+	if userAgent != "" {
+		req.Header.Set("User-Agent", userAgent)
+	}
+	response, err := client.Do(req)
 	if err != nil {
 		return "", false, err
 	}
+	defer response.Body.Close()
+
 	// 读取资源数据 body: []byte
 	body, err := io.ReadAll(response.Body)
 	// 关闭资源流
