@@ -27,17 +27,11 @@ import (
 
 // 变量的位置不要更改!!!!!,实际是做初始化使用的,优先级高于init函数!!!
 
-// 检查表状态
-var sqliteStatus = checkSQLiteStatus()
-
 // 是否已经安装过了
 var installed = isInstalled()
 
 // 加载配置文件
 var config, site = loadInstallConfig()
-
-// 使用的主题
-//var themePath = "/theme/" + site.Theme + "/"
 
 // 服务器url路径
 var httpServerPath = "http://"
@@ -46,14 +40,14 @@ var httpServerPath = "http://"
 var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBasePath(config.BasePath), server.WithMaxRequestBodySize(config.MaxRequestBodySize))
 
 func init() {
-	if !sqliteStatus { // 表状态检查失败
-		panic("表检查失败")
-	}
+
+	//初始化静态文件
+	initStaticFS()
 
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
 
-	// gzip压缩文件,产生  xxx.html.zip 文件,https://www.cloudwego.io/zh/docs/hertz/tutorials/basic-feature/middleware/gzip/
+	// gzip压缩文件,产生  xxx.html.gz 文件,https://www.cloudwego.io/zh/docs/hertz/tutorials/basic-feature/middleware/gzip/
 	// h.Use(gzip.Gzip(gzip.DefaultCompression))
 }
 
@@ -62,16 +56,10 @@ func main() {
 	// 初始化admin路由,使用init实现
 	//initAdminRoute()
 
-	//注册category和context的href路由
-	/*
-		err := registerHrefRoute()
-		if err != nil {
-			FuncLogError(err)
-		}
-	*/
-	//生成json文件
-	if !pathExist(searchDataJsonFile) {
-		genSearchDataJson()
+	//加载页面模板
+	err := loadTemplate()
+	if err != nil { // 初始化模板异常
+		panic("初始化模板异常")
 	}
 
 	message := "浏览器打开前端: "
@@ -85,7 +73,4 @@ func main() {
 
 	// 启动服务
 	h.Spin()
-
-	// 启用热更新
-
 }

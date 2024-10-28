@@ -19,6 +19,7 @@ package main
 
 import (
 	"image/color"
+	"math/rand"
 	"sync"
 	"sync/atomic"
 
@@ -49,6 +50,7 @@ var chainRandStr string
 
 var errorLoginCount atomic.Uint32
 
+// generateCaptcha 生成随机验证码
 func generateCaptcha() {
 	captchaLock.Lock()
 	defer captchaLock.Unlock()
@@ -61,9 +63,20 @@ func generateCaptcha() {
 	captchaBase64 = item.EncodeB64string()
 }
 
+// generateChainRandStr 生成区块链登录的随机字符串
 func generateChainRandStr() {
 	captchaLock.Lock()
 	defer captchaLock.Unlock()
 	//先记录到全局变量
 	chainRandStr = randStr(30)
+}
+
+// randStr 生成随机字符串
+func randStr(n int) string {
+	//rand.Seed(time.Now().UnixNano())
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }

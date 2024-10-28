@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS site (
 		theme         TEXT NOT NULL,
 		themePC         TEXT,
 		themeWAP         TEXT,
-		siteThemeWEIXIN         TEXT,
+		themeWX        TEXT,
 		logo         TEXT,
 		favicon         TEXT,
 		footer         TEXT,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS site (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,siteThemeWEIXIN,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2024<span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','jiagou.com','架构','jiagou','gpress_site');
+INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,themeWX,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2024<span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','jiagou.com','架构','jiagou','gpress_site');
 
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
 		title, 
@@ -304,8 +304,8 @@ location / {
     ##}
 
 
-    
-    root   /data/gpress/gpressdatadir/statichtml;
+    ### 当前在用主题(default)的静态文件目录
+    root   /data/gpress/gpressdatadir/statichtml/default;
     index  index.html index.htm;
 }
 
@@ -397,8 +397,8 @@ nginx 配置示例如下:</p>
 </span></span><span class="line"><span class="cl">    ##}
 </span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    root   /data/gpress/gpressdatadir/statichtml;
+</span></span><span class="line"><span class="cl">    ### 当前在用主题(default)的静态文件目录
+</span></span><span class="line"><span class="cl">    root   /data/gpress/gpressdatadir/statichtml/default;
 </span></span><span class="line"><span class="cl">    index  index.html index.htm;
 </span></span><span class="line"><span class="cl">}
 </span></span><span class="line"><span class="cl">

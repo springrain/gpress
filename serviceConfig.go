@@ -22,13 +22,12 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"math/rand"
 	"os"
 
 	"gitee.com/chunanyong/zorm"
 )
 
-// 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入表,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
+// loadInstallConfig 加载配置文件,只有初始化安装时需要读取配置文件,读取后,就写入表,通过后台管理,然后重命名为 install_config.json_配置已失效_请通过后台设置管理
 func loadInstallConfig() (Config, Site) {
 	var site = Site{Theme: "default"}
 	defaultErr := errors.New("install_config.json加载失败,使用默认配置")
@@ -47,21 +46,21 @@ func loadInstallConfig() (Config, Site) {
 	// 打开文件
 	jsonFile, err := os.Open(datadir + "install_config.json")
 	if err != nil {
-		FuncLogError(defaultErr)
+		FuncLogError(nil, defaultErr)
 		return defaultConfig, site
 	}
 	// 关闭文件
 	defer jsonFile.Close()
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		FuncLogError(defaultErr)
+		FuncLogError(nil, defaultErr)
 		return defaultConfig, site
 	}
 	configJson := Config{}
 	// Decode从输入流读取下一个json编码值并保存在v指向的值里
 	err = json.Unmarshal([]byte(byteValue), &configJson)
 	if err != nil {
-		FuncLogError(defaultErr)
+		FuncLogError(nil, defaultErr)
 		return defaultConfig, site
 	}
 
@@ -92,7 +91,6 @@ var defaultConfig = Config{
 
 // insertConfig 插入config
 func insertConfig(ctx context.Context) error {
-
 	//数据库存在config,不更新数据库,更新config变量
 	finder := zorm.NewSelectFinder(tableConfigName).Append("WHERE id=?", "gpress_config")
 	c := Config{}
@@ -111,6 +109,7 @@ func insertConfig(ctx context.Context) error {
 	return err
 }
 
+// findConfig 查询配置
 func findConfig() (Config, error) {
 
 	finder := zorm.NewSelectFinder(tableConfigName, "*")
@@ -135,14 +134,4 @@ func findConfig() (Config, error) {
 	}
 
 	return config, nil
-}
-
-// randStr 生成随机字符串
-func randStr(n int) string {
-	//rand.Seed(time.Now().UnixNano())
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
 }
