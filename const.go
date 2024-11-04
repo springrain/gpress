@@ -42,7 +42,7 @@ const (
 	tableCategoryName = "category"
 
 	// 默认模型
-	tableModuleDefaultName = "module_default"
+	// tableModuleDefaultName = "module_default"
 	// 文章内容
 	tableContentName = "content"
 	//---------------------------//
@@ -73,5 +73,5 @@ const (
 	compressedFileSuffix = ".gz"
 
 	//版本号
-	version = "v1.0.6"
+	version = "v1.0.7"
 )
