@@ -21,6 +21,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -42,8 +43,7 @@ func verifySecp256k1Signature(senderAddress string, signatureData string, signat
 		return false, errors.New("invalid signature")
 	}
 	// 计算消息的哈希,包括 MetaMask 的消息前缀
-	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s",
-		len(signatureData), signatureData)
+	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(signatureData), signatureData)
 	messageBytes := []byte(prefix)
 	messageHash := keccak256Hash(messageBytes)
 	r, s, v := signatureBytes[:32], signatureBytes[32:64], signatureBytes[64]
@@ -99,8 +99,13 @@ func verifyXuperSignature(chainAddress string, sig, msg []byte) (valid bool, err
 	publicKeyX := new(big.Int).SetBytes(signature[64:96])
 	publicKeyY := new(big.Int).SetBytes(signature[96:128])
 	data := signature[128:]
-	if string(msg) != string(data) { //数据不一致
-		return false, errors.New("原始数据不一致")
+	h := sha512.New()
+	// 计算消息的哈希,包括消息前缀
+	prefix := fmt.Sprintf("\x20Xuper Signed Message:\n%d%s", len(msg), msg)
+	h.Write([]byte(prefix))
+	hash := h.Sum(nil)
+	if string(hash) != string(data) { //数据Hash不一致
+		return false, errors.New("原始数据Hash不一致")
 	}
 	pub := ecdsa.PublicKey{Curve: elliptic.P256(), X: publicKeyX, Y: publicKeyY}
 	pubKey := &pub
