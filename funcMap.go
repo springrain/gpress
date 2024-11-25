@@ -68,7 +68,7 @@ func funcBasePath() string {
 	return config.BasePath
 }
 
-// funcConvertType 多语言i18n适配,例如 {{ T "nextPage" }}
+// funcConvertType 类型转换,支持json和object的转换
 func funcConvertType(value interface{}, sourceType string, targetType string) (interface{}, error) {
 	// json字符串转成Map
 	if sourceType == "json" && targetType == "object" {
