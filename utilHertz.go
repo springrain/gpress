@@ -217,12 +217,12 @@ func initStaticFS() {
 			case "js", "css", "image": //处理静态文件,根据浏览器获取对应的主题
 				theme, _ := getTheme(c)
 				return []byte("/" + themeDir + theme + "/" + relativePath)
-			case "admin/js", "admin/css", "admin/image": //后台管理的静态文件
-				return []byte("/" + templateDir + relativePath)
 			case "public": //public目录下的静态文件
 				return []byte("/" + datadir + relativePath)
 			case "favicon.ico": //默认的favicon图标
 				return []byte("/" + datadir + site.Favicon)
+			case "admin/js", "admin/css", "admin/image": //后台管理的静态文件
+				return []byte("/" + templateDir + relativePath)
 			default: //其他从public目录下获取
 				return []byte("/" + datadir + "public/" + relativePath)
 			}
