@@ -185,16 +185,20 @@ func updateInstall(ctx context.Context) error {
 
 // initStaticFS 初始化静态文件
 func initStaticFS() {
-	//设置默认的静态文件,实际路径会拼接为 datadir/public
-	h.Static("/public", datadir)
-	//设置默认的 favicon.ico
-	h.StaticFile("/favicon.ico", datadir+site.Favicon)
-	//后台管理的静态文件
-	h.Static("/admin/js", templateDir)
-	h.Static("/admin/css", templateDir)
-	h.Static("/admin/image", templateDir)
 
-	//映射其他静态文件
+	//统一映射静态文件,兼容项目前缀路径
+	/*
+		//设置默认的静态文件,实际路径会拼接为 datadir/public
+		h.Static("/public", datadir)
+		//设置默认的 favicon.ico
+		h.StaticFile("/favicon.ico", datadir+site.Favicon)
+		//后台管理的静态文件
+		h.Static("/admin/js", templateDir)
+		h.Static("/admin/css", templateDir)
+		h.Static("/admin/image", templateDir)
+	*/
+
+	//映射静态文件,兼容项目前缀路径
 	h.StaticFS("/", &app.FS{
 		Root:     "./",
 		Compress: false, //不使用hertz的压缩.gz,程序控制压缩.gz
@@ -205,12 +209,21 @@ func initStaticFS() {
 			parts := strings.Split(relativePath, "/")
 			if len(parts) > 1 {
 				key = parts[0]
+				if key == "admin" { //后台管理
+					key = key + "/" + parts[1]
+				}
 			}
 			switch key {
 			case "js", "css", "image": //处理静态文件,根据浏览器获取对应的主题
 				theme, _ := getTheme(c)
 				return []byte("/" + themeDir + theme + "/" + relativePath)
-			default:
+			case "admin/js", "admin/css", "admin/image": //后台管理的静态文件
+				return []byte("/" + templateDir + relativePath)
+			case "public": //public目录下的静态文件
+				return []byte("/" + datadir + relativePath)
+			case "favicon.ico": //默认的favicon图标
+				return []byte("/" + datadir + site.Favicon)
+			default: //其他从public目录下获取
 				return []byte("/" + datadir + "public/" + relativePath)
 			}
 
