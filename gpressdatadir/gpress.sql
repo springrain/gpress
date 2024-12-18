@@ -306,6 +306,10 @@ location / {
 
     ### 当前在用主题(default)的静态文件目录
     root   /data/gpress/gpressdatadir/statichtml/default;
+
+    ## 避免目录 301 重定向,例如 /about 会301到 /about/           
+    try_files $uri $uri/index.html;
+
     index  index.html index.htm;
 }
 
@@ -399,6 +403,8 @@ nginx 配置示例如下:</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    ### 当前在用主题(default)的静态文件目录
 </span></span><span class="line"><span class="cl">    root   /data/gpress/gpressdatadir/statichtml/default;
+</span></span><span class="line"><span class="cl">    ## 避免目录 301 重定向,例如 /about 会301到 /about/
+</span></span><span class="line"><span class="cl">    try_files $uri $uri/index.html;
 </span></span><span class="line"><span class="cl">    index  index.html index.htm;
 </span></span><span class="line"><span class="cl">}
 </span></span><span class="line"><span class="cl">
