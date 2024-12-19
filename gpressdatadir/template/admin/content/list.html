@@ -31,7 +31,7 @@
 
 			<div class="tree" id="tree">
 				<details open="">
-					<summary id="全部内容" class="tree-item"><a id="all_tree_a" href="/admin/content/list?comCode=&pageNo=1">全部内容</a>
+					<summary id="全部内容" class="tree-item"><a id="all_tree_a" href="{{basePath}}admin/content/list?comCode=&pageNo=1">全部内容</a>
 					</summary>
 				</details>
 			</div>
@@ -230,7 +230,7 @@
 			const detailsHtml = $(
 				`<details id="details_${node.id}" open="">
 					<summary class="tree-item">
-						<a id="tree_a_${node.id}" href="/admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> 
+						<a id="tree_a_${node.id}" href="{{basePath}}admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> 
 						<i class="layui-icon layui-icon-tips tips-dropdown" id="${node.id}" ></i>
 					</summary>
 				</details>`
@@ -238,14 +238,14 @@
 
 			/*
 					<span class="operate"><a
-							href="/admin/content/save?categoryID=${node.id}">
+							href="{{basePath}}admin/content/save?categoryID=${node.id}">
 							<i class="layui-icon layui-icon-file" title="新增内容"></i>
 						</a>
-						<a href="/admin/category/save?pid=${node.id}"><i class="layui-icon layui-icon-add-circle"
+						<a href="{{basePath}}admin/category/save?pid=${node.id}"><i class="layui-icon layui-icon-add-circle"
 								title="新增子导航"></i></a>
-						<a href="/admin/category/update?id=${node.id}"><i class="layui-icon layui-icon-edit" title="编辑导航"></i></a>
+						<a href="{{basePath}}admin/category/update?id=${node.id}"><i class="layui-icon layui-icon-edit" title="编辑导航"></i></a>
 						<i class="layui-icon layui-icon-delete" title="删除导航"
-							onclick="deleteFunc('${node.id}','/admin/category/delete');"></i>
+							onclick="deleteFunc('${node.id}','{{basePath}}admin/category/delete');"></i>
 					</span>
 			
 			*/
