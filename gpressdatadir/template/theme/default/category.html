@@ -34,7 +34,7 @@
         {{ if eq $.userType 1}}
         <a href="{{basePath}}admin/content/look?id={{.Id}}" class="archive-post-link">
         {{else}}
-        <a href="{{basePath}}post/{{.Id}}" class="archive-post-link">
+        <a href="{{basePath}}{{ trimSlash $v.PathURL }}/{{.Id}}" class="archive-post-link">
         {{ end }}
 
           {{ .Title }}
@@ -57,13 +57,13 @@
   {{end}}
 
   {{if gt $currPageNo 1}}
-  <a class="prev" href="{{basePath}}category/{{.UrlPathParam}}/page/{{ addInt $currPageNo -1 }}?q={{.q}}">
+  <a class="prev" href="{{basePath}}{{ trimSlash $nav.PathURL }}/page/{{ addInt $currPageNo -1 }}?q={{.q}}">
       <i class="iconfont icon-left"></i>
       <span class="prev-text">上一页</span>
     </a>
   {{end}}
   {{if lt $currPageNo $selectList.Page.PageCount}}
-  <a class="next" href="{{basePath}}category/{{.UrlPathParam}}/page/{{ addInt $currPageNo 1 }}?q={{.q}}">
+  <a class="next" href="{{basePath}}{{ trimSlash $nav.PathURL }}/page/{{ addInt $currPageNo 1 }}?q={{.q}}">
       <span class="next-text">下一页</span>
       <i class="iconfont icon-right"></i>
     </a>
