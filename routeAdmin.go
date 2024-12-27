@@ -452,12 +452,12 @@ func funcContentList(ctx context.Context, c *app.RequestContext) {
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	q := strings.TrimSpace(c.Query("q"))
 	pageNo, _ := strconv.Atoi(pageNoStr)
-	comCode := strings.TrimSpace(c.Query("comCode"))
+	pathURL := strings.TrimSpace(c.Query("pathURL"))
 	values := make([]interface{}, 0)
 	sql := ""
-	if comCode != "" {
-		sql = " * from content where comCode like ?  order by sortNo desc "
-		values = append(values, comCode+"%")
+	if pathURL != "" {
+		sql = " * from content where pathURL like ?  order by sortNo desc "
+		values = append(values, pathURL+"%")
 	} else {
 		sql = " * from content order by sortNo desc "
 	}
@@ -639,11 +639,11 @@ func funcUpdateCategory(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	if entity.Pid != "" {
-		f := zorm.NewSelectFinder(tableCategoryName, "comCode").Append(" where id =?", entity.Pid)
-		zorm.QueryRow(ctx, f, &(entity.ComCode))
-		entity.ComCode = entity.ComCode + entity.Id + ","
+		f := zorm.NewSelectFinder(tableCategoryName, "pathURL").Append(" where id =?", entity.Pid)
+		zorm.QueryRow(ctx, f, &(entity.PathURL))
+		entity.PathURL = entity.PathURL + entity.Id + "/"
 	} else {
-		entity.ComCode = "," + entity.Id + ","
+		entity.PathURL = "/" + entity.Id + "/"
 	}
 	entity.UpdateTime = now
 	funcUpdate(ctx, c, entity, entity.Id)
@@ -669,7 +669,7 @@ func funcUpdateContent(ctx context.Context, c *app.RequestContext) {
 		entity.Toc = toc
 	}
 	if entity.CategoryID != "" {
-		f := zorm.NewSelectFinder(tableCategoryName, "comCode,name as categoryName").Append(" where id =?", entity.CategoryID)
+		f := zorm.NewSelectFinder(tableCategoryName, "pathURL,name as categoryName").Append(" where id =?", entity.CategoryID)
 		zorm.QueryRow(ctx, f, entity)
 	}
 	entity.UpdateTime = now
@@ -747,11 +747,11 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		entity.UpdateTime = now
 	}
 	if entity.Pid != "" {
-		f := zorm.NewSelectFinder(entity.GetTableName(), "comCode").Append(" where id =?", entity.Pid)
-		zorm.QueryRow(ctx, f, &(entity.ComCode))
-		entity.ComCode = entity.ComCode + entity.Id + ","
+		f := zorm.NewSelectFinder(entity.GetTableName(), "pathURL").Append(" where id =?", entity.Pid)
+		zorm.QueryRow(ctx, f, &(entity.PathURL))
+		entity.PathURL = entity.PathURL + entity.Id + "/"
 	} else {
-		entity.ComCode = "," + entity.Id + ","
+		entity.PathURL = "/" + entity.Id + "/"
 	}
 	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.Insert(ctx, entity)
@@ -762,6 +762,14 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(ctx, err)
 		return
 	}
+	// 增加路由映射, @TODO 不支持重复添加,需要重启清理路由表
+	//目录的访问映射
+	h.GET("/"+entity.Id, addListCategoryRoute(entity.Id))
+	//目录分页数据的访问映射
+	h.GET("/"+entity.Id+"/page/:pageNo", addListCategoryRoute(entity.Id))
+	//目录下文章的访问映射
+	h.GET("/"+entity.Id+"/:urlPathParam", funcOneContent)
+
 	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
 }
 
@@ -797,7 +805,7 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 		entity.Toc = toc
 	}
 	if entity.CategoryID != "" {
-		f := zorm.NewSelectFinder(tableCategoryName, "comCode,name as categoryName").Append(" where id =?", entity.CategoryID)
+		f := zorm.NewSelectFinder(tableCategoryName, "pathURL,name as categoryName").Append(" where id =?", entity.CategoryID)
 		zorm.QueryRow(ctx, f, entity)
 	}
 	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
