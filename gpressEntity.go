@@ -107,8 +107,8 @@ type Category struct {
 	// ModuleID 模型ID
 	ModuleID string `column:"moduleID" json:"moduleID,omitempty"`
 
-	// ComCode 代码全路径
-	ComCode string `column:"comCode" json:"comCode,omitempty"`
+	// PathURL URL路径,用/隔开,例如/a/b/c
+	PathURL string `column:"pathURL" json:"pathURL,omitempty"`
 
 	// TemplateFile 模板文件
 	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
@@ -187,8 +187,8 @@ type Content struct {
 	// CategoryName 导航菜单
 	CategoryName string `column:"categoryName" json:"categoryName,omitempty"`
 
-	// ComCode 代码全路径
-	ComCode string `column:"comCode" json:"comCode,omitempty"`
+	// PathURL URL路径,用/隔开,例如/a/b/c
+	PathURL string `column:"pathURL" json:"pathURL,omitempty"`
 
 	// TemplateFile 模板文件
 	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`

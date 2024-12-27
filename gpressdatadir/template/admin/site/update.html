@@ -36,16 +36,6 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">默认主题 &nbsp;<i class="layui-icon layui-icon-tips" title="默认渲染的主题,所有主题都在gpressdatadir/template/theme目录下"></i></label>
-					<div class="layui-input-block">
-						<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
-							{{ range $index,$obj := $themeName }}
-							<option value='{{$obj}}'>{{$obj}}</option>
-							{{end}}
-						</select>
-					</div>
-				</div>	
-				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">PC主题 &nbsp;<i class="layui-icon layui-icon-tips" title="PC浏览器访问时,使用此主题渲染"></i></label>
 					<div class="layui-input-block">
 						<select name="themePC" id="themePC" lay-verify="required" lay-reqtext="请选择主题">
@@ -69,6 +59,16 @@
 					<label class="layui-form-label">微信主题 &nbsp;<i class="layui-icon layui-icon-tips" title="微信访问时,使用此主题渲染"></i></label>
 					<div class="layui-input-block">
 						<select name="themeWX" id="themeWX" lay-verify="required" lay-reqtext="请选择主题">
+							{{ range $index,$obj := $themeName }}
+							<option value='{{$obj}}'>{{$obj}}</option>
+							{{end}}
+						</select>
+					</div>
+				</div>	
+				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">默认主题 &nbsp;<i class="layui-icon layui-icon-tips" title="默认渲染的主题,所有主题都在gpressdatadir/template/theme目录下"></i></label>
+					<div class="layui-input-block">
+						<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
 							{{ range $index,$obj := $themeName }}
 							<option value='{{$obj}}'>{{$obj}}</option>
 							{{end}}
