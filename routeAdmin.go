@@ -762,13 +762,9 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(ctx, err)
 		return
 	}
-	// 增加路由映射, @TODO 不支持重复添加,需要重启清理路由表
-	//目录的访问映射
-	h.GET("/"+entity.Id, addListCategoryRoute(entity.Id))
-	//目录分页数据的访问映射
-	h.GET("/"+entity.Id+"/page/:pageNo", addListCategoryRoute(entity.Id))
-	//目录下文章的访问映射
-	h.GET("/"+entity.Id+"/:urlPathParam", funcOneContent)
+	// 增加自定义路由映射
+	pathURL := trimRightSlash(entity.PathURL)
+	routeCategoryMap[pathURL] = entity.Id
 
 	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
 }
