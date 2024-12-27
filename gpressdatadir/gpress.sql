@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS category (
 		pid        TEXT,
 		themePC        TEXT,
 		moduleID        TEXT,
-		comCode        TEXT,
+		pathURL        TEXT,
 		templateFile        TEXT,
 		childTemplateFile        TEXT,
 		keyword           TEXT,
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS category (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',web,',NULL,NULL,NULL,'',NULL,'Web','web');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,comCode,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,',about,',NULL,NULL,NULL,'','/post/about','About','about');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/web/',NULL,NULL,NULL,'',NULL,'Web','web');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/about/',NULL,NULL,NULL,'','/post/about','About','about');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS content (
 		subtitle           TEXT,
 		categoryID           TEXT,
 		categoryName           TEXT,
-		comCode        TEXT,
+		pathURL        TEXT,
 		templateFile           TEXT,
 		author           TEXT,
 		tag           TEXT,
@@ -147,7 +147,7 @@ INSERT INTO content (
                         tag,
                         author,
                         templateFile,
-                        comCode,
+                        pathURL,
                         categoryName,
                         categoryID,
                         subtitle,
@@ -193,7 +193,7 @@ INSERT INTO content (
                         NULL,
                         'springrain',
                         NULL,
-                        ',about,',
+                        '/about/',
                         'About',
                         'about',
                         NULL,
@@ -426,7 +426,7 @@ nginx 配置示例如下:</p>
                         '',
                         '',
                         '',
-                        ',web,',
+                        '/web/',
                         'Web',
                         'web',
                         '',
