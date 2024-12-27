@@ -31,7 +31,7 @@
 
 			<div class="tree" id="tree">
 				<details open="">
-					<summary id="全部内容" class="tree-item"><a id="all_tree_a" href="{{basePath}}admin/content/list?comCode=&pageNo=1">全部内容</a>
+					<summary id="全部内容" class="tree-item"><a id="all_tree_a" href="{{basePath}}admin/content/list?pathURL=&pageNo=1">全部内容</a>
 					</summary>
 				</details>
 			</div>
@@ -41,7 +41,7 @@
 		<div style="height: 100%;">
 				<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
 					<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
-					<input type="hidden" id="comCode" name="comCode" value="">
+					<input type="hidden" id="pathURL" name="pathURL" value="">
 					<div class="layui-input-group">
 						<input type="text" id="q" name="q" placeholder="搜索" class="layui-input">
 						<div class="layui-input-split layui-input-suffix" style="cursor: pointer;">
@@ -132,14 +132,14 @@
 		if (q) {
 			$("#q").val(q)
 		}
-		var comCode = params.get("comCode")
-		if (comCode && comCode != "") {
-			$("#comCode").val(comCode)
+		var pathURL = params.get("pathURL")
+		if (pathURL && pathURL != "") {
+			$("#pathURL").val(pathURL)
 		}
 
 		//选中高亮
-		if (comCode && comCode != "") {//被选中
-			var codes = comCode.split(",");
+		if (pathURL && pathURL != "") {//被选中
+			var codes = pathURL.split("/");
 			for (i = 0; i < codes.length; i++) {
 				var code = codes[i];
 				//console.log(code)
@@ -230,7 +230,7 @@
 			const detailsHtml = $(
 				`<details id="details_${node.id}" open="">
 					<summary class="tree-item">
-						<a id="tree_a_${node.id}" href="{{basePath}}admin/content/list?comCode=${node.comCode}&pageNo=1">${node.name}</a> 
+						<a id="tree_a_${node.id}" href="{{basePath}}admin/content/list?pathURL=${node.pathURL}&pageNo=1">${node.name}</a> 
 						<i class="layui-icon layui-icon-tips tips-dropdown" id="${node.id}" ></i>
 					</summary>
 				</details>`

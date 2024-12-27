@@ -47,6 +47,8 @@ func init() {
 	// 查看内容
 	h.GET("/post/:urlPathParam", funcOneContent)
 
+	//初始化目录导航路径
+	initCategoryRouter()
 }
 
 // funcIndex 模板首页
@@ -57,9 +59,12 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 
 // funcListCategory 导航菜单数据列表
 func funcListCategory(ctx context.Context, c *app.RequestContext) {
-	urlPathParam := c.Param("urlPathParam")
 	data := warpRequestMap(c)
-
+	urlPathParam := c.Param("urlPathParam")
+	if urlPathParam == "" { //通过自定URL进来的
+		urlPathParam = c.GetString("urlPathParam")
+		//data["urlPath"] = c.GetString("urlPath")
+	}
 	data["UrlPathParam"] = urlPathParam
 	templateFile, err := findThemeTemplate(ctx, tableCategoryName, urlPathParam)
 	if err != nil || templateFile == "" {
@@ -72,14 +77,19 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 func funcListTags(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
+
 	data["UrlPathParam"] = urlPathParam
 	cHtml(c, http.StatusOK, "tag.html", data)
 }
 
 // funcOneContent 查询一篇文章
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
-	urlPathParam := c.Param("urlPathParam")
 	data := warpRequestMap(c)
+	urlPathParam := c.Param("urlPathParam")
+	if urlPathParam == "" { //通过自定URL进来的
+		urlPathParam = c.GetString("urlPathParam")
+		data["urlPath"] = c.GetString("urlPath")
+	}
 	data["UrlPathParam"] = urlPathParam
 
 	templateFile, err := findThemeTemplate(ctx, tableContentName, urlPathParam)
@@ -87,6 +97,28 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 		templateFile = "content.html"
 	}
 	cHtml(c, http.StatusOK, templateFile, data)
+}
+
+// initCategoryRouter 初始化目录导航路径
+func initCategoryRouter() {
+	categorys, _ := findAllCategory(context.Background())
+	for i := 0; i < len(categorys); i++ {
+		category := categorys[i]
+		//目录的访问映射
+		h.GET("/"+category.Id, addListCategoryRoute(category.Id))
+		//目录分页数据的访问映射
+		h.GET("/"+category.Id+"/page/:pageNo", addListCategoryRoute(category.Id))
+		//目录下文章的访问映射
+		h.GET("/"+category.Id+"/:urlPathParam", funcOneContent)
+	}
+}
+
+// addListCategoryRoute 增加栏目的GET请求路由,用于自定义设置导航菜单路由
+func addListCategoryRoute(categoryID string) app.HandlerFunc {
+	return func(ctx context.Context, c *app.RequestContext) {
+		c.Set("urlPathParam", categoryID)
+		funcListCategory(ctx, c)
+	}
 }
 
 // warpRequestMap 包装请求参数为map
