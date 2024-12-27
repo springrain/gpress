@@ -26,12 +26,12 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
+var routeCategoryMap = make(map[string]string, 0)
+
 // init 初始化函数
 func init() {
 	// 异常页面
-	h.GET("/error", func(ctx context.Context, c *app.RequestContext) {
-		cHtml(c, http.StatusOK, "error.html", nil)
-	})
+	h.GET("/error", funcError)
 
 	// 默认首页
 	h.GET("/", funcIndex)
@@ -47,8 +47,12 @@ func init() {
 	// 查看内容
 	h.GET("/post/:urlPathParam", funcOneContent)
 
+	// 通配其他动态路径
+	h.GET("/*filepath", funcListCategoryFilepath)
+
 	//初始化目录导航路径
 	initCategoryRouter()
+
 }
 
 // funcIndex 模板首页
@@ -57,13 +61,17 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 	cHtml(c, http.StatusOK, "index.html", data)
 }
 
+// funcError 错误页面
+func funcError(ctx context.Context, c *app.RequestContext) {
+	cHtml(c, http.StatusOK, "error.html", nil)
+}
+
 // funcListCategory 导航菜单数据列表
 func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
 	if urlPathParam == "" { //通过自定URL进来的
 		urlPathParam = c.GetString("urlPathParam")
-		//data["urlPath"] = c.GetString("urlPath")
 	}
 	data["UrlPathParam"] = urlPathParam
 	templateFile, err := findThemeTemplate(ctx, tableCategoryName, urlPathParam)
@@ -88,7 +96,6 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 	if urlPathParam == "" { //通过自定URL进来的
 		urlPathParam = c.GetString("urlPathParam")
-		data["urlPath"] = c.GetString("urlPath")
 	}
 	data["UrlPathParam"] = urlPathParam
 
@@ -97,6 +104,33 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 		templateFile = "content.html"
 	}
 	cHtml(c, http.StatusOK, templateFile, data)
+}
+
+// funcListCategoryFilepath 通配的filepath映射
+func funcListCategoryFilepath(ctx context.Context, c *app.RequestContext) {
+	key := string(c.URI().Path())
+	key = trimRightSlash(key)
+	categoryID, has := routeCategoryMap[key]
+	contentID := ""
+	if !has { //不是导航菜单的路径
+		lastIndex := strings.LastIndex(key, "/")
+		contentID = key[lastIndex:]
+		contentID = strings.TrimLeft(contentID, "/")
+		key = key[:lastIndex]
+		categoryID, has = routeCategoryMap[key]
+	}
+	if !has || categoryID == "" {
+		cHtml(c, http.StatusNotFound, "error.html", nil)
+		return
+	}
+	if contentID != "" {
+		c.Set("urlPathParam", contentID)
+		funcOneContent(ctx, c)
+	} else {
+		c.Set("urlPathParam", categoryID)
+		funcListCategory(ctx, c)
+	}
+
 }
 
 // initCategoryRouter 初始化目录导航路径

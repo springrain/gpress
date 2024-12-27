@@ -185,28 +185,16 @@ func updateInstall(ctx context.Context) error {
 
 // initStaticFS 初始化静态文件
 func initStaticFS() {
-
-	//统一映射静态文件,兼容项目前缀路径
-	/*
-		//设置默认的静态文件,实际路径会拼接为 datadir/public
-		h.Static("/public", datadir)
-		//设置默认的 favicon.ico
-		h.StaticFile("/favicon.ico", datadir+site.Favicon)
-		//后台管理的静态文件
-		h.Static("/admin/js", templateDir)
-		h.Static("/admin/css", templateDir)
-		h.Static("/admin/image", templateDir)
-	*/
-
-	//映射静态文件,兼容项目前缀路径
-	h.StaticFS("/", &app.FS{
+	appFS := &app.FS{
 		Root:     "./",
 		Compress: false, //不使用hertz的压缩.gz,程序控制压缩.gz
 		//CompressedFileSuffix: compressedFileSuffix,
 		PathRewrite: func(c *app.RequestContext) []byte {
-			relativePath := c.Param("filepath")
+			//relativePath := c.Param("filepath")
+			relativePath := string(c.URI().Path())
+			relativePath = strings.TrimLeft(relativePath, funcBasePath())
 			key := relativePath
-			parts := strings.Split(relativePath, "/")
+			parts := strings.Split(key, "/")
 			if len(parts) > 1 {
 				key = parts[0]
 				if key == "admin" { //后台管理
@@ -228,7 +216,31 @@ func initStaticFS() {
 			}
 
 		},
-	})
+	}
+	//统一映射静态文件,兼容项目前缀路径
+	/*
+		//设置默认的静态文件,实际路径会拼接为 datadir/public
+		h.Static("/public", datadir)
+		//设置默认的 favicon.ico
+		h.StaticFile("/favicon.ico", datadir+site.Favicon)
+		//后台管理的静态文件
+		h.Static("/admin/js", templateDir)
+		h.Static("/admin/css", templateDir)
+		h.Static("/admin/image", templateDir)
+	*/
+	//设置默认的静态文件,实际路径会拼接为 datadir/public
+	h.StaticFS("/public", appFS)
+	//设置默认的 favicon.ico
+	h.StaticFS("/favicon.ico", appFS)
+	h.StaticFS("/js", appFS)
+	h.StaticFS("/css", appFS)
+	h.StaticFS("/image", appFS)
+	//后台管理的静态文件
+	h.StaticFS("/admin/js", appFS)
+	h.StaticFS("/admin/css", appFS)
+	h.StaticFS("/admin/image", appFS)
+	//映射静态文件,兼容项目前缀路径
+	//h.StaticFS("/", appFS)
 }
 
 // cRedirecURI 重定向到uri,拼接上basePath

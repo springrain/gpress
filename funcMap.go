@@ -55,6 +55,9 @@ var funcMap = template.FuncMap{
 	"hasPrefix":        hasPrefix,
 	"hasSuffix":        hasSuffix,
 	"contains":         contains,
+	"trimRightSlash":   trimRightSlash,
+	"trimLeftSlash":    trimLeftSlash,
+	"trimSlash":        trimSlash,
 	"generateStringID": FuncGenerateStringID,
 	"treeCategory":     funcTreeCategory,
 	"themeName":        funcThemeName,
@@ -367,6 +370,19 @@ func hasSuffix(s, suffix string) bool {
 // contains 是否包含某字符串
 func contains(s, substr string) bool {
 	return strings.Contains(s, substr)
+}
+
+func trimRightSlash(s string) string {
+	str := strings.TrimRight(s, "/")
+	return str
+}
+func trimLeftSlash(s string) string {
+	str := strings.TrimLeft(s, "/")
+	return str
+}
+func trimSlash(s string) string {
+	str := strings.Trim(s, "/")
+	return str
 }
 
 // sliceCategory2Tree 导航菜单数组转树形结构
