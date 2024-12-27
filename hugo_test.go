@@ -198,7 +198,7 @@ func TestAbout(t *testing.T) {
 	}
 
 	//更新about的hrefURL
-	finder := zorm.NewUpdateFinder(tableCategoryName).Append("hrefURL=? WHERE id=?", "post/about", "about")
+	finder := zorm.NewUpdateFinder(tableCategoryName).Append("hrefURL=? WHERE id=?", "about/about", "about")
 	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.UpdateFinder(ctx, finder)
 	})
