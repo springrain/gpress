@@ -21,7 +21,7 @@
         {{ slice .UpdateTime 0 10 }} 
       </span>
       <span class="archive-post-title">
-        <a href="{{basePath}}post/{{.Id}}" class="archive-post-link">
+        <a href="{{basePath}}{{ trimSlash $v.PathURL }}/{{.Id}}" class="archive-post-link">
           {{ .Title }}
         </a>
       </span>

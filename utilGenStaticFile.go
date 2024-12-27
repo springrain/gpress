@@ -85,15 +85,15 @@ func genStaticFile() error {
 	ctx := context.Background()
 	contents := make([]Content, 0)
 
-	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<3 order by status desc, sortNo desc")
+	f_post := zorm.NewSelectFinder(tableContentName, "id,pathURL,tag").Append(" WHERE status<3 order by status desc, sortNo desc")
 	err := zorm.Query(ctx, f_post, &contents, nil)
 	if err != nil {
 		return err
 	}
 	//生成导航菜单的静态网页
-	categoryIds := make([]string, 0)
-	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status<3 order by status desc,sortNo desc")
-	err = zorm.Query(ctx, f_category, &categoryIds, nil)
+	categorys := make([]Category, 0)
+	f_category := zorm.NewSelectFinder(tableCategoryName, "id,pathURL").Append(" WHERE status<3 order by status desc,sortNo desc")
+	err = zorm.Query(ctx, f_category, &categorys, nil)
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func genStaticFile() error {
 	// 生成 default,pc,wap,weixin 等平台的静态文件
 	useThemes := map[string]bool{}
 	useThemes[""] = true
-	err = genStaticFileByTheme(contents, categoryIds, site.Theme, "")
+	err = genStaticFileByTheme(contents, categorys, site.Theme, "")
 	if err != nil {
 		FuncLogError(ctx, err)
 		//return err
@@ -112,7 +112,7 @@ func genStaticFile() error {
 	_, has := useThemes[site.ThemePC]
 	//生成PC模板的静态网页
 	if !has {
-		err = genStaticFileByTheme(contents, categoryIds, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+		err = genStaticFileByTheme(contents, categorys, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -123,7 +123,7 @@ func genStaticFile() error {
 	// 生成手机WAP模板的静态网页
 	_, has = useThemes[site.ThemeWAP]
 	if !has {
-		err = genStaticFileByTheme(contents, categoryIds, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
+		err = genStaticFileByTheme(contents, categorys, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -133,7 +133,7 @@ func genStaticFile() error {
 	//生成微信WX模板的静态网页
 	_, has = useThemes[site.ThemeWX]
 	if !has {
-		err = genStaticFileByTheme(contents, categoryIds, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
+		err = genStaticFileByTheme(contents, categorys, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -151,7 +151,7 @@ func genStaticFile() error {
 }
 
 // genStaticFileByTheme 根据主题模板,生成静态文件
-func genStaticFileByTheme(contents []Content, categoryIds []string, theme string, userAgent string) error {
+func genStaticFileByTheme(contents []Content, categorys []Category, theme string, userAgent string) error {
 	domain := ""
 	if site.Domain != "" {
 		if strings.HasPrefix(site.Domain, "http://") || strings.HasPrefix(site.Domain, "https://") {
@@ -184,12 +184,12 @@ func genStaticFileByTheme(contents []Content, categoryIds []string, theme string
 		}
 		postId := contents[i].Id
 		//postURL := httpServerPath + "post/" + postId
-		fileHash, success, err := writeStaticHtml("post/"+postId, "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(trimLeftSlash(contents[i].PathURL)+postId, "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/post/" + postId + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + trimLeftSlash(contents[i].PathURL) + postId + "</loc></url>")
 		}
 
 		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent)
@@ -197,29 +197,28 @@ func genStaticFileByTheme(contents []Content, categoryIds []string, theme string
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/page/" + strconv.Itoa(i+1) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + "</loc></url>")
 		}
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
 	}
 
-	for i := 0; i < len(categoryIds); i++ {
-		categoryId := categoryIds[i]
+	for i := 0; i < len(categorys); i++ {
 		//生成导航菜单首页index
-		fileHash, success, err := writeStaticHtml("category/"+categoryId, "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(trimSlash(categorys[i].PathURL), "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + trimSlash(categorys[i].PathURL) + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml("category/"+categoryId+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
+			fileHash, success, err := writeStaticHtml(trimSlash(categorys[i].PathURL)+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
 			if fileHash == "" || err != nil {
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + "/category/" + categoryId + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + trimSlash(categorys[i].PathURL) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
@@ -234,7 +233,7 @@ func genStaticFileByTheme(contents []Content, categoryIds []string, theme string
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
 			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
@@ -242,7 +241,7 @@ func genStaticFileByTheme(contents []Content, categoryIds []string, theme string
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + "/tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
@@ -291,7 +290,7 @@ func genStaticFileByTheme(contents []Content, categoryIds []string, theme string
 // writeStaticHtml 写入静态html
 func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgent string) (string, bool, error) {
 	httpurl := httpServerPath + urlFilePath
-	filePath := staticHtmlDir + theme + "/" + urlFilePath
+	filePath := staticHtmlDir + theme + funcBasePath() + urlFilePath
 	if urlFilePath != "" {
 		filePath = filePath + "/"
 	}

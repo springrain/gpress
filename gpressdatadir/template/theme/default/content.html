@@ -7,8 +7,8 @@
 
 {{ $content := selectOne "content" $contentSQL .UrlPathParam }}
 
-{{ $prevContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortNo < ? order by  status desc,sortNo desc " $content.SortNo  }}
-{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortNo > ? order by  status desc,sortNo asc " $content.SortNo  }}
+{{ $prevContent := selectOne "content"  "id,title,pathURL FROM content WHERE status in (1,2) and sortNo < ? order by  status desc,sortNo desc " $content.SortNo  }}
+{{ $nextContent := selectOne "content"  "id,title,pathURL FROM content WHERE status in (1,2) and sortNo > ? order by  status desc,sortNo asc " $content.SortNo  }}
 
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -28,7 +28,7 @@
     <div class="post-meta">
       <span class="post-time"> {{ $content.CreateTime }} </span>
       <div class="post-category">
-          <a href="{{basePath}}category/{{ $content.CategoryID }}"> {{ $content.CategoryName }} </a>
+          <a href="{{basePath}}{{ trimSlash $content.PathURL }}"> {{ $content.CategoryName }} </a>
           </div>
       
     </div>
@@ -79,14 +79,14 @@
 
     <nav class="post-nav">
       {{if $prevContent.Id }}
-      <a class="prev" href="{{basePath}}post/{{$prevContent.Id}}">
+      <a class="prev" href="{{basePath}}{{ trimSlash $prevContent.PathURL }}/{{$prevContent.Id}}">
           <i class="iconfont icon-left"></i>
           <span class="prev-text nav-default">{{$prevContent.Title}}</span>
           <span class="prev-text nav-mobile">上一篇</span>
         </a>
       {{end}}
       {{if $nextContent.Id }}
-      <a class="next" href="{{basePath}}post/{{$nextContent.Id}}">
+      <a class="next" href="{{basePath}}{{ trimSlash $nextContent.PathURL }}/{{$nextContent.Id}}">
           <span class="next-text nav-default">{{$nextContent.Title}}</span>
           <span class="next-text nav-mobile">下一篇</span>
           <i class="iconfont icon-right"></i>
