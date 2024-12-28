@@ -175,7 +175,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | hrefTarget  | string      | 跳转方式     | _self,_blank,_parent,_top|
 | pid         | string      | 父导航ID     | 父导航ID  |
 | signature   | string      | 私钥对内容的签名   | 私钥对内容的签名  |
-| pathURL     | string      | URL路径,用/隔开,例如/a/b/c | URL路径,用/隔开,例如/a/b/c  |
+| pathURL     | string      | URL路径,用/隔开,例如/a/b/c/ | URL路径,用/隔开,例如/a/b/c/  |
 | templateFile  | string      | 模板文件       | 当前导航页的模板  |
 | childTemplateFile  | string | 子主题模板文件  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | keyword     | string      | 导航关键字   | 是      |        |
@@ -202,7 +202,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | summary     | string      | 摘要         | 是      |      使用 jieba 分词器  |
 | categoryName| string      | 导航菜单,逗号(,)隔开| 是| 使用 jieba 分词器.      |
 | categoryID  | string      | 导航ID       | 否      | -                       |
-| pathURL     | string      | URL路径,用/隔开,例如/a/b/c | URL路径,用/隔开,例如/a/b/c  |
+| pathURL     | string      | URL路径,用/隔开,例如/a/b/c/ | URL路径,用/隔开,例如/a/b/c/  |
 | templateFile  | string      | 模板文件       | 否      | 模板                    |
 | content     | string      | 文章内容     | 否      |                         |
 | markdown    | string      | Markdown内容 | 否      |                         |
