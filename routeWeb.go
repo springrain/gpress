@@ -71,7 +71,7 @@ func funcError(ctx context.Context, c *app.RequestContext) {
 func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	if urlPathParam == "" { //导航菜单路径访问的,例如:/web
+	if urlPathParam == "" { //导航菜单路径访问,例如:/web
 		urlPathParam = c.GetString("urlPathParam")
 	}
 	data["UrlPathParam"] = urlPathParam
@@ -95,7 +95,7 @@ func funcListTags(ctx context.Context, c *app.RequestContext) {
 func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
 	urlPathParam := c.Param("urlPathParam")
-	if urlPathParam == "" { //导航菜单路径访问的,例如:/web/nginx-use-hsts
+	if urlPathParam == "" { //导航菜单路径访问,例如:/web/nginx-use-hsts
 		urlPathParam = c.GetString("urlPathParam")
 	}
 	data["UrlPathParam"] = urlPathParam
