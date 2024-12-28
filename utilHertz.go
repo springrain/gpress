@@ -192,6 +192,7 @@ func initStaticFS() {
 		PathRewrite: func(c *app.RequestContext) []byte {
 			//relativePath := c.Param("filepath")
 			relativePath := string(c.URI().Path())
+			//去掉basePath
 			relativePath = strings.TrimLeft(relativePath, funcBasePath())
 			key := relativePath
 			parts := strings.Split(key, "/")
@@ -217,7 +218,8 @@ func initStaticFS() {
 
 		},
 	}
-	//统一映射静态文件,兼容项目前缀路径
+	//映射静态文件,兼容项目前缀路径. 不再使用,有动态通配拦截 /
+	//h.StaticFS("/", appFS)
 	/*
 		//设置默认的静态文件,实际路径会拼接为 datadir/public
 		h.Static("/public", datadir)
@@ -228,6 +230,7 @@ func initStaticFS() {
 		h.Static("/admin/css", templateDir)
 		h.Static("/admin/image", templateDir)
 	*/
+
 	//设置默认的静态文件,实际路径会拼接为 datadir/public
 	h.StaticFS("/public", appFS)
 	//设置默认的 favicon.ico
@@ -239,8 +242,7 @@ func initStaticFS() {
 	h.StaticFS("/admin/js", appFS)
 	h.StaticFS("/admin/css", appFS)
 	h.StaticFS("/admin/image", appFS)
-	//映射静态文件,兼容项目前缀路径
-	//h.StaticFS("/", appFS)
+
 }
 
 // cRedirecURI 重定向到uri,拼接上basePath

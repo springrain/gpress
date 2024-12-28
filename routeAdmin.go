@@ -698,6 +698,8 @@ func funcUpdateInit(ctx context.Context, c *app.RequestContext, entity zorm.IEnt
 	}
 	return true
 }
+
+// funcUpdate 更新表数据
 func funcUpdate(ctx context.Context, c *app.RequestContext, entity zorm.IEntityStruct, id string) {
 	if id == "" { //没有id,终止调用
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
