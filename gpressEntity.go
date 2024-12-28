@@ -104,8 +104,8 @@ type Category struct {
 	// ThemePC 主题PC
 	ThemePC string `column:"themePC" json:"themePC,omitempty"`
 
-	// ModuleID 模型ID
-	ModuleID string `column:"moduleID" json:"moduleID,omitempty"`
+	// Signature 私钥对内容的签名
+	Signature string `column:"signature" json:"signature,omitempty"`
 
 	// PathURL URL路径,用/隔开,例如/a/b/c
 	PathURL string `column:"pathURL" json:"pathURL,omitempty"`
@@ -166,8 +166,8 @@ type Content struct {
 	// Title 文章标题
 	Title string `column:"title" json:"title,omitempty"`
 
-	// ModuleID 模型ID
-	ModuleID string `column:"moduleID" json:"moduleID,omitempty"`
+	// Signature 私钥对内容的签名
+	Signature string `column:"signature" json:"signature,omitempty"`
 
 	// Keyword 关键字
 	Keyword string `column:"keyword" json:"keyword,omitempty"`
