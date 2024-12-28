@@ -48,7 +48,7 @@ func genSearchDataJson() error {
 	searchDataLock.Lock()
 	defer searchDataLock.Unlock()
 
-	finder := zorm.NewSelectFinder(tableContentName, "id,title,hrefURL,summary,createTime,tag,categoryName,content,description").Append("WHERE status in (1,2) order by status desc, sortNo desc")
+	finder := zorm.NewSelectFinder(tableContentName).Append("WHERE status in (1,2) order by status desc, sortNo desc")
 	finder.SelectTotalCount = false
 	//page := zorm.NewPage()
 	//page.PageSize = 10000
@@ -59,7 +59,7 @@ func genSearchDataJson() error {
 	}
 	for i := 0; i < len(datas); i++ {
 		if datas[i].HrefURL == "" {
-			datas[i].HrefURL = funcBasePath() + "post/" + datas[i].Id
+			datas[i].HrefURL = funcBasePath() + trimLeftSlash(datas[i].PathURL) + datas[i].Id
 		}
 	}
 	dataBytes, err := json.Marshal(datas)
