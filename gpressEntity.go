@@ -107,7 +107,7 @@ type Category struct {
 	// Signature 私钥对内容的签名
 	Signature string `column:"signature" json:"signature,omitempty"`
 
-	// PathURL URL路径,用/隔开,例如/a/b/c
+	// PathURL URL路径,用/隔开,例如/a/b/c/
 	PathURL string `column:"pathURL" json:"pathURL,omitempty"`
 
 	// TemplateFile 模板文件
@@ -187,7 +187,7 @@ type Content struct {
 	// CategoryName 导航菜单
 	CategoryName string `column:"categoryName" json:"categoryName,omitempty"`
 
-	// PathURL URL路径,用/隔开,例如/a/b/c
+	// PathURL URL路径,用/隔开,例如/a/b/c/
 	PathURL string `column:"pathURL" json:"pathURL,omitempty"`
 
 	// TemplateFile 模板文件
