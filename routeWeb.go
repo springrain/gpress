@@ -169,11 +169,11 @@ func initCategoryRoute() {
 	for i := 0; i < len(categorys); i++ {
 		category := categorys[i]
 		//导航菜单的访问映射
-		h.GET("/"+category.Id, addListCategoryRoute(category.Id))
+		h.GET(trimRightSlash(category.PathURL), addListCategoryRoute(category.Id))
 		//导航菜单分页数据的访问映射
-		h.GET("/"+category.Id+"/page/:pageNo", addListCategoryRoute(category.Id))
+		h.GET(category.PathURL+"page/:pageNo", addListCategoryRoute(category.Id))
 		//导航菜单下文章的访问映射
-		h.GET("/"+category.Id+"/:urlPathParam", funcOneContent)
+		h.GET(category.PathURL+":urlPathParam", funcOneContent)
 	}
 }
 
