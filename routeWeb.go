@@ -54,9 +54,10 @@ func init() {
 	h.GET("/post/:urlPathParam", funcOneContent)
 	h.GET("/post/:urlPathParam/", funcOneContent)
 
-	//h.GET("/favicon.ico", func(ctx context.Context, c *app.RequestContext) {
-	//	c.File(datadir + site.Favicon)
-	//})
+	//@TODO 静态文件映射的 /favicon.ico 还是进入通配funcListCategoryFilepath
+	h.GET("/favicon.ico", func(ctx context.Context, c *app.RequestContext) {
+		c.File(datadir + site.Favicon)
+	})
 
 	//初始化导航菜单路由
 	initCategoryRoute()
