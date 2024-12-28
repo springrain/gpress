@@ -37,16 +37,26 @@ func init() {
 	// 默认首页
 	h.GET("/", funcIndex)
 	h.GET("/page/:pageNo", funcIndex)
+	h.GET("/page/:pageNo/", funcIndex)
 
 	// 导航菜单列表
 	h.GET("/category/:urlPathParam", funcListCategory)
+	h.GET("/category/:urlPathParam/", funcListCategory)
 	h.GET("/category/:urlPathParam/page/:pageNo", funcListCategory)
+	h.GET("/category/:urlPathParam/page/:pageNo/", funcListCategory)
 
 	// 查看标签
 	h.GET("/tag/:urlPathParam", funcListTags)
+	h.GET("/tag/:urlPathParam/", funcListTags)
 	h.GET("/tag/:urlPathParam/page/:pageNo", funcListTags)
+	h.GET("/tag/:urlPathParam/page/:pageNo/", funcListTags)
 	// 查看内容
 	h.GET("/post/:urlPathParam", funcOneContent)
+	h.GET("/post/:urlPathParam/", funcOneContent)
+
+	//h.GET("/favicon.ico", func(ctx context.Context, c *app.RequestContext) {
+	//	c.File(datadir + site.Favicon)
+	//})
 
 	//初始化导航菜单路由
 	initCategoryRoute()
@@ -111,11 +121,6 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 func funcListCategoryFilepath(ctx context.Context, c *app.RequestContext) {
 	//@TODO 静态文件映射的 /favicon.ico 还是进入到这个方法,造成了异常
 	key := string(c.URI().Path())
-	if key == "/favicon.ico" {
-		c.File(datadir + site.Favicon)
-		return
-	}
-
 	key = trimRightSlash(key) // 去掉最后的/, 例如: /web/ 实际是 /web
 	//从url路径分析获得的内容id,例如: /web/nginx-use-hsts contentID是nginx-use-hsts
 	contentID := ""
@@ -179,8 +184,10 @@ func initCategoryRoute() {
 		h.GET(category.PathURL, addListCategoryRoute(category.Id))
 		//导航菜单分页数据的访问映射
 		h.GET(category.PathURL+"page/:pageNo", addListCategoryRoute(category.Id))
+		h.GET(category.PathURL+"page/:pageNo/", addListCategoryRoute(category.Id))
 		//导航菜单下文章的访问映射
 		h.GET(category.PathURL+":urlPathParam", funcOneContent)
+		h.GET(category.PathURL+":urlPathParam/", funcOneContent)
 	}
 }
 
