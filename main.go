@@ -41,9 +41,6 @@ var h = server.Default(server.WithHostPorts(config.ServerPort), server.WithBaseP
 
 func init() {
 
-	//初始化静态文件
-	initStaticFS()
-
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
 
