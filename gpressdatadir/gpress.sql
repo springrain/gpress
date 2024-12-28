@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS category (
 		hrefTarget        TEXT,
 		pid        TEXT,
 		themePC        TEXT,
-		moduleID        TEXT,
+		signature        TEXT,
 		pathURL        TEXT,
 		templateFile        TEXT,
 		childTemplateFile        TEXT,
@@ -47,12 +47,12 @@ CREATE TABLE IF NOT EXISTS category (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/web/',NULL,NULL,NULL,'',NULL,'Web','web');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,moduleID,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/about/',NULL,NULL,NULL,'','/about/about','About','about');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/web/',NULL,NULL,NULL,'',NULL,'Web','web');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/about/',NULL,NULL,NULL,'','/about/about','About','about');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
-		moduleID         TEXT  ,
+		signature         TEXT  ,
 		title         TEXT   NOT NULL,
 		keyword           TEXT,
 		description           TEXT,
@@ -155,7 +155,7 @@ INSERT INTO content (
                         description,
                         keyword,
                         title,
-                        moduleID,
+                        signature,
                         id
                     )
                     VALUES (
