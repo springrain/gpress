@@ -31,6 +31,10 @@ var routeCategoryMap = make(map[string]string, 0)
 
 // init 初始化函数
 func init() {
+
+	//初始化静态文件
+	initStaticFS()
+
 	// 异常页面
 	h.GET("/error", funcError)
 
