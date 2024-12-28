@@ -174,7 +174,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | hrefURL     | string      | 跳转路径     |    -  |
 | hrefTarget  | string      | 跳转方式     | _self,_blank,_parent,_top|
 | pid         | string      | 父导航ID     | 父导航ID  |
-| moduleID    | string      | module表ID   |  导航菜单下的文章默认使用的模型字段 |
+| signature   | string      | 私钥对内容的签名   | 私钥对内容的签名  |
 | pathURL     | string      | URL路径,用/隔开,例如/a/b/c | URL路径,用/隔开,例如/a/b/c  |
 | templateFile  | string      | 模板文件       | 当前导航页的模板  |
 | childTemplateFile  | string | 子主题模板文件  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
@@ -190,7 +190,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | columnName  | 类型        | 说明        | 是否分词 |  备注                  | 
 | ----------- | ----------- | ----------- | ------- | ---------------------- |
 | id          | string      | 主键         | 否      |    -                   |
-| moduleID    | string      | 模型ID       | 否      |  文章使用的模型字段     |
+| signature    | string      | 私钥对内容的签名       | 否      |  文章使用的模型字段     |
 | title       | string      | 文章标题     | 是      |    使用 jieba 分词器    |
 | keyword     | string      | 内容关键字   | 是      |    使用 jieba 分词器    |
 | description | string      | 内容描述     | 是      |    使用 jieba 分词器    |
