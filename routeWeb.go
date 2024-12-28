@@ -109,7 +109,13 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 
 // funcListCategoryFilepath 通配的filepath映射
 func funcListCategoryFilepath(ctx context.Context, c *app.RequestContext) {
+	//@TODO 静态文件映射的 /favicon.ico 还是进入到这个方法,造成了异常
 	key := string(c.URI().Path())
+	if key == "/favicon.ico" {
+		c.File(datadir + site.Favicon)
+		return
+	}
+
 	key = trimRightSlash(key) // 去掉最后的/, 例如: /web/ 实际是 /web
 	//从url路径分析获得的内容id,例如: /web/nginx-use-hsts contentID是nginx-use-hsts
 	contentID := ""
@@ -170,6 +176,7 @@ func initCategoryRoute() {
 		category := categorys[i]
 		//导航菜单的访问映射
 		h.GET(trimRightSlash(category.PathURL), addListCategoryRoute(category.Id))
+		h.GET(category.PathURL, addListCategoryRoute(category.Id))
 		//导航菜单分页数据的访问映射
 		h.GET(category.PathURL+"page/:pageNo", addListCategoryRoute(category.Id))
 		//导航菜单下文章的访问映射
