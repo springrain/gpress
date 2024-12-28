@@ -1,5 +1,5 @@
 v1.0.7
-- 支持目录ID的URL分割方式.
+- URL默认使用导航菜单ID,例如:/web/nginx-use-hsts
 - comCode字段更名为pathURL,用/分割
 - 统一映射静态文件,兼容项目前缀路径   
 - 完善文档,注释
