@@ -113,19 +113,43 @@ func funcListCategoryFilepath(ctx context.Context, c *app.RequestContext) {
 	key = trimRightSlash(key) // 去掉最后的/, 例如: /web/ 实际是 /web
 	//从url路径分析获得的内容id,例如: /web/nginx-use-hsts contentID是nginx-use-hsts
 	contentID := ""
+	pageNo := ""
 	//获取路径的对应的 categoryID
 	categoryID, has := routeCategoryMap[key]
-
-	if !has { //不是导航菜单的路径,例如 /web/nginx-use-hsts,categoryID是web
-		//获取最后的 / 位置,获取 contentID是nginx-use-hsts, categoryID是web
-		lastIndex := strings.LastIndex(key, "/")
-		contentID = key[lastIndex:]
-		contentID = strings.TrimLeft(contentID, "/")
-		key = key[:lastIndex]
-		//获取 categoryID
-		categoryID, has = routeCategoryMap[key]
+	if has { //导航菜单的路径
+		c.Set("urlPathParam", categoryID)
+		funcListCategory(ctx, c)
+		return
 	}
-	if !has || categoryID == "" { //没有注册的categoryID,返回404的error
+
+	//拆分url
+	urls := strings.Split(key, "/")
+
+	//处理分页请求,例如 /web/page/1
+	if len(urls) > 1 && urls[len(urls)-2] == "page" {
+		pageNo = urls[len(urls)-1]
+		urls = urls[:len(urls)-2]
+		key = strings.Join(urls, "/")
+		categoryID, has = routeCategoryMap[key]
+		if has {
+			c.Set("urlPathParam", categoryID)
+			c.Set("pageNo", pageNo)
+			funcListCategory(ctx, c)
+			return
+		}
+	}
+	if len(urls) < 3 { // 类似 /web 却没有注册,返回404
+		cHtml(c, http.StatusNotFound, "error.html", nil)
+		return
+	}
+	//处理导航/内容的请求,例如: /web/nginx-use-hsts
+	contentID = urls[len(urls)-1]
+	urls = urls[:len(urls)-1]
+	key = strings.Join(urls, "/")
+	//获取 categoryID
+	categoryID, has = routeCategoryMap[key]
+
+	if !has { //没有注册的categoryID,返回404的error
 		cHtml(c, http.StatusNotFound, "error.html", nil)
 		return
 	}
@@ -164,6 +188,9 @@ func addListCategoryRoute(categoryID string) app.HandlerFunc {
 // warpRequestMap 包装请求参数为map
 func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 	pageNoStr := c.Param("pageNo")
+	if pageNoStr == "" {
+		pageNoStr = c.GetString("pageNo")
+	}
 	if pageNoStr == "" {
 		//pageNoStr = c.DefaultQuery("pageNo", "1")
 		pageNoStr = "1"
