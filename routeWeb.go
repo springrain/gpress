@@ -26,7 +26,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-// routeCategoryMap 动态添加的导航菜单路由map[pathURL]categoryID
+// routeCategoryMap 动态添加的导航菜单路由map[categoryURI]categoryID
 var routeCategoryMap = make(map[string]string, 0)
 
 // init 初始化函数
@@ -43,20 +43,22 @@ func init() {
 	h.GET("/page/:pageNo", funcIndex)
 	h.GET("/page/:pageNo/", funcIndex)
 
-	// 导航菜单列表
-	h.GET("/category/:urlPathParam", funcListCategory)
-	h.GET("/category/:urlPathParam/", funcListCategory)
-	h.GET("/category/:urlPathParam/page/:pageNo", funcListCategory)
-	h.GET("/category/:urlPathParam/page/:pageNo/", funcListCategory)
+	/*
+		// 导航菜单列表
+		h.GET("/category/:urlPathParam", funcListCategory)
+		h.GET("/category/:urlPathParam/", funcListCategory)
+		h.GET("/category/:urlPathParam/page/:pageNo", funcListCategory)
+		h.GET("/category/:urlPathParam/page/:pageNo/", funcListCategory)
+		// 查看内容
+		h.GET("/post/:urlPathParam", funcOneContent)
+		h.GET("/post/:urlPathParam/", funcOneContent)
+	*/
 
 	// 查看标签
 	h.GET("/tag/:urlPathParam", funcListTags)
 	h.GET("/tag/:urlPathParam/", funcListTags)
 	h.GET("/tag/:urlPathParam/page/:pageNo", funcListTags)
 	h.GET("/tag/:urlPathParam/page/:pageNo/", funcListTags)
-	// 查看内容
-	h.GET("/post/:urlPathParam", funcOneContent)
-	h.GET("/post/:urlPathParam/", funcOneContent)
 
 	//@TODO 静态文件映射的 /favicon.ico 还是进入通配funcListCategoryFilepath
 	h.GET("/favicon.ico", func(ctx context.Context, c *app.RequestContext) {
@@ -170,8 +172,7 @@ func funcListCategoryFilepath(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	if contentURI != "" { //内容页面
-		contentId, _ := findContentIdByPathURL(ctx, contentURI, key+"/")
-		c.Set("urlPathParam", contentId)
+		c.Set("urlPathParam", key+"/"+contentURI)
 		funcOneContent(ctx, c)
 	} else { //导航菜单页面
 		c.Set("urlPathParam", categoryID)
@@ -186,14 +187,14 @@ func initCategoryRoute() {
 	for i := 0; i < len(categorys); i++ {
 		category := categorys[i]
 		//导航菜单的访问映射
-		h.GET(trimRightSlash(category.PathURL), addListCategoryRoute(category.Id))
-		h.GET(category.PathURL, addListCategoryRoute(category.Id))
+		h.GET(trimRightSlash(category.Id), addListCategoryRoute(category.Id))
+		h.GET(category.Id, addListCategoryRoute(category.Id))
 		//导航菜单分页数据的访问映射
-		h.GET(category.PathURL+"page/:pageNo", addListCategoryRoute(category.Id))
-		h.GET(category.PathURL+"page/:pageNo/", addListCategoryRoute(category.Id))
+		h.GET(category.Id+"page/:pageNo", addListCategoryRoute(category.Id))
+		h.GET(category.Id+"page/:pageNo/", addListCategoryRoute(category.Id))
 		//导航菜单下文章的访问映射
-		h.GET(category.PathURL+":contentURI", addOneContentRoute(category.PathURL))
-		h.GET(category.PathURL+":contentURI/", addOneContentRoute(category.PathURL))
+		h.GET(category.Id+":contentURI", addOneContentRoute(category.Id))
+		h.GET(category.Id+":contentURI/", addOneContentRoute(category.Id))
 	}
 }
 
@@ -205,12 +206,11 @@ func addListCategoryRoute(categoryID string) app.HandlerFunc {
 	}
 }
 
-// addOneContentRoute 增加内容的GET请求路由,通过pathURL 和 URI,查询contentId
-func addOneContentRoute(pathURL string) app.HandlerFunc {
+// addOneContentRoute 增加内容的GET请求路由
+func addOneContentRoute(categoryID string) app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		contentURI := c.Param("contentURI")
-		contentId, _ := findContentIdByPathURL(ctx, contentURI, pathURL)
-		c.Set("urlPathParam", contentId)
+		c.Set("urlPathParam", categoryID+contentURI)
 		funcOneContent(ctx, c)
 	}
 }

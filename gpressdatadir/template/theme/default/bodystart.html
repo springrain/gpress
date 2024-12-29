@@ -65,7 +65,7 @@
 			  {{if $v.HrefURL}}
 			    <a href="{{ hrefURL $v.HrefURL }}">
 			  {{else}}
-			    <a href="{{basePath}}{{ trimSlash $v.PathURL }}">
+			    <a href="{{basePath}}{{ trimSlash $v.Id }}">
 			  {{end}}
 				<li class="mobile-menu-item">{{ $v.Name }}</li>
 			</a>
@@ -90,7 +90,7 @@
 					  {{if $v.HrefURL}}
 					     <a class="menu-item-link" href="{{ hrefURL $v.HrefURL }}">{{ $v.Name }}</a>
 					  {{else}}
-					     <a class="menu-item-link" href="{{basePath}}{{ trimSlash $v.PathURL }}">{{ $v.Name }}</a>
+					     <a class="menu-item-link" href="{{basePath}}{{ trimSlash $v.Id }}">{{ $v.Name }}</a>
 					  {{end}}
 					</li>
 					{{ end }}

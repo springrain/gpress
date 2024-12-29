@@ -18,11 +18,11 @@
 {{ range $k,$v := $selectList.Data }}
 <article class="post">
   <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="{{basePath}}{{ trimSlash $v.PathURL }}/{{.Id}}">{{ .Title }}</a></h1>
+    <h1 class="post-title"><a class="post-link" href="{{basePath}}{{ trimSlash $v.Id }}">{{ .Title }}</a></h1>
     <div class="post-meta">
       <span class="post-time">{{ slice .UpdateTime 0 10 }}</span>
       <div class="post-category">
-          <a href="{{basePath}}{{ trimSlash $v.PathURL }}/{{ .CategoryID }}">{{ .CategoryName }}</a>
+          <a href="{{basePath}}{{ categoryURL $v.Id  }}">{{ .CategoryName }}</a>
           </div>
     </div>
   </header>
@@ -32,7 +32,7 @@
       {{ .Summary }} 
     </div>
     <div class="read-more">
-      <a href="{{basePath}}{{ trimSlash $v.PathURL }}/{{.Id}}" class="read-more-link">阅读更多</a>
+      <a href="{{basePath}}{{ trimSlash $v.Id }}" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
