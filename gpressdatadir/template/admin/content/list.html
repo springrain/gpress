@@ -31,7 +31,7 @@
 
 			<div class="tree" id="tree">
 				<details open="">
-					<summary id="全部内容" class="tree-item"><a id="all_tree_a" href="{{basePath}}admin/content/list?pathURL=&pageNo=1">全部内容</a>
+					<summary id="全部内容" class="tree-item"><a id="all_tree_a" href="{{basePath}}admin/content/list?id=&pageNo=1">全部内容</a>
 					</summary>
 				</details>
 			</div>
@@ -41,7 +41,7 @@
 		<div style="height: 100%;">
 				<form id="listForm" action="{{basePath}}admin/{{.UrlPathParam}}/list" method="GET">
 					<input type="hidden" id="pageNo" name="pageNo" value="{{.Page.PageNo}}">
-					<input type="hidden" id="pathURL" name="pathURL" value="">
+					<input type="hidden" id="id" name="id" value="">
 					<div class="layui-input-group">
 						<input type="text" id="q" name="q" placeholder="搜索" class="layui-input">
 						<div class="layui-input-split layui-input-suffix" style="cursor: pointer;">
@@ -65,7 +65,7 @@
 						{{ range $i,$v := .Data }}
 						<tr>
 							<!-- 获取每一列的值 -->
-							<td title="{{basePath}}{{trimLeftSlash .PathURL }}{{ .URI }}"><a href="{{basePath}}{{ trimLeftSlash $v.PathURL }}{{ .URI }}" style="cursor: pointer;" target="_blank">{{basePath}}{{trimLeftSlash .PathURL }}{{ .URI }}</a></td>
+							<td title="{{basePath}}{{trimLeftSlash $v.Id }}"><a href="{{basePath}}{{ trimLeftSlash $v.Id }}" style="cursor: pointer;" target="_blank">{{basePath}}{{trimLeftSlash .Id }}</a></td>
 							<td title="{{ .Title }}"><a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}" style="cursor: pointer;"> {{ .Title }} </a></td>
 							<td title="{{ .CategoryName }}"> {{ .CategoryName }}</td>
 							<td> {{ .SortNo }}</td>
@@ -129,19 +129,21 @@
 		if (q) {
 			$("#q").val(q)
 		}
-		var pathURL = params.get("pathURL")
-		if (pathURL && pathURL != "") {
-			$("#pathURL").val(pathURL)
+		var id = params.get("id")
+		if (id && id != "") {
+			$("#id").val(id)
 		}
 
 		//选中高亮
-		if (pathURL && pathURL != "") {//被选中
-			var codes = pathURL.split("/");
+		if (id && id != "") {//被选中
+			var codes = id.split("/");
+			var codeId="/";
 			for (i = 0; i < codes.length; i++) {
 				var code = codes[i];
 				//console.log(code)
 				if (code != "") {
-					document.getElementById("tree_a_" + code).style="color:#1e9fff";
+					codeId=codeId+code+"/"
+					document.getElementById("tree_a_" + codeId).style="color:#1e9fff";
 				}
 			}
 
@@ -227,7 +229,7 @@
 			const detailsHtml = $(
 				`<details id="details_${node.id}" open="">
 					<summary class="tree-item">
-						<a id="tree_a_${node.id}" href="{{basePath}}admin/content/list?pathURL=${node.pathURL}&pageNo=1">${node.name}</a> 
+						<a id="tree_a_${node.id}" href="{{basePath}}admin/content/list?id=${node.id}&pageNo=1">${node.name}</a> 
 						<i class="layui-icon layui-icon-tips tips-dropdown" id="${node.id}" ></i>
 					</summary>
 				</details>`

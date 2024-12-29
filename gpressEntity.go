@@ -89,9 +89,6 @@ type Category struct {
 	// ID
 	Id string `column:"id" json:"id,omitempty"`
 
-	// URI 资源路径
-	URI string `column:"uri" json:"uri,omitempty"`
-
 	// Name 名称
 	Name string `column:"name" json:"name,omitempty"`
 
@@ -109,9 +106,6 @@ type Category struct {
 
 	// Signature 私钥对内容的签名
 	Signature string `column:"signature" json:"signature,omitempty"`
-
-	// PathURL URL路径,用/隔开,例如/a/b/c/
-	PathURL string `column:"pathURL" json:"pathURL,omitempty"`
 
 	// TemplateFile 模板文件
 	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
@@ -166,14 +160,8 @@ type Content struct {
 	// ID
 	Id string `column:"id" json:"id,omitempty"`
 
-	// URI 资源路径
-	URI string `column:"uri" json:"uri,omitempty"`
-
 	// Title 文章标题
 	Title string `column:"title" json:"title,omitempty"`
-
-	// Signature 私钥对内容的签名
-	Signature string `column:"signature" json:"signature,omitempty"`
 
 	// Keyword 关键字
 	Keyword string `column:"keyword" json:"keyword,omitempty"`
@@ -192,9 +180,6 @@ type Content struct {
 
 	// CategoryName 导航菜单
 	CategoryName string `column:"categoryName" json:"categoryName,omitempty"`
-
-	// PathURL URL路径,用/隔开,例如/a/b/c/
-	PathURL string `column:"pathURL" json:"pathURL,omitempty"`
 
 	// TemplateFile 模板文件
 	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
@@ -219,6 +204,15 @@ type Content struct {
 
 	// Thumbnail 缩略图
 	Thumbnail string `column:"thumbnail" json:"thumbnail,omitempty"`
+
+	// Signature 私钥对内容的签名
+	Signature string `column:"signature" json:"signature,omitempty"`
+
+	// SignAddress 签名的address
+	SignAddress string `column:"signAddress" json:"signAddress,omitempty"`
+
+	// SignChain 签名的区块链
+	SignChain string `column:"signChain" json:"signChain,omitempty"`
 
 	// CreateTime 创建时间
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`

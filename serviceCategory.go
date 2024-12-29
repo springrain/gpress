@@ -19,7 +19,6 @@ package main
 
 import (
 	"context"
-	"errors"
 
 	"gitee.com/chunanyong/zorm"
 )
@@ -30,16 +29,4 @@ func findAllCategory(ctx context.Context) ([]Category, error) {
 	categorys := make([]Category, 0)
 	err := zorm.Query(ctx, finder, &categorys, nil)
 	return categorys, err
-}
-
-// findContentIdByPathURL 根据pathURL查询CotentId
-func findContentIdByPathURL(ctx context.Context, uri string, pathURL string) (string, error) {
-
-	if uri == "" || pathURL == "" {
-		return "", errors.New("uri 或者 pathURL 为空")
-	}
-	contentId := ""
-	finder := zorm.NewSelectFinder(tableContentName, "id").Append("WHERE uri=? and pathURL=?", uri, pathURL)
-	_, err := zorm.QueryRow(ctx, finder, &contentId)
-	return contentId, err
 }
