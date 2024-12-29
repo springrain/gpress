@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS category (
 		hrefURL           TEXT,
 		hrefTarget        TEXT,
 		pid        TEXT,
-		themePC        TEXT,
 		templateFile        TEXT,
 		childTemplateFile        TEXT,
 		keyword           TEXT,
@@ -45,8 +44,8 @@ CREATE TABLE IF NOT EXISTS category (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,NULL,'',NULL,'Web','/web/');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,NULL,'','/about/about','About','/about/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'',NULL,'Web','/web/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'','/about/about','About','/about/');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
