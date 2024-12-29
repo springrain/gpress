@@ -6,6 +6,7 @@
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
 
+{{ $categorys := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
 {{ $themeTemplate := themeTemplate "content" }} 
 
 <div class="layui-panel" style="padding: 5px;height: 100%;">
@@ -43,8 +44,12 @@
 			<div class="layui-col-md3">
 				<label class="layui-form-label">导航菜单</label>
 				<div class="layui-input-block">
-					<input type="hidden" name="categoryID" id="categoryID" value="{{ .Data.CategoryID }}" />
-					<input type="text" class="layui-input" disabled value="{{ .Data.CategoryName }}" />
+					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单">
+						<option value="">请选择</option>
+						{{ range $index,$obj := $categorys.Data }}
+						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
+						{{end}}
+					</select>
 				</div>
 			</div>
 			<div class="layui-col-md3">
@@ -141,7 +146,7 @@
 		var $ = layui.jquery;
    
 		//选中导航菜单
-		//$("#categoryID option[value='{{.Data.CategoryID}}']").attr("selected", true);
+		$("#categoryID option[value='{{.Data.CategoryID}}']").attr("selected", true);
 		//选中模板
 		$("#templateFile option[value='{{.Data.TemplateFile}}']").attr("selected", true);
 		//选中状态
@@ -331,7 +336,7 @@
 			field.status = field.status - 0;
 			field.thumbnail = thumbnail;
 			field.code = "";
-			//field.categoryName = $("#categoryID").find("option:selected").text();
+			field.categoryName = $("#categoryID").find("option:selected").text();
 			//选中的文章类型
 			let contentType=$("input:radio[name='contentType']:checked").val(); 
 			if(contentType=="1"){//富文本
