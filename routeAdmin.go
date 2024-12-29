@@ -452,12 +452,12 @@ func funcContentList(ctx context.Context, c *app.RequestContext) {
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	q := strings.TrimSpace(c.Query("q"))
 	pageNo, _ := strconv.Atoi(pageNoStr)
-	pathURL := strings.TrimSpace(c.Query("pathURL"))
+	id := strings.TrimSpace(c.Query("id"))
 	values := make([]interface{}, 0)
 	sql := ""
-	if pathURL != "" {
-		sql = " * from content where pathURL like ?  order by sortNo desc "
-		values = append(values, pathURL+"%")
+	if id != "" {
+		sql = " * from content where id like ?  order by sortNo desc "
+		values = append(values, id+"%")
 	} else {
 		sql = " * from content order by sortNo desc "
 	}
@@ -632,21 +632,12 @@ func funcUpdateUser(ctx context.Context, c *app.RequestContext) {
 
 // funcUpdateCategory 更新导航菜单
 func funcUpdateCategory(ctx context.Context, c *app.RequestContext) {
-	now := time.Now().Format("2006-01-02 15:04:05")
+
 	entity := &Category{}
 	ok := funcUpdateInit(ctx, c, entity)
 	if !ok {
 		return
 	}
-	if entity.Pid != "" {
-		f := zorm.NewSelectFinder(tableCategoryName, "pathURL").Append(" where id =?", entity.Pid)
-		zorm.QueryRow(ctx, f, &(entity.PathURL))
-		entity.PathURL = entity.PathURL + entity.Id + "/"
-	} else {
-		entity.PathURL = "/" + entity.Id + "/"
-	}
-	entity.UpdateTime = now
-	funcUpdate(ctx, c, entity, entity.Id)
 }
 
 // funcUpdateContent 更新内容
@@ -668,12 +659,23 @@ func funcUpdateContent(ctx context.Context, c *app.RequestContext) {
 		entity.Content = content
 		entity.Toc = toc
 	}
+	newId := ""
 	if entity.CategoryID != "" {
-		f := zorm.NewSelectFinder(tableCategoryName, "pathURL,name as categoryName").Append(" where id =?", entity.CategoryID)
+		f := zorm.NewSelectFinder(tableCategoryName, "name as categoryName").Append(" where id =?", entity.CategoryID)
 		zorm.QueryRow(ctx, f, entity)
+		urls := strings.Split(entity.Id, "/")
+		newId = entity.CategoryID + urls[len(urls)-1]
 	}
 	entity.UpdateTime = now
-	funcUpdate(ctx, c, entity, entity.Id)
+	zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		funcUpdate(ctx, c, entity, entity.Id)
+		if newId != "" {
+			finder := zorm.NewUpdateFinder(tableContentName).Append("id=? WHERE id=?", newId, entity.Id)
+			return zorm.UpdateFinder(ctx, finder)
+		}
+		return nil, nil
+	})
+
 }
 
 // funcUpdateInit 初始化更新的对象参数,先从数据库查询,再更新数据
@@ -749,11 +751,9 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		entity.UpdateTime = now
 	}
 	if entity.Pid != "" {
-		f := zorm.NewSelectFinder(entity.GetTableName(), "pathURL").Append(" where id =?", entity.Pid)
-		zorm.QueryRow(ctx, f, &(entity.PathURL))
-		entity.PathURL = entity.PathURL + entity.URI + "/"
+		entity.Id = entity.Pid + entity.Id + "/"
 	} else {
-		entity.PathURL = "/" + entity.URI + "/"
+		entity.Id = "/" + entity.Id + "/"
 	}
 	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.Insert(ctx, entity)
@@ -765,8 +765,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	// 增加自定义路由映射
-	pathURL := trimRightSlash(entity.PathURL)
-	routeCategoryMap[pathURL] = entity.Id
+	routeCategoryMap[trimRightSlash(entity.Id)] = entity.Id
 
 	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
 }
@@ -775,16 +774,16 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	entity := &Content{}
 	err := c.Bind(entity)
-	if err != nil {
+	if err != nil || entity.Id == "" || entity.CategoryID == "" {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return
 	}
 	now := time.Now().Format("2006-01-02 15:04:05")
-	if entity.Id == "" {
-		entity.Id = FuncGenerateStringID()
-	}
+	// 构建ID
+	entity.Id = entity.CategoryID + entity.Id
+
 	if entity.CreateTime == "" {
 		entity.CreateTime = now
 	}
@@ -802,10 +801,10 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 		entity.Content = content
 		entity.Toc = toc
 	}
-	if entity.CategoryID != "" {
-		f := zorm.NewSelectFinder(tableCategoryName, "pathURL,name as categoryName").Append(" where id =?", entity.CategoryID)
-		zorm.QueryRow(ctx, f, entity)
-	}
+
+	f := zorm.NewSelectFinder(tableCategoryName, "name as categoryName").Append(" where id =?", entity.CategoryID)
+	zorm.QueryRow(ctx, f, entity)
+
 	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.Insert(ctx, entity)
 	})

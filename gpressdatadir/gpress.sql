@@ -30,14 +30,11 @@ CREATE TABLE IF NOT EXISTS user (
 
 CREATE TABLE IF NOT EXISTS category (
 		id TEXT PRIMARY KEY     NOT NULL,
-		uri         TEXT NOT NULL ,
 		name          TEXT  NOT NULL,
 		hrefURL           TEXT,
 		hrefTarget        TEXT,
 		pid        TEXT,
 		themePC        TEXT,
-		signature        TEXT,
-		pathURL    TEXT UNIQUE NOT NULL,
 		templateFile        TEXT,
 		childTemplateFile        TEXT,
 		keyword           TEXT,
@@ -48,13 +45,11 @@ CREATE TABLE IF NOT EXISTS category (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,uri,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/web/',NULL,NULL,NULL,'',NULL,'Web','web','web');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,uri,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/about/',NULL,NULL,NULL,'','/about/about','About','about','about');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,NULL,'',NULL,'Web','/web/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,NULL,'','/about/about','About','/about/');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
-		uri         TEXT NOT NULL ,
-		signature         TEXT  ,
 		title         TEXT   NOT NULL,
 		keyword           TEXT,
 		description           TEXT,
@@ -62,7 +57,6 @@ CREATE TABLE IF NOT EXISTS content (
 		subtitle           TEXT,
 		categoryID           TEXT,
 		categoryName           TEXT,
-		pathURL        TEXT,
 		templateFile           TEXT,
 		author           TEXT,
 		tag           TEXT,
@@ -71,6 +65,9 @@ CREATE TABLE IF NOT EXISTS content (
 		content           TEXT,
 		markdown          TEXT,
 		thumbnail         TEXT,
+		signature         TEXT  ,
+		signAddress       TEXT  ,
+		signChain         TEXT  ,
 		createTime        TEXT,
 		updateTime        TEXT,
 		createUser        TEXT,
@@ -149,7 +146,6 @@ INSERT INTO content (
                         tag,
                         author,
                         templateFile,
-                        pathURL,
                         categoryName,
                         categoryID,
                         subtitle,
@@ -158,7 +154,8 @@ INSERT INTO content (
                         keyword,
                         title,
                         signature,
-						uri,
+						signAddress,
+						signChain,
                         id
                     )
                     VALUES (
@@ -196,7 +193,6 @@ INSERT INTO content (
                         NULL,
                         'springrain',
                         NULL,
-                        '/about/',
                         'About',
                         'about',
                         NULL,
@@ -205,8 +201,9 @@ INSERT INTO content (
                         NULL,
                         'about',
                         NULL,
-						'about',
-                        'about'
+						NULL,
+						NULL,
+                        '/about/about'
                     ),
                     (
                         1,
@@ -430,7 +427,6 @@ nginx 配置示例如下:</p>
                         '',
                         '',
                         '',
-                        '/web/',
                         'Web',
                         'web',
                         '',
@@ -438,7 +434,8 @@ nginx 配置示例如下:</p>
                         '',
                         '',
                         'gpress',
-                        '',
-						'gpress',
-                        'gpress'
+                        NULL,
+						NULL,
+						NULL,
+						'/web/gpress'
                     );

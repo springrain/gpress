@@ -58,6 +58,7 @@ var funcMap = template.FuncMap{
 	"trimRightSlash":   trimRightSlash,
 	"trimLeftSlash":    trimLeftSlash,
 	"trimSlash":        trimSlash,
+	"categoryURL":      categoryURL,
 	"generateStringID": FuncGenerateStringID,
 	"treeCategory":     funcTreeCategory,
 	"themeName":        funcThemeName,
@@ -383,6 +384,12 @@ func trimLeftSlash(s string) string {
 func trimSlash(s string) string {
 	str := strings.Trim(s, "/")
 	return str
+}
+func categoryURL(s string) string {
+	str := strings.Trim(s, "/")
+	urls := strings.Split(str, "/")
+	urls = urls[:len(urls)-1]
+	return strings.Join(urls, "/")
 }
 
 // sliceCategory2Tree 导航菜单数组转树形结构

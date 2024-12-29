@@ -14,8 +14,7 @@
 			<label class="layui-form-label">URI路径</label>
 			<div class="layui-input-block">
 			  <input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
-			  <input type="hidden" name="uri" id="uri" value="{{.Data.URI}}" />
-			  <input type="text" class="layui-input" disabled value="{{basePath}}{{trimSlash .Data.PathURL}}" />
+			  <input type="text" class="layui-input" disabled value="{{basePath}}{{trimSlash .Data.Id}}" />
 			</div>
 		  </div>
 		  <div class="layui-form-item layui-col-md6">
