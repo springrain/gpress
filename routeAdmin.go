@@ -751,9 +751,9 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 	if entity.Pid != "" {
 		f := zorm.NewSelectFinder(entity.GetTableName(), "pathURL").Append(" where id =?", entity.Pid)
 		zorm.QueryRow(ctx, f, &(entity.PathURL))
-		entity.PathURL = entity.PathURL + entity.Id + "/"
+		entity.PathURL = entity.PathURL + entity.URI + "/"
 	} else {
-		entity.PathURL = "/" + entity.Id + "/"
+		entity.PathURL = "/" + entity.URI + "/"
 	}
 	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.Insert(ctx, entity)

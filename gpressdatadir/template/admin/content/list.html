@@ -47,15 +47,12 @@
 						<div class="layui-input-split layui-input-suffix" style="cursor: pointer;">
 							<i class="layui-icon layui-icon-search" onclick="submitListForm();"></i>
 						</div>
-						<div class="layui-input-suffix">
-							<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="layui-btn layui-bg-blue">新增内容</a>
-						</div>
 					</div>
 				</form>
 				<table class="layui-table table-content" id="table_list" lay-filter="parse-table-list">
 					<thead>
 						<tr>
-							<th width="25%">ID</th>
+							<th width="25%">URI路径</th>
 							<th width="29%">文章标题</th>
 							<th width="10%">导航菜单</th>
 							<th width="7%">排序</th>
@@ -68,7 +65,7 @@
 						{{ range $i,$v := .Data }}
 						<tr>
 							<!-- 获取每一列的值 -->
-							<td title="{{ .Id }}"><a href="{{basePath}}{{ trimSlash $v.PathURL }}/{{.Id}}" style="cursor: pointer;" target="_blank">{{ .Id }}</a></td>
+							<td title="{{basePath}}{{trimLeftSlash .PathURL }}{{ .URI }}"><a href="{{basePath}}{{ trimLeftSlash $v.PathURL }}{{ .URI }}" style="cursor: pointer;" target="_blank">{{basePath}}{{trimLeftSlash .PathURL }}{{ .URI }}</a></td>
 							<td title="{{ .Title }}"><a href="{{basePath}}admin/{{$.UrlPathParam}}/update?id={{.Id}}" style="cursor: pointer;"> {{ .Title }} </a></td>
 							<td title="{{ .CategoryName }}"> {{ .CategoryName }}</td>
 							<td> {{ .SortNo }}</td>

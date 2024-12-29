@@ -170,6 +170,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | columnName    | 类型         | 说明    |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | 主键        |    -  |
+| uri         | string      | 资源路径     |    -  |
 | name        | string      | 导航名称     |    -  |
 | hrefURL     | string      | 跳转路径     |    -  |
 | hrefTarget  | string      | 跳转方式     | _self,_blank,_parent,_top|
@@ -190,7 +191,8 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | columnName  | 类型        | 说明        | 是否分词 |  备注                  | 
 | ----------- | ----------- | ----------- | ------- | ---------------------- |
 | id          | string      | 主键         | 否      |    -                   |
-| signature    | string      | 私钥对内容的签名       | 否      |  文章使用的模型字段     |
+| uri         | string      | 资源路径     |    -    |
+| signature   | string      | 私钥对内容的签名 | 否   |  文章使用的模型字段     |
 | title       | string      | 文章标题     | 是      |    使用 jieba 分词器    |
 | keyword     | string      | 内容关键字   | 是      |    使用 jieba 分词器    |
 | description | string      | 内容描述     | 是      |    使用 jieba 分词器    |

@@ -89,6 +89,9 @@ type Category struct {
 	// ID
 	Id string `column:"id" json:"id,omitempty"`
 
+	// URI 资源路径
+	URI string `column:"uri" json:"uri,omitempty"`
+
 	// Name 名称
 	Name string `column:"name" json:"name,omitempty"`
 
@@ -162,6 +165,9 @@ type Content struct {
 
 	// ID
 	Id string `column:"id" json:"id,omitempty"`
+
+	// URI 资源路径
+	URI string `column:"uri" json:"uri,omitempty"`
 
 	// Title 文章标题
 	Title string `column:"title" json:"title,omitempty"`

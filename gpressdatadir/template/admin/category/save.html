@@ -4,7 +4,7 @@
 
 {{ $themeTemplate := themeTemplate "category" }} <!-- 模版数据 -->
 
-{{ $categoryName := selectOne "category" "* from category WHERE id=?" .QueryStringMap.pid }}
+{{ $category := selectOne "category" "* from category WHERE id=?" .QueryStringMap.pid }}
 
 {{ $maxSortNo:=  selectOne "category" "max(sortNo) as sortNo from category" }} 
 
@@ -15,11 +15,13 @@
 	<div class="layui-card-body">
 	  <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">ID</label>
+			<label class="layui-form-label">URI</label>
 			<div class="layui-input-block">
-			  <input type="text" name="id" lay-verify="required" lay-reqtext="请填写ID" autocomplete="off" class="layui-input" value="" />
+				<input type="hidden" name="id" id="id" value="{{generateStringID}}" />
+				<input type="text" name="uri" lay-verify="required" placeholder="必填,保存后不允许修改" lay-reqtext="请填写URI路径" autocomplete="off" class="layui-input" value="" />
 			</div>
 		  </div>
+		  
 		  <div class="layui-form-item layui-col-md6">
 			  <label class="layui-form-label">导航名称</label>
 			  <div class="layui-input-block">
@@ -50,8 +52,8 @@
 		  <div class="layui-form-item layui-col-md6">
 			<label class="layui-form-label">父级导航</label>
 			<div class="layui-input-block">
-			  <input  type="hidden"  name="pid"  value="{{$categoryName.Id}}">
-			  <input type="text"  autocomplete="off" class="layui-input" value="{{$categoryName.Name}}" disabled>
+			  <input  type="hidden"  name="pid"  value="{{$category.Id}}">
+			  <input type="text"  autocomplete="off" class="layui-input" value="{{$category.Name}}" disabled>
 			</div>
 		  </div>
 
