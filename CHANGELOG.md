@@ -1,6 +1,6 @@
 v1.0.7
-- URL默认使用导航菜单ID,例如:/web/nginx-use-hsts
-- comCode字段更名为pathURL,用/分割.moduleID字段更名为signature
+- 使用导航和内容的URI路径,例如:/web/nginx-use-hsts
+- comCode字段更名为pathURL,用/分割.moduleID字段更名为signature,增加uri字段
 - 统一映射静态文件,兼容项目前缀路径   
 - 完善文档,注释
 
