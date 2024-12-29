@@ -632,12 +632,12 @@ func funcUpdateUser(ctx context.Context, c *app.RequestContext) {
 
 // funcUpdateCategory 更新导航菜单
 func funcUpdateCategory(ctx context.Context, c *app.RequestContext) {
-
 	entity := &Category{}
 	ok := funcUpdateInit(ctx, c, entity)
 	if !ok {
 		return
 	}
+	funcUpdate(ctx, c, entity, entity.Id)
 }
 
 // funcUpdateContent 更新内容
