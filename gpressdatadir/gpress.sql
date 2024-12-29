@@ -30,13 +30,14 @@ CREATE TABLE IF NOT EXISTS user (
 
 CREATE TABLE IF NOT EXISTS category (
 		id TEXT PRIMARY KEY     NOT NULL,
+		uri         TEXT NOT NULL ,
 		name          TEXT  NOT NULL,
 		hrefURL           TEXT,
 		hrefTarget        TEXT,
 		pid        TEXT,
 		themePC        TEXT,
 		signature        TEXT,
-		pathURL        TEXT,
+		pathURL    TEXT UNIQUE NOT NULL,
 		templateFile        TEXT,
 		childTemplateFile        TEXT,
 		keyword           TEXT,
@@ -47,11 +48,12 @@ CREATE TABLE IF NOT EXISTS category (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/web/',NULL,NULL,NULL,'',NULL,'Web','web');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/about/',NULL,NULL,NULL,'','/about/about','About','about');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,uri,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/web/',NULL,NULL,NULL,'',NULL,'Web','web','web');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pathURL,signature,themePC,pid,hrefTarget,hrefURL,name,uri,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'/about/',NULL,NULL,NULL,'','/about/about','About','about','about');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
+		uri         TEXT NOT NULL ,
 		signature         TEXT  ,
 		title         TEXT   NOT NULL,
 		keyword           TEXT,
@@ -156,6 +158,7 @@ INSERT INTO content (
                         keyword,
                         title,
                         signature,
+						uri,
                         id
                     )
                     VALUES (
@@ -202,6 +205,7 @@ INSERT INTO content (
                         NULL,
                         'about',
                         NULL,
+						'about',
                         'about'
                     ),
                     (
@@ -435,5 +439,6 @@ nginx 配置示例如下:</p>
                         '',
                         'gpress',
                         '',
+						'gpress',
                         'gpress'
                     );

@@ -2,8 +2,7 @@
 <title>更新导航菜单 - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
-{{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }}
-{{ $categoryName := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
+{{ $category := selectOne "category" "* from category WHERE id=?" .Data.Pid }}
 {{ $themeTemplate := themeTemplate "category" }} <!-- 模版数据 -->
 <div class="layui-card layui-panel" style="height: 100%;">
 	<div class="layui-card-header">
@@ -12,10 +11,11 @@
 	<div class="layui-card-body">
 	  <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">ID</label>
+			<label class="layui-form-label">URI路径</label>
 			<div class="layui-input-block">
 			  <input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
-			  <input type="text" class="layui-input" disabled value="{{.Data.Id}}" />
+			  <input type="hidden" name="uri" id="uri" value="{{.Data.URI}}" />
+			  <input type="text" class="layui-input" disabled value="{{basePath}}{{trimSlash .Data.PathURL}}" />
 			</div>
 		  </div>
 		  <div class="layui-form-item layui-col-md6">
@@ -48,8 +48,8 @@
 		<div class="layui-form-item layui-col-md6">
 		  <label class="layui-form-label">父级导航</label>
 		  <div class="layui-input-block">
-			<input  type="hidden"  name="pid"  value="{{$categoryName.Id}}">
-			<input type="text"  autocomplete="off" class="layui-input" value="{{$categoryName.Name}}" disabled>
+			<input  type="hidden"  name="pid"  value="{{$category.Id}}">
+			<input type="text"  autocomplete="off" class="layui-input" value="{{$category.Name}}" disabled>
 		  </div>
 		</div>
 

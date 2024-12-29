@@ -6,7 +6,8 @@
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
 
-{{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
+{{ $category := selectOne "category" "* from category WHERE id=?" .QueryStringMap.categoryID }}
+{{ $categorys := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
 {{ $maxSortNo:=  selectOne "content" "max(sortNo) as sortNo from content" }} 
 {{ $themeTemplate := themeTemplate "content" }}
 
@@ -14,10 +15,10 @@
 	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST" onsubmit="return false;" style="height:100%;display: flex;flex-direction: column;">
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
-				<label class="layui-form-label">ID</label>
+				<label class="layui-form-label">URI</label>
 				<div class="layui-input-block">
-					<input type="text" name="id" lay-verify="required" lay-reqtext="请填写ID" autocomplete="off"
-						class="layui-input" value="">
+					<input type="hidden" name="id" id="id" value="{{generateStringID}}" />
+					<input type="text" name="uri" placeholder="必填,保存后不允许修改" lay-verify="required" lay-reqtext="请填写URI路径" autocomplete="off" class="layui-input" value="" />
 				</div>
 			</div>
 			<div class="layui-col-md3">
@@ -47,7 +48,7 @@
 				<div class="layui-input-block">
 					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单">
 						<option value="">请选择</option>
-						{{ range $index,$obj := $category.Data }}
+						{{ range $index,$obj := $categorys.Data }}
 						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
 						{{end}}
 					</select>
