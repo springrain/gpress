@@ -47,6 +47,9 @@
 						<div class="layui-input-split layui-input-suffix" style="cursor: pointer;">
 							<i class="layui-icon layui-icon-search" onclick="submitListForm();"></i>
 						</div>
+						<div class="layui-input-suffix">
+							<a href="{{basePath}}admin/{{.UrlPathParam}}/save" class="layui-btn layui-bg-blue">新增内容</a>
+						</div>
 					</div>
 				</form>
 				<table class="layui-table table-content" id="table_list" lay-filter="parse-table-list">
