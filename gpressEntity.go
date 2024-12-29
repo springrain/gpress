@@ -101,12 +101,6 @@ type Category struct {
 	// Pid 父级ID
 	Pid string `column:"pid" json:"pid,omitempty"`
 
-	// ThemePC 主题PC
-	ThemePC string `column:"themePC" json:"themePC,omitempty"`
-
-	// Signature 私钥对内容的签名
-	Signature string `column:"signature" json:"signature,omitempty"`
-
 	// TemplateFile 模板文件
 	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
 
