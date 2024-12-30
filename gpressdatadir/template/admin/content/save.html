@@ -15,9 +15,9 @@
 	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST" onsubmit="return false;" style="height:100%;display: flex;flex-direction: column;">
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
-				<label class="layui-form-label">URI</label>
+				<label class="layui-form-label">路径标识</label>
 				<div class="layui-input-block">
-					<input type="text" name="id" placeholder="保存后不允许修改" lay-verify="required|uri" lay-reqtext="请填写URI路径" autocomplete="off" class="layui-input" value="" />
+					<input type="text" name="id" placeholder="保存后不允许修改" lay-verify="required|uri" lay-reqtext="请填写路径标识" autocomplete="off" class="layui-input" value="" />
 				</div>
 			</div>
 			<div class="layui-col-md3">
@@ -151,7 +151,7 @@
 			// 验证uri
 			uri: function(value, elem) {
 			  if (!/^[a-zA-Z0-9_-|-,-\-]+$/.test(value)) {
-				return 'URI可以包含英文、数字、中划线(-)、下划线(_)、竖线(|)和逗号(,)';
+				return '路径标识可以包含英文、数字、中划线(-)、下划线(_)、竖线(|)和逗号(,)';
 			  }
 			},
 		})
