@@ -18,6 +18,12 @@
 			</div>
 		  </div>
 		  <div class="layui-form-item layui-col-md6">
+			<label class="layui-form-label">URL路径</label>
+			<div class="layui-input-block">
+			  <input type="text" class="layui-input" disabled value="{{basePath}}{{trimSlash .Data.Id}}" />
+			</div>
+		  </div>
+		  <div class="layui-form-item layui-col-md6">
 			<label class="layui-form-label">导航名称</label>
 			<div class="layui-input-block">
 			  <input type="text" name="name" lay-verify="required" lay-reqtext="请填写导航名称" autocomplete="off" class="layui-input" value="{{.Data.Name}}" />
