@@ -38,15 +38,9 @@ import (
 var templateAdmin = template.New(appName+"-admin").Delims("", "").Funcs(funcMap)
 var htmlRenderAdmin = render.HTMLProduction{Template: templateAdmin}
 
-// 前端模板渲染,分为pc/wap/wx三种客户端,默认是templateDefault
-var templateDefault = template.New(appName+"-default").Delims("", "").Funcs(funcMap)
-var htmlRender = render.HTMLProduction{Template: templateDefault}
-var templatePC = template.New(appName+"-pc").Delims("", "").Funcs(funcMap)
-var htmlRenderPC = render.HTMLProduction{Template: templatePC}
-var templateWAP = template.New(appName+"-wap").Delims("", "").Funcs(funcMap)
-var htmlRenderWAP = render.HTMLProduction{Template: templateWAP}
-var templateWX = template.New(appName+"-wx").Delims("", "").Funcs(funcMap)
-var htmlRenderWX = render.HTMLProduction{Template: templateWX}
+// 前端模板渲染,分为pc/wap/wx三种客户端,使用Map记录
+var webTemplateMap = make(map[string]*template.Template)
+var webRenderMap = make(map[string]render.HTMLRender)
 
 // cHtml 渲染前端页面
 func cHtml(c *app.RequestContext, code int, name string, obj interface{}) {
@@ -75,37 +69,71 @@ func loadTemplate() error {
 		FuncLogError(nil, err)
 		return err
 	}
-
+	// 重新初始化Template和Render的Map
+	webTemplateMap = make(map[string]*template.Template)
+	webRenderMap = make(map[string]render.HTMLRender)
 	//遍历前端默认模板文件
 	if site.Theme != "" {
-		err = walkTemplateDir(templateDefault, themeDir+site.Theme+"/", themeDir+site.Theme+"/", false)
-		if err != nil {
-			FuncLogError(nil, err)
-			return err
+		themeTemplate, has := webTemplateMap[site.Theme]
+		if !has {
+			themeTemplate = template.New(appName+site.Theme).Delims("", "").Funcs(funcMap)
+			webTemplateMap[site.Theme] = themeTemplate
+			err = walkTemplateDir(themeTemplate, themeDir+site.Theme+"/", themeDir+site.Theme+"/", false)
+			if err != nil {
+				FuncLogError(nil, err)
+				return err
+			}
 		}
+		htmlRender := render.HTMLProduction{Template: themeTemplate}
+		webRenderMap["default"] = &htmlRender
+
 	}
 	if site.ThemePC != "" {
-		err = walkTemplateDir(templatePC, themeDir+site.ThemePC+"/", themeDir+site.ThemePC+"/", false)
-		if err != nil {
-			FuncLogError(nil, err)
-			return err
+		themeTemplate, has := webTemplateMap[site.ThemePC]
+		if !has {
+			themeTemplate = template.New(appName+site.ThemePC).Delims("", "").Funcs(funcMap)
+			webTemplateMap[site.ThemePC] = themeTemplate
+			err = walkTemplateDir(themeTemplate, themeDir+site.ThemePC+"/", themeDir+site.ThemePC+"/", false)
+			if err != nil {
+				FuncLogError(nil, err)
+				return err
+			}
 		}
+		htmlRender := render.HTMLProduction{Template: themeTemplate}
+		webRenderMap["pc"] = &htmlRender
+
 	}
 	//遍历手机wap的模板文件
 	if site.ThemeWAP != "" {
-		err = walkTemplateDir(templateWAP, themeDir+site.ThemeWAP+"/", themeDir+site.ThemeWAP+"/", false)
-		if err != nil {
-			FuncLogError(nil, err)
-			return err
+		themeTemplate, has := webTemplateMap[site.ThemeWAP]
+		if !has {
+			themeTemplate = template.New(appName+site.ThemeWAP).Delims("", "").Funcs(funcMap)
+			webTemplateMap[site.ThemeWAP] = themeTemplate
+			err = walkTemplateDir(themeTemplate, themeDir+site.ThemeWAP+"/", themeDir+site.ThemeWAP+"/", false)
+			if err != nil {
+				FuncLogError(nil, err)
+				return err
+			}
 		}
+		htmlRender := render.HTMLProduction{Template: themeTemplate}
+		webRenderMap["wap"] = &htmlRender
+
 	}
 	//遍历微信WX的模板文件
 	if site.ThemeWX != "" {
-		err = walkTemplateDir(templateWX, themeDir+site.ThemeWX+"/", themeDir+site.ThemeWX+"/", false)
-		if err != nil {
-			FuncLogError(nil, err)
-			return err
+		themeTemplate, has := webTemplateMap[site.ThemeWX]
+		if !has {
+			themeTemplate = template.New(appName+site.ThemeWX).Delims("", "").Funcs(funcMap)
+			webTemplateMap[site.ThemeWX] = themeTemplate
+			err = walkTemplateDir(themeTemplate, themeDir+site.ThemeWX+"/", themeDir+site.ThemeWX+"/", false)
+			if err != nil {
+				FuncLogError(nil, err)
+				return err
+			}
 		}
+		htmlRender := render.HTMLProduction{Template: themeTemplate}
+		webRenderMap["wx"] = &htmlRender
+
 	}
 	return nil
 }
@@ -310,18 +338,18 @@ func getTheme(c *app.RequestContext) (string, render.HTMLRender) {
 		userAgentByte = c.GetHeader("User-Agent")
 	}
 	if len(userAgentByte) == 0 {
-		return site.Theme, htmlRender
+		return site.Theme, webRenderMap["default"]
 	}
 	userAgent := strings.ToLower(string(userAgentByte))
 
 	if site.ThemeWX != "" && (strings.Contains(userAgent, "weixin") || strings.Contains(userAgent, "wechat") || strings.Contains(userAgent, "micromessenger")) { // 微信
-		return site.ThemeWX, htmlRenderWX
+		return site.ThemeWX, webRenderMap["wx"]
 	} else if site.ThemeWAP != "" && (strings.Contains(userAgent, "android") || strings.Contains(userAgent, "phone") || strings.Contains(userAgent, "harmonyos") || strings.Contains(userAgent, "mobile") || strings.Contains(userAgent, "blackberry") || strings.Contains(userAgent, "ipod")) {
-		return site.ThemeWAP, htmlRenderWAP
+		return site.ThemeWAP, webRenderMap["wap"]
 	} else if site.ThemePC != "" && (strings.Contains(userAgent, "windows") || strings.Contains(userAgent, "linux") || strings.Contains(userAgent, "macintosh") || strings.Contains(userAgent, "ipad") || strings.Contains(userAgent, "tablet")) {
-		return site.ThemePC, htmlRenderPC
+		return site.ThemePC, webRenderMap["pc"]
 	}
-	return site.Theme, htmlRender
+	return site.Theme, webRenderMap["default"]
 
 }
 
