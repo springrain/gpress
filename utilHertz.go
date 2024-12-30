@@ -221,7 +221,7 @@ func initStaticFS() {
 			//relativePath := c.Param("filepath")
 			relativePath := string(c.URI().Path())
 			//去掉basePath
-			relativePath = strings.TrimLeft(relativePath, funcBasePath())
+			relativePath = strings.TrimPrefix(relativePath, funcBasePath())
 			key := relativePath
 			parts := strings.Split(key, "/")
 			if len(parts) > 1 {

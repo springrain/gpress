@@ -55,8 +55,8 @@ var funcMap = template.FuncMap{
 	"hasPrefix":        funcHasPrefix,
 	"hasSuffix":        funcHasSuffix,
 	"contains":         funcContains,
-	"trimRightSlash":   funcTrimRightSlash,
-	"trimLeftSlash":    funcTrimLeftSlash,
+	"trimSuffixSlash":  funcTrimSuffixSlash,
+	"trimPrefixSlash":  funcTrimPrefixSlash,
 	"trimSlash":        funcTrimSlash,
 	"categoryURL":      funcCategoryURL,
 	"lastURI":          funcLastURI,
@@ -374,12 +374,12 @@ func funcContains(s, substr string) bool {
 	return strings.Contains(s, substr)
 }
 
-func funcTrimRightSlash(s string) string {
-	str := strings.TrimRight(s, "/")
+func funcTrimSuffixSlash(s string) string {
+	str := strings.TrimSuffix(s, "/")
 	return str
 }
-func funcTrimLeftSlash(s string) string {
-	str := strings.TrimLeft(s, "/")
+func funcTrimPrefixSlash(s string) string {
+	str := strings.TrimPrefix(s, "/")
 	return str
 }
 func funcTrimSlash(s string) string {
