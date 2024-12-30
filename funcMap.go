@@ -52,13 +52,14 @@ var funcMap = template.FuncMap{
 	//"themeFile":  funcThemeFile,
 	//"convertType":      funcConvertJson,
 	//"convertMap":       funcConvertMap,
-	"hasPrefix":        hasPrefix,
-	"hasSuffix":        hasSuffix,
-	"contains":         contains,
-	"trimRightSlash":   trimRightSlash,
-	"trimLeftSlash":    trimLeftSlash,
-	"trimSlash":        trimSlash,
-	"categoryURL":      categoryURL,
+	"hasPrefix":        funcHasPrefix,
+	"hasSuffix":        funcHasSuffix,
+	"contains":         funcContains,
+	"trimRightSlash":   funcTrimRightSlash,
+	"trimLeftSlash":    funcTrimLeftSlash,
+	"trimSlash":        funcTrimSlash,
+	"categoryURL":      funcCategoryURL,
+	"lastURI":          funcLastURI,
 	"generateStringID": FuncGenerateStringID,
 	"treeCategory":     funcTreeCategory,
 	"themeName":        funcThemeName,
@@ -358,38 +359,46 @@ func funcThemeName() []string {
 	return themeNames
 }
 
-// hasPrefix 是否某字符串开头
-func hasPrefix(s, prefix string) bool {
+// funcHasPrefix 是否某字符串开头
+func funcHasPrefix(s, prefix string) bool {
 	return strings.HasPrefix(s, prefix)
 }
 
-// hasSuffix 是否某字符串结尾
-func hasSuffix(s, suffix string) bool {
+// funcHasSuffix 是否某字符串结尾
+func funcHasSuffix(s, suffix string) bool {
 	return strings.HasSuffix(s, suffix)
 }
 
-// contains 是否包含某字符串
-func contains(s, substr string) bool {
+// funcContains 是否包含某字符串
+func funcContains(s, substr string) bool {
 	return strings.Contains(s, substr)
 }
 
-func trimRightSlash(s string) string {
+func funcTrimRightSlash(s string) string {
 	str := strings.TrimRight(s, "/")
 	return str
 }
-func trimLeftSlash(s string) string {
+func funcTrimLeftSlash(s string) string {
 	str := strings.TrimLeft(s, "/")
 	return str
 }
-func trimSlash(s string) string {
+func funcTrimSlash(s string) string {
 	str := strings.Trim(s, "/")
 	return str
 }
-func categoryURL(s string) string {
+func funcCategoryURL(s string) string {
 	str := strings.Trim(s, "/")
 	urls := strings.Split(str, "/")
 	urls = urls[:len(urls)-1]
 	return strings.Join(urls, "/")
+}
+func funcLastURI(s string) string {
+	str := funcTrimSlash(s)
+	urls := strings.Split(str, "/")
+	if len(urls) < 1 {
+		return str
+	}
+	return urls[len(urls)-1]
 }
 
 // sliceCategory2Tree 导航菜单数组转树形结构
