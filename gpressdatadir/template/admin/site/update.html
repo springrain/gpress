@@ -181,8 +181,8 @@
 			contentType: "application/json;charset=utf-8",
 			dataType:"json",
 			data:JSON.stringify(field),
-			error:function(){
-				layer.msg("修改错误,请重试!");
+			error: function (result) {
+				layer.msg("更新错误!"+result.responseJSON.message);
 			},
 			success:function(result){
 				if (result.statusCode == 1) {
