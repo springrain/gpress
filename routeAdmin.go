@@ -774,7 +774,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	// 增加自定义路由映射
-	routeCategoryMap[funcTrimRightSlash(entity.Id)] = entity.Id
+	routeCategoryMap[funcTrimSuffixSlash(entity.Id)] = entity.Id
 
 	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
 }
