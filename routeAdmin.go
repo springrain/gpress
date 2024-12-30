@@ -592,6 +592,9 @@ func funcUpdateConfig(ctx context.Context, c *app.RequestContext) {
 	if !ok {
 		return
 	}
+	if !strings.HasSuffix(entity.BasePath, "/") {
+		entity.BasePath = entity.BasePath + "/"
+	}
 	entity.UpdateTime = now
 	funcUpdate(ctx, c, entity, entity.Id)
 }
