@@ -1,6 +1,6 @@
 v1.0.7
-- URI作为导航和内容的ID,例如:/web/nginx-use-hsts
-- 去掉comCode字段,moduleID字段更名为signature,增加signAddress和signChain字段
+- URI作为导航和内容的ID,例如:/web/是导航ID,/web/nginx-use-hsts是内容ID
+- 去掉comCode,moduleID字段,增加signature,signAddress和signChain字段
 - 统一映射静态文件,兼容项目前缀路径   
 - 完善文档,注释
 
