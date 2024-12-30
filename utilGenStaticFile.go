@@ -59,7 +59,7 @@ func genSearchDataJson() error {
 	}
 	for i := 0; i < len(datas); i++ {
 		if datas[i].HrefURL == "" {
-			datas[i].HrefURL = funcBasePath() + trimLeftSlash(datas[i].Id)
+			datas[i].HrefURL = funcBasePath() + funcTrimLeftSlash(datas[i].Id)
 		}
 	}
 	dataBytes, err := json.Marshal(datas)
@@ -183,12 +183,12 @@ func genStaticFileByTheme(contents []Content, categorys []string, theme string, 
 			tagsMap[tag] = true
 		}
 		//postURL := httpServerPath + "post/" + postId
-		fileHash, success, err := writeStaticHtml(trimLeftSlash(contents[i].Id), "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(funcTrimLeftSlash(contents[i].Id), "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + trimLeftSlash(contents[i].Id) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimLeftSlash(contents[i].Id) + "</loc></url>")
 		}
 
 		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent)
@@ -204,20 +204,20 @@ func genStaticFileByTheme(contents []Content, categorys []string, theme string, 
 
 	for i := 0; i < len(categorys); i++ {
 		//生成导航菜单首页index
-		fileHash, success, err := writeStaticHtml(trimSlash(categorys[i]), "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(funcTrimSlash(categorys[i]), "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + trimSlash(categorys[i]) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categorys[i]) + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml(trimSlash(categorys[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
+			fileHash, success, err := writeStaticHtml(funcTrimSlash(categorys[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
 			if fileHash == "" || err != nil {
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + trimSlash(categorys[i]) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categorys[i]) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
