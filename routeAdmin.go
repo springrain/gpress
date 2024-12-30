@@ -592,6 +592,9 @@ func funcUpdateConfig(ctx context.Context, c *app.RequestContext) {
 	if !ok {
 		return
 	}
+	if !strings.HasPrefix(entity.BasePath, "/") {
+		entity.BasePath = "/" + entity.BasePath
+	}
 	if !strings.HasSuffix(entity.BasePath, "/") {
 		entity.BasePath = entity.BasePath + "/"
 	}
