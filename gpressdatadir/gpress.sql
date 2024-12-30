@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS site (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,themeWX,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2025<span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','jiagou.com','架构','jiagou','gpress_site');
+INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,themeWX,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2025 <span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','jiagou.com','架构','jiagou','gpress_site');
 
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
 		title, 
@@ -220,7 +220,7 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 **作为后浪：** 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......  
 **帮助文档：** [点击查看帮助文档](https://gitee.com/gpress/gpress/blob/master/gpressdatadir/public/doc/index.md)    
  
-个人博客 [jiagou.com](jiagou.com/about/about) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
+个人博客 [jiagou.com](https://jiagou.com/about/about) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
 ![](/public/index.png "")
 # 开发环境  
 gprss使用了 ```https://github.com/wangfenjin/simple``` 作为FTS5的全文检索扩展,编译好的libsimple文件放到 ```gpressdatadir/fts5``` 目录下,如果gpress启动报错连不上数据库,请检查libsimple文件是否正确,如果需要重新编译libsimple,请参考 https://github.com/wangfenjin/simple.  
@@ -323,7 +323,7 @@ location / {
 <strong>作为Web3：</strong> gpress已支持以太坊和百度超级链账户体系,会基于Wasm持续迭代去中心功能,让数据自由一点点......<br>
 <strong>作为后浪：</strong> 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......<br>
 <strong>帮助文档：</strong> <a href="https://gitee.com/gpress/gpress/blob/master/gpressdatadir/public/doc/index.md">点击查看帮助文档</a></p>
-<p>个人博客 <a href="jiagou.com/about/about">jiagou.com</a> 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.<br>
+<p>个人博客 <a href="https://jiagou.com/about/about">jiagou.com</a> 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.<br>
 <img src="/public/index.png" alt="" title=""></p>
 <h1 id="开发环境">开发环境</h1>
 <p>gprss使用了 <code>https://github.com/wangfenjin/simple</code> 作为FTS5的全文检索扩展,编译好的libsimple文件放到 <code>gpressdatadir/fts5</code> 目录下,如果gpress启动报错连不上数据库,请检查libsimple文件是否正确,如果需要重新编译libsimple,请参考 <a href="https://github.com/wangfenjin/simple">https://github.com/wangfenjin/simple</a>.</p>
