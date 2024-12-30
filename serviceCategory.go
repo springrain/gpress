@@ -33,7 +33,7 @@ func findAllCategory(ctx context.Context) ([]Category, error) {
 
 // validateIDExists 校验ID是否已经存在
 func validateIDExists(ctx context.Context, id string) bool {
-	id = funcTrimRightSlash(id)
+	id = funcTrimSuffixSlash(id)
 	if id == "" {
 		return true
 	}

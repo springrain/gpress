@@ -59,7 +59,7 @@ func genSearchDataJson() error {
 	}
 	for i := 0; i < len(datas); i++ {
 		if datas[i].HrefURL == "" {
-			datas[i].HrefURL = funcBasePath() + funcTrimLeftSlash(datas[i].Id)
+			datas[i].HrefURL = funcBasePath() + funcTrimPrefixSlash(datas[i].Id)
 		}
 	}
 	dataBytes, err := json.Marshal(datas)
@@ -183,12 +183,12 @@ func genStaticFileByTheme(contents []Content, categorys []string, theme string, 
 			tagsMap[tag] = true
 		}
 		//postURL := httpServerPath + "post/" + postId
-		fileHash, success, err := writeStaticHtml(funcTrimLeftSlash(contents[i].Id), "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(funcTrimPrefixSlash(contents[i].Id), "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimLeftSlash(contents[i].Id) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + "</loc></url>")
 		}
 
 		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent)
