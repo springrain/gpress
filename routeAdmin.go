@@ -741,9 +741,6 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	now := time.Now().Format("2006-01-02 15:04:05")
-	if entity.Id == "" {
-		entity.Id = FuncGenerateStringID()
-	}
 	if entity.CreateTime == "" {
 		entity.CreateTime = now
 	}
@@ -754,6 +751,12 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		entity.Id = entity.Pid + entity.Id + "/"
 	} else {
 		entity.Id = "/" + entity.Id + "/"
+	}
+	has := validateIDExists(ctx, entity.Id)
+	if has {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
+		c.Abort() // 终止后续调用
+		return
 	}
 	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.Insert(ctx, entity)
@@ -783,7 +786,12 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	now := time.Now().Format("2006-01-02 15:04:05")
 	// 构建ID
 	entity.Id = entity.CategoryID + entity.Id
-
+	has := validateIDExists(ctx, entity.Id)
+	if has {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
+		c.Abort() // 终止后续调用
+		return
+	}
 	if entity.CreateTime == "" {
 		entity.CreateTime = now
 	}
