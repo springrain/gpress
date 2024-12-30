@@ -11,10 +11,10 @@
 	<div class="layui-card-body">
 	  <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">URI路径</label>
+			<label class="layui-form-label">URI</label>
 			<div class="layui-input-block">
 			  <input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
-			  <input type="text" class="layui-input" disabled value="{{basePath}}{{trimSlash .Data.Id}}" />
+			  <input type="text" class="layui-input" disabled value="{{lastURI .Data.Id}}" />
 			</div>
 		  </div>
 		  <div class="layui-form-item layui-col-md6">
