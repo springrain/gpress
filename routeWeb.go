@@ -210,7 +210,15 @@ func addListCategoryRoute(categoryID string) app.HandlerFunc {
 func addOneContentRoute(categoryID string) app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		contentURI := c.Param("contentURI")
-		c.Set("urlPathParam", categoryID+contentURI)
+		key := categoryID + contentURI
+		//获取路径的对应的 categoryID
+		value, has := routeCategoryMap[key]
+		if has { //导航菜单的路径
+			c.Set("urlPathParam", value)
+			funcListCategory(ctx, c)
+			return
+		}
+		c.Set("urlPathParam", key)
 		funcOneContent(ctx, c)
 	}
 }
