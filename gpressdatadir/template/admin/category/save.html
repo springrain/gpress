@@ -17,7 +17,7 @@
 		  <div class="layui-form-item layui-col-md6">
 			<label class="layui-form-label">URI</label>
 			<div class="layui-input-block">
-				<input type="text" name="id" lay-verify="required" placeholder="英文字符,保存后不允许修改" lay-reqtext="请填写URI路径" autocomplete="off" class="layui-input" value="" />
+				<input type="text" name="id" lay-verify="required|uri" placeholder="保存后不允许修改" lay-reqtext="请填写URI路径" autocomplete="off" class="layui-input" value="" />
 			</div>
 		  </div>
 		  
@@ -116,6 +116,18 @@ layui.use(function(){
 var form = layui.form;
 var layer = layui.layer;
 var $ =layui.jquery;
+
+// 自定义验证规则
+form.verify({
+	// 验证uri
+    uri: function(value, elem) {
+		if (!/^[a-zA-Z0-9_-|-,-\-]+$/.test(value)) {
+				return 'URI可以包含英文、数字、中划线(-)、下划线(_)、竖线(|)和逗号(,)';
+		}
+    },
+})
+
+
 // 提交事件
 form.on('submit(gpress-form-ajax-update)', function(data){
   var field = data.field; // 获取表单字段值
