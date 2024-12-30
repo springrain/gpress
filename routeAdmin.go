@@ -754,7 +754,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 	}
 	has := validateIDExists(ctx, entity.Id)
 	if has {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
+		c.JSON(http.StatusConflict, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -788,7 +788,7 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	entity.Id = entity.CategoryID + entity.Id
 	has := validateIDExists(ctx, entity.Id)
 	if has {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
+		c.JSON(http.StatusConflict, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
 		c.Abort() // 终止后续调用
 		return
 	}
