@@ -188,7 +188,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 ### 文章内容(表名:content)
 | columnName  | 类型        | 说明        | 是否分词 |  备注                  | 
 | ----------- | ----------- | ----------- | ------- | ---------------------- |
-| id          | string      | 主键         | URL路径,用/隔开,例如/web/nginx-use-hsts |
+| id          | string      | 主键         |   否    | URL路径,用/隔开,例如/web/nginx-use-hsts |
 | signature   | string      | 私钥对内容的签名 | 否   |  文章使用的模型字段     |
 | title       | string      | 文章标题     | 是      |    使用 jieba 分词器    |
 | keyword     | string      | 内容关键字   | 是      |    使用 jieba 分词器    |
