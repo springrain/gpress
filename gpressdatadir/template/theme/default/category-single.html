@@ -1,0 +1,46 @@
+<!-- 查询 content -->
+{{ $contentSQL := "* FROM content WHERE id=? order by sortNo desc" }}
+
+
+
+{{$contentID := printf "/single/%s" (lastURI .UrlPathParam) }}
+
+{{ $content := selectOne "content" $contentSQL $contentID }}
+
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <title>{{ $content.Title }}</title>
+  <meta name="description" content="{{ $content.Description }}" />
+  <meta name="keyword" content="{{ $content.Keyword }}" />
+
+{{template "bodystart.html"  }}
+
+
+<article class="post">
+    
+  <header class="post-header">
+    <h1 class="post-title">{{ $content.Title }}</h1>
+
+    <div class="post-meta">
+      
+      
+    </div>
+  </header>
+
+  <div class="post-content">
+
+    {{ safeHTML $content.Content }}
+
+</div>
+<div class="post-copyright">
+
+</div>
+
+</article>
+
+
+
+
+  {{template "bodyend.html" }}
