@@ -9,7 +9,7 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 **作为后浪：** 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......  
 **帮助文档：** [点击查看帮助文档](./gpressdatadir/public/doc/index.md)   
  
-个人博客 [jiagou.com](https://jiagou.com/about/about) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
+个人博客 [jiagou.com](https://jiagou.com) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
 <img src="gpressdatadir/public/index.png" width="600px">
 
 ## 开发环境  
