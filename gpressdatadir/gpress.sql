@@ -44,8 +44,10 @@ CREATE TABLE IF NOT EXISTS category (
 		sortNo            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'',NULL,'Web','/web/');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'','/about/about','About','/about/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,3,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'',NULL,'Web','/web/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'','/web/gpress','gpress','/gpress/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,'category-single.html',NULL,'',NULL,'About','/about/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (3,0,NULL,'2025-01-01 22:41:20','2025-01-01 22:41:20',NULL,NULL,NULL,'',NULL,'单页','/single/');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
@@ -158,7 +160,7 @@ INSERT INTO content (
                         id
                     )
                     VALUES (
-                        0,
+                        3,
                         100,
                         NULL,
                         '2024-04-11 11:02:40',
@@ -193,16 +195,16 @@ INSERT INTO content (
                         'springrain',
                         NULL,
                         'About',
-                        '/about/',
+                        '/single/',
                         NULL,
                         NULL,
                         NULL,
                         NULL,
-                        'about',
+                        'About',
                         NULL,
 						NULL,
 						NULL,
-                        '/about/about'
+                        '/single/about'
                     ),
                     (
                         1,
@@ -220,7 +222,7 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 **作为后浪：** 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......  
 **帮助文档：** [点击查看帮助文档](https://gitee.com/gpress/gpress/blob/master/gpressdatadir/public/doc/index.md)    
  
-个人博客 [jiagou.com](https://jiagou.com/about/about) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
+个人博客 [jiagou.com](https://jiagou.com) 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.  
 ![](/public/index.png "")
 # 开发环境  
 gprss使用了 ```https://github.com/wangfenjin/simple``` 作为FTS5的全文检索扩展,编译好的libsimple文件放到 ```gpressdatadir/fts5``` 目录下,如果gpress启动报错连不上数据库,请检查libsimple文件是否正确,如果需要重新编译libsimple,请参考 https://github.com/wangfenjin/simple.  
@@ -323,7 +325,7 @@ location / {
 <strong>作为Web3：</strong> gpress已支持以太坊和百度超级链账户体系,会基于Wasm持续迭代去中心功能,让数据自由一点点......<br>
 <strong>作为后浪：</strong> 相对于Hugo、WordPress等优秀的内容平台,gpress还有很多不足,功能简单而又稚嫩......<br>
 <strong>帮助文档：</strong> <a href="https://gitee.com/gpress/gpress/blob/master/gpressdatadir/public/doc/index.md">点击查看帮助文档</a></p>
-<p>个人博客 <a href="https://jiagou.com/about/about">jiagou.com</a> 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.<br>
+<p>个人博客 <a href="https://jiagou.com">jiagou.com</a> 使用gpress搭建,搜索和后台管理是动态,其他是静态页面.<br>
 <img src="/public/index.png" alt="" title=""></p>
 <h1 id="开发环境">开发环境</h1>
 <p>gprss使用了 <code>https://github.com/wangfenjin/simple</code> 作为FTS5的全文检索扩展,编译好的libsimple文件放到 <code>gpressdatadir/fts5</code> 目录下,如果gpress启动报错连不上数据库,请检查libsimple文件是否正确,如果需要重新编译libsimple,请参考 <a href="https://github.com/wangfenjin/simple">https://github.com/wangfenjin/simple</a>.</p>
