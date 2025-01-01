@@ -7,47 +7,47 @@ import (
 
 func TestDataSliceCategory2Tree(t *testing.T) {
 	type args struct {
-		categorys []Category
+		categorys []*Category
 	}
 	tests := []struct {
 		name string
 		args args
-		want []Category
+		want []*Category
 	}{
 		{
 			name: "无节点",
 			args: args{
 				categorys: nil,
 			},
-			want: []Category{},
+			want: []*Category{},
 		},
 		{
 			name: "两级节点",
 			args: args{
-				categorys: []Category{
+				categorys: []*Category{
 					{Id: "1", Name: "Category 1", Pid: ""},
 					{Id: "2", Name: "Category 2", Pid: "1"},
 					{Id: "3", Name: "Category 3", Pid: ""},
 					{Id: "4", Name: "Category 4", Pid: "3"},
 				},
 			},
-			want: []Category{
+			want: []*Category{
 				{
 					Id:   "1",
 					Name: "Category 1",
-					Leaf: []Category{{Id: "2", Name: "Category 2", Pid: "1"}},
+					Leaf: []*Category{{Id: "2", Name: "Category 2", Pid: "1"}},
 				},
 				{
 					Id:   "3",
 					Name: "Category 3",
-					Leaf: []Category{{Id: "4", Name: "Category 4", Pid: "3"}},
+					Leaf: []*Category{{Id: "4", Name: "Category 4", Pid: "3"}},
 				},
 			},
 		},
 		{
 			name: "多级节点",
 			args: args{
-				categorys: []Category{
+				categorys: []*Category{
 					{Id: "1", Name: "Category 1", Pid: ""},
 					{Id: "2", Name: "Category 2", Pid: "1"},
 					{Id: "3", Name: "Category 3", Pid: "1"},
@@ -56,16 +56,16 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 					{Id: "6", Name: "Category 6", Pid: "3"},
 				},
 			},
-			want: []Category{
+			want: []*Category{
 				{
 					Id:   "1",
 					Name: "Category 1",
-					Leaf: []Category{
+					Leaf: []*Category{
 						{
 							Id:   "2",
 							Pid:  "1",
 							Name: "Category 2",
-							Leaf: []Category{
+							Leaf: []*Category{
 								{
 									Id:   "4",
 									Pid:  "2",
@@ -82,7 +82,7 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 							Id:   "3",
 							Pid:  "1",
 							Name: "Category 3",
-							Leaf: []Category{
+							Leaf: []*Category{
 								{
 									Id:   "6",
 									Pid:  "3",
@@ -97,7 +97,7 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 		{
 			name: "多颗树",
 			args: args{
-				categorys: []Category{
+				categorys: []*Category{
 					{Id: "1", Name: "Category 1", Pid: ""},
 					{Id: "2", Name: "Category 2", Pid: "1"},
 					{Id: "3", Name: "Category 3", Pid: ""},
@@ -106,11 +106,11 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 					{Id: "6", Name: "Category 6", Pid: "5"},
 				},
 			},
-			want: []Category{
+			want: []*Category{
 				{
 					Id:   "1",
 					Name: "Category 1",
-					Leaf: []Category{
+					Leaf: []*Category{
 						{
 							Id:   "2",
 							Pid:  "1",
@@ -121,7 +121,7 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 				{
 					Id:   "3",
 					Name: "Category 3",
-					Leaf: []Category{
+					Leaf: []*Category{
 						{
 							Id:   "4",
 							Pid:  "3",
@@ -132,7 +132,7 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 				{
 					Id:   "5",
 					Name: "Category 5",
-					Leaf: []Category{
+					Leaf: []*Category{
 						{
 							Id:   "6",
 							Pid:  "5",

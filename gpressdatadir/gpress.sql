@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS category (
 	 ) strict ;
 INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,3,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'',NULL,'Web','/web/');
 INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,NULL,'','/web/gpress','gpress','/gpress/');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,'category-single.html',NULL,'',NULL,'About','/about/');
+INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,'category-single.html',NULL,'','/about','About','/about/');
 INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (3,0,NULL,'2025-01-01 22:41:20','2025-01-01 22:41:20',NULL,NULL,NULL,'',NULL,'单页','/single/');
 
 CREATE TABLE IF NOT EXISTS content (
@@ -194,7 +194,7 @@ INSERT INTO content (
                         NULL,
                         'springrain',
                         NULL,
-                        'About',
+                        '单页',
                         '/single/',
                         NULL,
                         NULL,
