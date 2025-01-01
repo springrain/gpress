@@ -128,7 +128,7 @@ type Category struct {
 	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
 
-	Leaf []Category `json:"leaf,omitempty"`
+	Leaf []*Category `json:"leaf,omitempty"`
 }
 
 // GetTableName 获取表名称
@@ -163,7 +163,7 @@ type Content struct {
 	// Description 页面描述
 	Description string `column:"description" json:"description,omitempty"`
 
-	// HrefURL 自身页面路径
+	// HrefURL 链接路径
 	HrefURL string `column:"hrefURL" json:"hrefURL,omitempty"`
 
 	// Subtitle 副标题

@@ -25,7 +25,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -329,9 +328,9 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 }
 
 // funcTreeCategory 导航菜单的树形结构
-func funcTreeCategory(sql string, values ...interface{}) []Category {
+func funcTreeCategory(sql string, values ...interface{}) []*Category {
 	ctx := context.Background()
-	categorys := make([]Category, 0)
+	categorys := make([]*Category, 0)
 	finder := zorm.NewFinder().Append("SELECT")
 	finder.Append(sql, values...)
 	err := zorm.Query(ctx, finder, &categorys, nil)
@@ -402,45 +401,26 @@ func funcLastURI(s string) string {
 }
 
 // sliceCategory2Tree 导航菜单数组转树形结构
-func sliceCategory2Tree(categorys []Category) []Category {
-	categorysMap := make(map[string]Category, len(categorys))
+func sliceCategory2Tree(categorys []*Category) []*Category {
+	categorysMap := make(map[string]*Category, len(categorys))
 	for _, v := range categorys {
 		categorysMap[v.Id] = v
 	}
-	for {
-		record := map[string]struct{}{}
-		for _, v := range categorysMap {
-			record[v.Pid] = struct{}{}
-		}
-		leafs := make([]Category, 0, 10)
-		for _, v := range categorysMap {
-			if v.Pid == "" { // 根节点
-				continue
+	treeCategory := make([]*Category, 0)
+	for i := 0; i < len(categorys); i++ {
+		category := categorys[i]
+		parent, has := categorysMap[category.Pid]
+		if has {
+			if parent.Leaf == nil {
+				parent.Leaf = make([]*Category, 0)
 			}
-			if _, ok := record[v.Id]; !ok {
-				leafs = append(leafs, v)
-			}
-		}
-		if len(leafs) == 0 {
-			break
-		}
-		for _, leaf := range leafs {
-			parent := categorysMap[leaf.Pid]
-			parent.Leaf = append(parent.Leaf, leaf)
-			categorysMap[parent.Id] = parent
-			delete(categorysMap, leaf.Id)
+			parent.Leaf = append(parent.Leaf, category)
+		} else {
+			treeCategory = append(treeCategory, category)
 		}
 	}
 
-	rootCategories := make([]Category, 0, len(categorysMap))
-	for _, v := range categorysMap {
-		rootCategories = append(rootCategories, v)
-	}
-
-	sort.Slice(rootCategories, func(i, j int) bool {
-		return rootCategories[i].CreateTime > rootCategories[j].CreateTime
-	})
-	return rootCategories
+	return treeCategory
 
 }
 
