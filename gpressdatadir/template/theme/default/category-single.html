@@ -1,8 +1,6 @@
 <!-- 查询 content -->
 {{ $contentSQL := "* FROM content WHERE id=? order by sortNo desc" }}
 
-
-
 {{$contentID := printf "/single/%s" (lastURI .UrlPathParam) }}
 
 {{ $content := selectOne "content" $contentSQL $contentID }}
