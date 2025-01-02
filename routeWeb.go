@@ -60,7 +60,7 @@ func init() {
 	h.GET("/tag/:urlPathParam/page/:pageNo", funcListTags)
 	h.GET("/tag/:urlPathParam/page/:pageNo/", funcListTags)
 
-	//@TODO 静态文件映射的 /favicon.ico 还是进入通配funcListCategoryFilepath
+	// 映射 /favicon.ico, h.StaticFS 和 h.Static 是解析目录请求,对于单个文件需要使用 h.StaticFile
 	h.GET("/favicon.ico", func(ctx context.Context, c *app.RequestContext) {
 		c.File(datadir + site.Favicon)
 	})
@@ -126,7 +126,6 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 
 // funcListCategoryFilepath 通配的filepath映射
 func funcListCategoryFilepath(ctx context.Context, c *app.RequestContext) {
-	//@TODO 静态文件映射的 /favicon.ico 还是进入到这个方法,造成了异常
 	key := string(c.URI().Path())
 	//兼容basePath
 	key = "/" + strings.TrimPrefix(key, funcBasePath())

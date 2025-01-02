@@ -1,3 +1,6 @@
+v1.0.8
+- 完善文档,注释
+
 v1.0.7
 - URI作为导航和内容的ID,例如:/web/是导航ID,/web/nginx-use-hsts是内容ID
 - 去掉comCode,moduleID字段,增加signature,signAddress和signChain字段
