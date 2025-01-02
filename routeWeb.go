@@ -114,6 +114,14 @@ func initCategoryRoute() {
 
 // addCategoryRoute 增加导航菜单的路由
 func addCategoryRoute(categoryID string) {
+
+	// 处理重复注册路由的panic,不对外抛出
+	defer func() {
+		if r := recover(); r != nil {
+			FuncLogPanic(nil, r.(error))
+		}
+	}()
+
 	//导航菜单的访问映射
 	h.GET(funcTrimSuffixSlash(categoryID), addListCategoryRoute(categoryID))
 	h.GET(categoryID, addListCategoryRoute(categoryID))
