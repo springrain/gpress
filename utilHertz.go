@@ -247,30 +247,7 @@ func initStaticFS() {
 		},
 	}
 	//映射静态文件,兼容项目前缀路径. 不再使用,有动态通配拦截 /
-	//h.StaticFS("/", appFS)
-	/*
-		//设置默认的静态文件,实际路径会拼接为 datadir/public
-		h.Static("/public", datadir)
-		//设置默认的 favicon.ico
-		h.StaticFile("/favicon.ico", datadir+site.Favicon)
-		//后台管理的静态文件
-		h.Static("/admin/js", templateDir)
-		h.Static("/admin/css", templateDir)
-		h.Static("/admin/image", templateDir)
-	*/
-
-	//设置默认的静态文件,实际路径会拼接为 datadir/public
-	h.StaticFS("/public", appFS)
-	//设置默认的 favicon.ico, h.StaticFS 和 h.Static 是解析目录请求,对于单个文件需要使用 h.StaticFile
-	//h.StaticFS("/favicon.ico", appFS)
-	h.StaticFS("/js", appFS)
-	h.StaticFS("/css", appFS)
-	h.StaticFS("/image", appFS)
-	//后台管理的静态文件
-	h.StaticFS("/admin/js", appFS)
-	h.StaticFS("/admin/css", appFS)
-	h.StaticFS("/admin/image", appFS)
-
+	h.StaticFS("/", appFS)
 }
 
 // cRedirecURI 重定向到uri,拼接上basePath
