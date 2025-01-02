@@ -19,6 +19,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -118,7 +119,7 @@ func addCategoryRoute(categoryID string) {
 	// 处理重复注册路由的panic,不对外抛出
 	defer func() {
 		if r := recover(); r != nil {
-			FuncLogPanic(nil, r.(error))
+			FuncLogPanic(nil, errors.New(r.(string)))
 		}
 	}()
 
