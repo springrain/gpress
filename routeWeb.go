@@ -26,9 +26,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-// routeCategoryMap 动态添加的导航菜单路由map[categoryURI]categoryID
-var routeCategoryMap = make(map[string]string, 0)
-
 // init 初始化函数
 func init() {
 
@@ -43,33 +40,14 @@ func init() {
 	h.GET("/page/:pageNo", funcIndex)
 	h.GET("/page/:pageNo/", funcIndex)
 
-	/*
-		// 导航菜单列表
-		h.GET("/category/:urlPathParam", funcListCategory)
-		h.GET("/category/:urlPathParam/", funcListCategory)
-		h.GET("/category/:urlPathParam/page/:pageNo", funcListCategory)
-		h.GET("/category/:urlPathParam/page/:pageNo/", funcListCategory)
-		// 查看内容
-		h.GET("/post/:urlPathParam", funcOneContent)
-		h.GET("/post/:urlPathParam/", funcOneContent)
-	*/
-
 	// 查看标签
 	h.GET("/tag/:urlPathParam", funcListTags)
 	h.GET("/tag/:urlPathParam/", funcListTags)
 	h.GET("/tag/:urlPathParam/page/:pageNo", funcListTags)
 	h.GET("/tag/:urlPathParam/page/:pageNo/", funcListTags)
 
-	// 映射 /favicon.ico, h.StaticFS 和 h.Static 是解析目录请求,对于单个文件需要使用 h.StaticFile
-	h.GET("/favicon.ico", func(ctx context.Context, c *app.RequestContext) {
-		c.File(datadir + site.Favicon)
-	})
-
 	//初始化导航菜单路由
 	initCategoryRoute()
-
-	// 通配其他动态路径
-	h.GET("/*filepath", funcListCategoryFilepath)
 
 }
 
@@ -124,79 +102,27 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	cHtml(c, http.StatusOK, templateFile, data)
 }
 
-// funcListCategoryFilepath 通配的filepath映射
-func funcListCategoryFilepath(ctx context.Context, c *app.RequestContext) {
-	key := string(c.URI().Path())
-	//兼容basePath
-	key = "/" + strings.TrimPrefix(key, funcBasePath())
-	key = funcTrimSuffixSlash(key) // 去掉最后的/, 例如: /web/ 实际是 /web
-	//从url路径分析获得的内容uri,例如: /web/nginx-use-hsts contentURI是nginx-use-hsts
-	contentURI := ""
-	pageNo := ""
-	//获取路径的对应的 categoryID
-	categoryID, has := routeCategoryMap[key]
-	if has { //导航菜单的路径
-		c.Set("urlPathParam", categoryID)
-		funcListCategory(ctx, c)
-		return
-	}
-
-	//拆分url
-	urls := strings.Split(key, "/")
-
-	//处理分页请求,例如 /web/page/1
-	if len(urls) > 1 && urls[len(urls)-2] == "page" {
-		pageNo = urls[len(urls)-1]
-		urls = urls[:len(urls)-2]
-		key = strings.Join(urls, "/")
-		categoryID, has = routeCategoryMap[key]
-		if has {
-			c.Set("urlPathParam", categoryID)
-			c.Set("pageNo", pageNo)
-			funcListCategory(ctx, c)
-			return
-		}
-	}
-	if len(urls) < 3 { // 类似 /web 却没有注册,返回404
-		cHtml(c, http.StatusNotFound, "error.html", nil)
-		return
-	}
-	//处理导航/内容的请求,例如: /web/nginx-use-hsts
-	contentURI = urls[len(urls)-1]
-	urls = urls[:len(urls)-1]
-	key = strings.Join(urls, "/")
-	//获取 categoryID
-	categoryID, has = routeCategoryMap[key]
-
-	if !has { //没有注册的categoryID,返回404的error
-		cHtml(c, http.StatusNotFound, "error.html", nil)
-		return
-	}
-	if contentURI != "" { //内容页面
-		c.Set("urlPathParam", key+"/"+contentURI)
-		funcOneContent(ctx, c)
-	} else { //导航菜单页面
-		c.Set("urlPathParam", categoryID)
-		funcListCategory(ctx, c)
-	}
-
-}
-
 // initCategoryRoute 初始化导航菜单的映射路径
 func initCategoryRoute() {
 	categorys, _ := findAllCategory(context.Background())
 	for i := 0; i < len(categorys); i++ {
 		category := categorys[i]
-		//导航菜单的访问映射
-		h.GET(funcTrimSuffixSlash(category.Id), addListCategoryRoute(category.Id))
-		h.GET(category.Id, addListCategoryRoute(category.Id))
-		//导航菜单分页数据的访问映射
-		h.GET(category.Id+"page/:pageNo", addListCategoryRoute(category.Id))
-		h.GET(category.Id+"page/:pageNo/", addListCategoryRoute(category.Id))
-		//导航菜单下文章的访问映射
-		h.GET(category.Id+":contentURI", addOneContentRoute(category.Id))
-		h.GET(category.Id+":contentURI/", addOneContentRoute(category.Id))
+		categoryID := category.Id
+		addCategoryRoute(categoryID)
 	}
+}
+
+// addCategoryRoute 增加导航菜单的路由
+func addCategoryRoute(categoryID string) {
+	//导航菜单的访问映射
+	h.GET(funcTrimSuffixSlash(categoryID), addListCategoryRoute(categoryID))
+	h.GET(categoryID, addListCategoryRoute(categoryID))
+	//导航菜单分页数据的访问映射
+	h.GET(categoryID+"page/:pageNo", addListCategoryRoute(categoryID))
+	h.GET(categoryID+"page/:pageNo/", addListCategoryRoute(categoryID))
+	//导航菜单下文章的访问映射
+	h.GET(categoryID+":contentURI", addOneContentRoute(categoryID))
+	h.GET(categoryID+":contentURI/", addOneContentRoute(categoryID))
 }
 
 // addListCategoryRoute 增加导航菜单的GET请求路由,用于自定义设置导航的路由
@@ -212,13 +138,6 @@ func addOneContentRoute(categoryID string) app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		contentURI := c.Param("contentURI")
 		key := categoryID + contentURI
-		//获取路径的对应的 categoryID
-		value, has := routeCategoryMap[key]
-		if has { //导航菜单的路径
-			c.Set("urlPathParam", value)
-			funcListCategory(ctx, c)
-			return
-		}
 		c.Set("urlPathParam", key)
 		funcOneContent(ctx, c)
 	}
