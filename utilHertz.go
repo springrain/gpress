@@ -261,8 +261,8 @@ func initStaticFS() {
 
 	//设置默认的静态文件,实际路径会拼接为 datadir/public
 	h.StaticFS("/public", appFS)
-	//设置默认的 favicon.ico
-	h.StaticFS("/favicon.ico", appFS)
+	//设置默认的 favicon.ico, h.StaticFS 和 h.Static 是解析目录请求,对于单个文件需要使用 h.StaticFile
+	//h.StaticFS("/favicon.ico", appFS)
 	h.StaticFS("/js", appFS)
 	h.StaticFS("/css", appFS)
 	h.StaticFS("/image", appFS)
