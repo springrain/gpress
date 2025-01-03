@@ -502,6 +502,11 @@ func funcListThemeTemplate(ctx context.Context, c *app.RequestContext) {
 		//获取文件后缀
 		ext := filepath.Ext(path)
 		ext = strings.ToLower(ext)
+		// 跳过压缩的 gz文件
+		if ext == ".gz" {
+			return nil
+		}
+
 		pid := filepath.ToSlash(filepath.Dir(path))
 		if pid == "." {
 			pid = ""
