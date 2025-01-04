@@ -58,6 +58,7 @@ var funcMap = template.FuncMap{
 	"trimPrefixSlash":  funcTrimPrefixSlash,
 	"trimSlash":        funcTrimSlash,
 	"categoryURL":      funcCategoryURL,
+	"firstURI":         funcFirstURI,
 	"lastURI":          funcLastURI,
 	"generateStringID": FuncGenerateStringID,
 	"treeCategory":     funcTreeCategory,
@@ -373,26 +374,45 @@ func funcContains(s, substr string) bool {
 	return strings.Contains(s, substr)
 }
 
-func funcTrimSuffixSlash(s string) string {
-	str := strings.TrimSuffix(s, "/")
-	return str
-}
+// funcTrimPrefixSlash 去掉开头的 /
 func funcTrimPrefixSlash(s string) string {
 	str := strings.TrimPrefix(s, "/")
 	return str
 }
+
+// funcTrimSuffixSlash 去掉结尾的 /
+func funcTrimSuffixSlash(s string) string {
+	str := strings.TrimSuffix(s, "/")
+	return str
+}
+
+// funcTrimSlash 去掉前后的 /
 func funcTrimSlash(s string) string {
 	str := strings.Trim(s, "/")
 	return str
 }
-func funcCategoryURL(s string) string {
-	str := strings.Trim(s, "/")
+
+// funcCategoryURL 根据contentID获取所属菜单的URL,例如 /a/b/c 返回 a/b
+func funcCategoryURL(contentID string) string {
+	str := strings.Trim(contentID, "/")
 	urls := strings.Split(str, "/")
 	urls = urls[:len(urls)-1]
 	return strings.Join(urls, "/")
 }
-func funcLastURI(s string) string {
-	str := funcTrimSlash(s)
+
+// funcFirstURI 获取路径的第一个 uri, 例如 /a/b/c 返回 a
+func funcFirstURI(uri string) string {
+	str := funcTrimSlash(uri)
+	urls := strings.Split(str, "/")
+	if len(urls) < 1 {
+		return str
+	}
+	return urls[0]
+}
+
+// funcLastURI 获取路径的最后一个 uri, 例如 /a/b/c 返回 c
+func funcLastURI(uri string) string {
+	str := funcTrimSlash(uri)
 	urls := strings.Split(str, "/")
 	if len(urls) < 1 {
 		return str
