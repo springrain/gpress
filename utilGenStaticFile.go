@@ -151,7 +151,7 @@ func genStaticFile() error {
 }
 
 // genStaticFileByTheme 根据主题模板,生成静态文件
-func genStaticFileByTheme(contents []Content, categorys []string, theme string, userAgent string) error {
+func genStaticFileByTheme(contents []Content, categories []string, theme string, userAgent string) error {
 	domain := ""
 	if site.Domain != "" {
 		if strings.HasPrefix(site.Domain, "http://") || strings.HasPrefix(site.Domain, "https://") {
@@ -202,22 +202,22 @@ func genStaticFileByTheme(contents []Content, categorys []string, theme string, 
 		prvePageFileHash = fileHash
 	}
 
-	for i := 0; i < len(categorys); i++ {
+	for i := 0; i < len(categories); i++ {
 		//生成导航菜单首页index
-		fileHash, success, err := writeStaticHtml(funcTrimSlash(categorys[i]), "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i]), "", theme, userAgent)
 		if fileHash == "" || err != nil {
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categorys[i]) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml(funcTrimSlash(categorys[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
+			fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
 			if fileHash == "" || err != nil {
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categorys[i]) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
