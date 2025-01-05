@@ -7,7 +7,7 @@
 {{template "admin/bodystart.html"}} 
 
 {{ $category := selectOne "category" "* from category WHERE id=?" .QueryStringMap.categoryID }}
-{{ $categorys := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
+{{ $categories := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
 {{ $maxSortNo:=  selectOne "content" "max(sortNo) as sortNo from content" }} 
 {{ $themeTemplate := themeTemplate "content" }}
 
@@ -47,7 +47,7 @@
 				<div class="layui-input-block">
 					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单">
 						<option value="">请选择</option>
-						{{ range $index,$obj := $categorys.Data }}
+						{{ range $index,$obj := $categories.Data }}
 						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
 						{{end}}
 					</select>

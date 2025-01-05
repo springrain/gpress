@@ -6,7 +6,7 @@
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
 
-{{ $categorys := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
+{{ $categories := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
 {{ $themeTemplate := themeTemplate "content" }} 
 
 <div class="layui-panel" style="padding: 5px;height: 100%;">
@@ -46,7 +46,7 @@
 				<div class="layui-input-block">
 					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单">
 						<option value="">请选择</option>
-						{{ range $index,$obj := $categorys.Data }}
+						{{ range $index,$obj := $categories.Data }}
 						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
 						{{end}}
 					</select>
