@@ -106,9 +106,9 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 
 // initCategoryRoute 初始化导航菜单的映射路径
 func initCategoryRoute() {
-	categorys, _ := findAllCategory(context.Background())
-	for i := 0; i < len(categorys); i++ {
-		category := categorys[i]
+	categories, _ := findAllCategory(context.Background())
+	for i := 0; i < len(categories); i++ {
+		category := categories[i]
 		categoryID := category.Id
 		addCategoryRoute(categoryID)
 	}

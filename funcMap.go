@@ -331,15 +331,15 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 // funcTreeCategory 导航菜单的树形结构
 func funcTreeCategory(sql string, values ...interface{}) []*Category {
 	ctx := context.Background()
-	categorys := make([]*Category, 0)
+	categories := make([]*Category, 0)
 	finder := zorm.NewFinder().Append("SELECT")
 	finder.Append(sql, values...)
-	err := zorm.Query(ctx, finder, &categorys, nil)
+	err := zorm.Query(ctx, finder, &categories, nil)
 	if err != nil {
-		return categorys
+		return categories
 	}
 
-	treeCategory := sliceCategory2Tree(categorys)
+	treeCategory := sliceCategory2Tree(categories)
 
 	return treeCategory
 }
@@ -421,15 +421,15 @@ func funcLastURI(uri string) string {
 }
 
 // sliceCategory2Tree 导航菜单数组转树形结构
-func sliceCategory2Tree(categorys []*Category) []*Category {
-	categorysMap := make(map[string]*Category, len(categorys))
-	for _, v := range categorys {
-		categorysMap[v.Id] = v
+func sliceCategory2Tree(categories []*Category) []*Category {
+	categoriesMap := make(map[string]*Category, len(categories))
+	for _, v := range categories {
+		categoriesMap[v.Id] = v
 	}
 	treeCategory := make([]*Category, 0)
-	for i := 0; i < len(categorys); i++ {
-		category := categorys[i]
-		parent, has := categorysMap[category.Pid]
+	for i := 0; i < len(categories); i++ {
+		category := categories[i]
+		parent, has := categoriesMap[category.Pid]
 		if has {
 			if parent.Leaf == nil {
 				parent.Leaf = make([]*Category, 0)

@@ -7,7 +7,7 @@ import (
 
 func TestDataSliceCategory2Tree(t *testing.T) {
 	type args struct {
-		categorys []*Category
+		categories []*Category
 	}
 	tests := []struct {
 		name string
@@ -17,14 +17,14 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 		{
 			name: "无节点",
 			args: args{
-				categorys: nil,
+				categories: nil,
 			},
 			want: []*Category{},
 		},
 		{
 			name: "两级节点",
 			args: args{
-				categorys: []*Category{
+				categories: []*Category{
 					{Id: "1", Name: "Category 1", Pid: ""},
 					{Id: "2", Name: "Category 2", Pid: "1"},
 					{Id: "3", Name: "Category 3", Pid: ""},
@@ -47,7 +47,7 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 		{
 			name: "多级节点",
 			args: args{
-				categorys: []*Category{
+				categories: []*Category{
 					{Id: "1", Name: "Category 1", Pid: ""},
 					{Id: "2", Name: "Category 2", Pid: "1"},
 					{Id: "3", Name: "Category 3", Pid: "1"},
@@ -97,7 +97,7 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 		{
 			name: "多颗树",
 			args: args{
-				categorys: []*Category{
+				categories: []*Category{
 					{Id: "1", Name: "Category 1", Pid: ""},
 					{Id: "2", Name: "Category 2", Pid: "1"},
 					{Id: "3", Name: "Category 3", Pid: ""},
@@ -145,7 +145,7 @@ func TestDataSliceCategory2Tree(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := sliceCategory2Tree(tt.args.categorys); !reflect.DeepEqual(got, tt.want) {
+			if got := sliceCategory2Tree(tt.args.categories); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("sliceCategory2Tree() = %v, want %v", got, tt.want)
 			}
 		})
