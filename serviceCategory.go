@@ -26,9 +26,9 @@ import (
 // findAllCategory 查找所有的导航菜单
 func findAllCategory(ctx context.Context) ([]Category, error) {
 	finder := zorm.NewSelectFinder(tableCategoryName)
-	categorys := make([]Category, 0)
-	err := zorm.Query(ctx, finder, &categorys, nil)
-	return categorys, err
+	categories := make([]Category, 0)
+	err := zorm.Query(ctx, finder, &categories, nil)
+	return categories, err
 }
 
 // validateIDExists 校验ID是否已经存在
