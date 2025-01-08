@@ -1,4 +1,5 @@
 v1.0.8
+- 增加 txID 字段,记录上链交易的Hash
 - 修改错误的categorys拼写  
 - 主题管理过滤掉.gz压缩文件
 - 动态增加路由映射,去掉routeCategoryMap的处理逻辑
