@@ -206,6 +206,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | signature   | string      | 私钥对内容的签名 | 否   |                         |
 | signAddress | string      | 签名的Address   | 否   |                         |
 | signChain   | string      | Address所属的链 | 否   |                         |
+| txID        | string      | 上链交易的Hash  | 否   |                         |
 | createTime  | string      | 创建时间     | -       |  2006-01-02 15:04:05    |
 | updateTime  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
 | createUser  | string      | 创建人       | -       |  初始化 system          |

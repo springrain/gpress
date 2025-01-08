@@ -208,6 +208,9 @@ type Content struct {
 	// SignChain 签名的区块链
 	SignChain string `column:"signChain" json:"signChain,omitempty"`
 
+	// TxID 上链交易的Hash
+	TxID string `column:"txID" json:"txID,omitempty"`
+
 	// CreateTime 创建时间
 	CreateTime string `column:"createTime" json:"createTime,omitempty"`
 
