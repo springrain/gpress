@@ -162,7 +162,7 @@ INSERT INTO content (
                         id
                     )
                     VALUES (
-                        3,
+                        0,
                         100,
                         NULL,
                         '2024-04-11 11:02:40',
