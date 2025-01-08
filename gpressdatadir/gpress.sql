@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS content (
 		signature         TEXT  ,
 		signAddress       TEXT  ,
 		signChain         TEXT  ,
+		txID              TEXT  ,
 		createTime        TEXT,
 		updateTime        TEXT,
 		createUser        TEXT,
@@ -157,6 +158,7 @@ INSERT INTO content (
                         signature,
 						signAddress,
 						signChain,
+						txID,
                         id
                     )
                     VALUES (
@@ -202,6 +204,7 @@ INSERT INTO content (
                         NULL,
                         'About',
                         NULL,
+						NULL,
 						NULL,
 						NULL,
                         '/single/about'
@@ -436,6 +439,7 @@ nginx 配置示例如下:</p>
                         '',
                         'gpress',
                         NULL,
+						NULL,
 						NULL,
 						NULL,
 						'/web/gpress'
