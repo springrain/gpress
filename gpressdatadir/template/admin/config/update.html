@@ -84,14 +84,14 @@
 					dataType:"json",
 			        data:{"updateSQL":value},
 					error: function (result) {
-						layer.msg("更新错误!"+result.responseJSON.message);
+						layer.msg("SQL执行失败!"+result.responseJSON.message);
 					},
 					success:function(result){
-						console.log(result)
+						//console.log(result)
 						if (result.statusCode == 1) {
-							layer.msg("SQL执行成功!"+result.message);
 							// 关闭 prompt
-				            layer.close(index);
+							layer.close(index);
+							layer.msg("SQL执行成功!"+result.message);
 						}else{
 							layer.msg("SQL执行失败!"+result.message);
 						}
