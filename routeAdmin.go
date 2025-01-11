@@ -131,6 +131,8 @@ func init() {
 	//ajax POST删除数据
 	adminGroup.POST("/:urlPathParam/delete", funcDelete)
 
+	//ajax POST执行更新语句
+	adminGroup.POST("/updatesql", funcUpdateSQL)
 }
 
 // funcAdminInstallPre 跳转到安装界面
@@ -874,6 +876,21 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		}
 		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
 	}
+}
+
+func funcUpdateSQL(ctx context.Context, c *app.RequestContext) {
+	updateSQL := string(c.FormValue("updateSQL"))
+	finder := zorm.NewFinder().Append(updateSQL)
+	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
+		return zorm.UpdateFinder(ctx, finder)
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
+		c.Abort() // 终止后续调用
+		FuncLogError(ctx, err)
+		return
+	}
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "修改" + strconv.Itoa(count.(int)) + "条数据"})
 }
 
 // permissionHandler 权限拦截器

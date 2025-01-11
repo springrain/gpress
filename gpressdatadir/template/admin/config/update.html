@@ -59,6 +59,7 @@
 				<div class="layui-form-item">
 					<div class="layui-input-block">
 					  <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交修改</button>
+					  <button type="button" class="layui-btn layui-bg-red" lay-on="updatesql">更新SQL</button>
 					</div>
 				</div>
 			</form>
@@ -70,7 +71,35 @@
 	layui.use(function(){
 	  var form = layui.form;
 	  var layer = layui.layer;
+	  var util = layui.util;
 	  var $ =layui.jquery;
+
+	  util.on('lay-on', {
+		'updatesql': function(){
+			layer.prompt({title: '请输入更新SQL', formType: 2}, function(value, index, elem){
+				if(value === '') return elem.focus();
+				$.ajax({
+					url:basePath+"admin/updatesql",
+					type:"POST",
+					dataType:"json",
+			        data:{"updateSQL":value},
+					error: function (result) {
+						layer.msg("更新错误!"+result.responseJSON.message);
+					},
+					success:function(result){
+						console.log(result)
+						if (result.statusCode == 1) {
+							layer.msg("SQL执行成功!"+result.message);
+							// 关闭 prompt
+				            layer.close(index);
+						}else{
+							layer.msg("SQL执行失败!"+result.message);
+						}
+					}
+				});
+			});
+		},
+	  });
 
 	  // 提交事件
 	  form.on('submit(gpress-form-ajax-update)', function(data){
