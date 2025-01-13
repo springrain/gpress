@@ -96,7 +96,8 @@ location / {
     
     ### 当前在用主题(default)的静态文件目录
     root   /data/gpress/gpressdatadir/statichtml/default;
-
+    
+    ### if 指令可能会和 try_files 指令冲突,造成 try_files 无效
     ## 避免目录 301 重定向,例如 /about 会301到 /about/           
     try_files $uri $uri/index.html;
     
