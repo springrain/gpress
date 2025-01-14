@@ -173,7 +173,7 @@
 		upload.render({
 			elem: '#button-upload-thumbnail',
 			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
-			size: 5 * 1024, // 限制文件大小,单位 KB
+			size: 20 * 1024, // 限制文件大小,单位 KB
 			data: {
 				dirPath: function(){
 					return $('#categoryID').val()+"{{lastURI .Data.Id}}"; // 目录路径
