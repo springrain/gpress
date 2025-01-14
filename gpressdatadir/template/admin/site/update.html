@@ -141,7 +141,10 @@
 	  upload.render({
 			elem: '#button-upload-logo',
 			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
-			size: 5 * 1024, // 限制文件大小,单位 KB
+			size: 20 * 1024, // 限制文件大小,单位 KB
+			data: {
+				dirPath: 'site-logo'
+			},
 			done: function (res) {
 				if (res.statusCode == 1) {
 					$("#img_logo").attr("src",  basePath+res.data);
@@ -155,7 +158,10 @@
 		upload.render({
 			elem: '#button-upload-favicon',
 			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
-			size: 5 * 1024, // 限制文件大小,单位 KB
+			size: 20 * 1024, // 限制文件大小,单位 KB
+			data: {
+				dirPath: 'site-logo'
+			},
 			done: function (res) {
 				if (res.statusCode == 1) {
 					$("#img_favicon").attr("src",   basePath+res.data);
