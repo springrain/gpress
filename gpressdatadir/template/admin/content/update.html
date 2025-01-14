@@ -174,6 +174,18 @@
 			elem: '#button-upload-thumbnail',
 			url: '{{basePath}}admin/upload', // 此处配置你自己的上传接口即可
 			size: 5 * 1024, // 限制文件大小,单位 KB
+			data: {
+				dirPath: function(){
+					return $('#categoryID').val()+"{{lastURI .Data.Id}}"; // 目录路径
+				}
+			},
+			before: function(obj){ 
+				// 没有选择导航菜单返回false,阻止上传
+				if($('#categoryID').val()==""){
+					layer.msg("导航菜单不能为空");
+					return false;
+				}
+			},
 			done: function (res) {
 				if (res.statusCode == 1) {
 					thumbnail =res.data;
@@ -204,15 +216,15 @@
 			});
 		});
 
-		// cherry markdown 编辑器
-		var cherry = new Cherry({
-			id: 'markdown-container',
-			value: '{{.Data.Markdown}}',
-			autoSave2Textarea: true,
-            defaultModel: 'edit&preview',
-			fileUpload: function (file, callback) {
+		var funcFileUpload=function (file, callback) {
+				// 没有选择导航菜单返回false,阻止上传
+				if($('#categoryID').val()==""){
+					layer.msg("导航菜单不能为空");
+					return false;
+				}
 				var formdata = new FormData(); // FormData对象,来发送二进制文件.
 				formdata.append('file', file); // 将文件追加到 formdata对象中
+				formdata.append('dirPath',  $('#categoryID').val()+"{{lastURI .Data.Id}}"); // 目录路径
 				$.ajax({
 					type: 'post',
 					url: '{{basePath}}admin/upload',
@@ -224,7 +236,15 @@
 					},
 					error(err) { },
 				});
-			},
+			};
+
+		// cherry markdown 编辑器
+		var cherry = new Cherry({
+			id: 'markdown-container',
+			value: '{{.Data.Markdown}}',
+			autoSave2Textarea: true,
+            defaultModel: 'edit&preview',
+			fileUpload: funcFileUpload,
 			toolbars: {
 				// 定义顶部工具栏
 				toolbar: [
@@ -280,22 +300,8 @@
 			},
 		}
 		var editorUploadConfig = {
-			server: '{{basePath}}admin/upload',
-			fieldName: 'file',
-			// 单个文件的最大体积限制,默认为 10M
-			maxFileSize: 100 * 1024 * 1024, // 100M
-			customInsert(res, insertFn) {
-				// 自定义返回数据结构.不用按照wangeditor默认规定的服务器返回的数据结构
-				insertFn(basePath+res.data)
-			},
-			onSuccess(file, res) {
-				console.log(res, '--上传成功---')
-			},
-			onFailed(file, res) {
-				layer.msg("上传失败!");
-			},
-			onError(file, err, res) {
-				console.log('--上传错误---')
+			 async customUpload(file, insertFn) {       
+				funcFileUpload(file,insertFn);
 			},
 		};
 		editorConfig.MENU_CONF['uploadImage'] = editorUploadConfig;
