@@ -313,12 +313,30 @@ func funcAdminReload(ctx context.Context, c *app.RequestContext) {
 // funcUploadFile 上传文件
 func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 	fileHeader, err := c.FormFile("file")
+	// 相对于上传的目录路径,只能是目录路径
+	dirPath := string(c.FormValue("dirPath"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 		c.Abort() // 终止后续调用
 		return
 	}
-	path := "public/upload/" + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
+	dirPath = filepath.ToSlash(dirPath)
+	dirPath = funcTrimSlash(dirPath)
+	if dirPath == "/" {
+		dirPath = ""
+	}
+	if dirPath != "" {
+		dirPath = dirPath + "/"
+	}
+	//服务器的目录,并创建目录
+	serverDirPath := datadir + "public/upload/" + dirPath
+	err = os.MkdirAll(serverDirPath, 0600)
+	if err != nil && !os.IsExist(err) {
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.Abort() // 终止后续调用
+		return
+	}
+	path := "public/upload/" + dirPath + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
 	newFileName := datadir + path
 	err = c.SaveUploadedFile(fileHeader, newFileName)
 	if err != nil {
