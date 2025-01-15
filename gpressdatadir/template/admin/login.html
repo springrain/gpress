@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>登录 - GPRESS</title>
+<title>{{T "Login"}} - GPRESS</title>
 <script type="text/javascript" src="{{basePath}}admin/js/sha3.min.js"></script>
 <style>
 	.gpress-login-container {
@@ -62,15 +62,15 @@
 	<div class="gpress-login-container">
 		<input type="hidden" id="message" value="{{.message}}">
 		<div class="login_logo"><img src="{{basePath}}public/logo.png"></div>
-		<div><h2 class="gpress-login-other">登录</h2></div>
+		<div><h2 class="gpress-login-other">{{T "Login"}}</h2></div>
 		<form class="layui-form" action="{{basePath}}admin/login" method="post">
 			<div class="layui-form-item">
 				<div class="layui-input-wrap">
 					<div class="layui-input-prefix">
 						<i class="layui-icon layui-icon-username"></i>
 					</div>
-					<input type="text" name="account" value="" lay-verify="required" placeholder="账 户"
-						lay-reqtext="请填写账户" autocomplete="off" class="layui-input">
+					<input type="text" name="account" value="" lay-verify="required" placeholder='{{T "Account"}}'
+						lay-reqtext='{{T "Please fill in the account"}}' autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -79,7 +79,7 @@
 						<i class="layui-icon layui-icon-password"></i>
 					</div>
 					<input type="password" id="password" name="password" value="" lay-verify="required"
-						placeholder="密 码" lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
+						placeholder='{{T "Password"}}' lay-reqtext='{{T "Please fill in the password"}}' autocomplete="off" class="layui-input" lay-affix="eye">
 				</div>
 			</div>
 
@@ -89,7 +89,7 @@
 					<div class="layui-input-prefix">
 						<i class="layui-icon layui-icon-vercode"></i>
 					</div>
-					<input type="text" name="answer" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码"
+					<input type="text" name="answer" value="" lay-verify="required" placeholder='{{T "CAPTCHA"}}' lay-reqtext='{{T "Please fill in the CAPTCHA"}}'
 						autocomplete="off" class="layui-input">
 						&nbsp; <img height="38px" src="{{ safeURL .captchaBase64 }}" />
 				</div>
@@ -98,13 +98,13 @@
 
 			<div class="layui-form-item">
 				<button class="layui-btn layui-btn-fluid  layui-bg-blue" lay-submit
-					lay-filter="gpress-login">登录</button>
+					lay-filter="gpress-login">{{T "Login"}}</button>
 			</div>
 		</form>
 		<div class="gpress-login-other">
-			<a href="{{basePath}}admin/chainlogin">区块链登录</a>
-			<a href="javascript:retrievepassword();">忘记密码</a>
-			<a href="https://gitee.com/gpress/gpress" target="_blank">联系我们</a>
+			<a href="{{basePath}}admin/chainlogin">{{T "Blockchain Login"}}</a>
+			<a href="javascript:retrievepassword();">{{T "Forgot password"}}</a>
+			<a href="https://gitee.com/gpress/gpress" target="_blank">{{T "Contact US"}}</a>
 		</div>
 	</div>
 	<script>
@@ -135,7 +135,7 @@
 
 		// 忘记密码
 		function retrievepassword(){
-			layer.alert(' 1.重命名 gpressdatadir/template/install.html.bak 为 install.html </br> 2.重启gpress,重新安装初始化管理员账号密码,数据不会丢失.',{title:"忘记密码"});
+			layer.alert('{{T "Retrieve your password"}}',{title:'{{T "Forgot password"}}'});
 		}
 	</script>
 
