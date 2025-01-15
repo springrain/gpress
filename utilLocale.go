@@ -22,6 +22,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"strings"
 )
 
 // localeMap 用于记录翻译的Map
@@ -47,10 +48,16 @@ func initLocale() {
 		FuncLogError(nil, defaultErr)
 		return
 	}
+	localeMapTemp := make(map[string]string)
 	// Decode从输入流读取下一个json编码值并保存在v指向的值里
-	err = json.Unmarshal([]byte(byteValue), &localeMap)
+	err = json.Unmarshal([]byte(byteValue), &localeMapTemp)
 	if err != nil {
 		FuncLogError(nil, defaultErr)
 		return
 	}
+	//不区分大小写
+	for key, value := range localeMapTemp {
+		localeMap[strings.ToLower(key)] = value
+	}
+	localeMapTemp = nil
 }
