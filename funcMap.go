@@ -66,6 +66,7 @@ var funcMap = template.FuncMap{
 	"themeTemplate":    funcThemeTemplate,
 	"version":          funcVersion,
 	"seq":              funcSeq,
+	"T":                funcT,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -456,4 +457,13 @@ func funcSeq(start, end int) []int {
 		nums = append(nums, i)
 	}
 	return nums
+}
+
+// funcT 根据配置的locale,获取语言包的值,如果找不到就返回key
+func funcT(key string) string {
+	value, exists := localeMap[key]
+	if exists {
+		return value
+	}
+	return key
 }

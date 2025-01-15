@@ -70,7 +70,9 @@ func loadInstallConfig() (Config, Site) {
 	if configJson.BasePath == "" {
 		configJson.BasePath = "/"
 	}
-
+	if configJson.Locale == "" {
+		configJson.Locale = "zh-CN"
+	}
 	configJson.Id = defaultConfig.Id
 
 	return configJson, site
@@ -87,6 +89,7 @@ var defaultConfig = Config{
 	JwttokenKey:        "jwttoken", // jwt的key
 	Timeout:            7200,       // 两小时超时
 	ServerPort:         ":660",     // gpress: 103 + 112 + 114 + 101 + 115 + 115 = 660
+	Locale:             "zh-CN",
 }
 
 // insertConfig 插入config
@@ -132,6 +135,8 @@ func findConfig() (Config, error) {
 	if config.MaxRequestBodySize == 0 {
 		config.MaxRequestBodySize = 20 * 1024 * 1024
 	}
-
+	if config.Locale == "" {
+		config.Locale = "zh-CN"
+	}
 	return config, nil
 }
