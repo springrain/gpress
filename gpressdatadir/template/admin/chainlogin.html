@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>区块链钱包登录 - GPRESS</title>
+<title>{{T "Blockchain wallet login"}} - GPRESS</title>
 <style>
 	.gpress-login-container {
 		padding: 0 20px;
@@ -61,7 +61,7 @@
 	<div class="gpress-login-container">
 		<input type="hidden" id="message" value="{{.message}}">
 		<div class="login_logo"><img src="{{basePath}}public/logo.png"></div>
-		<div><h2 class="gpress-login-other">区块链登录</h2></div>
+		<div><h2 class="gpress-login-other">{{T "Blockchain login"}}</h2></div>
 		<form class="layui-form" id="chainlogin" action="{{basePath}}admin/chainlogin" method="post">
 			<input type="hidden" id="signature" name="signature" value="">
 			<table class="layui-table">
@@ -80,13 +80,11 @@
 				  </tr>
 				</tbody>
 			  </table>
-			
-			
 		</form>
 		<div class="gpress-login-other">
-			<a href="{{basePath}}admin/login">账号密码登录</a>
-			<a href="javascript:retrievepassword();">忘记密码</a>
-			<a href="https://gitee.com/gpress/gpress" target="_blank">联系我们</a>
+			<a href="{{basePath}}admin/login">{{T "Account password login"}}</a>
+			<a href="javascript:retrievepassword();">{{T "Forget password"}}</a>
+			<a href="https://gitee.com/gpress/gpress" target="_blank">{{T "Contact us"}}</a>
 		</div>
 	</div>
 	<script>
@@ -100,9 +98,9 @@
 			}
 		});
 
-	// 忘记密码
+    // 忘记密码
     function retrievepassword(){
-		layer.alert(' 1.重命名 gpressdatadir/template/install.html.bak 为 install.html </br> 2.重启gpress,重新安装初始化管理员账号密码,数据不会丢失.',{title:"忘记密码"});
+		layer.alert('{{T "Retrieve your password"}}',{title:'{{T "Forget password"}}'});
 	}
     // 钱包登录
     function walletLogin(provider) {
@@ -115,7 +113,7 @@
 				personalSign(provider, account)
 			})
 		} else {
-			layer.alert("请安装对应钱包");
+			layer.alert('{{T "Please install the corresponding wallet"}}',{title:'{{T "Info"}}'});
 		}
 	}
 
@@ -137,8 +135,6 @@
 		let res = await response.json()
 		
 		if (res.statusCode == 1) {
-			//let arrayboj
-            //const hexString = stringToHex(res.data)
 			let arrayboj = [res.data, accounts];
 			
 			provider.request({
