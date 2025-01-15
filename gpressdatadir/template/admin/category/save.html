@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>新增导航菜单 - GPRESS</title>
+<title>{{T "Add Navigation Menu"}} - GPRESS</title>
 {{template "admin/bodystart.html"}}
 
 {{ $themeTemplate := themeTemplate "category" }} <!-- 模版数据 -->
@@ -10,36 +10,36 @@
 
 <div class="layui-card layui-panel" style="height: 100%;">
 	<div class="layui-card-header">
-	  新增导航菜单
+	  {{T "Add Navigation Menu"}}
 	</div>
 	<div class="layui-card-body">
 	  <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST">
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">路径标识</label>
+			<label class="layui-form-label">{{T "Path Identifier"}}</label>
 			<div class="layui-input-block">
-				<input type="text" name="id" lay-verify="required|uri" placeholder="保存后不允许修改" lay-reqtext="请填写路径标识" autocomplete="off" class="layui-input" value="" />
+				<input type="text" name="id" lay-verify="required|uri" placeholder='{{T "Cannot be modified after saving"}}' lay-reqtext="{{T "Please fill in the path identifier"}}" autocomplete="off" class="layui-input" value="" />
 			</div>
 		  </div>
 		  
 		  <div class="layui-form-item layui-col-md6">
-			  <label class="layui-form-label">导航名称</label>
+			  <label class="layui-form-label">{{T "Navigation Name"}}</label>
 			  <div class="layui-input-block">
-				<input type="text" name="name" lay-verify="required" lay-reqtext="请填写导航名称" autocomplete="off" class="layui-input" value="">
+				<input type="text" name="name" lay-verify="required" lay-reqtext='{{T "Please fill in the navigation name"}}' autocomplete="off" class="layui-input" value="">
 			  </div>
 		  </div>
 
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">跳转路径</label>
+			<label class="layui-form-label">{{T "Redirect Path"}}</label>
 			<div class="layui-input-block">
 			  <input type="text" name="hrefURL" autocomplete="off" class="layui-input" value="">
 			</div>
 		  </div>
 
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">跳转方式</label>
+			<label class="layui-form-label">{{T "Redirect Method"}}</label>
 			<div class="layui-input-block">
 				<select name="hrefTarget" id="hrefTarget">
-					<option value="">默认</option>
+					<option value="">{{T "Default"}}</option>
 					<option value='_blank'>_blank</option>
 					<option value='_parent'>_parent</option>
 					<option value='_self'>_self</option>
@@ -49,7 +49,7 @@
 		  </div>
 
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">父级导航</label>
+			<label class="layui-form-label">{{T "Parent Navigation"}}</label>
 			<div class="layui-input-block">
 			  <input  type="hidden"  name="pid"  value="{{$category.Id}}">
 			  <input type="text"  autocomplete="off" class="layui-input" value="{{$category.Name}}" disabled>
@@ -57,10 +57,10 @@
 		  </div>
 
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">页面模版</label>
+			<label class="layui-form-label">{{T "Page Template"}}</label>
 			<div class="layui-input-block">
 				<select name="templateFile" id="templateFile">
-					<option value="">默认(category.html)</option>
+					<option value="">{{T "Default"}} (category.html)</option>
 					{{ range $index,$obj := $themeTemplate }}
 					<option value='{{$obj.Name}}'>{{$obj.Name}}</option>
 					{{end}}
@@ -69,41 +69,41 @@
 		  </div>
 
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">keyword</label>
+			<label class="layui-form-label">Keyword</label>
 			<div class="layui-input-block">
 			  <input type="text" name="keyword" autocomplete="off" class="layui-input"  value="" />
 			</div>
 		</div>
 
 		<div class="layui-form-item layui-col-md6">
-		  <label class="layui-form-label">description</label>
+		  <label class="layui-form-label">Description</label>
 		  <div class="layui-input-block">
 			<input type="text" name="description" autocomplete="off" class="layui-input"  value="" />
 		  </div>
 		</div>
 
 		  <div class="layui-form-item layui-col-md6">
-			  <label class="layui-form-label">排序</label>
+			  <label class="layui-form-label">{{T "Sort"}}</label>
 			  <div class="layui-input-block">
-				<input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off" class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">
+				<input type="number" name="sortNo" lay-verify="required" lay-reqtext='{{T "Please fill in the sort number"}}' autocomplete="off" class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">
 			  </div>
 		  </div>
 
 		  <div class="layui-form-item layui-col-md6">
-			<label class="layui-form-label">状态</label>
+			<label class="layui-form-label">{{T "Status"}}</label>
 			<div class="layui-input-block">
 				<select name="status" id="status">
-					<option value="1">公开</option>
-					<option value="0">链接访问</option>
-					<option value="2">置顶</option>
-					<option value="3">私密</option>
+					<option value="1">{{T "Public"}}</option>
+					<option value="0">{{T "Link Access"}}</option>
+					<option value="2">{{T "Top"}}</option>
+					<option value="3">{{T "Private"}}</option>
 				</select>
 			</div>
 		  </div>		  
 
 		  <div class="layui-form-item">
 			  <div class="layui-input-block">
-				<button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交保存</button>
+				<button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">{{T "Submit"}}</button>
 			  </div>
 		  </div>
 	  </form>
@@ -122,7 +122,7 @@ form.verify({
 	// 验证uri
     uri: function(value, elem) {
 		if (!/^[a-zA-Z0-9_-|-,-\-]+$/.test(value)) {
-				return '路径标识可以包含英文、数字、中划线(-)、下划线(_)、竖线(|)和逗号(,)';
+				return '{{T "Path identifier can contain letters, numbers, hyphens (-), underscores (_), vertical bars (|), and commas (,)"}}';
 		}
     },
 })
@@ -141,21 +141,21 @@ form.on('submit(gpress-form-ajax-update)', function(data){
 	  dataType:"json",
 	  data:JSON.stringify(field),
 	  error: function (result) {
-		layer.msg("保存错误!"+result.responseJSON.message);
+		layer.msg('{{T "Save error!"}}'+result.responseJSON.message);
 	  },
 	  success:function(result){
 		  if (result.statusCode == 1) {
-			layer.confirm('保存成功,是否继续添加?', {
+			layer.confirm('{{T "Save successful, continue adding?"}}', {
 			icon: 3,
-			title:"确认",
-			btn: ['返回列表','继续添加' ] //按钮
+			title:'{{T "Confirm"}}',
+			btn: ['{{T "Return to List"}}','{{T "Continue Adding"}}' ] //按钮
 			}, function () {
 				window.location.href = '{{basePath}}admin/content/list';
 			},function () {
 				location.reload();
 			});
 		  }else{
-			  layer.msg("保存失败!");
+			  layer.msg('{{T "Save failed!"}}');
 		  }
 	  }
   });
