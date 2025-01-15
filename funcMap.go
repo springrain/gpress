@@ -459,9 +459,9 @@ func funcSeq(start, end int) []int {
 	return nums
 }
 
-// funcT 根据配置的locale,获取语言包的值,如果找不到就返回key
+// funcT 根据配置的locale,获取语言包的值,不区分大小写,找不到返回传入的key
 func funcT(key string) string {
-	value, exists := localeMap[key]
+	value, exists := localeMap[strings.ToLower(key)]
 	if exists {
 		return value
 	}
