@@ -39,14 +39,14 @@ type Config struct {
 	// ServerPort 服务器端口
 	ServerPort string `column:"serverPort" json:"serverPort,omitempty"`
 
-	// Theme 主题
-	//Theme string `column:"theme" json:"theme,omitempty"`
+	// Timeout 超时时间,单位秒
+	Timeout int `column:"timeout" json:"timeout,omitempty"`
 
 	// MaxRequestBodySize 最大请求
 	MaxRequestBodySize int `column:"maxRequestBodySize" json:"maxRequestBodySize,omitempty"`
 
-	// Timeout 超时时间,单位秒
-	Timeout int `column:"timeout" json:"timeout,omitempty"`
+	// Locale 语言包
+	Locale string `column:"locale" json:"locale,omitempty"`
 
 	// Proxy 代理,用于翻墙 格式: http://127.0.0.1:8090
 	Proxy string `column:"proxy" json:"proxy,omitempty"`

@@ -124,6 +124,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | serverPort  | string      | IP:端口     |  默认 :660  |
 | timeout     | int         | jwt超时时间秒|  默认 7200  |
 | maxRequestBodySize | int  | 最大请求     |  默认 20M  |
+| locale      | string      | 语言包       |  默认 zh-CN,en-US |
 | proxy       | string      | http代理地址 |             |
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
