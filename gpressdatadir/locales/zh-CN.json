@@ -57,5 +57,8 @@
   "restart gpress": "设置修改成功,重启gpress才能生效!",
   "Update failed!": "修改失败!",
   "OK":"确定",
-  "Cancel":"取消"
+  "Cancel":"取消",
+  "Update User Information": "更新用户信息",
+  "Username": "用户名",
+  "Update successfully!": "修改成功!"
 }
