@@ -113,7 +113,7 @@
 				personalSign(provider, account)
 			})
 		} else {
-			layer.alert('{{T "Please install the corresponding wallet"}}',{title:'{{T "Info"}}'});
+			layer.msg('{{T "Please install the corresponding wallet"}}');
 		}
 	}
 
@@ -145,7 +145,7 @@
 				document.getElementById("chainlogin").submit();
 			})
 		} else {
-			layer.alert(res.message);
+			layer.msg(res.message);
 		}
 	}
 
