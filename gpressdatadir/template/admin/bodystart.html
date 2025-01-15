@@ -1,103 +1,103 @@
 <style>
-    .space {
-      height: 1px;
-      width: 100%;
-      background-color: #000220;
-    }
+  .space {
+    height: 1px;
+    width: 100%;
+    background-color: #000220;
+  }
 
-    .layui-logo {
-      left: 0;
-      top: 0;
-      width: 200px;
-      text-align: center;
-      line-height: 60px;
-      color: #fff;
-      font-size: 20px;
-      letter-spacing: .1em;
-    }
+  .layui-logo {
+    left: 0;
+    top: 0;
+    width: 200px;
+    text-align: center;
+    line-height: 60px;
+    color: #fff;
+    font-size: 20px;
+    letter-spacing: .1em;
+  }
 
-    .layui-bg-black {
-      background-color: #001529 !important;
-      color: #fff !important;
-    }
+  .layui-bg-black {
+    background-color: #001529 !important;
+    color: #fff !important;
+  }
 
-    .layui-nav-tree .layui-this,
-    .layui-nav-tree .layui-this>a,
-    .layui-nav-tree .layui-this>a:hover,
-    .layui-nav-tree .layui-nav-child dd.layui-this,
-    .layui-nav-tree .layui-nav-child dd.layui-this a {
-      background-color: #1890ff;
-      color: #fff;
-    }
-    .layui-panel {
-      overflow: auto;
-    }
-    .version-div {
-      position: absolute; 
-      bottom: 5px; 
-      left: 50%; 
-      transform: translateX(-50%);
-      text-align: center;
-    }
-  </style>
+  .layui-nav-tree .layui-this,
+  .layui-nav-tree .layui-this>a,
+  .layui-nav-tree .layui-this>a:hover,
+  .layui-nav-tree .layui-nav-child dd.layui-this,
+  .layui-nav-tree .layui-nav-child dd.layui-this a {
+    background-color: #1890ff;
+    color: #fff;
+  }
+  .layui-panel {
+    overflow: auto;
+  }
+  .version-div {
+    position: absolute; 
+    bottom: 5px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    text-align: center;
+  }
+</style>
 </head>
 
 <body>
-  <div class="layui-layout">
+<div class="layui-layout">
 
-    <div class="layui-side layui-bg-black">
-      <div class="layui-side-scroll" style="width: 200px;">
-        <div class="layui-logo"><a href="{{basePath}}" target="_blank" style="color: #fff;">GPRESS</a></div>
-        <div class="space"></div>
-        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-        <ul class="layui-nav layui-nav-tree" lay-filter="test">
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll" style="width: 200px;">
+      <div class="layui-logo"><a href="{{basePath}}" target="_blank" style="color: #fff;">GPRESS</a></div>
+      <div class="space"></div>
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree" lay-filter="test">
 
-          <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
-            <a href="{{basePath}}admin/content/list">
-              <i class="layui-icon layui-icon-file-b"></i>
-              <cite>内容导航</cite>
-            </a>
-          </li>
-          <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
-            <a href="{{basePath}}admin/site/update?id=gpress_site">
-              <i class="layui-icon layui-icon-website"></i>
-              <cite>站点信息</cite>
-            </a>
-          </li>
-          <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
-            <a href="{{basePath}}admin/user/update?id=gpress_admin">
-              <i class="layui-icon layui-icon-username"></i>
-              <cite>用户信息</cite>
-            </a>
-          </li>
-          <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
-            <a href="{{basePath}}admin/themeTemplate/list">
-              <i class="layui-icon layui-icon-theme"></i>
-              <cite>主题模板</cite>
-            </a>
-          </li>
-          <li class="layui-nav-item layui-bg-black">
-            <a id="nav-refresh" href="javascript:;">
-              <i class="layui-icon layui-icon-refresh"></i>
-              <cite>刷新站点</cite>
-            </a>
-          </li>
-          <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
-            <a href="{{basePath}}admin/config/update?id=gpress_config">
-              <i class="layui-icon layui-icon-set"></i>
-              <cite>设置</cite>
-            </a>
-          </li>
-          <li class="layui-nav-item layui-bg-black">
-            <a id="nav-quit" href="javascript:;">
-              <i class="layui-icon layui-icon-logout"></i>
-              <cite>{{T "Logout"}}</cite>
-            </a>
-          </li>
-        </ul>
-        <div class="version-div"><a href="https://gitee.com/gpress/gpress" style="color: #fff;" target="_blank">{{version}}</a></div>
-      </div>
+        <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
+          <a href="{{basePath}}admin/content/list">
+            <i class="layui-icon layui-icon-file-b"></i>
+            <cite>{{T "Content Navigation"}}</cite>
+          </a>
+        </li>
+        <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
+          <a href="{{basePath}}admin/site/update?id=gpress_site">
+            <i class="layui-icon layui-icon-website"></i>
+            <cite>{{T "Site Information"}}</cite>
+          </a>
+        </li>
+        <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
+          <a href="{{basePath}}admin/user/update?id=gpress_admin">
+            <i class="layui-icon layui-icon-username"></i>
+            <cite>{{T "User Information"}}</cite>
+          </a>
+        </li>
+        <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
+          <a href="{{basePath}}admin/themeTemplate/list">
+            <i class="layui-icon layui-icon-theme"></i>
+            <cite>{{T "Theme Template"}}</cite>
+          </a>
+        </li>
+        <li class="layui-nav-item layui-bg-black">
+          <a id="nav-refresh" href="javascript:;">
+            <i class="layui-icon layui-icon-refresh"></i>
+            <cite>{{T "Refresh Site"}}</cite>
+          </a>
+        </li>
+        <li name="layui-nav-tree-left-ul-li" class="layui-nav-item layui-bg-black">
+          <a href="{{basePath}}admin/config/update?id=gpress_config">
+            <i class="layui-icon layui-icon-set"></i>
+            <cite>{{T "Settings"}}</cite>
+          </a>
+        </li>
+        <li class="layui-nav-item layui-bg-black">
+          <a id="nav-quit" href="javascript:;">
+            <i class="layui-icon layui-icon-logout"></i>
+            <cite>{{T "Logout"}}</cite>
+          </a>
+        </li>
+      </ul>
+      <div class="version-div"><a href="https://gitee.com/gpress/gpress" style="color: #fff;" target="_blank">{{version}}</a></div>
     </div>
-    <div class="layui-body" style="position: absolute;z-index: 9999;">
-      <!-- 内容主体区域 -->
-      <div style="padding: 15px;top: 0;position: absolute;bottom: 0;margin:0px;right: 0;left: 0;">
+  </div>
+  <div class="layui-body" style="position: absolute;z-index: 9999;">
+    <!-- 内容主体区域 -->
+    <div style="padding: 15px;top: 0;position: absolute;bottom: 0;margin:0px;right: 0;left: 0;">

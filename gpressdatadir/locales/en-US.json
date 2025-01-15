@@ -1,1 +1,3 @@
-{}
+{
+    "Retrieve your password":"1. Rename gpressdatadir/template/install.html.bak to install.html. 2. Restart gpress, reinitialize administrator account and password, data will not be lost."
+}
