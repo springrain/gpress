@@ -1,6 +1,6 @@
 {{ $convertJson := convertType $.Data "object" "json"  }}
 {{template "admin/header.html"}}
-<title>主题模板 - GPRESS</title>
+<title>{{T "Theme Template"}} - GPRESS</title>
 <link href="{{basePath}}admin/css/tree.css" rel="stylesheet">
 
 {{template "admin/bodystart.html"}}
@@ -11,17 +11,17 @@
 			<input type="hidden" id="file"  value="" />
 		  <div class="layui-form-item" style="padding: 5px;text-align: center;">
 			<div class="layui-inline">
-				<button type="button" class="layui-btn" id="button-upload-theme" title="仅支持zip格式">
-					<i class="layui-icon layui-icon-upload"></i> 上传主题
+				<button type="button" class="layui-btn" id="button-upload-theme" title='{{T "Only zip format is supported"}}'>
+					<i class="layui-icon layui-icon-upload"></i> {{T "Upload Theme"}}
 				</button>
 			</div>
 			<div class="layui-inline">
 				<button onclick="themeMarket()" type="button" class="layui-btn layui-bg-blue">
-					<i class="layui-icon layui-icon-theme"></i> 主题市场
+					<i class="layui-icon layui-icon-theme"></i> {{T "Market"}}
 				</button>
 			</div>
 			<div class="layui-inline">
-				<button onclick="updateContent();" type="button" class="layui-btn layui-bg-blue">保存文件</button>
+				<button onclick="updateContent();" type="button" class="layui-btn layui-bg-blue">{{T "Save File"}}</button>
 			</div>  
 		  </div>
 			
@@ -32,7 +32,7 @@
 	</div>
 	<div class="layui-col-md8" style="height: 100%;position: relative;">
 		<div style="position: absolute;left: 5px;right: 5px;top: 5px;bottom: -5px;">
-			<textarea id="content" placeholder="左侧选择要修改的文件,这里显示文件内容,进行编辑修改,点击 保存文件 按钮,保存修改的内容." style="height: 100%;  border-color: #16b777;box-shadow: 0 0 0 3px rgba(22,183,119,.08);" class="layui-textarea">{{.ExtMap.file}}</textarea>
+			<textarea id="content" placeholder='{{T "Select the file to modify on the left, display the file content here, edit and modify, click the Save File button to save the changes."}}' style="height: 100%;  border-color: #16b777;box-shadow: 0 0 0 3px rgba(22,183,119,.08);" class="layui-textarea">{{.ExtMap.file}}</textarea>
 		</div>
 	</div>
 
@@ -89,16 +89,16 @@
 			exts: 'zip',
 			acceptMime: 'application/zip',
 			text: { // 自定义提示文本
-			"data-format-error": "仅支持zip格式", // 数据格式错误的提示
-			"check-error": "仅支持zip格式", // 文件格式校验失败的提示
+			"data-format-error": '{{T "Only zip format is supported"}}', // 数据格式错误的提示
+			"check-error": '{{T "Only zip format is supported"}}', // 文件格式校验失败的提示
 			},
 			done: function (res) {
 				if (res.statusCode == 1) {
-				  layer.msg("上传成功",function(){
+				  layer.msg('{{T "Upload successful"}}',function(){
 				    location.reload();
 				  });
 				}else{
-					layer.msg("上传错误!");
+					layer.msg('{{T "Upload error!"}}');
 				}
 				
 			}
@@ -161,7 +161,7 @@
     function updateContent(){
       var file=$("#file").val();
 	  if(file==""){
-		layer.msg("请选择要修改的文件");
+		layer.msg('{{T "Please select the file to modify"}}');
 		return false;
 	  }
 	  var content=$("#content").val();
@@ -172,13 +172,13 @@
 			dataType: "json",
 			data: JSON.stringify({"filePath":file,"fileContent":content}),
 			error: function () {
-				layer.msg("修改错误,请重试!");
+				layer.msg('{{T "Update error, please try again!"}}');
 			},
 			success: function (result) {
 				if (result.statusCode == 1) {
-					layer.msg("修改成功");
+					layer.msg('{{T "Update successfully!"}}');
 				} else {
-					layer.msg("修改失败!");
+					layer.msg('{{T "Update failed!"}}');
 				}
 			}
 		});
@@ -190,7 +190,7 @@ function themeMarket(){
 	if(!!themeData){
 	  layer.open({
         type: 1,
-		title:"主题市场",
+		title:'{{T "Theme Market"}}',
 		shadeClose: true, 
         area: ['800px', 'auto'], // 宽高
         content: $('#ID-themeMarket-layer-wrapper'), 
@@ -216,13 +216,13 @@ var inst = table.render({
 	//url: 'https://www.gpress.cn/themes.json', // 此处为静态模拟数据，实际使用时需换成真实接口
     data: themeData,
 	cols: [[ //标题栏
-      {field: 'themeName', title: '主题名称', width: 150, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > '+d.themeName+' </a>';}},
+      {field: 'themeName', title: '{{T "Theme Name"}}', width: 150, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > '+d.themeName+' </a>';}},
 	  {field: 'star', title: 'star', width: 100,sort: true},
-      {field: 'themeVersion', title: '版本', width: 100},
-      {field: 'themeType', title: '主题分类', width: 100},
-      {field: 'gpressVersion', title: '兼容版本', width: 100},
-      {field: 'screenshot', title: '预览图', width: 100, templet: function(d){return '<img src="'+d.screenshot+'" onclick=showScreenshot("'+d.themeName+'","'+d.screenshot+'"); height="30px" />';}},
-	  {field: 'download', title: '下载', width: 85, templet: function(d){return '<a target="_blank" href="'+d.download+'" > 下载 </a>';}}
+      {field: 'themeVersion', title: '{{T "Version"}}', width: 100},
+      {field: 'themeType', title: '{{T "Theme Category"}}', width: 100},
+      {field: 'gpressVersion', title: '{{T "Compatible Version"}}', width: 100},
+      {field: 'screenshot', title: '{{T "Preview"}}', width: 100, templet: function(d){return '<img src="'+d.screenshot+'" onclick=showScreenshot("'+d.themeName+'","'+d.screenshot+'"); height="30px" />';}},
+	  {field: 'download', title: '{{T "Download"}}', width: 85, templet: function(d){return '<a target="_blank" href="'+d.download+'" > {{T "Download"}} </a>';}}
     ]],
     //skin: 'line', // 表格风格
     //even: true,
@@ -233,7 +233,7 @@ var inst = table.render({
 
 	layer.open({
         type: 1,
-		title:"主题市场",
+		title:'{{T "Theme Market"}}',
 		shadeClose: true, 
         area: ['800px', 'auto'], // 宽高
         content: $('#ID-themeMarket-layer-wrapper'), 
