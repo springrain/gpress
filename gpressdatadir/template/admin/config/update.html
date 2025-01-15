@@ -1,11 +1,11 @@
 {{template "admin/header.html"}}
-<title>更新设置 - GPRESS</title>
+<title>{{T "Update Settings"}}  - GPRESS</title>
 
 <script type="text/javascript" src="{{basePath}}admin/js/sha3.min.js"></script>
 {{template "admin/bodystart.html"}}
         <div class="layui-card layui-panel" style="height: 100%;">
           <div class="layui-card-header">
-            更新设置
+            {{T "Update Settings"}} 
           </div>
           <div class="layui-card-body">
             <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
@@ -20,31 +20,31 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">基础路径</label>
+					<label class="layui-form-label">{{T "Base Path"}}</label>
 					<div class="layui-input-block">
 					  <input type="text" name="basePath"  autocomplete="off" class="layui-input" value="{{.Data.BasePath}}">
 					</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">jwt key</label>
+					<label class="layui-form-label">JWT Key</label>
 					<div class="layui-input-block">
-					  <input type="text" name="jwttokenKey" lay-verify="required" lay-reqtext="请填写jwt key" autocomplete="off" class="layui-input" value="{{.Data.JwttokenKey}}">
+					  <input type="text" name="jwttokenKey" lay-verify="required" lay-reqtext='{{T "Please fill in the JWT key"}}' autocomplete="off" class="layui-input" value="{{.Data.JwttokenKey}}">
 					</div>
 				  </div>
 				<div class="layui-form-item layui-col-md6">
-				  <label class="layui-form-label">jwt密钥</label>
+				  <label class="layui-form-label">JWT Secret</label>
 				  <div class="layui-input-block">
-					<input type="password" name="jwtSecret" lay-verify="required" lay-reqtext="请填写jwt密钥" autocomplete="off" class="layui-input" value="{{.Data.JwtSecret}}" lay-affix="eye">
+					<input type="password" name="jwtSecret" lay-verify="required" lay-reqtext='{{T "Please fill in the JWT Secret"}}' autocomplete="off" class="layui-input" value="{{.Data.JwtSecret}}" lay-affix="eye">
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">ip:端口</label>
+					<label class="layui-form-label">IP:Port</label>
 					<div class="layui-input-block">
-					  <input type="text" name="serverPort" lay-verify="required" lay-reqtext="请填写ip:端口" autocomplete="off" class="layui-input" value="{{.Data.ServerPort}}">
+					  <input type="text" name="serverPort" lay-verify="required" lay-reqtext='{{T "Please fill in the IP:Port"}}' autocomplete="off" class="layui-input" value="{{.Data.ServerPort}}">
 					</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">语言</label>
+					<label class="layui-form-label">{{T "Language"}}</label>
 					<div class="layui-input-block">
 						<select name="locale" id="locale">
 							<option value="zh-CN">简体中文</option>
@@ -53,21 +53,21 @@
 					</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">超时时间</label>
+					<label class="layui-form-label">{{T "Timeout"}}</label>
 					<div class="layui-input-block">
 					  <input type="number" name="timeout" lay-verify="required" lay-reqtext="请填写超时时间" autocomplete="off" class="layui-input" value="{{.Data.Timeout}}">
 					</div>
 				</div>	
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">最大的请求</label>
+					<label class="layui-form-label">{{T "Max Request Body Size"}}</label>
 					<div class="layui-input-block">
 					  <input type="number" name="maxRequestBodySize"  autocomplete="off" class="layui-input" value="{{.Data.MaxRequestBodySize}}">
 					</div>
 				</div>	
 				<div class="layui-form-item">
 					<div class="layui-input-block">
-					  <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交修改</button>
-					  <button type="button" class="layui-btn layui-bg-red" lay-on="updatesql">更新SQL</button>
+					  <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">{{T "Submit Changes"}}</button>
+					  <button type="button" class="layui-btn layui-bg-red" lay-on="updatesql">{{T "Update SQL"}}</button>
 					</div>
 				</div>
 			</form>
@@ -90,7 +90,9 @@
 	  
 	  util.on('lay-on', {
 		'updatesql': function(){
-			layer.prompt({title: '请输入更新SQL', formType: 2}, function(value, index, elem){
+			layer.prompt(
+			{title: '{{T "Please enter the update SQL"}}', formType: 2,btn: ['{{T "OK"}}', '{{T "Cancel"}}'],}, 
+			function(value, index, elem){
 				if(value === '') return elem.focus();
 				$.ajax({
 					url:basePath+"admin/updatesql",
@@ -98,16 +100,16 @@
 					dataType:"json",
 			        data:{"updateSQL":value},
 					error: function (result) {
-						layer.msg("SQL执行失败!"+result.responseJSON.message);
+						layer.msg('{{T "SQL execution failed!"}}'+result.responseJSON.message);
 					},
 					success:function(result){
 						//console.log(result)
 						if (result.statusCode == 1) {
 							// 关闭 prompt
 							layer.close(index);
-							layer.msg("SQL执行成功!"+result.message);
+							layer.msg('{{T "SQL executed successfully!"}}'+result.message);
 						}else{
-							layer.msg("SQL执行失败!"+result.message);
+							layer.msg('{{T "SQL execution failed!"}}'+result.message);
 						}
 					}
 				});
@@ -130,13 +132,13 @@
 			dataType:"json",
 			data:JSON.stringify(field),
 			error: function (result) {
-				layer.msg("更新错误!"+result.responseJSON.message);
+				layer.msg('{{T "Update error!"}}'+result.responseJSON.message);
 			},
 			success:function(result){
 				if (result.statusCode == 1) {
-					layer.msg("设置修改成功,重启gpress才能生效!");
+					layer.msg('{{T "restart gpress"}}');
 				}else{
-					layer.msg("修改失败!");
+					layer.msg('{{T "Update failed!"}}');
 				}
 			}
 		});
