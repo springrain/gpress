@@ -76,10 +76,9 @@
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">排序</label>
+				<label class="layui-form-label">description</label>
 				<div class="layui-input-block">
-					<input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off"
-						class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">
+					<input type="text" name="description" autocomplete="off" class="layui-input" value="">
 				</div>
 			</div>
 		</div>
@@ -100,9 +99,10 @@
 			        
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">description</label>
+				<label class="layui-form-label">排序</label>
 				<div class="layui-input-block">
-					<input type="text" name="description" autocomplete="off" class="layui-input" value="">
+					<input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off"
+						class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">
 				</div>
 			</div>
 			<div class="layui-col-md3">
