@@ -67,6 +67,7 @@ var funcMap = template.FuncMap{
 	"version":          funcVersion,
 	"seq":              funcSeq,
 	"T":                funcT,
+	"locale":           funcLocale,
 }
 
 // funcBasePath 基础路径,前端所有的资源请求必须带上 {{basePath}}
@@ -466,4 +467,9 @@ func funcT(key string) string {
 		return value
 	}
 	return key
+}
+
+// funcLocale 当前使用的语言
+func funcLocale() string {
+	return gpressLocate
 }
