@@ -1,10 +1,10 @@
 {{template "admin/header.html"}}
-<title>更新站点信息 - GPRESS</title>
+<title>{{T "Update Site Information"}} - GPRESS</title>
 {{ $themeName := themeName }} 
 {{template "admin/bodystart.html"}}
         <div class="layui-card layui-panel" style="height: 100%;">
           <div class="layui-card-header">
-            更新站点信息
+            {{T "Update Site Information"}}
           </div>
           <div class="layui-card-body">
             <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
@@ -18,27 +18,27 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">名称</label>
+					<label class="layui-form-label">{{T "Name"}}</label>
 					<div class="layui-input-block">
-					  <input type="text" name="name" lay-verify="required" autocomplete="off" lay-reqtext="请填写名称" class="layui-input" value="{{.Data.Name}}">
+					  <input type="text" name="name" lay-verify="required" autocomplete="off" lay-reqtext='{{T "Please fill in the name"}}' class="layui-input" value="{{.Data.Name}}">
 					</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">标题</label>
+					<label class="layui-form-label">{{T "Title"}}</label>
 					<div class="layui-input-block">
-					  <input type="text" name="title" lay-verify="required" autocomplete="off" lay-reqtext="请填写标题" class="layui-input"  value="{{.Data.Title}}">
+					  <input type="text" name="title" lay-verify="required" autocomplete="off" lay-reqtext='{{T "Please fill in the title"}}' class="layui-input"  value="{{.Data.Title}}">
 					</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-				  <label class="layui-form-label">域名&nbsp;<i class="layui-icon layui-icon-tips" title="用于生成网站地图sitemap.xml"></i></label>
+				  <label class="layui-form-label">{{T "Domain"}}&nbsp;<i class="layui-icon layui-icon-tips" title='{{T "Used to generate the sitemap.xml"}}'></i></label>
 				  <div class="layui-input-block">
 					<input type="text" name="domain" autocomplete="off" class="layui-input" value="{{.Data.Domain}}">
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">PC主题 &nbsp;<i class="layui-icon layui-icon-tips" title="PC浏览器访问时,使用此主题渲染"></i></label>
+					<label class="layui-form-label">{{T "PC Theme"}} &nbsp;<i class="layui-icon layui-icon-tips" title='{{T "Used when accessed by PC browsers"}}'></i></label>
 					<div class="layui-input-block">
-						<select name="themePC" id="themePC" lay-verify="required" lay-reqtext="请选择主题">
+						<select name="themePC" id="themePC" lay-verify="required" lay-reqtext='{{T "Please select a theme"}}'>
 							{{ range $index,$obj := $themeName }}
 							<option value='{{$obj}}'>{{$obj}}</option>
 							{{end}}
@@ -46,9 +46,9 @@
 					</div>
 				</div>	
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">手机主题 &nbsp;<i class="layui-icon layui-icon-tips" title="手机浏览器访问时,使用此主题渲染"></i></label>
+					<label class="layui-form-label">{{T "Mobile Theme"}} &nbsp;<i class="layui-icon layui-icon-tips" title='{{T "Used when accessed by mobile browsers"}}'></i></label>
 					<div class="layui-input-block">
-						<select name="themeWAP" id="themeWAP" lay-verify="required" lay-reqtext="请选择主题">
+						<select name="themeWAP" id="themeWAP" lay-verify="required" lay-reqtext='{{T "Please select a theme"}}'>
 							{{ range $index,$obj := $themeName }}
 							<option value='{{$obj}}'>{{$obj}}</option>
 							{{end}}
@@ -56,9 +56,9 @@
 					</div>
 				</div>	
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">微信主题 &nbsp;<i class="layui-icon layui-icon-tips" title="微信访问时,使用此主题渲染"></i></label>
+					<label class="layui-form-label">{{T "WeChat Theme"}} &nbsp;<i class="layui-icon layui-icon-tips" title='{{T "Used when accessed by WeChat"}}'></i></label>
 					<div class="layui-input-block">
-						<select name="themeWX" id="themeWX" lay-verify="required" lay-reqtext="请选择主题">
+						<select name="themeWX" id="themeWX" lay-verify="required" lay-reqtext='{{T "Please select a theme"}}'>
 							{{ range $index,$obj := $themeName }}
 							<option value='{{$obj}}'>{{$obj}}</option>
 							{{end}}
@@ -66,9 +66,9 @@
 					</div>
 				</div>	
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">默认主题 &nbsp;<i class="layui-icon layui-icon-tips" title="默认渲染的主题,所有主题都在gpressdatadir/template/theme目录下"></i></label>
+					<label class="layui-form-label">{{T "Default Theme"}} &nbsp;<i class="layui-icon layui-icon-tips" title='{{T "Default rendering theme, all themes are located in gpressdatadir/template/theme directory"}}'></i></label>
 					<div class="layui-input-block">
-						<select name="theme" id="theme" lay-verify="required" lay-reqtext="请选择主题">
+						<select name="theme" id="theme" lay-verify="required" lay-reqtext='{{T "Please select a theme"}}'>
 							{{ range $index,$obj := $themeName }}
 							<option value='{{$obj}}'>{{$obj}}</option>
 							{{end}}
@@ -76,13 +76,13 @@
 					</div>
 				</div>	
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">keyword</label>
+					<label class="layui-form-label">Keyword</label>
 					<div class="layui-input-block">
 					  <input type="text" name="keyword" autocomplete="off" class="layui-input" value="{{.Data.Keyword}}">
 					</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">站点描述</label>
+					<label class="layui-form-label">Description</label>
 					<div class="layui-input-block">
 					  <input type="text" name="description" autocomplete="off" class="layui-input" value="{{.Data.Description}}">
 					</div>
@@ -92,7 +92,7 @@
 					<div class="layui-input-block" style="display: flex;justify-content: space-between;align-items: center;">
 					  <input type="text" name="logo" id="logo" autocomplete="off" class="layui-input" value="{{.Data.Logo}}"> &nbsp;
 						<button type="button" class="layui-btn" id="button-upload-logo">
-							<i class="layui-icon layui-icon-upload"></i> 上传图片
+							<i class="layui-icon layui-icon-upload"></i> {{T "Upload Image"}}
 						</button> &nbsp;
 						<img height="38px" src="{{basePath}}{{.Data.Logo}}" id="img_logo"/>
 				   </div>
@@ -102,21 +102,20 @@
 					<div class="layui-input-block" style="display: flex;justify-content: space-between;align-items: center;">
 					  <input type="text" name="favicon" id="favicon" autocomplete="off" class="layui-input" value="{{.Data.Favicon}}"> &nbsp;
 					  <button type="button" class="layui-btn" id="button-upload-favicon">
-						<i class="layui-icon layui-icon-upload"></i> 上传图片
+						<i class="layui-icon layui-icon-upload"></i> {{T "Upload Image"}}
 					</button> &nbsp;
 					<img height="38px" src="{{basePath}}{{.Data.Favicon}}" id="img_favicon" />
-				
 				</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">底部信息</label>
+					<label class="layui-form-label">{{T "Footer"}}</label>
 					<div class="layui-input-block">
-					  <textarea name="footer" placeholder="底部信息"  autocomplete="off" class="layui-textarea">{{.Data.Footer}}</textarea>
+					  <textarea name="footer" placeholder='{{T "Footer"}}'  autocomplete="off" class="layui-textarea">{{.Data.Footer}}</textarea>
 					</div>
 				</div>
 				<div class="layui-form-item">
 					<div class="layui-input-block">
-					  <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交修改</button>
+					  <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">{{T "Submit Changes"}}</button>
 					</div>
 				</div>
 			</form>
@@ -188,13 +187,13 @@
 			dataType:"json",
 			data:JSON.stringify(field),
 			error: function (result) {
-				layer.msg("更新错误!"+result.responseJSON.message);
+				layer.msg('{{T "Update error!"}}'+result.responseJSON.message);
 			},
 			success:function(result){
 				if (result.statusCode == 1) {
-					layer.msg("站点信息修改成功,请 刷新站点 ");
+					layer.msg('{{T "Site information updated successfully, please Refresh Site"}}');
 				}else{
-					layer.msg("修改失败!");
+					layer.msg('{{T "Update failed!"}}');
 				}
 			}
 		});
