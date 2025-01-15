@@ -50,8 +50,8 @@ func init() {
 
 func main() {
 
-	// 初始化admin路由,使用init实现
-	//initAdminRoute()
+	// 初始化语言包
+	initLocale()
 
 	//加载页面模板
 	err := loadTemplate()
