@@ -1,10 +1,10 @@
 {{template "admin/header.html"}}
-<title>更新用户信息 - GPRESS</title>
+<title>{{T "Update User Information"}} - GPRESS</title>
 <script type="text/javascript" src="{{basePath}}admin/js/sha3.min.js"></script>
 {{template "admin/bodystart.html"}}
         <div class="layui-card layui-panel" style="height: 100%;">
           <div class="layui-card-header">
-            更新用户信息
+            {{T "Update User Information"}}
           </div>
           <div class="layui-card-body">
             <form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/update" method="POST">
@@ -19,36 +19,36 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">账号</label>
+					<label class="layui-form-label">{{T "Account"}}</label>
 					<div class="layui-input-block">
-					  <input type="text" name="account" lay-verify="required" autocomplete="off" lay-reqtext="请填写账号" class="layui-input"  value="{{.Data.Account}}">
+					  <input type="text" name="account" lay-verify="required" autocomplete="off" lay-reqtext='{{T "Please fill in the account"}}' class="layui-input"  value="{{.Data.Account}}">
 					</div>
 				</div>
 
 				<div class="layui-form-item layui-col-md6">
-				  <label class="layui-form-label">密码</label>
+				  <label class="layui-form-label">{{T "Password"}}</label>
 				  <div class="layui-input-block">
 					<input type="password" name="password" id="password" autocomplete="off" class="layui-input" lay-affix="eye" value="" >
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-				  <label class="layui-form-label">用户名</label>
+				  <label class="layui-form-label">{{T "Username"}}</label>
 				  <div class="layui-input-block">
 					<input type="text" name="userName" autocomplete="off" class="layui-input" value="{{.Data.UserName}}">
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">区块链类型</label>
+					<label class="layui-form-label">{{T "Blockchain Type"}}</label>
 					<div class="layui-input-block">
 						<select name="chainType" id="chainType">
-							<option value="">请选择</option>
-							<option value="XUPER">百度超级链</option>
-							<option value="ETH">以太坊</option>
+							<option value="">{{T "Please select"}}</option>
+							<option value="XUPER">{{T "XuperChain"}}</option>
+							<option value="ETH">{{T "Ethereum"}}</option>
 						</select>
 					</div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">区块链地址</label>
+					<label class="layui-form-label">{{T "Blockchain Address"}}</label>
 					<div class="layui-input-block">
 					  <input type="text" name="chainAddress" autocomplete="off" class="layui-input" value="{{.Data.ChainAddress}}">
 					</div>
@@ -56,7 +56,7 @@
 				
 				<div class="layui-form-item">
 					<div class="layui-input-block">
-					  <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">提交修改</button>
+					  <button type="submit" class="layui-btn layui-bg-blue" lay-submit lay-filter="gpress-form-ajax-update">{{T "Submit Changes"}}</button>
 					</div>
 				</div>
 			</form>
@@ -92,13 +92,13 @@
 			dataType:"json",
 			data:JSON.stringify(field),
 			error: function (result) {
-				layer.msg("更新错误!"+result.responseJSON.message);
+				layer.msg('{{T "Update error!"}}'+result.responseJSON.message);
 			},
 			success:function(result){
 				if (result.statusCode == 1) {
-					layer.msg("修改成功!");
+					layer.msg('{{T "Update successfully!"}}');
 				}else{
-					layer.msg("修改失败!");
+					layer.msg('{{T "Update failed!"}}');
 				}
 			}
 		});
