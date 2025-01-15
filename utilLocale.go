@@ -27,12 +27,14 @@ import (
 
 // localeMap 用于记录翻译的Map
 var localeMap = make(map[string]string)
+var gpressLocate = "zh-CN"
 
 // initLocale 要在config初始化之后,需要获取config中的语言配置
 func initLocale() {
-	defaultErr := errors.New(config.Locale + ".json加载失败,使用默认zh-CN.json")
+	gpressLocate = config.Locale
+	defaultErr := errors.New(gpressLocate + ".json加载失败,使用默认zh-CN.json")
 	// 打开文件
-	jsonFile, err := os.Open(datadir + "/locales/" + config.Locale + ".json")
+	jsonFile, err := os.Open(datadir + "/locales/" + gpressLocate + ".json")
 	if err != nil {
 		FuncLogError(nil, defaultErr)
 		jsonFile, err = os.Open(datadir + "/locales/zh-CN.json")
@@ -40,6 +42,7 @@ func initLocale() {
 			FuncLogError(nil, defaultErr)
 			return
 		}
+		gpressLocate = "zh-CN"
 	}
 	// 关闭文件
 	defer jsonFile.Close()
