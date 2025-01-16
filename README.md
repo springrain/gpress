@@ -1,5 +1,6 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />    
-<a href="./README.md">English</a> | <a href="./README.zh-CN.md">简体中文</a>       
+
+<a href="./README.md">English</a> | <a href="./README.zh-CN.md">简体中文</a>         
 ## Introduction  
 Web3 content platform, Hertz + Go template + FTS5 full-text search, supports Ethereum and Baidu Super Chain, compatible with Hugo and WordPress ecosystems, uses Wasm extension plugins, and requires only 200M memory.  
 
