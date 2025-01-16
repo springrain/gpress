@@ -1,4 +1,13 @@
 {{template "admin/header.html"}}
+<style>
+	.layui-form-label {
+	  width: 130px;
+	}
+	.layui-input-block {
+	  margin-left: 160px;
+	}
+</style>
+
 <title>{{T "Update Settings"}}  - GPRESS</title>
 
 <script type="text/javascript" src="{{basePath}}admin/js/sha3.min.js"></script>
@@ -59,7 +68,7 @@
 					</div>
 				</div>	
 				<div class="layui-form-item layui-col-md6">
-					<label class="layui-form-label">{{T "Max Request Body Size"}}</label>
+					<label class="layui-form-label">{{T "Max Request Size"}}</label>
 					<div class="layui-input-block">
 					  <input type="number" name="maxRequestBodySize"  autocomplete="off" class="layui-input" value="{{.Data.MaxRequestBodySize}}">
 					</div>
