@@ -97,7 +97,7 @@
   "Download": "下载",
   "Add Navigation Menu": "新增导航菜单",
   "Path Identifier": "路径标识",
-  "Cannot be update after saving": "保存后不允许修改",
+  "Cannot update after saved": "保存后不允许修改",
   "Please fill in the path identifier": "请填写路径标识",
   "Navigation Name": "导航名称",
   "Please fill in the navigation name": "请填写导航名称",
