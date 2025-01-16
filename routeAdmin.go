@@ -900,6 +900,7 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 func funcUpdateSQL(ctx context.Context, c *app.RequestContext) {
 	updateSQL := string(c.FormValue("updateSQL"))
 	finder := zorm.NewFinder().Append(updateSQL)
+	finder.InjectionCheck = false
 	count, err := zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.UpdateFinder(ctx, finder)
 	})
