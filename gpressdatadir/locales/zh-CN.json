@@ -48,7 +48,7 @@
   "Language": "语言",
   "Timeout": "超时时间",
   "Please fill in the timeout": "请填写超时时间",
-  "Max Request Body Size": "最大的请求",
+  "Max Request Size": "最大的请求",
   "Submit Changes": "提交修改",
   "Update SQL": "更新SQL",
   "Please enter the update SQL": "请输入更新SQL",
