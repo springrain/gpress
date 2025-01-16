@@ -158,6 +158,9 @@
   "Content": "内容",
   "Rich Text": "富文本",
   "Path identifier and navigation menu cannot be empty": "路径标识和导航菜单不能为空",
-  "Please enter content...": "请输入内容..."
+  "Please enter content...": "请输入内容...",
+  "Edit Content": "修改内容",
+  "Navigation menu cannot be empty": "导航菜单不能为空"
+
 
 }
