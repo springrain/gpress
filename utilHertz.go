@@ -181,7 +181,7 @@ func isInstalled() bool {
 
 	// 依赖sqliteStatus变量,确保sqlite在isInstalled之前初始化
 	if !sqliteStatus {
-		err := errors.New("表检查失败,sqliteStatus状态为false")
+		err := errors.New(funcT("Table check failed,sqliteStatus is false"))
 		FuncLogError(nil, err)
 		panic(err)
 	}
