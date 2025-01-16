@@ -17,13 +17,13 @@
 			<div class="layui-col-md3">
 				<label class="layui-form-label">{{T "Path Identifier"}}</label>
 				<div class="layui-input-block">
-					<input type="text" id="id" name="id" placeholder="{{T "Cannot be modified after saving"}}" lay-verify="required|uri" lay-reqtext="{{T "Please fill in the path identifier"}}" autocomplete="off" class="layui-input" value="" />
+					<input type="text" id="id" name="id" placeholder='{{T "Cannot be modified after saving"}}' lay-verify="required|uri" lay-reqtext='{{T "Please fill in the path identifier"}}' autocomplete="off" class="layui-input" value="" />
 				</div>
 			</div>
 			<div class="layui-col-md3">
 				<label class="layui-form-label">{{T "Title"}}</label>
 				<div class="layui-input-block">
-					<input type="text" name="title" lay-verify="required" lay-reqtext="{{T "Please fill in the content title"}}" autocomplete="off"
+					<input type="text" name="title" lay-verify="required" lay-reqtext='{{T "Please fill in the content title"}}' autocomplete="off"
 						class="layui-input" value="">
 				</div>
 			</div>
@@ -45,7 +45,7 @@
 			<div class="layui-col-md3">
 				<label class="layui-form-label">{{T "Navigation Menu"}}</label>
 				<div class="layui-input-block">
-					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="{{T "Please select a navigation menu"}}">
+					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext='{{T "Please select a navigation menu"}}'>
 						<option value="">{{T "Please select"}}</option>
 						{{ range $index,$obj := $categories.Data }}
 						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
@@ -97,7 +97,7 @@
 			<div class="layui-col-md3">
 				<label class="layui-form-label">{{T "Sort"}}</label>
 				<div class="layui-input-block">
-					<input type="number" name="sortNo" lay-verify="required" lay-reqtext="{{T "Please fill in the sort number"}}" autocomplete="off"
+					<input type="number" name="sortNo" lay-verify="required" lay-reqtext='{{T "Please fill in the sort number"}}' autocomplete="off"
 						class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">
 				</div>
 			</div>
