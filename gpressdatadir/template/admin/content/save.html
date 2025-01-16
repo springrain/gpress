@@ -1,5 +1,5 @@
 {{template "admin/header.html"}}
-<title>新增内容 - GPRESS</title>
+<title>{{T "Add Content"}} - GPRESS</title>
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.css" />
 <link href="{{basePath}}admin/js/wangeditor/wangeditor5.min.css" rel="stylesheet" />
 <script src="{{basePath}}admin/js/wangeditor/wangeditor5.min.js"></script>
@@ -15,26 +15,26 @@
 	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST" onsubmit="return false;" style="height:100%;display: flex;flex-direction: column;">
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
-				<label class="layui-form-label">路径标识</label>
+				<label class="layui-form-label">{{T "Path Identifier"}}</label>
 				<div class="layui-input-block">
-					<input type="text" id="id" name="id" placeholder="保存后不允许修改" lay-verify="required|uri" lay-reqtext="请填写路径标识" autocomplete="off" class="layui-input" value="" />
+					<input type="text" id="id" name="id" placeholder="{{T "Cannot be modified after saving"}}" lay-verify="required|uri" lay-reqtext="{{T "Please fill in the path identifier"}}" autocomplete="off" class="layui-input" value="" />
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">文章标题</label>
+				<label class="layui-form-label">{{T "Title"}}</label>
 				<div class="layui-input-block">
-					<input type="text" name="title" lay-verify="required" lay-reqtext="请填写文章标题" autocomplete="off"
+					<input type="text" name="title" lay-verify="required" lay-reqtext="{{T "Please fill in the content title"}}" autocomplete="off"
 						class="layui-input" value="">
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">摘要</label>
+				<label class="layui-form-label">{{T "Summary"}}</label>
 				<div class="layui-input-block">
 					<input type="text" name="summary" autocomplete="off" class="layui-input" value="">
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">keyword</label>
+				<label class="layui-form-label">Keyword</label>
 				<div class="layui-input-block">
 					<input type="text" name="keyword" autocomplete="off" class="layui-input" value="">
 				</div>
@@ -43,10 +43,10 @@
 
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
-				<label class="layui-form-label">导航菜单</label>
+				<label class="layui-form-label">{{T "Navigation Menu"}}</label>
 				<div class="layui-input-block">
-					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="请选择导航菜单">
-						<option value="">请选择</option>
+					<select name="categoryID" id="categoryID" lay-verify="required" lay-reqtext="{{T "Please select a navigation menu"}}">
+						<option value="">{{T "Please select"}}</option>
 						{{ range $index,$obj := $categories.Data }}
 						<option value="{{$obj.Id}}">{{$obj.Name}}</option>
 						{{end}}
@@ -54,10 +54,10 @@
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">页面模版</label>
+				<label class="layui-form-label">{{T "Page Template"}}</label>
 				<div class="layui-input-block">
 					<select name="templateFile" id="templateFile">
-						<option value="">默认(content.html)</option>
+						<option value="">{{T "Default"}} (content.html)</option>
 						{{ range $index,$obj := $themeTemplate }}
 						<option value="{{$obj.Name}}">{{$obj.Name}}</option>
 						{{end}}
@@ -65,18 +65,18 @@
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">状态</label>
+				<label class="layui-form-label">{{T "Status"}}</label>
 				<div class="layui-input-block">
 					<select name="status" id="status">
-						<option value="1">公开</option>
-						<option value="0">链接访问</option>
-						<option value="2">置顶</option>
-						<option value="3">私密</option>
+						<option value="1">{{T "Public"}}</option>
+						<option value="0">{{T "Link Access"}}</option>
+						<option value="2">{{T "Top"}}</option>
+						<option value="3">{{T "Private"}}</option>
 					</select>
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">description</label>
+				<label class="layui-form-label">Description</label>
 				<div class="layui-input-block">
 					<input type="text" name="description" autocomplete="off" class="layui-input" value="">
 				</div>
@@ -85,46 +85,42 @@
 
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
-				
-				<label class="layui-form-label">封面图</label>
+				<label class="layui-form-label">{{T "Cover Image"}}</label>
 				<div class="layui-input-block">
 					<button type="button" class="layui-btn" id="button-upload-thumbnail">
-						<i class="layui-icon layui-icon-upload"></i> 上传封面
+						<i class="layui-icon layui-icon-upload"></i> {{T "Upload Cover"}}
 					</button>
-					
 					<img height="38px" src="" id="img_thumbnail" style="padding-left: 10px;" />
 					<i id="i_delete_thumbnail" class="layui-icon layui-icon-delete" style="font-size: 20px;display: none;"></i> 
-				   
 				</div>
-			        
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">排序</label>
+				<label class="layui-form-label">{{T "Sort"}}</label>
 				<div class="layui-input-block">
-					<input type="number" name="sortNo" lay-verify="required" lay-reqtext="请填写排序" autocomplete="off"
+					<input type="number" name="sortNo" lay-verify="required" lay-reqtext="{{T "Please fill in the sort number"}}" autocomplete="off"
 						class="layui-input" value="{{addInt $maxSortNo.SortNo 1}}">
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">作者</label>
+				<label class="layui-form-label">{{T "Author"}}</label>
 				<div class="layui-input-block">
 					<input type="text" name="author" autocomplete="off" class="layui-input" value="">
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">tag标签</label>
+				<label class="layui-form-label">{{T "Tag"}}</label>
 				<div class="layui-input-block">
 					<input type="text" name="tag" autocomplete="off" class="layui-input" value="">
 				</div>
 			</div>
 		</div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">文章内容</label>
+			<label class="layui-form-label">{{T "Content"}}</label>
 			<div class="layui-input-block">
 				<input type="radio" name="contentType" value="0" title="Markdown" checked lay-filter="contentType" />
-				<input type="radio" name="contentType" value="1" title="富文本" lay-filter="contentType" />
+				<input type="radio" name="contentType" value="1" title='{{T "Rich Text"}}' lay-filter="contentType" />
 				<button type="submit" class="layui-btn layui-bg-blue" lay-submit
-					lay-filter="gpress-form-ajax-update">提交保存</button>
+					lay-filter="gpress-form-ajax-update">{{T "Submit"}}</button>
 			</div>
 		</div>
 		<div id="markdown-container" style="height: 100%;"></div>
@@ -151,7 +147,7 @@
 			// 验证uri
 			uri: function(value, elem) {
 			  if (!/^[a-zA-Z0-9_-|-,-\-]+$/.test(value)) {
-				return '路径标识可以包含英文、数字、中划线(-)、下划线(_)、竖线(|)和逗号(,)';
+				return '{{T "Path identifier can contain letters, numbers, hyphens (-), underscores (_), vertical bars (|), and commas (,)"}}';
 			  }
 			},
 		})
@@ -180,7 +176,7 @@
 			before: function(obj){ 
 				// 没有选择导航菜单返回false,阻止上传
 				if($('#categoryID').val()=="" || $('#id').val()==""){
-					layer.msg("路径标识和导航菜单不能为空");
+					layer.msg('{{T "Path identifier and navigation menu cannot be empty"}}');
 					return false;
 				}
 			},
@@ -203,7 +199,7 @@
 		$("#img_thumbnail").click(function () {
 			layer.photos({
 				photos: {
-					"title": "封面图",
+					"title": '{{T "Cover Image"}}',
 					"start": 0,
 					"data": [{
 					  "src": basePath+thumbnail,
@@ -217,7 +213,7 @@
 		var funcFileUpload=function (file, callback) {
 				// 没有选择导航菜单返回false,阻止上传
 				if($('#categoryID').val()=="" || $('#id').val()==""){
-					layer.msg("路径标识和导航菜单不能为空");
+					layer.msg('{{T "Path identifier and navigation menu cannot be empty"}}');
 					return false;
 				}
 				var formdata = new FormData(); // FormData对象,来发送二进制文件.
@@ -236,9 +232,13 @@
 				});
 			};
 
-
+		var cherryLocale="zh_CN";
+		if (locale!='zh-CN'){
+			cherryLocale="en_US";
+		}
 		// cherry markdown 编辑器
 		var cherry = new Cherry({
+			locale: cherryLocale,
 			id: 'markdown-container',
 			value: '',
 			autoSave2Textarea: true,
@@ -288,10 +288,14 @@
 		});
 
 		// 富文本编辑器
-		const { createEditor, createToolbar } = window.wangEditor
+		const { createEditor, createToolbar,i18nChangeLanguage } = window.wangEditor
+		if (locale!='zh-CN'){ //如果不是中文,就使用英文
+			// 切换语言 - 'en' 或者 'zh-CN'
+			i18nChangeLanguage('en')
+		}
 		var content = "";
 		const editorConfig = {
-			placeholder: '请输入内容...',
+			placeholder: '{{T "Please enter content..."}}',
 			MENU_CONF: {},
 			onChange(editor) {
 				content = editor.getHtml()
@@ -361,21 +365,21 @@
 				dataType: "json",
 				data: JSON.stringify(field),
 				error: function (result) {
-					layer.msg("保存错误!"+result.responseJSON.message);
+					layer.msg('{{T "Save error!"}}'+result.responseJSON.message);
 				},
 				success: function (result) {
 					if (result.statusCode == 1) {
-						layer.confirm('保存成功,是否继续添加?', {
+						layer.confirm('{{T "Save successful, continue adding?"}}', {
 							icon: 3,
-							title: "确认",
-							btn: ['返回列表', '继续添加'] //按钮
+							title: '{{T "Confirm"}}',
+							btn: ['{{T "Return to List"}}', '{{T "Continue Adding"}}'] //按钮
 						}, function () {
 							window.location.href = '{{basePath}}admin/{{.UrlPathParam}}/list';
 						}, function () {
 							location.reload();
 						});
 					} else {
-						layer.msg("保存失败!");
+						layer.msg('{{T "Save failed!"}}');
 					}
 				}
 			});
@@ -383,4 +387,3 @@
 		});
 	});
 </script>
-
