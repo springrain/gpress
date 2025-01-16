@@ -164,7 +164,7 @@ func funcAdminInstall(ctx context.Context, c *app.RequestContext) {
 	sha3Bytes := sha3.Sum512([]byte(user.Password))
 	user.Password = hex.EncodeToString(sha3Bytes[:])
 
-	loginHtml := "admin/login?message=" + funcT("Congratulations, you have successfully installed GPRESS. Please log in now.")
+	loginHtml := "admin/login?message=" + funcT("Congratulations, you have successfully installed GPRESS. Please log in now")
 	if user.ChainAddress != "" && user.ChainType != "" { //如果使用了address作为登录方式
 		user.Account = ""
 		user.UserName = ""
@@ -909,7 +909,7 @@ func funcUpdateSQL(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(ctx, err)
 		return
 	}
-	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: fmt.Sprintf(funcT("Modified %d records"), count)})
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: fmt.Sprintf(funcT("Updated %d records"), count)})
 }
 
 // permissionHandler 权限拦截器
