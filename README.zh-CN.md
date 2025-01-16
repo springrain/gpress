@@ -1,4 +1,5 @@
 <img src="gpressdatadir/public/gpress-logo.png" height="150px" />  
+  
 ## 介绍  
 Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存  
     
