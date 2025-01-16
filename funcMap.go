@@ -191,7 +191,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 	responseData := ResponseData{StatusCode: 0}
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
-		err := errors.New("sql语句错误")
+		err := errors.New(funcT("SQL statement error"))
 		responseData.ERR = err
 		responseData.StatusCode = 0
 		return responseData, err
@@ -254,7 +254,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 	case "": // 对象为空查询map
 		responseData.Data, responseData.ERR = zorm.QueryMap(ctx, finder, page)
 	default:
-		err := errors.New(urlPathParam + "表不存在!")
+		err := errors.New(urlPathParam + funcT("Table does not exist!"))
 		responseData.ERR = err
 		responseData.StatusCode = 0
 		return responseData, err
@@ -268,7 +268,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (interface{}, error) {
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
-		err := errors.New("sql语句错误")
+		err := errors.New(funcT("SQL statement error"))
 		return nil, err
 	}
 	var selectOneData interface{}
@@ -323,7 +323,7 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 	case "": // 对象为空查询map
 		selectOneData, _ = zorm.QueryRowMap(ctx, finder)
 	default:
-		err := errors.New(urlPathParam + "表不存在!")
+		err := errors.New(urlPathParam + funcT("Table does not exist!"))
 		return selectOneData, err
 	}
 

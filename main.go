@@ -56,16 +56,16 @@ func main() {
 	//加载页面模板
 	err := loadTemplate()
 	if err != nil { // 初始化模板异常
-		panic("初始化模板异常")
+		panic(funcT("Template initialization anomaly"))
 	}
 
-	message := "浏览器打开前端: "
+	message := funcT("Open the front-end in the browse") + ": "
 	if strings.HasPrefix(config.ServerPort, ":") {
 		httpServerPath += "127.0.0.1"
 	}
 	httpServerPath += config.ServerPort + config.BasePath
 	message += httpServerPath
-	message += "\n浏览器打开后台: " + httpServerPath + "admin/login"
+	message += "\n" + funcT("Open the back-end in the browser") + ": " + httpServerPath + "admin/login"
 	fmt.Println(message)
 
 	// 启动服务
