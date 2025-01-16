@@ -27,7 +27,7 @@
   "Blockchain wallet login": "区块链钱包登录",
   "Blockchain login": "区块链登录",
   "Account password login": "账号密码登录",
-  "Contact US": "联系我们",
+  "Contact us": "联系我们",
   "1. Rename gpressdatadir/template/install.html.bak to install.html.  </br> 2. Settings updated successfully, restart GPRESS to take effect!, reinitialize administrator account and password, data will not be lost.": "1.重命名 gpressdatadir/template/install.html.bak 为 install.html </br> 2.重启gpress,重新安装初始化管理员账号密码,数据不会丢失.",
   "Forgot password": "忘记密码",
   "Please install the corresponding wallet": "请安装对应的钱包",
