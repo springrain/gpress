@@ -46,7 +46,7 @@ var dbDaoConfig = zorm.DataSourceConfig{
 func checkSQLiteStatus() bool {
 	const failSuffix = ".fail"
 	if failDB := datadir + "gpress.db" + failSuffix; pathExist(failDB) {
-		FuncLogError(nil, fmt.Errorf("请确认[%s]是否需要手动重命名为[gpress.db],不需要请手动删除[%s]", failDB, failDB))
+		FuncLogError(nil, fmt.Errorf(funcT("Please confirm if [%s] needs to be manually renamed to [gpress.db]. If not, please manually delete [%s]"), failDB, failDB))
 		return false
 	}
 	defaultFtsFile := datadir + "fts5/libsimple"
@@ -104,7 +104,7 @@ func checkSQLiteStatus() bool {
 	}
 	createTableSQL := string(sqlByte)
 	if createTableSQL == "" {
-		panic("gpressdatadir/gpress.sql 文件异常")
+		panic("gpressdatadir/gpress.sql " + funcT("File anomaly"))
 	}
 
 	ctx := context.Background()

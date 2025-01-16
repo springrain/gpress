@@ -20,6 +20,7 @@ package main
 import (
 	"context"
 	"encoding/hex"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -163,7 +164,7 @@ func funcAdminInstall(ctx context.Context, c *app.RequestContext) {
 	sha3Bytes := sha3.Sum512([]byte(user.Password))
 	user.Password = hex.EncodeToString(sha3Bytes[:])
 
-	loginHtml := "admin/login?message=恭喜您,成功安装gpress,现在请登录"
+	loginHtml := "admin/login?message=" + funcT("Congratulations, you have successfully installed GPRESS. Please log in now.")
 	if user.ChainAddress != "" && user.ChainType != "" { //如果使用了address作为登录方式
 		user.Account = ""
 		user.UserName = ""
@@ -212,7 +213,7 @@ func funcAdminLogin(ctx context.Context, c *app.RequestContext) {
 	if errorLoginCount.Load() >= errCount { //连续错误3次显示验证码
 		answer := c.PostForm("answer")
 		if answer != captchaAnswer { //答案不对
-			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=验证码错误"))
+			c.Redirect(http.StatusOK, cRedirecURI("admin/login?message="+funcT("Incorrect verification code")))
 			c.Abort() // 终止后续调用
 			return
 		}
@@ -221,7 +222,7 @@ func funcAdminLogin(ctx context.Context, c *app.RequestContext) {
 	account := strings.TrimSpace(c.PostForm("account"))
 	password := strings.TrimSpace(c.PostForm("password"))
 	if account == "" || password == "" { // 用户不存在或者异常
-		c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码不能为空"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/login?message="+funcT("Account or password cannot be empty")))
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -232,7 +233,7 @@ func funcAdminLogin(ctx context.Context, c *app.RequestContext) {
 	userId, err := findUserId(ctx, account, password)
 	if userId == "" || err != nil { // 用户不存在或者异常
 		errorLoginCount.Add(1)
-		c.Redirect(http.StatusOK, cRedirecURI("admin/login?message=账户或密码错误"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/login?message="+funcT("Account or password is incorrect")))
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -271,7 +272,7 @@ func funcAdminChainlogin(ctx context.Context, c *app.RequestContext) {
 	signature := c.PostForm("signature")
 	userId, chainType, chainAddress, err := findUserAddress(ctx)
 	if userId == "" || chainType == "" || chainAddress == "" || err != nil {
-		c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message=地址异常"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message="+funcT("Address anomaly")))
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -282,13 +283,13 @@ func funcAdminChainlogin(ctx context.Context, c *app.RequestContext) {
 	case "XUPER":
 		verify, err = verifyXuperSignature(chainAddress, []byte(signature), []byte(chainRandStr))
 	default:
-		c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message=暂不支持此类型区块链账户"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message="+funcT("We currently do not support this type of blockchain account")))
 		c.Abort() // 终止后续调用
 		return
 	}
 
 	if !verify || err != nil {
-		c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message=签名校验失败"))
+		c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message="+funcT("Signature verification failed")))
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -682,7 +683,7 @@ func funcUpdateContent(ctx context.Context, c *app.RequestContext) {
 	if entity.Markdown != "" {
 		content, toc, err := renderMarkdownHtml(entity.Markdown)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Markdown to HTML conversion error")})
 			c.Abort() // 终止后续调用
 			FuncLogError(ctx, err)
 			return
@@ -717,14 +718,14 @@ func funcUpdateInit(ctx context.Context, c *app.RequestContext, entity zorm.IEnt
 	finder := zorm.NewSelectFinder(entity.GetTableName()).Append("WHERE id=?", id)
 	has, err := zorm.QueryRow(ctx, finder, entity)
 	if !has || err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "Id不存在"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("ID does not exist")})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return false
 	}
 	err = c.Bind(entity)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("JSON data conversion error")})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return false
@@ -735,7 +736,7 @@ func funcUpdateInit(ctx context.Context, c *app.RequestContext, entity zorm.IEnt
 // funcUpdate 更新表数据
 func funcUpdate(ctx context.Context, c *app.RequestContext, entity zorm.IEntityStruct, id string) {
 	if id == "" { //没有id,终止调用
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("ID cannot be empty")})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -744,7 +745,7 @@ func funcUpdate(ctx context.Context, c *app.RequestContext, entity zorm.IEntityS
 		return nil, err
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "更新数据失败"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Failed to update data")})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return
@@ -766,7 +767,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 	entity := &Category{}
 	err := c.Bind(entity)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("JSON data conversion error")})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return
@@ -785,7 +786,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 	}
 	has := validateIDExists(ctx, entity.Id)
 	if has {
-		c.JSON(http.StatusConflict, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
+		c.JSON(http.StatusConflict, ResponseData{StatusCode: 0, Message: funcT("URL path is duplicated, please modify the path identifier")})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -793,7 +794,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		return zorm.Insert(ctx, entity)
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Failed to save data")})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return
@@ -804,7 +805,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 	// 增加自定义路由映射
 	//routeCategoryMap[funcTrimSuffixSlash(entity.Id)] = entity.Id
 
-	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
+	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: funcT("Saved successfully!")})
 }
 
 // funcSaveContent 保存内容
@@ -812,7 +813,7 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	entity := &Content{}
 	err := c.Bind(entity)
 	if err != nil || entity.Id == "" || entity.CategoryID == "" {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "转换json数据错误"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("JSON data conversion error")})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return
@@ -822,7 +823,7 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	entity.Id = entity.CategoryID + entity.Id
 	has := validateIDExists(ctx, entity.Id)
 	if has {
-		c.JSON(http.StatusConflict, ResponseData{StatusCode: 0, Message: "URL路径重复,请修改路径标识"})
+		c.JSON(http.StatusConflict, ResponseData{StatusCode: 0, Message: funcT("URL path is duplicated, please modify the path identifier")})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -835,7 +836,7 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	if entity.Markdown != "" {
 		content, toc, err := renderMarkdownHtml(entity.Markdown)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "markdown转html错误"})
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Markdown to HTML conversion error")})
 			c.Abort() // 终止后续调用
 			FuncLogError(ctx, err)
 			return
@@ -851,12 +852,12 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 		return zorm.Insert(ctx, entity)
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "保存数据失败"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Failed to save data")})
 		c.Abort() // 终止后续调用
 		FuncLogError(ctx, err)
 		return
 	}
-	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: "保存成功!"})
+	c.JSON(http.StatusOK, ResponseData{StatusCode: count.(int), Message: funcT("Saved successfully!")})
 }
 
 // funcDelete 删除数据
@@ -864,7 +865,7 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 	id := c.PostForm("id")
 	//id := c.Query("id")
 	if id == "" { //没有id,终止调用
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "id不能为空"})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("ID cannot be empty")})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -877,22 +878,22 @@ func funcDelete(ctx context.Context, c *app.RequestContext) {
 		data := make([]Category, 0)
 		zorm.Query(context.Background(), finder, &data, page)
 		if len(data) != 0 {
-			c.JSON(http.StatusOK, ResponseData{StatusCode: 0, Message: "无法删除有子级的导航!"})
+			c.JSON(http.StatusOK, ResponseData{StatusCode: 0, Message: funcT("Cannot delete a navigation item with child elements!")})
 		} else {
 			err := deleteById(ctx, urlPathParam, id)
 			if err != nil {
-				c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
+				c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Failed to delete data")})
 				c.Abort() // 终止后续调用
 			}
-			c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
+			c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: funcT("Data deleted successfully")})
 		}
 	} else {
 		err := deleteById(ctx, urlPathParam, id)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: "删除数据失败"})
+			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Failed to delete data")})
 			c.Abort() // 终止后续调用
 		}
-		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "删除数据成功"})
+		c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: funcT("Data deleted successfully")})
 	}
 }
 
@@ -908,7 +909,7 @@ func funcUpdateSQL(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(ctx, err)
 		return
 	}
-	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: "修改" + strconv.Itoa(count.(int)) + "条数据"})
+	c.JSON(http.StatusOK, ResponseData{StatusCode: 1, Message: fmt.Sprintf(funcT("Modified %d records"), count)})
 }
 
 // permissionHandler 权限拦截器
