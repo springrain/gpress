@@ -181,6 +181,7 @@
   "Data deleted successfully": "删除数据成功",
   "Updated %d records": "修改 %d 条数据",
   "Failed to load install_config.json, using default configuration": "install_config.json加载失败,使用默认配置",
+  "Load failed, using default":"加载失败,使用默认",
   "Please confirm if [%s] needs to be manually renamed to [gpress.db]. If not, please manually delete [%s]": "请确认[%s]是否需要手动重命名为[gpress.db],不需要请手动删除[%s]",
   "File anomaly": "文件异常",
   "Table check failed,sqliteStatus is false": "表检查失败,sqliteStatus状态为false",
