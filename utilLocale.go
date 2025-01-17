@@ -32,7 +32,7 @@ var gpressLocate = "zh-CN"
 // initLocale 要在config初始化之后,需要获取config中的语言配置
 func initLocale() {
 	gpressLocate = config.Locale
-	defaultErr := errors.New(gpressLocate + ".json加载失败,使用默认zh-CN.json")
+	defaultErr := errors.New(gpressLocate + ".json " + funcT("Load failed, using default") + " zh-CN.json")
 	// 打开文件
 	jsonFile, err := os.Open(datadir + "/locales/" + gpressLocate + ".json")
 	if err != nil {
