@@ -191,5 +191,6 @@
   "Open the front-end in the browse": "浏览器打开前端",
   "Open the back-end in the browser": "浏览器打开后台",
   "Original data hash does not match": "原始数据Hash不一致",
-  "The public key in the signature does not match the address":"签名中的公钥和address不匹配"
+  "The public key in the signature does not match the address":"签名中的公钥和address不匹配",
+  "Backend management":"后台管理"
 }
