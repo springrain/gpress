@@ -74,7 +74,7 @@ func init() {
 	)
 }
 
-// conver2Html 由markdown转成html
+// conver2Html 由Markdown转成html
 func conver2Html(source []byte) (map[string]interface{}, *string, *string, error) {
 
 	var htmlBuffer bytes.Buffer

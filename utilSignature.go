@@ -101,39 +101,41 @@ func verifyXuperSignature(chainAddress string, sig, msg []byte) (valid bool, err
 	data := signature[128:]
 	h := sha512.New()
 	// 计算消息的哈希,包括消息前缀
-	prefix := fmt.Sprintf("\x20Xuper Signed Message:\n%d%s", len(msg), msg)
+	prefix := fmt.Sprintf("\x86XuperChain Signed Message:\n%d%s", len(msg), msg)
 	h.Write([]byte(prefix))
 	hash := h.Sum(nil)
 	if string(hash) != string(data) { //数据Hash不一致
-		return false, errors.New("原始数据Hash不一致")
+		return false, errors.New(funcT("Original data hash does not match"))
 	}
 	pub := ecdsa.PublicKey{Curve: elliptic.P256(), X: publicKeyX, Y: publicKeyY}
 	pubKey := &pub
 	verifyAddress, _ := verifyAddressUsingPublicKey(chainAddress, pubKey)
 	if !verifyAddress {
-		return false, errors.New("签名中的公钥和address不匹配")
+		return false, errors.New(funcT("The public key in the signature does not match the address"))
 	}
 
 	return ecdsa.Verify(pubKey, data, r, s), nil
 }
 
+/*
 // checkKeyCurve 判断是否是NIST标准的公钥
-func checkKeyCurve(k *ecdsa.PublicKey) bool {
-	if k.X == nil || k.Y == nil {
-		return false
+
+	func checkKeyCurve(k *ecdsa.PublicKey) bool {
+		if k.X == nil || k.Y == nil {
+			return false
+		}
+		switch k.Params().Name {
+		case "P-256": // NIST
+			return true
+		default: // 不支持的密码学类型
+			return false
+		}
 	}
-	switch k.Params().Name {
-	case "P-256": // NIST
-		return true
-	default: // 不支持的密码学类型
-		return false
-	}
-}
 
 type ECDSASignature struct {
 	R, S *big.Int
 }
-
+*/
 // verifyAddressUsingPublicKey 验证钱包地址是否和指定的公钥匹配. 如果成功,返回true和对应的密码学标记位;如果失败,返回false和默认的密码学标记位0
 func verifyAddressUsingPublicKey(address string, pub *ecdsa.PublicKey) (bool, uint8) {
 	//base58反解回byte[]数组

@@ -41,7 +41,7 @@ import (
 var searchDataLock = &sync.Mutex{}
 var genStaticHtmlLock = &sync.Mutex{}
 
-// genSearchDataJson 生成flexSearch需要的json文件,默认2000条数据
+// genSearchDataJson 生成flexSearch需要的json文件
 func genSearchDataJson() error {
 	//onlyOnce <- struct{}{}
 	//defer func() { <-onlyOnce }()
