@@ -187,11 +187,11 @@ Site information, such as title, logo, keywords, description, etc.
 | sortNo      | int         | Sort Order         |  Ascending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
-### Article Content (Table Name: content)
+### Content (Table Name: content)
 | columnName  | Type        | Description        | Whether to Tokenize |  Remarks                  | 
 | ----------- | ----------- | ----------- | ------- | ---------------------- |
 | id          | string      | Primary Key         |   No    | URL path, separated by /, e.g., /web/nginx-use-hsts |
-| title       | string      | Article Title     | Yes      |     Uses jieba tokenizer    |
+| title       | string      | Title     | Yes      |     Uses jieba tokenizer    |
 | keyword     | string      | Content Keywords   | Yes      |     Uses jieba tokenizer    |
 | description | string      | Content Description     | Yes      |     Uses jieba tokenizer    |
 | hrefURL     | string      | Self Page Path | No      |    -                    |
@@ -203,7 +203,7 @@ Site information, such as title, logo, keywords, description, etc.
 | categoryName| string      | Navigation Menu, separated by comma (,)| Yes| Uses jieba tokenizer.      |
 | categoryID  | string      | Navigation ID       | No      | -                       |
 | templateFile| string      | Template File     | No      | Template                    |
-| content     | string      | Article Content     | No      |                         |
+| content     | string      | Content     | No      |                         |
 | markdown    | string      | Markdown Content | No      |                         |
 | thumbnail   | string      | Cover Image       | No      |                         |
 | signature   | string      | Private Key Signature of Content | No   |                         |
