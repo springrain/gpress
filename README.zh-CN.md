@@ -104,7 +104,10 @@ location / {
     index  index.html index.htm;
 }
 
-```  
+``` 
+## 后台管理支持英文
+gpress后台管理目前支持中英双语,支持扩展其他语言,语言文件在 ```gpressdatadir/locales```,初始化安装默认使用的中文(```zh-CN```),如果需要英文,可以在安装前把```gpressdatadir/install_config.json```中的```"locale":"zh-CN"```修改为```"locale":"en-US"```.也可以在安装成功之后,在```设置```中修改```语言```为```English```,并重启生效.  
+
 ## 阿里云计算巢
 [点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以单独购买阿里云最低配服务器,进行部署.选择```张家口机房```,规格```ecs.t6-c4m1.large```,配置```2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M```,一年100元,五年200元左右.     
 
