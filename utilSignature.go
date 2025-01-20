@@ -21,7 +21,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/sha256"
-	"crypto/sha512"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -34,7 +33,7 @@ import (
 )
 
 // verifySecp256k1Signature 验证secp256k1的签名
-func verifySecp256k1Signature(senderAddress string, signatureData string, signature string) (bool, error) {
+func verifySecp256k1Signature(chainAddress string, msg string, signature string) (bool, error) {
 	signatureBytes, err := fromHex(signature)
 	if err != nil {
 		return false, err
@@ -43,7 +42,7 @@ func verifySecp256k1Signature(senderAddress string, signatureData string, signat
 		return false, errors.New("invalid signature")
 	}
 	// 计算消息的哈希,包括 MetaMask 的消息前缀
-	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(signatureData), signatureData)
+	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(msg), msg)
 	messageBytes := []byte(prefix)
 	messageHash := keccak256Hash(messageBytes)
 	r, s, v := signatureBytes[:32], signatureBytes[32:64], signatureBytes[64]
@@ -65,7 +64,7 @@ func verifySecp256k1Signature(senderAddress string, signatureData string, signat
 	if len(pubKeyHash) > 20 {
 		address = fmt.Sprintf("0x%x", pubKeyHash[len(pubKeyHash)-20:])
 	}
-	return strings.EqualFold(address, senderAddress), nil
+	return strings.EqualFold(address, chainAddress), nil
 }
 
 // fromHex 将16进制字符串解码为字节数组
@@ -86,24 +85,28 @@ func keccak256Hash(data []byte) []byte {
 	return d.Sum(nil)
 }
 
-// verifyXuperSignature XuperChain使用NIST标准的公钥,验证签名
-func verifyXuperSignature(chainAddress string, sig, msg []byte) (valid bool, err error) {
-	s2 := string(sig)
-	signature, e := hex.DecodeString(s2)
+// verifySecp256r1Signature XuperChain使用NIST标准的公钥,验证签名
+func verifySecp256r1Signature(chainAddress string, msg string, signature string) (valid bool, err error) {
+	signatureByte, e := hex.DecodeString(signature)
 	if e != nil {
 		return false, err
 	}
 
-	r := new(big.Int).SetBytes(signature[:32])
-	s := new(big.Int).SetBytes(signature[32:64])
-	publicKeyX := new(big.Int).SetBytes(signature[64:96])
-	publicKeyY := new(big.Int).SetBytes(signature[96:128])
-	data := signature[128:]
-	h := sha512.New()
+	r := new(big.Int).SetBytes(signatureByte[:32])
+	s := new(big.Int).SetBytes(signatureByte[32:64])
+	publicKeyX := new(big.Int).SetBytes(signatureByte[64:96])
+	publicKeyY := new(big.Int).SetBytes(signatureByte[96:128])
+	data := signatureByte[128:]
+	//h := sha512.New()
 	// 计算消息的哈希,包括消息前缀
 	prefix := fmt.Sprintf("\x86XuperChain Signed Message:\n%d%s", len(msg), msg)
-	h.Write([]byte(prefix))
-	hash := h.Sum(nil)
+	prefixHash := keccak256Hash([]byte(prefix))
+	// 将哈希值转换为十六进制字符串
+	hash, err := hex.DecodeString(fmt.Sprintf("%x", prefixHash))
+	if err != nil {
+		return false, err
+	}
+	//hash := h.Sum(nil)
 	if string(hash) != string(data) { //数据Hash不一致
 		return false, errors.New(funcT("Original data hash does not match"))
 	}

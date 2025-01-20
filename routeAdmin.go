@@ -281,7 +281,7 @@ func funcAdminChainlogin(ctx context.Context, c *app.RequestContext) {
 	case "ETH":
 		verify, err = verifySecp256k1Signature(chainAddress, chainRandStr, signature)
 	case "XUPER":
-		verify, err = verifyXuperSignature(chainAddress, []byte(signature), []byte(chainRandStr))
+		verify, err = verifySecp256r1Signature(chainAddress, chainRandStr, signature)
 	default:
 		c.Redirect(http.StatusOK, cRedirecURI("admin/chainlogin?message="+funcT("We currently do not support this type of blockchain account")))
 		c.Abort() // 终止后续调用
