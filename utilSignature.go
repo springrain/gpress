@@ -43,28 +43,54 @@ func verifySecp256k1Signature(chainAddress string, msg string, signature string)
 	}
 	// 计算消息的哈希,包括 MetaMask 的消息前缀
 	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(msg), msg)
-	messageBytes := []byte(prefix)
-	messageHash := keccak256Hash(messageBytes)
+	messageHash := keccak256Hash([]byte(prefix))
 	r, s, v := signatureBytes[:32], signatureBytes[32:64], signatureBytes[64]
-	sig, err := hex.DecodeString(fmt.Sprintf("%x%x%x", v, r, s))
+	sign, err := hex.DecodeString(fmt.Sprintf("%x%x%x", v, r, s))
 	if err != nil {
 		return false, err
 	}
-	hash, err := hex.DecodeString(fmt.Sprintf("%x", messageHash))
+	//fmt.Println("verifySecp256k1Signature-r:", hex.EncodeToString(r))
+	//fmt.Println("verifySecp256k1Signature-s:", hex.EncodeToString(s))
+	dcrdPublicKey, _, err := dcrdEcdsa.RecoverCompact(sign, messageHash)
 	if err != nil {
 		return false, err
 	}
-	dcrdPublicKey, _, err := dcrdEcdsa.RecoverCompact(sig, hash)
-	if err != nil {
-		return false, err
-	}
+	//fmt.Println("verifySecp256k1Signature-x:", hex.EncodeToString(dcrdPublicKey.X().Bytes()))
+	//fmt.Println("verifySecp256k1Signature-y:", hex.EncodeToString(dcrdPublicKey.Y().Bytes()))
 	pubKeyBytes := dcrdPublicKey.SerializeUncompressed()[1:]
-	pubKeyHash := keccak256Hash(pubKeyBytes)
+	addressHash := keccak256Hash(pubKeyBytes)
 	address := ""
-	if len(pubKeyHash) > 20 {
-		address = fmt.Sprintf("0x%x", pubKeyHash[len(pubKeyHash)-20:])
+	if len(addressHash) > 20 {
+		address = fmt.Sprintf("0x%x", addressHash[len(addressHash)-20:])
 	}
 	return strings.EqualFold(address, chainAddress), nil
+}
+
+// verifySecp256r1Signature XuperChain使用NIST标准的公钥,验证签名
+func verifySecp256r1Signature(chainAddress string, msg string, signature string) (valid bool, err error) {
+	signatureBytes, err := fromHex(signature)
+	if err != nil {
+		return false, err
+	}
+	if len(signatureBytes) < 65 {
+		return false, errors.New("invalid signature")
+	}
+	// 计算消息的哈希,包括消息前缀
+	prefix := fmt.Sprintf("\x86XuperChain Signed Message:\n%d%s", len(msg), msg)
+	messageHash := keccak256Hash([]byte(prefix))
+	r := new(big.Int).SetBytes(signatureBytes[:32])
+	s := new(big.Int).SetBytes(signatureBytes[32:64])
+	v := signatureBytes[64]
+	publicKey, err := recoverPublicKey(messageHash, r, s, v)
+	if err != nil {
+		return false, err
+	}
+	verifyAddress, _ := verifyAddressUsingPublicKey(chainAddress, publicKey)
+	if !verifyAddress {
+		return false, errors.New(funcT("The public key in the signature does not match the address"))
+	}
+
+	return true, nil
 }
 
 // fromHex 将16进制字符串解码为字节数组
@@ -83,41 +109,6 @@ func keccak256Hash(data []byte) []byte {
 	d := sha3.NewLegacyKeccak256()
 	d.Write(data)
 	return d.Sum(nil)
-}
-
-// verifySecp256r1Signature XuperChain使用NIST标准的公钥,验证签名
-func verifySecp256r1Signature(chainAddress string, msg string, signature string) (valid bool, err error) {
-	signatureByte, e := hex.DecodeString(signature)
-	if e != nil {
-		return false, err
-	}
-
-	r := new(big.Int).SetBytes(signatureByte[:32])
-	s := new(big.Int).SetBytes(signatureByte[32:64])
-	publicKeyX := new(big.Int).SetBytes(signatureByte[64:96])
-	publicKeyY := new(big.Int).SetBytes(signatureByte[96:128])
-	data := signatureByte[128:]
-	//h := sha512.New()
-	// 计算消息的哈希,包括消息前缀
-	prefix := fmt.Sprintf("\x86XuperChain Signed Message:\n%d%s", len(msg), msg)
-	prefixHash := keccak256Hash([]byte(prefix))
-	// 将哈希值转换为十六进制字符串
-	hash, err := hex.DecodeString(fmt.Sprintf("%x", prefixHash))
-	if err != nil {
-		return false, err
-	}
-	//hash := h.Sum(nil)
-	if string(hash) != string(data) { //数据Hash不一致
-		return false, errors.New(funcT("Original data hash does not match"))
-	}
-	pub := ecdsa.PublicKey{Curve: elliptic.P256(), X: publicKeyX, Y: publicKeyY}
-	pubKey := &pub
-	verifyAddress, _ := verifyAddressUsingPublicKey(chainAddress, pubKey)
-	if !verifyAddress {
-		return false, errors.New(funcT("The public key in the signature does not match the address"))
-	}
-
-	return ecdsa.Verify(pubKey, data, r, s), nil
 }
 
 /*
@@ -228,4 +219,81 @@ func hashUsingRipemd160(data []byte) []byte {
 	h.Write(data)
 	out := h.Sum(nil)
 	return out
+}
+
+// recoverPublicKey recovers the public key from r, s, v (all in []byte format) and the hash.
+func recoverPublicKey(hash []byte, r *big.Int, s *big.Int, v byte) (*ecdsa.PublicKey, error) {
+	curve := elliptic.P256()
+
+	// The curve order (N)
+	N := curve.Params().N
+
+	// Ensure r and s are valid
+	if r.Sign() <= 0 || r.Cmp(N) >= 0 || s.Sign() <= 0 || s.Cmp(N) >= 0 {
+		return nil, fmt.Errorf("invalid r or s values")
+	}
+
+	// Determine the x-coordinate and y's parity
+	x, _ := recoverX(curve, r, s, hash)
+	// 奇数
+	isOdd := v&1 == 1 // Determine y's parity based on v
+
+	// Calculate the y-coordinate
+	y := calculateY(curve, x, isOdd)
+	if y == nil {
+		return nil, fmt.Errorf("failed to calculate y coordinate")
+	}
+
+	// Create the public key
+	pubKey := ecdsa.PublicKey{Curve: curve, X: x, Y: y}
+
+	// Verify if the recovered public key is correct
+	if ecdsa.Verify(&pubKey, hash, r, s) {
+		return &pubKey, nil
+	}
+	fmt.Println("recoverPublicKey-hash:", hex.EncodeToString(hash))
+	fmt.Println("recoverPublicKey-r:", hex.EncodeToString(r.Bytes()))
+	fmt.Println("recoverPublicKey-s:", hex.EncodeToString(s.Bytes()))
+	fmt.Println("recoverPublicKey-x:", hex.EncodeToString(pubKey.X.Bytes()))
+	fmt.Println("recoverPublicKey-y:", hex.EncodeToString(pubKey.Y.Bytes()))
+	return nil, fmt.Errorf("failed to verify the signature with the recovered public key")
+}
+
+// calculateY calculates the y-coordinate of the curve given x and isOdd.
+func calculateY(curve elliptic.Curve, x *big.Int, isOdd bool) *big.Int {
+	params := curve.Params()
+
+	// y² = x³ - 3x + b (mod p)
+	x3 := new(big.Int).Exp(x, big.NewInt(3), params.P)
+	x3.Sub(x3, new(big.Int).Mul(big.NewInt(3), x))
+	x3.Add(x3, params.B)
+	x3.Mod(x3, params.P)
+
+	// Calculate square root of x³ - 3x + b mod p
+	y := new(big.Int).ModSqrt(x3, params.P)
+	if y == nil {
+		return nil // No valid y found
+	}
+
+	// Ensure the correct parity based on isOdd
+	if y.Bit(0) != 0 == isOdd {
+		y.Sub(params.P, y)
+	}
+	return y
+}
+
+// 计算x坐标的恢复算法
+func recoverX(curve elliptic.Curve, r *big.Int, s *big.Int, hashByte []byte) (*big.Int, error) {
+	// N是椭圆曲线的阶
+	N := curve.Params().N
+	hash := new(big.Int).SetBytes(hashByte)
+	// 计算k的逆
+	kInv := new(big.Int).ModInverse(s, N)
+
+	// 计算k = s^(-1) * (hash + r * d) mod N
+	k := new(big.Int).Mul(kInv, new(big.Int).Add(hash, new(big.Int).Mul(r, kInv)))
+	k.Mod(k, N)
+
+	// 计算恢复的x坐标
+	return r, nil
 }
