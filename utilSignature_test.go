@@ -40,6 +40,7 @@ func TestRecoverP256PublicKey(t *testing.T) {
 
 	//EIP-155 v=35+2×ChainID+recoveryID
 	v := 35 + 2*1 + uint(recoveryID.Int64())
+	// TODO 偶尔会恢复失败,原因待查
 	publicKey, err := recoverP256PublicKey(hash[:], r, s, v)
 	if err != nil {
 		panic(err)
