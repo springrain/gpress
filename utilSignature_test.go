@@ -27,7 +27,7 @@ import (
 	"testing"
 )
 
-func TestRecoverPublicKey(t *testing.T) {
+func TestRecoverP256PublicKey(t *testing.T) {
 	privateKey, _ := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	msg := "hello"
 	hash := keccak256Hash([]byte(msg))
@@ -36,7 +36,7 @@ func TestRecoverPublicKey(t *testing.T) {
 	r, s, _ := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 	// 恢复公钥
 	v := new(big.Int).Mod(privateKey.PublicKey.Y, big.NewInt(2)) // 奇偶性
-	publicKey, err := recoverPublicKey(hash[:], r, s, uint(v.Int64()))
+	publicKey, err := recoverP256PublicKey(hash[:], r, s, uint(v.Int64()))
 	if err != nil {
 		panic(err)
 	}
