@@ -27,6 +27,31 @@ import (
 	"testing"
 )
 
+func TestRecoverPublicKey(t *testing.T) {
+	privateKey, _ := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	msg := "hello"
+	hash := keccak256Hash([]byte(msg))
+
+	// 签名（强制添加恢复ID）
+	r, s, _ := ecdsa.Sign(rand.Reader, privateKey, hash[:])
+	// 恢复公钥
+	v := new(big.Int).Mod(privateKey.PublicKey.Y, big.NewInt(2)) // 奇偶性
+	publicKey, err := recoverPublicKey(hash[:], r, s, uint(v.Int64()))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(hex.EncodeToString(publicKey.X.Bytes()))
+	fmt.Println(hex.EncodeToString(privateKey.PublicKey.X.Bytes()))
+
+	// 比较恢复的公钥与原始公钥
+	if publicKey.X.Cmp(privateKey.PublicKey.X) != 0 || publicKey.Y.Cmp(privateKey.PublicKey.Y) != 0 {
+		t.Error("恢复失败")
+	} else {
+		fmt.Println("恢复成功")
+	}
+
+}
 func TestVerifySecp256r1Signature(t *testing.T) {
 	// Example message to sign
 	msg := "123"
@@ -51,14 +76,13 @@ func TestVerifySecp256r1Signature(t *testing.T) {
 	// Output the message and signature
 	fmt.Println("Signature:", signature)
 
-	ok, err := verifySecp256r1Signature("", msg, signature)
+	ok, _, err := verifySecp256r1Signature(msg, signature)
 	fmt.Println(ok)
 	if err != nil {
 		t.Error(err)
 	}
 
 }
-
 func TestVerifySecp256k1Signature(t *testing.T) {
 	address := "0xbe153AE90F5f114EF48A0e4279c565Be726302F6"
 	sign := "0x812a04f34f988692682412010dee232f7b09e4ce96a6a3a4c5a37373db008312213f882c2248cbfbdf16b75ec595aeb75c4f7fd743e5b061bcdac1cd6e1e64931b"
