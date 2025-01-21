@@ -230,11 +230,12 @@ func hashUsingRipemd160(data []byte) []byte {
 }
 
 // recoverP256PublicKey 根据签名的r,s,v恢复P256的公钥
-func recoverP256PublicKey(hash []byte, r *big.Int, s *big.Int, recoveryID uint) (*ecdsa.PublicKey, error) {
+func recoverP256PublicKey(hash []byte, r *big.Int, s *big.Int, v uint) (*ecdsa.PublicKey, error) {
 	curve := elliptic.P256()
 	params := curve.Params()
-	recoveryID = recoveryID % 2
-	//recoveryID := (uint(v) + 1) % 2
+
+	//v和recoveryID的奇偶性是相反的
+	recoveryID := (v + 1) % 2
 
 	// 检查r和s范围
 	if r.Sign() <= 0 || s.Sign() <= 0 || r.Cmp(params.N) >= 0 || s.Cmp(params.N) >= 0 {
