@@ -34,9 +34,13 @@ func TestRecoverP256PublicKey(t *testing.T) {
 
 	// 签名（强制添加恢复ID）
 	r, s, _ := ecdsa.Sign(rand.Reader, privateKey, hash[:])
+
 	// 恢复公钥
-	v := new(big.Int).Mod(privateKey.PublicKey.Y, big.NewInt(2)) // 奇偶性
-	publicKey, err := recoverP256PublicKey(hash[:], r, s, uint(v.Int64()))
+	recoveryID := new(big.Int).Mod(privateKey.PublicKey.Y, big.NewInt(2)) // 奇偶性
+
+	//EIP-155 v=35+2×ChainID+recoveryID
+	v := 35 + 2*1 + uint(recoveryID.Int64())
+	publicKey, err := recoverP256PublicKey(hash[:], r, s, v)
 	if err != nil {
 		panic(err)
 	}
