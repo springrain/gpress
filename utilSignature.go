@@ -66,7 +66,7 @@ func verifySecp256k1Signature(chainAddress string, msg string, signature string)
 func verifyXuperChainSignature(chainAddress string, msg string, signature string) (valid bool, err error) {
 
 	verify, publicKey, err := verifySecp256r1Signature(msg, signature)
-	if verify == false || err != nil {
+	if !verify || err != nil {
 		return false, err
 	}
 	// 验证XuperChain的address
@@ -78,6 +78,7 @@ func verifyXuperChainSignature(chainAddress string, msg string, signature string
 	return true, nil
 }
 
+// verifySecp256r1Signature 验证secp256r1的签名
 func verifySecp256r1Signature(msg string, signature string) (bool, *ecdsa.PublicKey, error) {
 	signatureBytes, err := fromHex(signature)
 	if err != nil {
@@ -92,7 +93,7 @@ func verifySecp256r1Signature(msg string, signature string) (bool, *ecdsa.Public
 	r := new(big.Int).SetBytes(signatureBytes[:32])
 	s := new(big.Int).SetBytes(signatureBytes[32:64])
 	v := signatureBytes[64]
-	publicKey, err := recoverPublicKey(messageHash, r, s, uint(v))
+	publicKey, err := recoverP256PublicKey(messageHash, r, s, uint(v))
 	if err != nil {
 		return false, publicKey, err
 	}
@@ -228,9 +229,8 @@ func hashUsingRipemd160(data []byte) []byte {
 	return out
 }
 
-// TODO 不稳定,恢复的公钥有可能验签失败
-// recoverPublicKey recovers the public key from r, s, v (all in []byte format) and the hash.
-func recoverPublicKey(hash []byte, r *big.Int, s *big.Int, recoveryID uint) (*ecdsa.PublicKey, error) {
+// recoverP256PublicKey 根据签名的r,s,v恢复P256的公钥
+func recoverP256PublicKey(hash []byte, r *big.Int, s *big.Int, recoveryID uint) (*ecdsa.PublicKey, error) {
 	curve := elliptic.P256()
 	params := curve.Params()
 	recoveryID = recoveryID % 2
