@@ -229,6 +229,7 @@ func hashUsingRipemd160(data []byte) []byte {
 	return out
 }
 
+// TODO 偶尔会恢复失败,原因待查
 // recoverP256PublicKey 根据签名的r,s,v恢复P256的公钥
 func recoverP256PublicKey(hash []byte, r *big.Int, s *big.Int, v uint) (*ecdsa.PublicKey, error) {
 	curve := elliptic.P256()
