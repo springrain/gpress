@@ -219,3 +219,10 @@ Site information, such as title, logo, keywords, description, etc.
 | createUser  | string      | Creator       | -       |  Initialization system          |
 | sortNo      | int         | Sort Order         | -       |  Ascending                   |
 | status      | int         | Status     | -       |  Link Access (0), Public (1), Top (2), Private (3)  |
+
+#### Copyright and Software Copyright Description
+* The software copyright registration number of this gpress is 2025SR0120223
+* The software copyright of this gpress is owned by us, and secondary software copyright applications are prohibited. Infringement will be prosecuted
+* The copyright of programs developed by developers using gpress belongs to the developers
+* Please retain the copyright without any other restrictions. That is to say, you must include the original license agreement statement in your distribution, whether you distribute it in binary or source code form
+* The open-source version is released under the AGPL-3.0 open-source license and is provided for free use, but it is not allowed to release and sell modified and derivative code as closed-source commercial software!
