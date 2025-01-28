@@ -22,7 +22,6 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"runtime"
 
 	"gitee.com/chunanyong/zorm"
 
@@ -49,20 +48,13 @@ func checkSQLiteStatus() bool {
 		FuncLogError(nil, fmt.Errorf(funcT("Please confirm if [%s] needs to be manually renamed to [gpress.db]. If not, please manually delete [%s]"), failDB, failDB))
 		return false
 	}
-	defaultFtsFile := datadir + "fts5/libsimple"
 
-	//CPU架构
-	goarch := runtime.GOARCH
-
-	ftsFile := defaultFtsFile + "-" + goarch
-	if !pathExist(ftsFile) { //文件不存在,使用默认的地址
-		ftsFile = defaultFtsFile
-	}
+	fts5File := datadir + "fts5/libsimple"
 	//注册fts5的simple分词器,建议使用jieba分词
 	//需要  --tags "fts5"
 	sql.Register("sqlite3_simple", &sqlite3.SQLiteDriver{
 		Extensions: []string{
-			ftsFile, //不要加后缀,它会自己处理,这样代码也统一
+			fts5File, //不要加后缀,它会自己处理,这样代码也统一
 		},
 	})
 
