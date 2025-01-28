@@ -13,7 +13,7 @@ Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度
 <img src="gpressdatadir/public/index.png" width="600px">
 
 ## 开发环境  
-gprss使用了 ```https://github.com/wangfenjin/simple``` 作为FTS5的全文检索扩展,编译好的libsimple文件放到 ```gpressdatadir/fts5``` 目录下,如果gpress启动报错连不上数据库,请检查libsimple文件是否正确,如果需要重新编译libsimple,请参考 https://github.com/wangfenjin/simple.  
+gpress使用了 ```https://github.com/wangfenjin/simple``` 作为FTS5的全文检索扩展,编译好的libsimple文件放到 ```gpressdatadir/fts5``` 目录下,如果gpress启动报错连不上数据库,请检查libsimple文件是否正确,如果需要重新编译libsimple,请参考 https://github.com/wangfenjin/simple.  
 
 默认端口660,后台管理地址 http://127.0.0.1:660/admin/login    
 需要先解压```gpressdatadir/dict.zip```      
@@ -22,7 +22,7 @@ gprss使用了 ```https://github.com/wangfenjin/simple``` 作为FTS5的全文检
 
 开发环境需要配置CGO编译,设置```set CGO_ENABLED=1```,下载[mingw64](https://github.com/niXman/mingw-builds-binaries/releases)和[cmake](https://cmake.org/download/),并把bin配置到环境变量,注意把```mingw64/bin/mingw32-make.exe``` 改名为 ```make.exe```  
 注意修改vscode的launch.json,增加 ``` ,"buildFlags": "--tags=fts5" ``` 用于调试fts5    
-test需要手动测试:``` go test -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress ```  
+test需要手动测试:``` go test -v -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress ```  
 打包: ``` go build --tags "fts5" -ldflags "-w -s" ```   
 重新编译simple时,建议使用```https://github.com/wangfenjin/simple```编译好的.  
 注意修改widnows编译脚本,去掉 mingw64 编译依赖的```libgcc_s_seh-1.dll```和```libstdc++-6.dll```,同时关闭```BUILD_TEST_EXAMPLE```,有冲突
