@@ -23,7 +23,7 @@ Package: ```go build --tags "fts5" -ldflags "-w -s"```.
 
 The development environment requires CGO compilation configuration. Set ```set CGO_ENABLED=1```, download [mingw64](https://github.com/niXman/mingw-builds-binaries/releases) and [cmake](https://cmake.org/download/), and configure the bin to the environment variables. Note to rename ```mingw64/bin/mingw32-make.exe``` to ```make.exe```.  
 Modify vscode's launch.json to add ``` ,"buildFlags": "--tags=fts5" ``` for debugging fts5.  
-Test needs to be done manually: ```go test -timeout 30s --tags "fts5" -run ^TestReadmks$ gitee.com/gpress/gpress```.  
+Test needs to be done manually: ```go test -v -timeout 30s --tags "fts5" -run ^TestReadmks$ gitee.com/gpress/gpress```.  
 Package: ```go build --tags "fts5" -ldflags "-w -s"```.  
 When recompiling simple, it is recommended to use the precompiled version from ```https://github.com/wangfenjin/simple```.  
 Note to modify the Windows compilation script, remove the ```libgcc_s_seh-1.dll``` and ```libstdc++-6.dll``` dependencies for mingw64 compilation, and turn off ```BUILD_TEST_EXAMPLE``` as there are conflicts.  
