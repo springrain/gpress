@@ -106,8 +106,9 @@
 				$.ajax({
 					url:basePath+"admin/updatesql",
 					type:"POST",
+					contentType: "application/json;charset=utf-8",
 					dataType:"json",
-			        data:{"updateSQL":value},
+			        data:JSON.stringify({"updateSQL":value}),
 					error: function (result) {
 						layer.msg('{{T "SQL execution failed!"}}'+result.responseJSON.message);
 					},
@@ -118,7 +119,7 @@
 							layer.close(index);
 							layer.msg('{{T "SQL executed successfully!"}}'+result.message);
 						}else{
-							layer.msg('{{T "SQL execution failed!"}}'+result.message);
+							layer.msg('{{T "SQL execution failed!"}}'+result.responseJSON.message);
 						}
 					}
 				});
