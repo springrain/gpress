@@ -323,11 +323,13 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 	}
 	dirPath = filepath.ToSlash(dirPath)
 	dirPath = funcTrimSlash(dirPath)
+	fileName := FuncGenerateStringID() + filepath.Ext(fileHeader.Filename)
 	if dirPath == "/" {
 		dirPath = ""
 	}
 	if dirPath != "" {
 		dirPath = dirPath + "/"
+		fileName = fileHeader.Filename
 	}
 	//服务器的目录,并创建目录
 	serverDirPath := datadir + "public/upload/" + dirPath
@@ -337,7 +339,7 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
-	path := "public/upload/" + dirPath + zorm.FuncGenerateStringID(ctx) + filepath.Ext(fileHeader.Filename)
+	path := "public/upload/" + dirPath + fileName
 	newFileName := datadir + path
 	err = c.SaveUploadedFile(fileHeader, newFileName)
 	if err != nil {
