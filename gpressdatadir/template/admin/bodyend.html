@@ -15,6 +15,7 @@ layui.use(function () {
   //选中菜单状态
   $("li[name='layui-nav-tree-left-ul-li']").each(function(i, li) {
     var href = $("a",$(li)).attr("href");
+    href=href.substring(0, href.indexOf("?"))
     href=href.substring(0, href.lastIndexOf("/"))
     if (uri==href){
         $(li).addClass("layui-this");
