@@ -134,7 +134,7 @@ Reads ```gpressdatadir/install_config.json``` during installation.
 | createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
 | updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
 | createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Ascending  |
+| sortNo      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### User (Table Name: user)
@@ -149,7 +149,7 @@ There is only one user in the backend.
 | createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
 | updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
 | createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Ascending  |
+| sortNo      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### Site Information (Table Name:site)
@@ -170,7 +170,7 @@ Site information, such as title, logo, keywords, description, etc.
 | createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
 | updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
 | createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Ascending  |
+| sortNo      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### Navigation Menu (Table Name: category)
@@ -188,7 +188,7 @@ Site information, such as title, logo, keywords, description, etc.
 | createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
 | updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
 | createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Ascending  |
+| sortNo      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### Content (Table Name: content)
@@ -204,8 +204,8 @@ Site information, such as title, logo, keywords, description, etc.
 | tag         | string      | Tags         | Yes      |      Uses jieba tokenizer  |
 | toc         | string      | Table of Contents         | Yes      |      Uses jieba tokenizer  |
 | summary     | string      | Summary         | Yes      |      Uses jieba tokenizer  |
-| categoryName| string      | Navigation Menu, separated by comma (,)| Yes| Uses jieba tokenizer.      |
-| categoryID  | string      | Navigation ID       | No      | -                       |
+| categoryName| string      | Navigation Menu | Yes       | Uses jieba tokenizer |
+| categoryID  | string      | Navigation ID       | No      | -               |
 | templateFile| string      | Template File     | No      | Template                    |
 | content     | string      | Content     | No      |                         |
 | markdown    | string      | Markdown Content | No      |                         |
@@ -217,7 +217,7 @@ Site information, such as title, logo, keywords, description, etc.
 | createTime  | string      | Creation Time     | -       |  2006-01-02 15:04:05    |
 | updateTime  | string      | Update Time     | -       |  2006-01-02 15:04:05    |
 | createUser  | string      | Creator       | -       |  Initialization system          |
-| sortNo      | int         | Sort Order         | -       |  Ascending                   |
+| sortNo      | int         | Sort Order         | -       |  Descending                   |
 | status      | int         | Status     | -       |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ## Copyright and Software Copyright Description
