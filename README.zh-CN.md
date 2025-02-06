@@ -132,7 +132,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  正序  |
+| sortNo      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 用户(表名:user)
@@ -147,7 +147,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  正序  |
+| sortNo      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 站点信息(表名:site)
@@ -168,7 +168,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  正序  |
+| sortNo      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 导航菜单(表名:category)
@@ -186,7 +186,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
 | createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  正序  |
+| sortNo      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 文章内容(表名:content)
@@ -202,7 +202,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | tag         | string      | 标签         | 是      |      使用 jieba 分词器  |
 | toc         | string      | 目录         | 是      |      使用 jieba 分词器  |
 | summary     | string      | 摘要         | 是      |      使用 jieba 分词器  |
-| categoryName| string      | 导航菜单,逗号(,)隔开| 是| 使用 jieba 分词器.      |
+| categoryName| string      | 导航菜单     | 是      |      使用 jieba 分词器  |
 | categoryID  | string      | 导航ID       | 否      | -                       |
 | templateFile| string      | 模板文件     | 否      | 模板                    |
 | content     | string      | 文章内容     | 否      |                         |
@@ -215,7 +215,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | createTime  | string      | 创建时间     | -       |  2006-01-02 15:04:05    |
 | updateTime  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
 | createUser  | string      | 创建人       | -       |  初始化 system          |
-| sortNo      | int         | 排序         | -       |  正序                   |
+| sortNo      | int         | 排序         | -       |  倒序                   |
 | status      | int         | 状态     | -       |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ## 版权软著说明
