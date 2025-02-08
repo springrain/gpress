@@ -35,8 +35,8 @@ var dbDaoConfig = zorm.DataSourceConfig{
 	DSN:                   sqliteDBfile,
 	DriverName:            "sqlite3_simple", // 使用simple分词器会注册这个驱动名
 	Dialect:               "sqlite",
-	MaxOpenConns:          50,
-	MaxIdleConns:          50,
+	MaxOpenConns:          1,
+	MaxIdleConns:          1,
 	ConnMaxLifetimeSecond: 600,
 	SlowSQLMillis:         -1,
 }
