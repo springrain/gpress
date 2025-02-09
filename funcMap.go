@@ -274,6 +274,7 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 	var selectOneData interface{}
 	finder := zorm.NewFinder().Append("SELECT")
 	finder.Append(sql, values...)
+	finder.SelectTotalCount = false
 
 	page := zorm.NewPage()
 	page.PageSize = 1
