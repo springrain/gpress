@@ -1,6 +1,6 @@
 module gitee.com/gpress/gpress
 
-go 1.23
+go 1.24
 
 require (
 	gitee.com/chunanyong/zorm v1.7.7
