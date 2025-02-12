@@ -25,7 +25,8 @@ gpress使用了 ```https://github.com/wangfenjin/simple``` 作为FTS5的全文�
 test需要手动测试:``` go test -v -timeout 30s --tags "fts5"  -run ^TestReadmks$ gitee.com/gpress/gpress ```  
 打包: ``` go build --tags "fts5" -ldflags "-w -s" ```   
 重新编译simple时,建议使用```https://github.com/wangfenjin/simple```编译好的.  
-注意修改widnows编译脚本,去掉 mingw64 编译依赖的```libgcc_s_seh-1.dll```和```libstdc++-6.dll```,同时关闭```BUILD_TEST_EXAMPLE```,有冲突
+注意修改widnows编译脚本,去掉 mingw64 编译依赖的```libgcc_s_seh-1.dll```和```libstdc++-6.dll```,同时关闭```BUILD_TEST_EXAMPLE```,有冲突.  
+注意: windows 打包之后,需要把 minragdatadir/libgcc_s_seh-1.dll 复制到minrag.exe同一个目录,兼容windows的gcc库  
 ```bat
 rmdir /q /s build
 mkdir build && cd build
