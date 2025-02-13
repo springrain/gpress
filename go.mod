@@ -3,7 +3,7 @@ module gitee.com/gpress/gpress
 go 1.24
 
 require (
-	gitee.com/chunanyong/zorm v1.7.7
+	gitee.com/chunanyong/zorm v1.7.8
 	github.com/alecthomas/chroma/v2 v2.15.0
 	github.com/cloudwego/hertz v0.9.5
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0
