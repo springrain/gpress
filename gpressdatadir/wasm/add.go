@@ -17,9 +17,13 @@
 
 package main
 
-//编译wasm命令: tinygo build -o add.wasm -scheduler=none --no-debug -target=wasi .
+//tinygo编译wasm命令: tinygo build -o add.wasm -scheduler=none --no-debug -target=wasi .
+// 使用 tinygo  go:export add
 
-//go:export add
+// go 1.24+ 编译wasm命令: GOOS=wasip1 GOARCH=wasm go build -buildmode=c-shared -o add.wasm
+// go 1.24+ windwos编译wasm命令: set GOOS=wasip1&&set GOARCH=wasm&&go build -buildmode=c-shared -o add.wasm
+
+//go:wasmexport add
 func add(x, y uint32) uint32 {
 	return x + y
 }
