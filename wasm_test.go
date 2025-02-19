@@ -43,11 +43,17 @@ func TestWasmAdd(t *testing.T) {
 	// implement `panic`.
 	wasi_snapshot_preview1.MustInstantiate(ctx, r)
 
-	mod, err := r.Instantiate(ctx, bytes)
+	// go 1.24 配置初始化函数
+	config := wazero.NewModuleConfig().WithStartFunctions("_initialize")
+	mod, err := r.InstantiateWithConfig(ctx, bytes, config)
+
+	// tinygo
+	//mod, err := r.Instantiate(ctx, bytes)
 	if err != nil {
 		t.Error(err)
 	}
 	res, err := mod.ExportedFunction("add").Call(ctx, 100, 200)
+	//res, err := mod.ExportedFunction("add").Call(ctx, api.EncodeI32(100), api.EncodeI32(200))
 	if err != nil {
 		t.Error(err)
 	}
