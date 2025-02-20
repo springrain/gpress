@@ -323,25 +323,26 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 	}
 	dirPath = filepath.ToSlash(dirPath)
 	dirPath = funcTrimSlash(dirPath)
-	fileName := FuncGenerateStringID() + filepath.Ext(fileHeader.Filename)
 	if dirPath == "/" {
 		dirPath = ""
 	}
+
+	fileName := FuncGenerateStringID() + filepath.Ext(fileHeader.Filename)
 	if dirPath != "" {
 		dirPath = dirPath + "/"
 		fileName = fileHeader.Filename
 	}
 	//服务器的目录,并创建目录
 	serverDirPath := datadir + "public/upload/" + dirPath
-	err = os.MkdirAll(serverDirPath, 0600)
+	err = os.MkdirAll(serverDirPath, 0755) //目录需要是755权限,才能正常读取
 	if err != nil && !os.IsExist(err) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 		c.Abort() // 终止后续调用
 		return
 	}
 	path := "public/upload/" + dirPath + fileName
-	newFileName := datadir + path
-	err = c.SaveUploadedFile(fileHeader, newFileName)
+	newFilePath := datadir + path
+	err = c.SaveUploadedFile(fileHeader, newFilePath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 		c.Abort() // 终止后续调用
