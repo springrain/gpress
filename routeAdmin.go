@@ -334,7 +334,7 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 	}
 	//服务器的目录,并创建目录
 	serverDirPath := datadir + "public/upload/" + dirPath
-	err = os.MkdirAll(serverDirPath, 0755) //目录需要是755权限,才能正常读取
+	err = os.MkdirAll(serverDirPath, 0755) //目录需要是755权限,才能正常读取,上传的文件默认是644
 	if err != nil && !os.IsExist(err) {
 		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
 		c.Abort() // 终止后续调用
