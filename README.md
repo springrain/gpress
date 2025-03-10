@@ -110,8 +110,6 @@ location / {
 ## Backend Management Supports English
 The gpress backend management currently supports both Chinese and English, with the capability to extend to other languages. Language files are located in ```gpressdatadir/locales```. By default, the system uses Chinese (```zh-CN```) upon initial installation. If English is preferred, you can modify the ```"locale":"zh-CN"``` to ```"locale":"en-US"``` in the ```gpressdatadir/install_config.json``` file before installation. Alternatively, after successful installation, you can change the ```Language``` setting to ```English``` in the ```Settings``` and restart the system to apply the changes.
 
-## Alibaba Cloud Computing Nest  
-[Click to deploy gpress to Alibaba Cloud Computing Nest](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe), or you can purchase the lowest configuration Alibaba Cloud server separately for deployment. Choose ```Zhangjiakou Data Center```, specification ```ecs.t6-c4m1.large```, configuration ```2-core CPU 0.5G memory 20G efficient cloud disk RockyLinux9 pay-by-traffic-bandwidth peak 80M```, costing 100 yuan per year, around 200 yuan for five years.     
 
 ## Table Structure  
 ID defaults to timestamp (23 digits) + random number (9 digits), globally unique.  
