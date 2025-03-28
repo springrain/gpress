@@ -32,6 +32,8 @@ import (
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer"
+	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 	"go.abhg.dev/goldmark/mermaid"
@@ -62,6 +64,7 @@ func init() {
 			emoji.Emoji,        // emoji表情
 			initHighlighting(), // 代码高亮
 			&mermaid.Extender{MermaidURL: funcBasePath() + "js/mermaid.min.js"}, // mermaid流程图,不使用cdn的js
+			&videoExtension{}, //video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
@@ -291,4 +294,139 @@ const preEnd = "</code></pre>"
 func (p *preWrapper) End(code bool) string {
 	//p.high = p.writeCounter.counter
 	return preEnd
+}
+
+// 自定义Video标签解析
+type Video struct {
+	ast.BaseInline
+	Title []byte
+	URL   []byte
+}
+
+func (n *Video) Dump(source []byte, level int) {
+	// 可选的调试方法
+}
+
+// 实现 ast.Node 接口
+var KindVideo = ast.NewNodeKind("Video")
+
+func (n *Video) Kind() ast.NodeKind {
+	return KindVideo
+}
+
+type videoParser struct{}
+
+func newVideoParser() parser.InlineParser {
+	return &videoParser{}
+}
+
+func (s *videoParser) Trigger() []byte {
+	return []byte{'!'} // 检测以 '!' 开头的文本
+}
+
+func (s *videoParser) Parse(parent ast.Node, block text.Reader, pc parser.Context) ast.Node {
+	line, _ := block.PeekLine()
+	if len(line) < 7 || string(line[0:6]) != "!video" {
+		return nil // 不是 !video 语法
+	}
+	block.Advance(6) // 跳过 "!video"
+
+	// 解析标题 [title]
+	title, ok := parseDelimitedContent(block, '[', ']')
+	if !ok {
+		return nil
+	}
+
+	// 解析 URL (url)
+	url, ok := parseDelimitedContent(block, '(', ')')
+	if !ok {
+		return nil
+	}
+	// 创建 Video 节点
+	return &Video{
+		Title: title,
+		URL:   url,
+	}
+}
+
+// FindClosureOptions 配置（根据旧参数 false, false 设置）
+var (
+	noNestingOptions = text.FindClosureOptions{ // 不允许嵌套
+		Nesting: false,
+		Newline: true, // 支持跨行查找
+	}
+)
+
+// parseDelimitedContent 通用函数：解析类似 [content] 或 (content) 的语法
+// opener: 起始字符（如 '[', '('）
+// closure: 闭合字符（如 ']', ')'）
+func parseDelimitedContent(block text.Reader, opener, closer byte) ([]byte, bool) {
+	line, _ := block.PeekLine()
+	if len(line) == 0 || line[0] != opener {
+		return nil, false
+	}
+	block.Advance(1) // 跳过起始符（如 '[' 或 '('）
+	// 查找闭合符
+	segments, found := block.FindClosure(opener, closer, noNestingOptions)
+	if !found || segments.Len() == 0 {
+		return nil, false
+	}
+	// 计算闭合符的绝对位置
+	lastSegment := segments.At(segments.Len() - 1)
+	content := block.Value(lastSegment)
+	block.Advance(lastSegment.Len() + 1)
+	return content, true
+}
+
+type VideoHTMLRenderer struct {
+	html.Config
+}
+
+func newVideoHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
+	r := &VideoHTMLRenderer{
+		Config: html.NewConfig(),
+	}
+	for _, opt := range opts {
+		opt.SetHTMLOption(&r.Config)
+	}
+	return r
+}
+
+func (r *VideoHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
+	reg.Register(KindVideo, r.renderVideo)
+}
+
+func (r *VideoHTMLRenderer) renderVideo(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
+	if !entering {
+		return ast.WalkContinue, nil
+	}
+
+	n := node.(*Video)
+	title := string(n.Title)
+	url := string(n.URL)
+
+	// 生成 HTML
+	_, _ = w.WriteString(`<video controls="controls" src="`)
+	_, _ = w.Write(util.EscapeHTML(util.URLEscape([]byte(url), true)))
+	_, _ = w.WriteString(`">`)
+	_, _ = w.Write(util.EscapeHTML([]byte(title)))
+	_, _ = w.WriteString(`</video>`)
+
+	return ast.WalkContinue, nil
+}
+
+// videoExtension video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
+type videoExtension struct{}
+
+func (e *videoExtension) Extend(m goldmark.Markdown) {
+	m.Parser().AddOptions(
+		parser.WithInlineParsers(
+			util.Prioritized(newVideoParser(), 100), // 高优先级
+		),
+	)
+	m.Renderer().AddOptions(
+		renderer.WithNodeRenderers(
+			util.Prioritized(newVideoHTMLRenderer(), 100),
+		),
+	)
 }
