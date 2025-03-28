@@ -64,7 +64,8 @@ func init() {
 			emoji.Emoji,        // emoji表情
 			initHighlighting(), // 代码高亮
 			&mermaid.Extender{MermaidURL: funcBasePath() + "js/mermaid.min.js"}, // mermaid流程图,不使用cdn的js
-			&videoExtension{}, //video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
+			&mediaExtension{MediaType: "video"},                                 //video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
+			&mediaExtension{MediaType: "audio"},
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
@@ -296,40 +297,38 @@ func (p *preWrapper) End(code bool) string {
 	return preEnd
 }
 
-// 自定义Video标签解析
-type Video struct {
+// 自定义Media标签解析
+type Media struct {
 	ast.BaseInline
-	Title []byte
-	URL   []byte
+	MediaType string
+	NodeKind  ast.NodeKind
+	Title     []byte
+	URL       []byte
 }
 
-func (n *Video) Dump(source []byte, level int) {
+func (n *Media) Dump(source []byte, level int) {
 	// 可选的调试方法
 }
 
-// 实现 ast.Node 接口
-var KindVideo = ast.NewNodeKind("Video")
-
-func (n *Video) Kind() ast.NodeKind {
-	return KindVideo
+func (n *Media) Kind() ast.NodeKind {
+	return n.NodeKind
 }
 
-type videoParser struct{}
-
-func newVideoParser() parser.InlineParser {
-	return &videoParser{}
+type mediaParser struct {
+	MediaType string
+	NodeKind  ast.NodeKind
 }
 
-func (s *videoParser) Trigger() []byte {
+func (s *mediaParser) Trigger() []byte {
 	return []byte{'!'} // 检测以 '!' 开头的文本
 }
 
-func (s *videoParser) Parse(parent ast.Node, block text.Reader, pc parser.Context) ast.Node {
+func (s *mediaParser) Parse(parent ast.Node, block text.Reader, pc parser.Context) ast.Node {
 	line, _ := block.PeekLine()
-	if len(line) < 7 || string(line[0:6]) != "!video" {
+	if len(line) < len(s.MediaType)+2 || string(line[0:len(s.MediaType)+1]) != ("!"+s.MediaType) {
 		return nil // 不是 !video 语法
 	}
-	block.Advance(6) // 跳过 "!video"
+	block.Advance(len(s.MediaType) + 1) // 跳过 "!video"
 
 	// 解析标题 [title]
 	title, ok := parseDelimitedContent(block, '[', ']')
@@ -343,9 +342,11 @@ func (s *videoParser) Parse(parent ast.Node, block text.Reader, pc parser.Contex
 		return nil
 	}
 	// 创建 Video 节点
-	return &Video{
-		Title: title,
-		URL:   url,
+	return &Media{
+		MediaType: s.MediaType,
+		NodeKind:  s.NodeKind,
+		Title:     title,
+		URL:       url,
 	}
 }
 
@@ -378,13 +379,17 @@ func parseDelimitedContent(block text.Reader, opener, closer byte) ([]byte, bool
 	return content, true
 }
 
-type VideoHTMLRenderer struct {
+type mediaHTMLRenderer struct {
+	MediaType string
+	NodeKind  ast.NodeKind
 	html.Config
 }
 
-func newVideoHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
-	r := &VideoHTMLRenderer{
-		Config: html.NewConfig(),
+func newMediaHTMLRenderer(mediaType string, nodeKind ast.NodeKind, opts ...html.Option) renderer.NodeRenderer {
+	r := &mediaHTMLRenderer{
+		MediaType: mediaType,
+		NodeKind:  nodeKind,
+		Config:    html.NewConfig(),
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -392,41 +397,48 @@ func newVideoHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
 	return r
 }
 
-func (r *VideoHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
-	reg.Register(KindVideo, r.renderVideo)
+func (r *mediaHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
+	reg.Register(r.NodeKind, r.renderMedia)
 }
 
-func (r *VideoHTMLRenderer) renderVideo(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
+func (r *mediaHTMLRenderer) renderMedia(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
 	if !entering {
 		return ast.WalkContinue, nil
 	}
 
-	n := node.(*Video)
+	n := node.(*Media)
 	title := string(n.Title)
 	url := string(n.URL)
 
 	// 生成 HTML
-	_, _ = w.WriteString(`<video controls="controls" src="`)
+	_, _ = w.WriteString("<" + n.MediaType)
+	_, _ = w.WriteString(` controls="controls" src="`)
 	_, _ = w.Write(util.EscapeHTML(util.URLEscape([]byte(url), true)))
 	_, _ = w.WriteString(`">`)
 	_, _ = w.Write(util.EscapeHTML([]byte(title)))
-	_, _ = w.WriteString(`</video>`)
+	_, _ = w.WriteString("</" + n.MediaType + ">")
 
 	return ast.WalkContinue, nil
 }
 
-// videoExtension video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
-type videoExtension struct{}
+// mediaExtension video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
+type mediaExtension struct {
+	MediaType string
+	nodeKind  ast.NodeKind
+}
 
-func (e *videoExtension) Extend(m goldmark.Markdown) {
+func (e *mediaExtension) Extend(m goldmark.Markdown) {
+	if e.nodeKind == 0 {
+		e.nodeKind = ast.NewNodeKind(e.MediaType)
+	}
 	m.Parser().AddOptions(
 		parser.WithInlineParsers(
-			util.Prioritized(newVideoParser(), 100), // 高优先级
+			util.Prioritized(&mediaParser{MediaType: e.MediaType, NodeKind: e.nodeKind}, 100), // 高优先级
 		),
 	)
 	m.Renderer().AddOptions(
 		renderer.WithNodeRenderers(
-			util.Prioritized(newVideoHTMLRenderer(), 100),
+			util.Prioritized(newMediaHTMLRenderer(e.MediaType, e.nodeKind), 100),
 		),
 	)
 }
