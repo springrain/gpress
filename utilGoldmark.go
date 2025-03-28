@@ -63,9 +63,9 @@ func init() {
 			//&toc.Extender{},//不能在这里引用toc插件,手动控制
 			emoji.Emoji,        // emoji表情
 			initHighlighting(), // 代码高亮
-			&mermaid.Extender{MermaidURL: funcBasePath() + "js/mermaid.min.js"}, // mermaid流程图,不使用cdn的js
-			&mediaExtension{MediaType: "video"},                                 //video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
-			&mediaExtension{MediaType: "audio"},
+			&mermaid.Extender{MermaidURL: funcBasePath() + "js/mermaid.min.js"},      // mermaid流程图,不使用cdn的js
+			&customExtension{NodeName: "video", NodeTag: `controls="controls" src=`}, //video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
+			&customExtension{NodeName: "audio", NodeTag: `controls="controls" src=`},
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
@@ -297,38 +297,38 @@ func (p *preWrapper) End(code bool) string {
 	return preEnd
 }
 
-// 自定义Media标签解析
-type Media struct {
+// 自定义CustomNode标签解析
+type CustomNode struct {
 	ast.BaseInline
-	MediaType string
-	NodeKind  ast.NodeKind
-	Title     []byte
-	URL       []byte
+	NodeName string
+	NodeKind ast.NodeKind
+	Title    []byte
+	URL      []byte
 }
 
-func (n *Media) Dump(source []byte, level int) {
+func (n *CustomNode) Dump(source []byte, level int) {
 	// 可选的调试方法
 }
 
-func (n *Media) Kind() ast.NodeKind {
+func (n *CustomNode) Kind() ast.NodeKind {
 	return n.NodeKind
 }
 
-type mediaParser struct {
-	MediaType string
-	NodeKind  ast.NodeKind
+type customParser struct {
+	NodeName string
+	NodeKind ast.NodeKind
 }
 
-func (s *mediaParser) Trigger() []byte {
+func (s *customParser) Trigger() []byte {
 	return []byte{'!'} // 检测以 '!' 开头的文本
 }
 
-func (s *mediaParser) Parse(parent ast.Node, block text.Reader, pc parser.Context) ast.Node {
+func (s *customParser) Parse(parent ast.Node, block text.Reader, pc parser.Context) ast.Node {
 	line, _ := block.PeekLine()
-	if len(line) < len(s.MediaType)+2 || string(line[0:len(s.MediaType)+1]) != ("!"+s.MediaType) {
+	if len(line) < len(s.NodeName)+2 || string(line[0:len(s.NodeName)+1]) != ("!"+s.NodeName) {
 		return nil // 不是 !video 语法
 	}
-	block.Advance(len(s.MediaType) + 1) // 跳过 "!video"
+	block.Advance(len(s.NodeName) + 1) // 跳过 "!video"
 
 	// 解析标题 [title]
 	title, ok := parseDelimitedContent(block, '[', ']')
@@ -342,11 +342,11 @@ func (s *mediaParser) Parse(parent ast.Node, block text.Reader, pc parser.Contex
 		return nil
 	}
 	// 创建 Video 节点
-	return &Media{
-		MediaType: s.MediaType,
-		NodeKind:  s.NodeKind,
-		Title:     title,
-		URL:       url,
+	return &CustomNode{
+		NodeName: s.NodeName,
+		NodeKind: s.NodeKind,
+		Title:    title,
+		URL:      url,
 	}
 }
 
@@ -379,17 +379,19 @@ func parseDelimitedContent(block text.Reader, opener, closer byte) ([]byte, bool
 	return content, true
 }
 
-type mediaHTMLRenderer struct {
-	MediaType string
-	NodeKind  ast.NodeKind
+type customHTMLRenderer struct {
+	NodeName string
+	NodeKind ast.NodeKind
+	NodeTag  string
 	html.Config
 }
 
-func newMediaHTMLRenderer(mediaType string, nodeKind ast.NodeKind, opts ...html.Option) renderer.NodeRenderer {
-	r := &mediaHTMLRenderer{
-		MediaType: mediaType,
-		NodeKind:  nodeKind,
-		Config:    html.NewConfig(),
+func newCustomHTMLRenderer(nodeName string, nodeKind ast.NodeKind, nodeTag string, opts ...html.Option) renderer.NodeRenderer {
+	r := &customHTMLRenderer{
+		NodeName: nodeName,
+		NodeKind: nodeKind,
+		NodeTag:  nodeTag,
+		Config:   html.NewConfig(),
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -397,48 +399,50 @@ func newMediaHTMLRenderer(mediaType string, nodeKind ast.NodeKind, opts ...html.
 	return r
 }
 
-func (r *mediaHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
-	reg.Register(r.NodeKind, r.renderMedia)
+func (r *customHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
+	reg.Register(r.NodeKind, r.renderCustomNode)
 }
 
-func (r *mediaHTMLRenderer) renderMedia(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
+func (r *customHTMLRenderer) renderCustomNode(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
 	if !entering {
 		return ast.WalkContinue, nil
 	}
 
-	n := node.(*Media)
+	n := node.(*CustomNode)
 	title := string(n.Title)
 	url := string(n.URL)
 
 	// 生成 HTML
-	_, _ = w.WriteString("<" + n.MediaType)
-	_, _ = w.WriteString(` controls="controls" src="`)
+	_, _ = w.WriteString("<" + n.NodeName + " ")
+	_, _ = w.WriteString(r.NodeTag)
+	_, _ = w.WriteString(`"`)
 	_, _ = w.Write(util.EscapeHTML(util.URLEscape([]byte(url), true)))
 	_, _ = w.WriteString(`">`)
 	_, _ = w.Write(util.EscapeHTML([]byte(title)))
-	_, _ = w.WriteString("</" + n.MediaType + ">")
+	_, _ = w.WriteString("</" + n.NodeName + ">")
 
 	return ast.WalkContinue, nil
 }
 
-// mediaExtension video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
-type mediaExtension struct {
-	MediaType string
-	nodeKind  ast.NodeKind
+// customExtension video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
+type customExtension struct {
+	NodeName string
+	NodeTag  string
+	nodeKind ast.NodeKind
 }
 
-func (e *mediaExtension) Extend(m goldmark.Markdown) {
-	if e.nodeKind == 0 {
-		e.nodeKind = ast.NewNodeKind(e.MediaType)
+func (ce *customExtension) Extend(m goldmark.Markdown) {
+	if ce.nodeKind == 0 {
+		ce.nodeKind = ast.NewNodeKind(ce.NodeName)
 	}
 	m.Parser().AddOptions(
 		parser.WithInlineParsers(
-			util.Prioritized(&mediaParser{MediaType: e.MediaType, NodeKind: e.nodeKind}, 100), // 高优先级
+			util.Prioritized(&customParser{NodeName: ce.NodeName, NodeKind: ce.nodeKind}, 100), // 高优先级
 		),
 	)
 	m.Renderer().AddOptions(
 		renderer.WithNodeRenderers(
-			util.Prioritized(newMediaHTMLRenderer(e.MediaType, e.nodeKind), 100),
+			util.Prioritized(newCustomHTMLRenderer(ce.NodeName, ce.nodeKind, ce.NodeTag), 100),
 		),
 	)
 }
