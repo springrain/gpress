@@ -413,6 +413,7 @@ func (r *customHTMLRenderer) renderCustomNode(w util.BufWriter, source []byte, n
 	url := string(n.URL)
 
 	// 生成 HTML
+	_, _ = w.WriteString("<div class='" + n.NodeName + "_div'>")
 	_, _ = w.WriteString("<" + n.NodeName + " ")
 	_, _ = w.WriteString(r.NodeTag)
 	_, _ = w.WriteString(`"`)
@@ -420,6 +421,7 @@ func (r *customHTMLRenderer) renderCustomNode(w util.BufWriter, source []byte, n
 	_, _ = w.WriteString(`">`)
 	_, _ = w.Write(util.EscapeHTML([]byte(title)))
 	_, _ = w.WriteString("</" + n.NodeName + ">")
+	_, _ = w.WriteString("</div>")
 
 	return ast.WalkContinue, nil
 }
