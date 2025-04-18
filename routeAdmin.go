@@ -775,6 +775,7 @@ func funcSaveCategory(ctx context.Context, c *app.RequestContext) {
 		FuncLogError(ctx, err)
 		return
 	}
+	entity.Id = strings.TrimSpace(entity.Id)
 	now := time.Now().Format("2006-01-02 15:04:05")
 	if entity.CreateTime == "" {
 		entity.CreateTime = now
@@ -823,6 +824,7 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	}
 	now := time.Now().Format("2006-01-02 15:04:05")
 	// 构建ID
+	entity.Id = strings.TrimSpace(entity.Id)
 	entity.Id = entity.CategoryID + entity.Id
 	has := validateIDExists(ctx, entity.Id)
 	if has {
