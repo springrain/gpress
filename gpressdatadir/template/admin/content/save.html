@@ -12,6 +12,7 @@
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.css" />
 <link href="{{basePath}}admin/js/wangeditor/wangeditor5.min.css" rel="stylesheet" />
 <script src="{{basePath}}admin/js/wangeditor/wangeditor5.min.js"></script>
+<script src="{{basePath}}admin/js/pinyin/pinyin-pro.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
 
@@ -24,16 +25,16 @@
 	<form class="layui-form" id="gpress-form" action="{{basePath}}admin/{{.UrlPathParam}}/save" method="POST" onsubmit="return false;" style="height:100%;display: flex;flex-direction: column;">
 		<div class="layui-form-item">
 			<div class="layui-col-md3">
-				<label class="layui-form-label">{{T "Path Identifier"}}</label>
+				<label class="layui-form-label">{{T "Title"}}</label>
 				<div class="layui-input-block">
-					<input type="text" id="id" name="id" placeholder='{{T "Cannot update after saved"}}' lay-verify="required|uri" lay-reqtext='{{T "Please fill in the path identifier"}}' autocomplete="off" class="layui-input" value="" />
+					<input type="text" id="title" name="title" lay-verify="required" lay-reqtext='{{T "Please fill in the content title"}}' autocomplete="off"
+						   class="layui-input" value="">
 				</div>
 			</div>
 			<div class="layui-col-md3">
-				<label class="layui-form-label">{{T "Title"}}</label>
+				<label class="layui-form-label">{{T "Path Identifier"}}</label>
 				<div class="layui-input-block">
-					<input type="text" name="title" lay-verify="required" lay-reqtext='{{T "Please fill in the content title"}}' autocomplete="off"
-						class="layui-input" value="">
+					<input type="text" id="id" name="id" placeholder='{{T "Cannot update after saved"}}' lay-verify="required|uri" lay-reqtext='{{T "Please fill in the path identifier"}}' autocomplete="off" class="layui-input" value="" />
 				</div>
 			</div>
 			<div class="layui-col-md3">
@@ -196,6 +197,26 @@
 					$("#i_delete_thumbnail").show();
 				}
 				console.log(res);
+			}
+		});
+
+		$('#title').blur(function() {
+			const value = $('#title').val();
+			if (value.length > 0) {
+				// 自动标题-*abc -> zi dong biao ti - * a b c
+				const py = pinyinPro.pinyin(value, {
+					pattern: 'pinyin', // 只输出首字母
+					toneType: 'none', // 不加音调
+					type: 'string', // string array all三种结果
+					separator: '-', // 自定义拼音之间的分隔符，仅在 type: 'string' 时生效
+					nonZh: 'spaced', // 非汉字在结果中空格隔开输出
+					segmentit: 2, // 1-逆向最大匹配算法：速度最快 2-最大概率算法：识别最准确 3-最少分词数算法
+				});
+				// 替换空格为- zi dong biao ti - * a b c1 -> zi-dong-biao-ti---*-a-b-c
+				const result = py.replace(/\s/g, '-');
+				$('#id').val(result);
+			} else {
+				$('#id').val('');
 			}
 		});
 
