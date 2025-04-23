@@ -213,7 +213,9 @@
 					segmentit: 2, // 1-逆向最大匹配算法：速度最快 2-最大概率算法：识别最准确 3-最少分词数算法
 				});
 				// 替换空格为- zi dong biao ti - * a b c1 -> zi-dong-biao-ti---*-a-b-c
-				const result = py.replace(/\s/g, '-');
+				let result = py.replace(/\s/g, '-');
+				// 最长50个字符
+                result=result.substring(0, 50)
 				$('#id').val(result);
 			} else {
 				$('#id').val('');
