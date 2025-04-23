@@ -4,14 +4,14 @@ go 1.24
 
 require (
 	gitee.com/chunanyong/zorm v1.7.8
-	github.com/alecthomas/chroma/v2 v2.16.0
+	github.com/alecthomas/chroma/v2 v2.17.0
 	github.com/cloudwego/hertz v0.9.7
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0
-	github.com/mattn/go-sqlite3 v1.14.27
+	github.com/mattn/go-sqlite3 v1.14.28
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/tetratelabs/wazero v1.9.0
-	github.com/yuin/goldmark v1.7.8
-	github.com/yuin/goldmark-emoji v1.0.5
+	github.com/yuin/goldmark v1.7.10
+	github.com/yuin/goldmark-emoji v1.0.6
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/yuin/goldmark-meta v1.1.0
 	go.abhg.dev/goldmark/mermaid v0.5.0
