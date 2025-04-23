@@ -214,6 +214,7 @@
 				});
 				// 替换空格为- zi dong biao ti - * a b c1 -> zi-dong-biao-ti---*-a-b-c
 				let result = py.replace(/\s/g, '-');
+				result = result.replaceAll("--","-")
 				// 最长50个字符
                 result=result.substring(0, 50)
 				$('#id').val(result);
