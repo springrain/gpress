@@ -279,7 +279,7 @@ func funcAdminChainlogin(ctx context.Context, c *app.RequestContext) {
 	verify := false
 	switch chainType {
 	case "ETH":
-		verify, err = verifySecp256k1Signature(chainAddress, chainRandStr, signature)
+		verify, err = verifyEthereumSignature(chainAddress, chainRandStr, signature)
 	case "XUPER":
 		verify, err = verifyXuperChainSignature(chainAddress, chainRandStr, signature)
 	default:
