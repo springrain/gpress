@@ -93,7 +93,7 @@ func TestVerifySecp256k1Signature(t *testing.T) {
 	sign := "0x812a04f34f988692682412010dee232f7b09e4ce96a6a3a4c5a37373db008312213f882c2248cbfbdf16b75ec595aeb75c4f7fd743e5b061bcdac1cd6e1e64931b"
 	msg := "123"
 
-	ok, err := verifySecp256k1Signature(address, msg, sign)
+	ok, err := verifyEthereumSignature(address, msg, sign)
 	fmt.Println(ok)
 	if err != nil {
 		t.Error(err)
