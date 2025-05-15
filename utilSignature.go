@@ -32,8 +32,8 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-// verifySecp256k1Signature 验证secp256k1的签名
-func verifySecp256k1Signature(chainAddress string, msg string, signature string) (bool, error) {
+// verifyEthereumSignature 验证 Ethereum secp256k1 的签名
+func verifyEthereumSignature(chainAddress string, msg string, signature string) (bool, error) {
 	signatureBytes, err := fromHex(signature)
 	if err != nil {
 		return false, err
@@ -62,7 +62,7 @@ func verifySecp256k1Signature(chainAddress string, msg string, signature string)
 	return strings.EqualFold(address, chainAddress), nil
 }
 
-// verifyXuperChainSignature XuperChain使用NIST标准的公钥,验证签名
+// verifyXuperChainSignature XuperChain使用 NIST/secp256r1 标准的公钥,验证签名
 func verifyXuperChainSignature(chainAddress string, msg string, signature string) (valid bool, err error) {
 
 	verify, publicKey, err := verifySecp256r1Signature(msg, signature)

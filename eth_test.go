@@ -236,7 +236,7 @@ func TestEth3(t *testing.T) {
 	message := "20230522151922392009508861"
 	// 发送者地址
 	senderAddress := "0xD530eC9517C20DE518345A7210338dFB6279f454"
-	verify, err := verifySecp256k1Signature(senderAddress, message, signature)
+	verify, err := verifyEthereumSignature(senderAddress, message, signature)
 	fmt.Println(verify)
 	fmt.Println(err)
 }
