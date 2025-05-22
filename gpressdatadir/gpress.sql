@@ -179,7 +179,7 @@ INSERT INTO content (
 * [springrain](https://gitee.com/chunanyong/springrain)
 * [zorm](https://gitee.com/chunanyong/zorm)
 * [gpress](https://gitee.com/gpress/gpress)
-* [gowe](https://gitee.com/chunanyong/gowe)',
+* [minRAG](https://gitee.com/minrag/minrag)',
                         '<p>本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .<br>
 使用<a href="https://gitee.com/gpress/gpress">gpress</a>迁移了<a href="https://github.com/gohugoio/hugo">hugo</a>的<a href="https://github.com/olOwOlo/hugo-theme-even">even</a>主题和markdown文件.</p>
 <p>我所见识过的一切都将消失一空,就如眼泪消逝在雨中......<br>
@@ -189,7 +189,7 @@ INSERT INTO content (
 <li><a href="https://gitee.com/chunanyong/springrain">springrain</a></li>
 <li><a href="https://gitee.com/chunanyong/zorm">zorm</a></li>
 <li><a href="https://gitee.com/gpress/gpress">gpress</a></li>
-<li><a href="https://gitee.com/chunanyong/gowe">gowe</a></li>
+<li><a href="https://gitee.com/minrag/minrag">minRAG</a></li>
 </ul>
 ',
                         '本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9.使用Hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......	不妨大胆一些,大胆一些......',
@@ -320,8 +320,7 @@ location / {
 }
 
 ```  
-# 阿里云计算巢
-[点击部署gpress到阿里云计算巢](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-d4000c9b22c54e5cbffe),也可以单独购买阿里云最低配服务器,进行部署.选择```张家口机房```,规格```ecs.t6-c4m1.large```,配置```2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M```,一年100元,五年200元左右.  ',
+',
                         '<h1 id="介绍">介绍</h1>
 <p>Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存</p>
 <p><strong>作为静态站点：</strong> gpress生成的静态文件和Hugo一致,也可以简单认为gpress是Hugo的后台管理,兼容Hugo主题生态,已迁移多款Hugo主题:<a href="https://gitee.com/gpress/gpress/tree/master/gpressdatadir/template/theme/default">even</a>、<a href="https://gitee.com/gpress/gpress-doks">doks</a>、<a href="https://gitee.com/gpress/gpress-book">book</a>、<a href="https://gitee.com/gpress/gpress-geekdoc">geekdoc</a>......<br>
@@ -414,8 +413,7 @@ nginx 配置示例如下:</p>
 </span></span><span class="line"><span class="cl">    index  index.html index.htm;
 </span></span><span class="line"><span class="cl">}
 </span></span><span class="line"><span class="cl">
-</span></span></code></pre></div><h1 id="阿里云计算巢">阿里云计算巢</h1>
-<p><a href="https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&amp;ServiceId=service-d4000c9b22c54e5cbffe">点击部署gpress到阿里云计算巢</a>,也可以单独购买阿里云最低配服务器,进行部署.选择<code>张家口机房</code>,规格<code>ecs.t6-c4m1.large</code>,配置<code>2核CPU 0.5G内存 20G高效云盘 RockyLinux9 按使用流量-带宽峰值80M</code>,一年100元,五年200元左右.</p>
+</span></span></code></pre></div>
 ',
                         '',
                         '<ul>
