@@ -13,6 +13,17 @@
 		height: auto; 
 	}
 
+	#editor-wrapper ul, #editor-wrapper ol {
+	    padding-left: 1.5em;          /* 恢复缩进 */
+	}
+	#editor-wrapper li {
+	    list-style-type: inherit !important; /* 强制继承父级设置 */
+	}
+
+	#editor-wrapper a {
+		all: revert; /* 重置所有属性为浏览器默认 */
+	}
+
 </style>
 <title>{{T "Add Content"}} - GPRESS</title>
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.css" />
