@@ -4,8 +4,8 @@ go 1.24
 
 require (
 	gitee.com/chunanyong/zorm v1.7.8
-	github.com/alecthomas/chroma/v2 v2.18.0
-	github.com/cloudwego/hertz v0.10.0
+	github.com/alecthomas/chroma/v2 v2.19.0
+	github.com/cloudwego/hertz v0.10.1
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0
 	github.com/mattn/go-sqlite3 v1.14.28
 	github.com/mojocn/base64Captcha v1.3.8
@@ -39,6 +39,6 @@ require (
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/image v0.23.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
-	google.golang.org/protobuf v1.27.1 // indirect
+	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
