@@ -25,12 +25,14 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"gitee.com/chunanyong/zorm"
 	"golang.org/x/crypto/sha3"
@@ -97,8 +99,11 @@ func genStaticFile() error {
 	if err != nil {
 		return err
 	}
+
 	//删除整个目录
-	os.RemoveAll(staticHtmlDir)
+	//os.RemoveAll(staticHtmlDir)
+	//当前时间前推1秒,作为删除更新文件的依据
+	modTime := time.Now().Add(-time.Second)
 
 	// 生成 default,pc,wap,weixin 等平台的静态文件
 	useThemes := map[string]bool{}
@@ -146,6 +151,18 @@ func genStaticFile() error {
 	if err != nil {
 		FuncLogError(ctx, err)
 	}
+
+	// 按照时间戳删除无效的文件
+	err = filepath.WalkDir(staticHtmlDir, func(path string, d os.DirEntry, err error) error {
+		if d.IsDir() || err != nil {
+			return nil
+		}
+		info, _ := d.Info()
+		if info.ModTime().Before(modTime) {
+			os.Remove(path) // 直接删除文件
+		}
+		return nil
+	})
 
 	return err
 }
@@ -250,7 +267,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	sitemapFile.WriteString("</urlset>")
 
 	//遍历当前使用的模板文件夹,压缩文本格式的文件
-	err = filepath.Walk(templateDir+"theme/"+theme+"/", func(path string, info os.FileInfo, err error) error {
+	err = filepath.WalkDir(templateDir+"theme/"+theme+"/", func(path string, info fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -259,7 +276,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 
 		// 只处理 js 和 css 文件夹
 		if !(strings.Contains(path, "/js/") || strings.Contains(path, "/css/")) {
-			return nil
+			return fs.SkipDir
 		}
 
 		//获取文件后缀

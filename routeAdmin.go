@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -512,7 +513,7 @@ func funcListThemeTemplate(ctx context.Context, c *app.RequestContext) {
 	list := make([]ThemeTemplate, 0)
 
 	//遍历当前使用的模板文件夹
-	err := filepath.Walk(themeDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.WalkDir(themeDir, func(path string, info fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
