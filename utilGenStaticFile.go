@@ -154,8 +154,19 @@ func genStaticFile() error {
 
 	// 按照时间戳删除无效的文件
 	err = filepath.WalkDir(staticHtmlDir, func(path string, d os.DirEntry, err error) error {
-		if d.IsDir() || err != nil {
+		if err != nil {
 			return nil
+		}
+		// 删除空目录
+		if d.IsDir() {
+			entries, err := os.ReadDir(path) // 读取目录内容
+			if err != nil {
+				return err
+			}
+			if len(entries) == 0 {
+				os.Remove(path)
+			}
+			return err
 		}
 		info, _ := d.Info()
 		if info.ModTime().Before(modTime) {
