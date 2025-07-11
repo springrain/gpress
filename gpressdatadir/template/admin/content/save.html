@@ -12,11 +12,12 @@
 		overflow: auto !important; 
 		height: auto; 
 	}
+
 </style>
 <title>{{T "Add Content"}} - GPRESS</title>
 <link rel="stylesheet" type="text/css" href="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.css" />
-<link href="{{basePath}}admin/js/wangeditor/wangeditor5.min.css" rel="stylesheet" />
-<script src="{{basePath}}admin/js/wangeditor/wangeditor5.min.js"></script>
+<link href="{{basePath}}admin/js/jodit/jodit.min.css" rel="stylesheet" />
+<script src="{{basePath}}admin/js/jodit/jodit.min.js"></script>
 <script src="{{basePath}}admin/js/pinyin/pinyin-pro.js"></script>
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
@@ -141,7 +142,6 @@
 		<div id="markdown-container" style="height: 100%;"></div>
         <div id="editor-wrapper" style="display: none;height: 100%;">
 			<div style="display: flex;height: 100%;overflow: auto;flex-direction: column;">
-				<div id="toolbar-container"><!-- 工具栏 --></div>
 				<div id="editor-container" style="flex:1"><!-- 编辑器 --></div>
 			</div>
 	     </div>
@@ -151,6 +151,19 @@
 {{template "admin/bodyend.html"}}
 
 <script>
+
+function getFileExtension(path) {
+    const lastDotIndex = path.lastIndexOf('.');
+    // 处理无扩展名或隐藏文件(如 .gitignore)
+    if (lastDotIndex <= 0 || lastDotIndex === path.length - 1) {
+        return '';
+    }
+    return path.slice(lastDotIndex).toLowerCase(); // 返回小写扩展名(如 ".png")
+}
+const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tif', '.tiff'];
+const videoExtensions = ['.mp4', '.webm', '.ogg', '.ogv'];
+const audioExtensions = ['.mp3', '.webm', '.ogg', '.wav', '.aac'];
+
 	layui.use(function () {
 		var form = layui.form;
 		var layer = layui.layer;
@@ -325,41 +338,95 @@
 			},
 		});
 
-		// 富文本编辑器
-		const { createEditor, createToolbar,i18nChangeLanguage } = window.wangEditor
-		if (locale!='zh-CN'){ //如果不是中文,就使用英文
-			// 切换语言 - 'en' 或者 'zh-CN'
-			i18nChangeLanguage('en')
-		}
-		var content = "";
 		const editorConfig = {
+			// 语言配置(直接通过配置项设置)
+			language: locale !== 'zh-CN' ? 'en' : 'zh_cn', // 中英文切换[4,6](@ref)
 			placeholder: '{{T "Please enter content..."}}',
-			MENU_CONF: {},
-			onChange(editor) {
-				content = editor.getHtml()
-				// 也可以同步到 <textarea>
+			height: '100%', // 建议显式设置高度
+			toolbarAdaptive: false, 
+		    buttons: [
+					'bold', 'italic', 'underline', 'strikethrough',  // 文本样式
+					'|',                            // 分组分隔符
+					'paragraph','font', 'fontsize', 'brush', '|',
+                    'ul', 'ol', 'table', '|',
+					'indent', 'outdent', 'align', 'lineHeight', '|',
+					'file','image','link', '|',               // 媒体与链接
+					'preview','source', 'fullsize'                  // 历史操作
+			],
+			
+			// 上传配置(统一处理图片/视频)[1,6](@ref)
+			uploader: {
+				url: '{{basePath}}admin/upload', // 上传接口 URL
+				format: 'json',
+				method: 'POST',
+				insertImageAsBase64URI: false, // 确保视频通过接口上传[7](@ref)
+                insertVideoAsEmbed: false,       // 禁用直接嵌入视频代码(避免绕过上传)
+				filesVariableName: function(){return "file"},     // 后端接收字段名(单文件)
+				prepareData: (formData) => {
+					// 没有选择导航菜单返回false,阻止上传
+					if($('#categoryID').val()=="" || $('#id').val()==""){
+						layer.msg('{{T "Path identifier and navigation menu cannot be empty"}}');
+						return false;
+					}
+					// 将当前文件添加到 FormData
+					//formData.append('file', formData["files"]);
+					formData.append('dirPath',  $('#categoryID').val()+$('#id').val()); // 目录路径
+					//formData["files"]=undefined;
+			   },
+			   isSuccess: function (resp) {
+				  return resp.statusCode==1;
+			   },
+			    defaultHandlerSuccess: function (data, resp) {
+					const ext=getFileExtension(data);
+
+					const fileURL=basePath+data;
+					
+                    if (imageExtensions.includes(ext)){
+						this.s.insertImage(fileURL);
+					}else if(videoExtensions.includes(ext)){
+						// 插入带完整属性的视频标签
+						this.s.insertHTML(`
+						<video controls width="100%" src="${fileURL}">
+							您的浏览器不支持视频播放
+						</video>
+						`);
+					}else if(audioExtensions.includes(ext)){
+						this.s.insertHTML(`
+						<audio controls>
+							<source src="${fileURL}" />
+						</audio>
+						`);
+					}else{
+						const match = data.match(/[^/\\?#]+(?=[?#]|$)/); // 匹配最后一个斜杠后的非分隔符字符
+						const fileName=match ? decodeURIComponent(match[0]) : data;
+						this.s.insertHTML(`
+							<a target="_blank" href="${fileURL}">${fileName}</a>
+						`);
+					}
+					
+				},
+				error: (e) => console.error('Upload error:', e)
 			},
-		}
-		var editorUploadConfig = {
-			 async customUpload(file, insertFn) {       
-				funcFileUpload(file,insertFn);
+			// 禁用多文件选择(关键)
+			filebrowser: {
+				multiple: false // 限制一次只能选一个文件
 			},
+
+			// 监听内容变更[6,8](@ref)
+			events: {
+				change: (newContent) => {
+				content = newContent; // 更新 content 变量
+				}
+			},
+
+			// 自定义工具栏按钮(排除不需要的按钮)[1](@ref)
+			//buttons: ['bold', 'italic', 'underline', 'image', 'video', '|', 'align'] 
+			// 其他按钮参考官方文档：https://xdsoft.net/jodit/docs/
 		};
-		editorConfig.MENU_CONF['uploadImage'] = editorUploadConfig;
-		editorConfig.MENU_CONF['uploadVideo'] = editorUploadConfig;
-		const editor = createEditor({
-			selector: '#editor-container',
-			html: '<p></p>',
-			config: editorConfig,
-			mode: 'default', // or 'simple'
-		})
-		const toolbar = createToolbar({
-			editor,
-			selector: '#toolbar-container',
-			//config: {},
-			config: { excludeKeys: ['todo','divider','redo'] },
-			mode: 'default', // or 'simple'
-		})
+
+		// 初始化编辑器（整合工具栏）[1,6](@ref)
+		const editor = Jodit.make('#editor-container', editorConfig);
+
 
 		// 切换 富文本 和 Markdown
 		form.on('radio(contentType)', function (data) {
@@ -372,6 +439,7 @@
 			} else {
 				$('#markdown-container').hide()
 				$('#editor-wrapper').show()
+				editor.s.focus();
 			}
 		})
 
