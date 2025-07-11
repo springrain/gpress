@@ -1,4 +1,5 @@
 v1.1.2
+- jodit 替换 wangEditor 
 - 完善文档,注释
 
 v1.1.1
