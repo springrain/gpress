@@ -159,18 +159,17 @@
 {{template "admin/bodyend.html"}}
 
 <script>
-function getFileExtension(path) {
-    const lastDotIndex = path.lastIndexOf('.');
-    // 处理无扩展名或隐藏文件(如 .gitignore)
-    if (lastDotIndex <= 0 || lastDotIndex === path.length - 1) {
-        return '';
-    }
-    return path.slice(lastDotIndex).toLowerCase(); // 返回小写扩展名(如 ".png")
-}
-const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tif', '.tiff'];
-const videoExtensions = ['.mp4', '.webm', '.ogg', '.ogv'];
-const audioExtensions = ['.mp3', '.webm', '.ogg', '.wav', '.aac'];
-
+	function getFileExtension(path) {
+		const lastDotIndex = path.lastIndexOf('.');
+		// 处理无扩展名或隐藏文件(如 .gitignore)
+		if (lastDotIndex <= 0 || lastDotIndex === path.length - 1) {
+			return '';
+		}
+		return path.slice(lastDotIndex).toLowerCase(); // 返回小写扩展名(如 ".png")
+	}
+	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tif', '.tiff'];
+	const videoExtensions = ['.mp4', '.webm', '.ogg', '.ogv'];
+	const audioExtensions = ['.mp3', '.webm', '.ogg', '.wav', '.aac'];
 
 	layui.use(function () {
 		var form = layui.form;
@@ -329,7 +328,7 @@ const audioExtensions = ['.mp3', '.webm', '.ogg', '.wav', '.aac'];
 		
 		const editorConfig = {
 			// 语言配置(直接通过配置项设置)
-			language: locale !== 'zh-CN' ? 'en' : 'zh_cn', // 中英文切换[4,6](@ref)
+			language: locale !== 'zh-CN' ? 'en' : 'zh_cn', // 中英文切换
 			placeholder: '{{T "Please enter content..."}}',
 			height: '100%', // 建议显式设置高度
 			toolbarAdaptive: false, 
@@ -348,12 +347,12 @@ const audioExtensions = ['.mp3', '.webm', '.ogg', '.wav', '.aac'];
 					'preview','source', 'fullsize'                  // 历史操作
 			],
 			
-			// 上传配置(统一处理图片/视频)[1,6](@ref)
+			// 上传配置(统一处理图片/视频)
 			uploader: {
 				url: '{{basePath}}admin/upload', // 上传接口 URL
 				format: 'json',
 				method: 'POST',
-				insertImageAsBase64URI: false, // 确保视频通过接口上传[7](@ref)
+				insertImageAsBase64URI: false, // 确保视频通过接口上传
                 insertVideoAsEmbed: false,       // 禁用直接嵌入视频代码(避免绕过上传)
 				filesVariableName: function(){return "file"},     // 后端接收字段名(单文件)
 				prepareData: (formData) => {
@@ -406,26 +405,24 @@ const audioExtensions = ['.mp3', '.webm', '.ogg', '.wav', '.aac'];
 				multiple: false // 限制一次只能选一个文件
 			},
 
-			// 监听内容变更[6,8](@ref)
+			// 监听内容变更
 			events: {
 				change: (newContent) => {
-				content = newContent; // 更新 content 变量
+				    content = newContent; // 更新 content 变量
 				}
 			},
 
-			// 自定义工具栏按钮(排除不需要的按钮)[1](@ref)
+			// 自定义工具栏按钮(排除不需要的按钮)
 			//buttons: ['bold', 'italic', 'underline', 'image', 'video', '|', 'align'] 
 			// 其他按钮参考官方文档：https://xdsoft.net/jodit/docs/
 		};
 
-		// 初始化编辑器（整合工具栏）[1,6](@ref)
+		// 初始化编辑器(整合工具栏)
 		const editor = Jodit.make('#editor-container', editorConfig);
 
 		if(content!=""){
 			editor.s.insertHTML(content);
 		}
-
-
 
 		// 切换 富文本 和 Markdown
 		form.on('radio(contentType)', function (data) {
@@ -433,12 +430,12 @@ const audioExtensions = ['.mp3', '.webm', '.ogg', '.wav', '.aac'];
 			// var checked = elem.checked; // 获得 radio 选中状态
 			var current = elem.value; // 获得 radio 值
 			if (current == 0) {
-				$('#markdown-container').show()
-				$('#editor-wrapper').hide()
+				$('#markdown-container').show();
+				$('#editor-wrapper').hide();
 			} else {
-				$('#markdown-container').hide()
-				$('#editor-wrapper').show()
-				editor.s.focus();
+				$('#markdown-container').hide();
+				$('#editor-wrapper').show();
+				//editor.s.focus();
 			}
 		})
 
