@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"math/big"
 	"os"
 	"path/filepath"
@@ -142,14 +143,14 @@ func loadTemplate() error {
 func walkTemplateDir(tmpl *template.Template, walkDir string, baseDir string, isAdmin bool) error {
 	loadTmpl := template.New(tmpl.Name()).Delims("", "").Funcs(funcMap)
 	//遍历模板文件夹
-	err := filepath.Walk(walkDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.WalkDir(walkDir, func(path string, info fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		// 分隔符统一为 / 斜杠
 		path = filepath.ToSlash(path)
 		if !isAdmin && strings.Contains(path, "/admin/") { //如果用户主题,但是包含admin目录,不解析
-			return nil
+			return fs.SkipDir
 		}
 		if strings.HasSuffix(path, ".html") { // 模板文件
 			relativePath := path[len(baseDir):]
