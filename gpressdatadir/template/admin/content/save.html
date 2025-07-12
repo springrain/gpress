@@ -362,13 +362,55 @@
 			showCharsCounter: false,      // 隐藏字符统计
 			showWordsCounter: false,      // 隐藏单词统计
 			statusbar: false,             // 隐藏状态栏
+			i18n: {
+				zh_cn: {
+					top: "上",
+					right: "右",
+					bottom: "下",
+					left: "左",
+					Title: "标题",
+					Link: "链接",
+					"Line height": "行间距",
+					Alternative: "描述",
+					"Alternative text": "描述",
+					"Lower Alpha": "小写英文字母",
+					"Lower Greek": "小写希腊字母",
+					"Lower Roman": "小写罗马数字",
+					"Upper Alpha": "大写英文字母",
+					"Upper Roman": "大写罗马数字",
+					"Change mode": "源码",
+			    },
+			},
+			controls: {
+				font: {
+					list: Jodit.atom({
+						"":"默认",
+						SimSun: "宋体",
+						"Microsoft YaHei": "微软雅黑",
+						SimHei: "黑体",
+						KaiTi: "楷体",
+						NSimSun: "新宋体",
+						华文行楷: "华文行楷",
+						"Arial, Helvetica, sans-serif":"Arial",
+						"'Courier New', Courier, monospace":"Courier New",
+						"Georgia, Palatino, serif":"Georgia",
+						"'Lucida Sans Unicode', 'Lucida Grande', sans-serif":"Lucida Sans Unicode",
+						"Tahoma, Geneva, sans-serif":"Tahoma",
+						"'Times New Roman', Times, serif":"Times New Roman",
+						"'Trebuchet MS', Helvetica, sans-serif":"Trebuchet MS",
+						"Helvetica, sans-serif":"Helvetica",
+						"Impact, Charcoal, sans-serif":"Impact",
+						"Verdana, Geneva, sans-serif":"Verdana",
+					}),
+				},
+		    },
 		    buttons: [
 					'bold', 'italic', 'underline', 'strikethrough',  // 文本样式
 					'|',                            // 分组分隔符
 					'paragraph','font', 'fontsize', 'brush', '|',
-                    'ul', 'ol', 'table', '|',
-					'indent', 'outdent', 'align', 'lineHeight', '|',
-					'file','image','link', '|',               // 媒体与链接
+                    'ul', 'ol', 'table', "hr", '|',
+					'align', 'indent', 'outdent',  'lineHeight', '|',
+					'file','image','link', "symbols",'|',               // 媒体与链接
 					'preview','source', 'fullsize'                  // 历史操作
 			],
 			
