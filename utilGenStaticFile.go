@@ -102,8 +102,8 @@ func genStaticFile() error {
 
 	//删除整个目录
 	//os.RemoveAll(staticHtmlDir)
-	//当前时间前推1秒,作为删除更新文件的依据
-	modTime := time.Now().Add(-time.Second)
+	//当前时间作为删除更新文件的依据
+	now := time.Now()
 
 	// 生成 default,pc,wap,weixin 等平台的静态文件
 	useThemes := map[string]bool{}
@@ -169,7 +169,7 @@ func genStaticFile() error {
 			return err
 		}
 		info, _ := d.Info()
-		if info.ModTime().Before(modTime) {
+		if info.ModTime().Before(now) {
 			os.Remove(path) // 直接删除文件
 		}
 		return nil
