@@ -287,7 +287,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 
 		// 只处理 js 和 css 文件夹
 		if !(strings.Contains(path, "/js/") || strings.Contains(path, "/css/")) {
-			return fs.SkipDir
+			return nil
 		}
 
 		//获取文件后缀
