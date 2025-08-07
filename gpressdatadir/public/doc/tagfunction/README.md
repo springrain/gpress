@@ -90,7 +90,6 @@
 {{ $site:=site }}
 //SELECT * FROM site  WHERE id=?
 ```
-
 - 结果
 
 ``` json
@@ -269,7 +268,7 @@
 |  userType | 0:访客 1:管理员 |
 |  status | 1:公开 2:原私密 3:私有 |
 
-### 查询栏目和内容
+## 查询栏目和内容
 ``` go
 {{ $category := selectList "category" "" 1 1000 "* FROM category WHERE status in (1,2) order by status desc,sortNo desc" }}
 
