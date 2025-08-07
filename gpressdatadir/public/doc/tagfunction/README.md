@@ -193,96 +193,12 @@
 
 20. treeCategory 导航菜单的树形结构
 
-- 查询sql获取目录 在转为树形结构
-```
-SELECT * from category WHERE status in (1,2) order by status desc,sortNo desc
-```
-- 结果（sql查询)
-``` json
-[
-  {
-    "id": "/aaa/",
-    "name": "aaa",
-    "hrefURL": "aaa",
-    "createTime": "2025-08-06 12:53:54",
-    "updateTime": "2025-08-06 12:53:54",
-    "sortNo": 4,
-    "status": 1
-  },
-  {
-    "id": "/web/",
-    "name": "Web",
-    "createTime": "2023-06-27 22:41:20",
-    "updateTime": "2023-06-27 22:41:20",
-    "sortNo": 3,
-    "status": 1
-  },
-  {
-    "id": "/gpress/",
-    "name": "gpress",
-    "hrefURL": "/web/gpress",
-    "createTime": "2023-06-27 22:41:20",
-    "updateTime": "2023-06-27 22:41:20",
-    "sortNo": 2,
-    "status": 1
-  },
-  {
-    "id": "/about/",
-    "name": "About",
-    "hrefURL": "/about",
-    "templateFile": "category-single.html",
-    "createTime": "2023-06-27 22:41:20",
-    "updateTime": "2023-06-27 22:41:20",
-    "sortNo": 1,
-    "status": 1
-  }
-]
+- 获取目录 在转为树形结构
+```go
+{{ $treeCategory := treeCategory "* from category WHERE status in (1,2) order by status desc,sortNo desc" }}
 
+//SELECT * from category WHERE status in (1,2) order by status desc,sortNo desc
 ```
-
-- 结果 (sql结果转树形结构)
-
-``` json
-[
-  {
-    "id": "/aaa/",
-    "name": "aaa",
-    "hrefURL": "aaa",
-    "createTime": "2025-08-06 12:53:54",
-    "updateTime": "2025-08-06 12:53:54",
-    "sortNo": 4,
-    "status": 1
-  },
-  {
-    "id": "/web/",
-    "name": "Web",
-    "createTime": "2023-06-27 22:41:20",
-    "updateTime": "2023-06-27 22:41:20",
-    "sortNo": 3,
-    "status": 1
-  },
-  {
-    "id": "/gpress/",
-    "name": "gpress",
-    "hrefURL": "/web/gpress",
-    "createTime": "2023-06-27 22:41:20",
-    "updateTime": "2023-06-27 22:41:20",
-    "sortNo": 2,
-    "status": 1
-  },
-  {
-    "id": "/about/",
-    "name": "About",
-    "hrefURL": "/about",
-    "templateFile": "category-single.html",
-    "createTime": "2023-06-27 22:41:20",
-    "updateTime": "2023-06-27 22:41:20",
-    "sortNo": 1,
-    "status": 1
-  }
-]
-```
-
 21. themeName 获取目录下的主题
 - 读取主题目录 (gpressdatadir/template/theme/)
 ```
