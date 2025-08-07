@@ -218,6 +218,9 @@ Site information, such as title, logo, keywords, description, etc.
 | sortNo      | int         | Sort Order         | -       |  Descending                   |
 | status      | int         | Status     | -       |  Link Access (0), Public (1), Top (2), Private (3)  |
 
+## Tag Function
+[Tag Function](./gpressdatadir/public/doc/tagfunction/README.md)
+
 ## Copyright and Software Copyright Description
 * The software copyright registration number of this gpress is 2025SR0120223
 * The software copyright of this gpress is owned by us, and secondary software copyright applications are prohibited. Infringement will be prosecuted
