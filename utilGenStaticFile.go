@@ -194,7 +194,9 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	if fileHash == "" || err != nil {
 		return err
 	}
+
 	//创建sitemap.xml
+	os.Remove(staticHtmlDir + theme + "/sitemap.xml")
 	sitemapFile, err := os.OpenFile(staticHtmlDir+theme+"/sitemap.xml", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return err
