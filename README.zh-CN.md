@@ -217,6 +217,9 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | sortNo      | int         | 排序         | -       |  倒序                   |
 | status      | int         | 状态     | -       |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
+## 标签函数
+[标签函数](./gpressdatadir/public/doc/tagfunction/README.md)
+
 ## 版权软著说明
 * 本gpress软件著作权登记号2025SR0120223
 * 本gpress软件著作权归我们所有,禁止进行二次的软著申请,侵权必究
