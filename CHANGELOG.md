@@ -1,3 +1,6 @@
+v1.1.5
+- 完善文档,注释
+
 v1.1.4
 - 感谢@soldier_of_love,完善标签文档
 - 修复sitemap生成bug
