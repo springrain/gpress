@@ -1,13 +1,13 @@
 module gitee.com/gpress/gpress
 
-go 1.24
+go 1.25
 
 require (
-	gitee.com/chunanyong/zorm v1.7.8
+	gitee.com/chunanyong/zorm v1.7.9
 	github.com/alecthomas/chroma/v2 v2.20.0
-	github.com/cloudwego/hertz v0.10.1
+	github.com/cloudwego/hertz v0.10.2
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0
-	github.com/mattn/go-sqlite3 v1.14.30
+	github.com/mattn/go-sqlite3 v1.14.32
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/tetratelabs/wazero v1.9.0
 	github.com/yuin/goldmark v1.7.13
@@ -21,8 +21,8 @@ require (
 
 require (
 	github.com/bytedance/gopkg v0.1.1 // indirect
-	github.com/bytedance/sonic v1.13.2 // indirect
-	github.com/bytedance/sonic/loader v0.2.4 // indirect
+	github.com/bytedance/sonic v1.14.0 // indirect
+	github.com/bytedance/sonic/loader v0.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/cloudwego/gopkg v0.1.4 // indirect
 	github.com/cloudwego/netpoll v0.7.0 // indirect
