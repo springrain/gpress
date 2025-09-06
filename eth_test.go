@@ -49,9 +49,9 @@ func TestEthSignature(t *testing.T) {
 	v := big.NewInt(0)
 	v.Add(v, big.NewInt(27))
 
-	fmt.Println(fmt.Sprintf("r %x", r.Bytes()))
-	fmt.Println(fmt.Sprintf("s %x", s.Bytes()))
-	fmt.Println(fmt.Sprintf("v %x", v.Bytes()))
+	fmt.Printf("r %x", r.Bytes())
+	fmt.Printf("s %x", s.Bytes())
+	fmt.Printf("v %x", v.Bytes())
 
 	sig, err := hex.DecodeString(fmt.Sprintf("%x%x%x", v.Bytes(), r.Bytes(), s.Bytes()))
 	if err != nil {

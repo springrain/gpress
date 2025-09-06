@@ -44,7 +44,7 @@ func init() {
 	// 设置随机种子
 	//rand.Seed(time.Now().UnixNano())
 
-	// gzip压缩文件,产生  xxx.html.gz 文件,https://www.cloudwego.io/zh/docs/hertz/tutorials/basic-feature/middleware/gzip/
+	// gzip压缩文件,产生  xxx.html.gz 文件,https://www.cloudwego.io/zh/docs/hertz/tutorials/third-party/middleware/gzip/
 	// h.Use(gzip.Gzip(gzip.DefaultCompression))
 }
 
