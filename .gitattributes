@@ -1,0 +1,52 @@
+# Don't allow people to merge changes to these generated files, because the result
+# may be invalid.  You need to run "rush update" again.
+pnpm-lock.yaml merge=ours
+shrinkwrap.yaml merge=binary
+npm-shrinkwrap.json merge=binary
+yarn.lock merge=binary
+
+# 不做自动解决冲突,暴露冲突后由开发者自行 rush pull-idl 做更新
+# packages/arch/idl/bam.log.json merge=ours
+
+# Rush's JSON config files use JavaScript-style code comments.  The rule below prevents pedantic
+# syntax highlighters such as GitHub's from highlighting these comments as errors.  Your text editor
+# may also require a special configuration to allow comments in JSON.
+#
+# For more information, see this issue: https://github.com/microsoft/rushstack/issues/1088
+#
+*.json linguist-language=JSON-with-Comments
+
+# 核心设置:对所有文件,让 Git 自动判断是否为文本文件,并进行换行符处理
+* text=auto
+
+# 强制特定类型的文本文件在检出和存储时都使用 LF
+*.java text eol=lf
+*.xml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.properties text eol=lf
+*.go text eol=lf
+*.mod text eol=lf
+*.sum text eol=lf
+*.js text eol=lf
+*.vue text eol=lf
+*.ts text eol=lf
+*.jsx text eol=lf
+*.html text eol=lf
+*.htm text eol=lf
+*.css text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.json text eol=lf
+
+
+# 明确指定哪些文件是二进制文件,Git 不应修改它们(避免损坏)
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.jar binary
+*.woff binary
+*.woff2 binary
+
