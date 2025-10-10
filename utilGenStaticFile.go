@@ -24,6 +24,7 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/fs"
 	"net/http"
@@ -81,6 +82,13 @@ func genSearchDataJson() error {
 
 // genStaticFile 生成全站静态文件和gzip文件,包括静态的html和search-data.json
 func genStaticFile() error {
+	//避免程序崩溃
+	defer func() {
+		if err := recover(); err != nil {
+			FuncLogError(context.Background(), fmt.Errorf("panic recovered: %v", err))
+		}
+	}()
+
 	genStaticHtmlLock.Lock()
 	defer genStaticHtmlLock.Unlock()
 
