@@ -1,0 +1,150 @@
+<script src="https://unpkg.com/mqtt@5.0.3/dist/mqtt.min.js"></script>
+<script>
+
+function MQTT_Connect() {
+	        var mqttURL=document.getElementById("MQTT_ServerAdd").value
+			//开始连接,只能使用 ws或wss协议,默认的path是 /mqtt
+			MQTT_Client = mqtt.connect(mqttURL
+			, {
+				//固定clientId
+				//clientId :"test-mqtt-clientId",
+				username:"test",
+				password:"password"
+
+                 //auth:false,
+				 //protocolId:"MQTT",
+				// defaultProtocol:"MQTT",
+				 //protocol:"MQTT",
+                // protocolVersion: 3, 
+                // hostname: "127.0.0.1",
+                 //port:1883
+                }
+			);
+            console.log(MQTT_Client);
+			MQTT_Client.on('connect',
+				function (connack) {
+					console.log('MQTT连接成功')
+				})
+			//服务器下发消息的回调
+			MQTT_Client.on("message", function (topic, payload) {
+				console.log(" 收到 topic:" + topic + " , payload :" + payload)
+				var str = document.getElementById("textareaid").value;
+	  		document.getElementById("textareaid").value = str + "\n"+"收到 topic:" + topic + " , payload :" + payload;
+			})
+			//服务器连接异常的回调
+			MQTT_Client.on("error", function (error) { console.log("MQTT Server Error 的回调" + error) })
+			//服务器重连连接异常的回调
+			MQTT_Client.on("reconnect", function () { console.log("MQTT Server Reconnect的回调") })
+			//服务器连接异常的回调
+			MQTT_Client.on("offline", function (errr) { console.log("MQTT Server Offline的回调" + errr) })
+        };
+
+        MQTT_SubOne = function() {
+		var Topic=document.getElementById("MQTT_Subscribe_Msg").value
+		var ok = false;
+		if (MQTT_Client && MQTT_Client.connected) {
+			MQTT_Client.subscribe(Topic, function (err, granted) {
+				if (!err) { 
+					console.log('订阅主题 ' + Topic + ' 成功') 
+					ok = true;
+				}else { console.log('订阅主题 ' + Topic + ' 失败') 
+					ok = false;
+					console.log(err)
+				}
+			})
+		} else {
+			console.log('请先连接服务器')
+			ok = false;
+		}
+		return ok;
+
+    };
+
+    function MQTT_SubMany() {
+		if (MQTT_Client && MQTT_Client.connected) {
+			MQTT_Client.subscribe({ 'Topic1': { qos: 0 }, 'Topic2': { qos: 1 } }, function (err, granted) {
+				if (!err) {
+					console.log('订阅多主题成功')
+				} else {
+					console.log('订阅多主题失败')
+				}
+			})
+		} else {
+			console.log('请先连接服务器')
+		}
+
+    };
+
+    MQTT_PubMsg = function() {
+		var Topic=document.getElementById("MQTT_Subscribe_Msg").value
+        var Msg=document.getElementById("MQTT_Publish_Msg").value
+
+
+		if (MQTT_Client && MQTT_Client.connected) {
+			MQTT_Client.publish(Topic, Msg);
+			console.log('发布成功->' + Topic + '->' + Msg)
+		} else {
+			console.log('请先连接服务器')
+		}
+    };
+    function MQTT_UnSubOne(Topic) {
+		if (MQTT_Client && MQTT_Client.connected) {
+			MQTT_Client.unsubscribe(Topic);
+		} else {
+			console.log('请先连接服务器')
+		}
+    };
+    function MQTT_unSubMany() {
+		if (MQTT_Client && MQTT_Client.connected) {
+			MQTT_Client.unsubscribe(['Topic1', 'Topic2']);
+		} else {
+			console.log('请先连接服务器')
+		}
+
+    };
+
+</script>
+
+
+
+
+<body style="margin: 0 auto;">
+	<div style="width: 500px;">服务器地址：<input style="float: right;width: 300px;" id="MQTT_ServerAdd" value="ws://127.0.0.1:8083/mqtt"></div>	
+
+	<div>　
+		<button onclick="MQTT_Connect()">连接服务器</button>   　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　    
+	</div>		
+ 
+	<div style="margin-top: 20px;">
+		订阅消息<input id="MQTT_Subscribe_Msg"  value="/mqtt/hello">　
+		QoS<select id="MQTT_Subscribe_QoS">
+			<option>0_Almost_Once</option>
+			<option>1_Atleast_Once</option>
+			<option>2_Exactly_Once</option>
+		</select>　
+		<button onclick="MQTT_SubOne()">添加订阅信息</button>   　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　    
+	</div>
+	<div style="margin-top: 20px;">
+		发布消息：<input id="MQTT_Publish_Msg">　　
+		<button onclick="MQTT_PubMsg()">发送消息</button>   　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　    
+	</div>
+	<div style="margin-top: 20px;">
+		订阅列表
+	</div>	
+	<div>
+		<table style="padding: 1px;width: 700px;margin-top: 5px;" border="1">
+			<tr style="background-color: #919191;">
+				<td>订阅消息</td>
+				<td>QoS</td>
+				<td>操作</td>
+			</tr>
+		</table>
+	</div>
+	<div style="margin-top: 20px;">
+		接收消息
+	</div>		
+	<div>
+		<textarea id="textareaid" rows="5" cols="30" class="message1" style="width: 100%;height: 300px; min-height: 100px;"></textarea>
+	</div>	
+
+</body>
