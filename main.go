@@ -49,6 +49,8 @@ func init() {
 }
 
 func main() {
+	//https://github.com/cloudwego/hertz/issues/292
+	defer InitLog().Close()
 
 	// 初始化语言包
 	initLocale()

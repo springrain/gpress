@@ -19,16 +19,29 @@ package main
 
 import (
 	"context"
+	"io"
+	"os"
 
+	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
-func init() {
-	// 设置默认的日志显示信息,显示文件和行号
-	// Set the default log display information, display file and line number.
-	// log.SetFlags(log.Llongfile | log.LstdFlags)
-	// 设置日志级别
+// InitLog 初始化日志文件
+func InitLog() *os.File {
+	f, err := os.OpenFile("./gpress.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+	// https://github.com/cloudwego/hertz/issues/292
+	//defer f.Close()
+	fileWriter := io.MultiWriter(f, os.Stdout)
+	hlog.SetOutput(fileWriter)
+	hlog.SetSilentMode(true)
 	hlog.SetLevel(hlog.LevelError)
+	zorm.FuncLogError = FuncLogError
+	zorm.FuncLogPanic = FuncLogPanic
+	zorm.FuncPrintSQL = FuncPrintSQL
+	return f
 }
 
 // LogCallDepth 记录日志调用层级,用于定位到业务层代码
@@ -43,6 +56,10 @@ var FuncLogError func(ctx context.Context, err error) = defaultLogError
 // FuncLogPanic Record panic log, using "defaultLogPanic" by default
 var FuncLogPanic func(ctx context.Context, err error) = defaultLogPanic
 
+// FuncPrintSQL 打印sql语句,参数和执行时间,小于0是禁用日志输出;等于0是只输出日志,不计算SQ执行时间;大于0是计算执行时间,并且大于指定值
+// FuncPrintSQL Print sql statement and parameters
+var FuncPrintSQL func(ctx context.Context, sqlstr string, args []interface{}, execSQLMillis int64) = defaultPrintSQL
+
 func defaultLogError(ctx context.Context, err error) {
 	//log.Output(LogCallDepth, fmt.Sprintln(err))
 	hlog.Error(err)
@@ -50,4 +67,15 @@ func defaultLogError(ctx context.Context, err error) {
 
 func defaultLogPanic(ctx context.Context, err error) {
 	defaultLogError(ctx, err)
+}
+
+func defaultPrintSQL(ctx context.Context, sqlstr string, args []interface{}, execSQLMillis int64) {
+	if args != nil {
+
+		hlog.Errorf("sql:", sqlstr, ",args:", args, ",execSQLMillis:", execSQLMillis)
+		//log.Output(LogCallDepth, fmt.Sprintln("sql:", sqlstr, ",args:", args, ",execSQLMillis:", execSQLMillis))
+	} else {
+		hlog.Errorf("sql:", sqlstr, ",args: [] ", ",execSQLMillis:", execSQLMillis)
+		//log.Output(LogCallDepth, fmt.Sprintln("sql:", sqlstr, ",args: [] ", ",execSQLMillis:", execSQLMillis))
+	}
 }
