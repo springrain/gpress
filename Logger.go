@@ -26,7 +26,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
-// LevelError 日志级别,使用变量,提升日志级别的优先级
+// levelError 日志级别,使用变量,提升日志级别的优先级
 var levelError = func() hlog.Level {
 	hlog.SetLevel(hlog.LevelError)
 	return hlog.LevelError
