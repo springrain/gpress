@@ -26,6 +26,12 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
+// LevelError 日志级别,使用变量,提升日志级别的优先级
+var levelError = func() hlog.Level {
+	hlog.SetLevel(hlog.LevelError)
+	return hlog.LevelError
+}()
+
 // InitLog 初始化日志文件
 func InitLog() *os.File {
 	f, err := os.OpenFile("./gpress.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -37,7 +43,8 @@ func InitLog() *os.File {
 	fileWriter := io.MultiWriter(f, os.Stdout)
 	hlog.SetOutput(fileWriter)
 	hlog.SetSilentMode(true)
-	hlog.SetLevel(hlog.LevelError)
+	//使用变量,提升日志级别的优先级
+	hlog.SetLevel(levelError)
 	zorm.FuncLogError = FuncLogError
 	zorm.FuncLogPanic = FuncLogPanic
 	zorm.FuncPrintSQL = FuncPrintSQL
