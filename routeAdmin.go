@@ -41,6 +41,9 @@ import (
 // alphaNumericReg 传入的列名只能是字母数字或下划线,长度不超过20
 var alphaNumericReg = regexp.MustCompile("^[a-zA-Z0-9_]{1,20}$")
 
+// reloadStatus 刷新站点的状态值
+var reloadStatus = 0
+
 // init 初始化函数
 func init() {
 	// adminGroup 初始化管理员路由组
@@ -301,9 +304,14 @@ func funcAdminChainlogin(ctx context.Context, c *app.RequestContext) {
 
 // funcAdminReload 刷新站点,会重新加载模板文件,生成静态文件
 func funcAdminReload(ctx context.Context, c *app.RequestContext) {
+	if reloadStatus > 0 { //正在处理中
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Please wait, refreshing...")})
+		c.Abort() // 终止后续调用
+		return
+	}
 	err := loadTemplate()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -318,7 +326,7 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 	// 相对于上传的目录路径,只能是目录路径
 	dirPath := string(c.FormValue("dirPath"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -337,7 +345,7 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 	serverDirPath := datadir + "public/upload/" + dirPath
 	err = os.MkdirAll(serverDirPath, 0755) //目录需要是755权限,才能正常读取,上传的文件默认是644
 	if err != nil && !os.IsExist(err) {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -345,7 +353,7 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 	newFilePath := datadir + path
 	err = c.SaveUploadedFile(fileHeader, newFilePath)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -356,20 +364,20 @@ func funcUploadFile(ctx context.Context, c *app.RequestContext) {
 func funcUploadTheme(ctx context.Context, c *app.RequestContext) {
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
 	ext := filepath.Ext(fileHeader.Filename)
 	if ext != ".zip" { //不是zip
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
 	path := themeDir + fileHeader.Filename
 	err = c.SaveUploadedFile(fileHeader, path)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -379,7 +387,7 @@ func funcUploadTheme(ctx context.Context, c *app.RequestContext) {
 	//解压压缩包
 	err = unzip(path, themeDir)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, ERR: err})
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
 		c.Abort() // 终止后续调用
 		return
 	}
@@ -554,7 +562,9 @@ func funcListThemeTemplate(ctx context.Context, c *app.RequestContext) {
 
 	responseData.UrlPathParam = urlPathParam
 	responseData.Data = list
-	responseData.ERR = err
+	if err != nil {
+		responseData.Message = err.Error()
+	}
 	listFile := "admin/" + urlPathParam + "/list.html"
 
 	filePath := c.Query("file")
@@ -566,7 +576,7 @@ func funcListThemeTemplate(ctx context.Context, c *app.RequestContext) {
 	filePath = filepath.ToSlash(filePath)
 	fileContent, err := os.ReadFile(themeDir + filePath)
 	if err != nil {
-		responseData.ERR = err
+		responseData.Message = err.Error()
 		cHtmlAdmin(c, http.StatusOK, listFile, responseData)
 		return
 	}

@@ -82,17 +82,21 @@ func genSearchDataJson() error {
 
 // genStaticFile 生成全站静态文件和gzip文件,包括静态的html和search-data.json
 func genStaticFile() error {
+	reloadStatus = 1
+	ctx := context.Background()
 	//避免程序崩溃
 	defer func() {
-		if err := recover(); err != nil {
-			FuncLogError(context.Background(), fmt.Errorf("panic recovered: %v", err))
+		//重置状态值
+		reloadStatus = 0
+		if r := recover(); r != nil {
+			FuncLogPanic(ctx, fmt.Errorf("genStaticFile panic recovered: %v", r))
 		}
 	}()
 
 	genStaticHtmlLock.Lock()
 	defer genStaticHtmlLock.Unlock()
 
-	ctx := context.Background()
+	//ctx := context.Background()
 	contents := make([]Content, 0)
 
 	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<3 order by status desc, sortNo desc")

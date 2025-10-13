@@ -354,6 +354,6 @@ type ResponseData struct {
 	// UrlPathParam 表名称
 	UrlPathParam string `json:"urlPathParam,omitempty"`
 
-	// ERR 响应错误
-	ERR error `json:"err,omitempty"`
+	// ERR 响应错误, json无法序列化error类型,使用Message返回错误信息
+	//ERR error `json:"err,omitempty"`
 }
