@@ -192,9 +192,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 	sql = strings.TrimSpace(sql)
 	if sql == "" || strings.Contains(sql, ";") {
 		err := errors.New(funcT("SQL statement error"))
-		if err != nil {
-			responseData.Message = err.Error()
-		}
+		responseData.Message = err.Error()
 		responseData.StatusCode = 0
 		return responseData, err
 	}
@@ -262,9 +260,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 
 	default:
 		err := errors.New(urlPathParam + funcT("Table does not exist!"))
-		if err != nil {
-			responseData.Message = err.Error()
-		}
+		responseData.Message = err.Error()
 		responseData.StatusCode = 0
 		return responseData, err
 	}
