@@ -26,11 +26,22 @@ layui.use(function () {
   });
 
   $('#nav-refresh').click(function() {
-    $.get('{{basePath}}admin/reload', function(result) {
-      layer.msg('{{T "Reload successful"}}!',function(){
-        location.reload();
-			});
-    });
+  $.ajax({
+        url: "{{basePath}}admin/reload",
+        type: "get",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        //data: JSON.stringify(field),
+        error: function (result) {
+        	layer.msg(result.responseJSON.message);
+        },
+        success: function (result) {
+          layer.msg('{{T "Reload successful"}}!',function(){
+            location.reload();
+          });
+        }
+      });
+
   });
 
   $('#nav-quit').click(function() {
