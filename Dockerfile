@@ -1,5 +1,9 @@
 # 构建阶段
 FROM golang:1.25.3-alpine3.22 AS builder
+# 操作系统(linux/darwin/windows,默认linux)
+ARG OS=linux     
+# 架构(amd64/arm64,默认amd64)    
+ARG ARCH=amd64        
 
 # 安装编译依赖
 RUN apk add --no-cache gcc g++ unzip
@@ -21,11 +25,15 @@ RUN go build --tags "fts5" -ldflags "-w -s" -o gpress
 RUN rm -rf /gpress/gpressdatadir/dict && \
     unzip /gpress/gpressdatadir/dict.zip -d /gpress/gpressdatadir && \
     rm -rf /gpress/gpressdatadir/dict.zip && \
-    cp -rf /gpress/gpressdatadir/fts5/libsimple.so /gpress/gpressdatadir/ && \
+    mv  /gpress/gpressdatadir/fts5 /gpress/gpressdatadir/fts && \
     rm -rf /gpress/gpressdatadir/fts5 && \
     mkdir -p /gpress/gpressdatadir/fts5 && \
-    mv /gpress/gpressdatadir/libsimple.so /gpress/gpressdatadir/fts5/
-
+    if [ "${OS}" = "windows" ]; then mv /gpress/gpressdatadir/fts/libsimple.dll /gpress/gpressdatadir/fts5/libsimple.dll ; \
+    elif [ "${OS}" = "darwin" ]; then mv /gpress/gpressdatadir/fts/libsimple.dylib /gpress/gpressdatadir/fts5/libsimple.dylib ; \
+    elif [ "${ARCH}" = "arm64" ]; then mv /gpress/gpressdatadir/fts/libsimple.so-aarch64 /gpress/gpressdatadir/fts5/libsimple.so ; \
+    elif [ "${OS}" = "linux" ]; then mv /gpress/gpressdatadir/fts/libsimple.so /gpress/gpressdatadir/fts5/libsimple.so ; \
+    else echo "Unsupported OS: ${OS}" && exit 1; fi && \
+    rm -rf /gpress/gpressdatadir/fts
 
 # 运行阶段
 FROM alpine:3.22.2
