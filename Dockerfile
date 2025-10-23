@@ -2,10 +2,10 @@
 FROM golang:1.25.3-alpine3.22 AS builder
 
 # 安装编译依赖
-RUN apk add --no-cache gcc g++ cmake git make zip unzip
+RUN apk add --no-cache gcc g++ cmake git make unzip
 
 # 设置工作目录
-WORKDIR /app
+WORKDIR /gpress
 
 # 设置国内代理
 #RUN go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
@@ -18,13 +18,13 @@ COPY . .
 RUN go build --tags "fts5" -ldflags "-w -s" -o gpress
 
 # 初始化文件
-RUN rm -rf /app/gpressdatadir/dict && \
-    unzip /app/gpressdatadir/dict.zip -d /app/gpressdatadir && \
-    rm -rf /app/gpressdatadir/dict.zip && \
-    cp -rf /app/gpressdatadir/fts5/libsimple.so /app/gpressdatadir/ && \
-    rm -rf /app/gpressdatadir/fts5 && \
-    mkdir -p /app/gpressdatadir/fts5 && \
-    mv /app/gpressdatadir/libsimple.so /app/gpressdatadir/fts5/
+RUN rm -rf /gpress/gpressdatadir/dict && \
+    unzip /gpress/gpressdatadir/dict.zip -d /gpress/gpressdatadir && \
+    rm -rf /gpress/gpressdatadir/dict.zip && \
+    cp -rf /gpress/gpressdatadir/fts5/libsimple.so /gpress/gpressdatadir/ && \
+    rm -rf /gpress/gpressdatadir/fts5 && \
+    mkdir -p /gpress/gpressdatadir/fts5 && \
+    mv /gpress/gpressdatadir/libsimple.so /gpress/gpressdatadir/fts5/
 
 
 # 运行阶段
@@ -35,13 +35,13 @@ RUN apk add --no-cache libgcc libstdc++ sqlite-libs
 
 
 # 设置工作目录
-WORKDIR /app
+WORKDIR /gpress
 
 RUN mkdir -p ./gpressdatadir
 
 # 复制编译产物
-COPY --from=builder /app/gpress .
-COPY --from=builder /app/gpressdatadir ./gpressdatadir/
+COPY --from=builder /gpress/gpress .
+COPY --from=builder /gpress/gpressdatadir ./gpressdatadir/
 
 
 
@@ -49,7 +49,7 @@ COPY --from=builder /app/gpressdatadir ./gpressdatadir/
 EXPOSE 660
 
 # 设置数据卷
-VOLUME ["/app/gpressdatadir"]
+VOLUME ["/gpress/gpressdatadir"]
 
 # 启动命令
 CMD ["./gpress"]
