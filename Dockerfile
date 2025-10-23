@@ -2,7 +2,7 @@
 FROM golang:1.25.3-alpine3.22 AS builder
 
 # 安装编译依赖
-RUN apk add --no-cache gcc g++ cmake git make unzip
+RUN apk add --no-cache gcc g++ unzip
 
 # 设置工作目录
 WORKDIR /gpress
