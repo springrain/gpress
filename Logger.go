@@ -21,6 +21,8 @@ import (
 	"context"
 	"io"
 	"os"
+	"reflect"
+	"unsafe"
 
 	"gitee.com/chunanyong/zorm"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -34,6 +36,19 @@ var levelError = func() hlog.Level {
 
 // InitLog 初始化日志文件
 func InitLog() *os.File {
+	//获取默认的logger
+	defaultLogger := hlog.DefaultLogger()
+	//获取私有的 depth 属性
+	depthField := reflect.ValueOf(defaultLogger).Elem().FieldByName("depth")
+	// 将私有字段变为可写
+	depthFieldPtr := unsafe.Pointer(depthField.UnsafeAddr())
+	depthValue := reflect.NewAt(depthField.Type(), depthFieldPtr).Elem()
+	//将 depth 改成 5
+	depthValue.Set(reflect.ValueOf(5))
+	// 重新设置logger
+	hlog.SetLogger(defaultLogger)
+	hlog.SetSystemLogger(defaultLogger)
+
 	f, err := os.OpenFile("./gpress.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
