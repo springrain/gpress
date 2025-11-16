@@ -1,0 +1,4 @@
+2025.11.14
+根据 https://cdn.jsdelivr.net/gh/zh-lx/pinyin-pro@latest/dist/pinyin-pro.js下载
+查看 https://github.com/zh-lx/pinyin-pro 最新版是3.27.0
+参数文档 https://pinyin-pro.cn/use/pinyin.html#%E5%8F%82%E6%95%B0
