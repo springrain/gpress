@@ -16,7 +16,7 @@ require (
 	github.com/yuin/goldmark-meta v1.1.0
 	go.abhg.dev/goldmark/mermaid v0.6.0
 	go.abhg.dev/goldmark/toc v0.12.0
-	golang.org/x/crypto v0.44.0
+	golang.org/x/crypto v0.45.0
 )
 
 require (
