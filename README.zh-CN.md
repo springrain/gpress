@@ -150,7 +150,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 站点信息(表名:site)
-站点的信息,例如 title,logo,keywords,description等
+站点的信息,例如 title,logo,keyword,description等
 
 | columnName    | 类型         | 说明    |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
