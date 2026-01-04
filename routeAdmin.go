@@ -420,7 +420,7 @@ func funcList(ctx context.Context, c *app.RequestContext) {
 		where = where + " and " + k + "=? "
 		values = append(values, value)
 	}
-	sql := "* from " + urlPathParam + where + " order by sortNo desc "
+	sql := "* from " + urlPathParam + where + " order by sortno desc "
 	var responseData ResponseData
 	var err error
 	if len(values) == 0 {
@@ -489,10 +489,10 @@ func funcContentList(ctx context.Context, c *app.RequestContext) {
 	values := make([]interface{}, 0)
 	sql := ""
 	if id != "" {
-		sql = " * from content where id like ?  order by sortNo desc "
+		sql = " * from content where id like ?  order by sortno desc "
 		values = append(values, id+"%")
 	} else {
-		sql = " * from content order by sortNo desc "
+		sql = " * from content order by sortno desc "
 	}
 	var responseData ResponseData
 	var err error

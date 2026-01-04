@@ -14,7 +14,7 @@
 ```
 {{ $site:=site }}
 <!-- 查询 content 列表 -->
-{{ $selectList := selectList "content" .q .pageNo 20 "* FROM content WHERE status in (1,2) order by  status desc,sortNo desc"  }}
+{{ $selectList := selectList "content" .q .pageNo 20 "* FROM content WHERE status in (1,2) order by  status desc,sortno desc"  }}
 {{ $basePath := basePath }}
 
 <!DOCTYPE html>
@@ -108,7 +108,7 @@
   "favicon": "public/favicon.png",
   "footer": "\u003cdiv class=\"copyright\"\u003e\u003cspan class=\"copyright-year\"\u003e\u0026copy; 2008 - 2025 \u003cspan class=\"author\"\u003ejiagou.com 版权所有 \u003ca href='https://beian.miit.gov.cn' target='_blank'\u003P备xxxxx号\u003c/a\u003e   \u003ca href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx'  target='_blank'\u003e\u003cimg src='/public/gongan.png'\u003e豫公网安备xxxxx号\u003c/a\u003e\u003c/span\u003e\u003c/sp\u003c/div\u003e",
   "updateTime": "2025-08-06 12:39:03",
-  "sortNo": 1,
+  "sortno": 1,
   "status": 1
 }
 
@@ -126,8 +126,8 @@
 |  values | sql语句参数 |
 
 ```
-如 {{ $selectList := selectList "content" .q .pageNo 20 "* FROM content WHERE status in (1,2) order by  status desc,sortNo desc"  }}
-最终执行为 SELECT * FROM content WHERE status in (1,2) order by  status desc,sortNo desc LIMIT 0,20
+如 {{ $selectList := selectList "content" .q .pageNo 20 "* FROM content WHERE status in (1,2) order by  status desc,sortno desc"  }}
+最终执行为 SELECT * FROM content WHERE status in (1,2) order by  status desc,sortno desc LIMIT 0,20
 ```
 
 10. selectOne 查询一条数据
@@ -194,9 +194,9 @@
 
 - 获取目录 在转为树形结构
 ```go
-{{ $treeCategory := treeCategory "* from category WHERE status in (1,2) order by status desc,sortNo desc" }}
+{{ $treeCategory := treeCategory "* from category WHERE status in (1,2) order by status desc,sortno desc" }}
 
-//SELECT * from category WHERE status in (1,2) order by status desc,sortNo desc
+//SELECT * from category WHERE status in (1,2) order by status desc,sortno desc
 ```
 21. themeName 获取目录下的主题
 - 读取主题目录 (gpressdatadir/template/theme/)
@@ -270,7 +270,7 @@
 
 ## 查询栏目和内容
 ``` go
-{{ $category := selectList "category" "" 1 1000 "* FROM category WHERE status in (1,2) order by status desc,sortNo desc" }}
+{{ $category := selectList "category" "" 1 1000 "* FROM category WHERE status in (1,2) order by status desc,sortno desc" }}
 
-{{ $content := selectOne "content" "* FROM content WHERE id=? order by sortNo desc" .UrlPathParam }}
+{{ $content := selectOne "content" "* FROM content WHERE id=? order by sortno desc" .UrlPathParam }}
 ```

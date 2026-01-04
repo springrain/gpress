@@ -30,7 +30,7 @@
 <script type="text/javascript" src="{{basePath}}admin/js/cherry-markdown/cherry-markdown.min.js"></script>
 {{template "admin/bodystart.html"}} 
 
-{{ $categories := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }} 
+{{ $categories := selectList "category" "" 1 1000 "* FROM category order by sortno desc" }} 
 {{ $themeTemplate := themeTemplate "content" }} 
 
 <div class="layui-panel" style="padding: 5px;height: 100%;">
@@ -120,7 +120,7 @@
 			<div class="layui-col-md3">
 				<label class="layui-form-label">{{T "Sort"}}</label>
 				<div class="layui-input-block">
-					<input type="number" name="sortNo" lay-verify="required" lay-reqtext='{{T "Please fill in the sort number"}}' autocomplete="off"
+					<input type="number" name="sortno" lay-verify="required" lay-reqtext='{{T "Please fill in the sort number"}}' autocomplete="off"
 						class="layui-input" value="{{.Data.SortNo}}">
 				</div>
 			</div>
@@ -485,7 +485,7 @@
 		// 提交事件
 		form.on('submit(gpress-form-ajax-update)', function (data) {
 			var field = data.field; // 获取表单字段值
-			field.sortNo = field.sortNo - 0;
+			field.sortno = field.sortno - 0;
 			field.status = field.status - 0;
 			field.thumbnail = thumbnail;
 			field.code = "";

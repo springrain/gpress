@@ -23,7 +23,7 @@
 				  <div class="layui-input-block">
 					<input type="hidden" name="id" id="id" value="{{.Data.Id}}" />
 					
-				    <input type="hidden" name="sortNo" id="sortNo" value=1 />
+				    <input type="hidden" name="sortno" id="sortno" value=1 />
 				    <input type="hidden" name="status" id="status" value=1 />
 					<input type="text" class="layui-input" disabled value="{{.Data.Id}}" />
 				  </div>
@@ -130,7 +130,7 @@
 	  // 提交事件
 	  form.on('submit(gpress-form-ajax-update)', function(data){
 		var field = data.field; // 获取表单字段值
-		field.sortNo=field.sortNo-0;
+		field.sortno=field.sortno-0;
 		field.status=field.status-0;
 		field.timeout=field.timeout-0;
 		field.maxRequestBodySize=field.maxRequestBodySize-0;

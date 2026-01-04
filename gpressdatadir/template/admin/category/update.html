@@ -95,7 +95,7 @@
 		<div class="layui-form-item layui-col-md6">
 			<label class="layui-form-label">{{T "Sort"}}</label>
 			<div class="layui-input-block">
-			  <input type="number" name="sortNo" lay-verify="required" lay-reqtext='{{T "Please fill in the sort number"}}' autocomplete="off" class="layui-input" value="{{.Data.SortNo}}" />
+			  <input type="number" name="sortno" lay-verify="required" lay-reqtext='{{T "Please fill in the sort number"}}' autocomplete="off" class="layui-input" value="{{.Data.SortNo}}" />
 			</div>
 		</div>
 
@@ -140,7 +140,7 @@ form.render();
 // 提交事件
 form.on('submit(gpress-form-ajax-update)', function(data){
   var field = data.field; // 获取表单字段值
-  field.sortNo=field.sortNo-0;
+  field.sortno=field.sortno-0;
   field.status=field.status-0;
   field.timeout=field.timeout-0;
   const form = document.getElementById('gpress-form');

@@ -1,5 +1,5 @@
 <!-- 查询 content -->
-{{ $contentSQL := "* FROM content WHERE id=? order by sortNo desc" }}
+{{ $contentSQL := "* FROM content WHERE id=? order by sortno desc" }}
 
 {{$contentID := printf "/single/%s" (lastURI .UrlPathParam) }}
 

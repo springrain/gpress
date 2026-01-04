@@ -41,7 +41,7 @@ func TestCategory(t *testing.T) {
 		menu.Set("id", strings.ToLower(nav))
 		menu.Set("name", nav)
 		menu.Set("status", 1)
-		menu.Set("sortNo", i+1)
+		menu.Set("sortno", i+1)
 		menu.Set("createTime", now)
 		menu.Set("updateTime", now)
 		_, err := zorm.Transaction(context.Background(), func(ctx context.Context) (interface{}, error) {
@@ -80,7 +80,7 @@ func TestReadmks(t *testing.T) {
 		if err != nil {
 			continue
 		}
-		sortNo := i + 1
+		sortno := i + 1
 		id := fileName[:strings.LastIndex(fileName, ".")]
 
 		fmt.Println(id)
@@ -99,7 +99,7 @@ func TestReadmks(t *testing.T) {
 		cMap.Set("id", id)
 		cMap.Set("summary", summary)
 		cMap.Set("markdown", markdown)
-		cMap.Set("sortNo", sortNo)
+		cMap.Set("sortno", sortno)
 		cMap.Set("status", 1)
 
 		metaData, tocHtml, html, _ := conver2Html([]byte(markdown))
@@ -113,8 +113,8 @@ func TestReadmks(t *testing.T) {
 		cMap.Set("author", metaData["author"])
 		cMap.Set("updateTime", date)
 		cMap.Set("createTime", date)
-		cMap.Set("categoryName", category)
-		cMap.Set("categoryID", category)
+		cMap.Set("category_name", category)
+		cMap.Set("category_id", category)
 		cMap.Set("tag", tag)
 
 		cMap.Set("content", html)
@@ -143,7 +143,7 @@ func TestReadmks(t *testing.T) {
 
 	for i := 0; i < len(lists); i++ { // 内循环 数组遍历
 		cMap := lists[i]
-		cMap.Set("sortNo", i+1)
+		cMap.Set("sortno", i+1)
 		date := cMap.GetDBFieldMap()["updateTime"].(time.Time)
 		dateStr := date.Format("2006-01-02 15:04:05")
 		cMap.Set("updateTime", dateStr)
@@ -173,7 +173,7 @@ func TestAbout(t *testing.T) {
 	cMap.Set("id", "about")
 	cMap.Set("summary", "jiagou.com")
 	cMap.Set("markdown", markdown)
-	cMap.Set("sortNo", 100)
+	cMap.Set("sortno", 100)
 	cMap.Set("status", 0)
 
 	_, tocHtml, html, _ := conver2Html([]byte(markdown))
@@ -182,8 +182,8 @@ func TestAbout(t *testing.T) {
 	cMap.Set("author", "springrain")
 	cMap.Set("updateTime", date)
 	cMap.Set("createTime", date)
-	cMap.Set("categoryName", "about")
-	cMap.Set("categoryID", "about")
+	cMap.Set("category_name", "about")
+	cMap.Set("category_id", "about")
 	cMap.Set("content", html)
 	cMap.Set("toc", tocHtml)
 	cMap.Set("summary", `本站服务器配置:1核CPU,512M内存,20G硬盘,AnolisOS(ANCK).使用Hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......
@@ -197,8 +197,8 @@ func TestAbout(t *testing.T) {
 		t.Error(err)
 	}
 
-	//更新about的hrefURL
-	finder := zorm.NewUpdateFinder(tableCategoryName).Append("hrefURL=? WHERE id=?", "about/about", "about")
+	//更新about的href_url
+	finder := zorm.NewUpdateFinder(tableCategoryName).Append("href_url=? WHERE id=?", "about/about", "about")
 	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.UpdateFinder(ctx, finder)
 	})

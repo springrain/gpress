@@ -120,18 +120,18 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | columnName  | 类型        | 说明         |  备注       | 
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | 主键        |gpress_config |
-| basePath    | string      | 基础路径    |  默认 /      |
-| jwtSecret   | string      | jwt密钥     | 随机生成     |
-| jwttokenKey | string      | jwt的key    |  默认 jwttoken  |
-| serverPort  | string      | IP:端口     |  默认 :660  |
+| base_path    | string      | 基础路径    |  默认 /      |
+| jwt_secret   | string      | jwt密钥     | 随机生成     |
+| jwt_token_key | string      | jwt的key    |  默认 jwttoken  |
+| server_port  | string      | IP:端口     |  默认 :660  |
 | timeout     | int         | jwt超时时间秒|  默认 7200  |
-| maxRequestBodySize | int  | 最大请求     |  默认 20M  |
+| max_request_body_size | int  | 最大请求     |  默认 20M  |
 | locale      | string      | 语言包       |  默认 zh-CN,en-US |
 | proxy       | string      | http代理地址 |             |
-| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
-| createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  倒序  |
+| create_time  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| update_time  | string      | 更新时间     |  2006-01-02 15:04:05  |
+| create_user  | string      | 创建人       |  初始化 system  |
+| sortno      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 用户(表名:user)
@@ -142,11 +142,11 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | id          | string      | 主键        | gpress_admin |
 | account     | string      | 登录名称    |  默认admin  |
 | passWord    | string      | 密码        |    -  |
-| userName    | string      | 说明        |    -  |
-| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
-| createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  倒序  |
+| user_name    | string      | 说明        |    -  |
+| create_time  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| update_time  | string      | 更新时间     |  2006-01-02 15:04:05  |
+| create_user  | string      | 创建人       |  初始化 system  |
+| sortno      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 站点信息(表名:site)
@@ -159,15 +159,15 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | keyword     | string      | 关键字       |     -  |
 | description | string      | 站点描述    |     -  |
 | theme       | string      | 默认主题     | 默认使用default  |
-| themePC     | string      | PC主题      | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
-| themeWAP    | string      | 手机主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
-| themeWX     | string      | 微信主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
+| theme_pc     | string      | PC主题      | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
+| theme_wap    | string      | 手机主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
+| theme_wx     | string      | 微信主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
 | logo        | string      | logo       |     -  |
 | favicon     | string      | Favicon    |     -  |
-| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
-| createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  倒序  |
+| create_time  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| update_time  | string      | 更新时间     |  2006-01-02 15:04:05  |
+| create_user  | string      | 创建人       |  初始化 system  |
+| sortno      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 导航菜单(表名:category)
@@ -175,17 +175,17 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | 主键         | URL路径,用/隔开,例如/web/ |
 | name        | string      | 导航名称     |    -  |
-| hrefURL     | string      | 跳转路径     |    -  |
-| hrefTarget  | string      | 跳转方式     | _self,_blank,_parent,_top|
+| href_url     | string      | 跳转路径     |    -  |
+| href_target  | string      | 跳转方式     | _self,_blank,_parent,_top|
 | pid         | string      | 父导航ID     | 父导航ID  |
-| templateFile  | string      | 模板文件       | 当前导航页的模板  |
-| childTemplateFile  | string | 子主题模板文件  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
+| template_file  | string      | 模板文件       | 当前导航页的模板  |
+| child_template_file  | string | 子主题模板文件  | 子页面默认使用的模板,子页面如果不设置,默认使用这个模板 |
 | keyword     | string      | 导航关键字   | 是      |        |
 | description | string      | 导航描述     | 是      |        |
-| createTime  | string      | 创建时间     |  2006-01-02 15:04:05  |
-| updateTime  | string      | 更新时间     |  2006-01-02 15:04:05  |
-| createUser  | string      | 创建人       |  初始化 system  |
-| sortNo      | int         | 排序         |  倒序  |
+| create_time  | string      | 创建时间     |  2006-01-02 15:04:05  |
+| update_time  | string      | 更新时间     |  2006-01-02 15:04:05  |
+| create_user  | string      | 创建人       |  初始化 system  |
+| sortno      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ### 文章内容(表名:content)
@@ -195,26 +195,26 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | title       | string      | 文章标题     | 是      |    使用 jieba 分词器    |
 | keyword     | string      | 内容关键字   | 是      |    使用 jieba 分词器    |
 | description | string      | 内容描述     | 是      |    使用 jieba 分词器    |
-| hrefURL     | string      | 自身页面路径 | 否      |    -                    |
+| href_url     | string      | 自身页面路径 | 否      |    -                    |
 | subtitle    | string      | 副标题       | 是      |      使用 jieba 分词器  |
 | author      | string      | 作者         | 是      |      使用 jieba 分词器  |
 | tag         | string      | 标签         | 是      |      使用 jieba 分词器  |
 | toc         | string      | 目录         | 是      |      使用 jieba 分词器  |
 | summary     | string      | 摘要         | 是      |      使用 jieba 分词器  |
-| categoryName| string      | 导航菜单     | 是      |      使用 jieba 分词器  |
-| categoryID  | string      | 导航ID       | 否      | -                       |
-| templateFile| string      | 模板文件     | 否      | 模板                    |
+| category_name| string      | 导航菜单     | 是      |      使用 jieba 分词器  |
+| category_id  | string      | 导航ID       | 否      | -                       |
+| template_file| string      | 模板文件     | 否      | 模板                    |
 | content     | string      | 文章内容     | 否      |                         |
 | markdown    | string      | Markdown内容 | 否      |                         |
 | thumbnail   | string      | 封面图       | 否      |                         |
 | signature   | string      | 私钥对内容的签名 | 否   |                         |
-| signAddress | string      | 签名的Address   | 否   |                         |
-| signChain   | string      | Address所属的链 | 否   |                         |
-| txID        | string      | 上链交易的Hash  | 否   |                         |
-| createTime  | string      | 创建时间     | -       |  2006-01-02 15:04:05    |
-| updateTime  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
-| createUser  | string      | 创建人       | -       |  初始化 system          |
-| sortNo      | int         | 排序         | -       |  倒序                   |
+| sign_address | string      | 签名的Address   | 否   |                         |
+| sign_chain   | string      | Address所属的链 | 否   |                         |
+| tx_id        | string      | 上链交易的Hash  | 否   |                         |
+| create_time  | string      | 创建时间     | -       |  2006-01-02 15:04:05    |
+| update_time  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
+| create_user  | string      | 创建人       | -       |  初始化 system          |
+| sortno      | int         | 排序         | -       |  倒序                   |
 | status      | int         | 状态     | -       |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
 ## 标签函数

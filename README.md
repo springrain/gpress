@@ -121,18 +121,18 @@ Reads ```gpressdatadir/install_config.json``` during installation.
 | columnName  | Type        | Description         |  Remarks       | 
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | Primary Key        |gpress_config |
-| basePath    | string      | Base Path    |  Default /      |
-| jwtSecret   | string      | JWT Secret     | Randomly generated     |
-| jwttokenKey | string      | JWT Key    |  Default jwttoken  |
-| serverPort  | string      | IP:Port     |  Default :660  |
+| base_path    | string      | Base Path    |  Default /      |
+| jwt_secret   | string      | JWT Secret     | Randomly generated     |
+| jwt_token_key | string      | JWT Key    |  Default jwttoken  |
+| server_port  | string      | IP:Port     |  Default :660  |
 | timeout     | int         | JWT Timeout Seconds|  Default 7200  |
-| maxRequestBodySize | int  | Max Request Size     |  Default 20M  |
+| max_request_body_size | int  | Max Request Size     |  Default 20M  |
 | locale      | string      | Language Pack       |  Default zh-CN,en-US |
 | proxy       | string      | HTTP Proxy Address |             |
-| createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
-| updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
-| createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Descending  |
+| create_time  | string      | Creation Time     |  2006-01-02 15:04:05  |
+| update_time  | string      | Update Time     |  2006-01-02 15:04:05  |
+| create_user  | string      | Creator       |  Initialization system  |
+| sortno      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### User (Table Name: user)
@@ -143,11 +143,11 @@ There is only one user in the backend.
 | id          | string      | Primary Key        | gpress_admin |
 | account     | string      | Login Name    |  Default admin  |
 | passWord    | string      | Password        |    -  |
-| userName    | string      | Description        |    -  |
-| createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
-| updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
-| createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Descending  |
+| user_name    | string      | Description        |    -  |
+| create_time  | string      | Creation Time     |  2006-01-02 15:04:05  |
+| update_time  | string      | Update Time     |  2006-01-02 15:04:05  |
+| create_user  | string      | Creator       |  Initialization system  |
+| sortno      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### Site Information (Table Name:site)
@@ -160,15 +160,15 @@ Site information, such as title, logo, keywords, description, etc.
 | keyword     | string      | Keywords       |     -  |
 | description | string      | Site Description    |     -  |
 | theme       | string      | Default Theme     | Default uses default  |
-| themePC     | string      | PC Theme      | First get from cookie, if not, get from Header, write to cookie, default uses default  |
-| themeWAP    | string      | Mobile Theme    | First get from cookie, if not, get from Header, write to cookie, default uses default  |
-| themeWX     | string      | WeChat Theme    | First get from cookie, if not, get from Header, write to cookie, default uses default  |
+| theme_pc     | string      | PC Theme      | First get from cookie, if not, get from Header, write to cookie, default uses default  |
+| theme_wap    | string      | Mobile Theme    | First get from cookie, if not, get from Header, write to cookie, default uses default  |
+| theme_wx     | string      | WeChat Theme    | First get from cookie, if not, get from Header, write to cookie, default uses default  |
 | logo        | string      | Logo       |     -  |
 | favicon     | string      | Favicon    |     -  |
-| createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
-| updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
-| createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Descending  |
+| create_time  | string      | Creation Time     |  2006-01-02 15:04:05  |
+| update_time  | string      | Update Time     |  2006-01-02 15:04:05  |
+| create_user  | string      | Creator       |  Initialization system  |
+| sortno      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### Navigation Menu (Table Name: category)
@@ -176,17 +176,17 @@ Site information, such as title, logo, keywords, description, etc.
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | Primary Key         | URL path, separated by /, e.g., /web/ |
 | name        | string      | Navigation Name     |    -  |
-| hrefURL     | string      | Redirect Path     |    -  |
-| hrefTarget  | string      | Redirect Method     | _self,_blank,_parent,_top|
+| href_url     | string      | Redirect Path     |    -  |
+| href_target  | string      | Redirect Method     | _self,_blank,_parent,_top|
 | pid         | string      | Parent Navigation ID     | Parent Navigation ID  |
-| templateFile  | string      | Template File       | Current navigation page template  |
-| childTemplateFile  | string | Child Theme Template File  | Default template for child pages, if not set, default uses this template |
+| template_file  | string      | Template File       | Current navigation page template  |
+| child_template_file  | string | Child Theme Template File  | Default template for child pages, if not set, default uses this template |
 | keyword     | string      | Navigation Keywords   | Yes      |        |
 | description | string      | Navigation Description     | Yes      |        |
-| createTime  | string      | Creation Time     |  2006-01-02 15:04:05  |
-| updateTime  | string      | Update Time     |  2006-01-02 15:04:05  |
-| createUser  | string      | Creator       |  Initialization system  |
-| sortNo      | int         | Sort Order         |  Descending  |
+| create_time  | string      | Creation Time     |  2006-01-02 15:04:05  |
+| update_time  | string      | Update Time     |  2006-01-02 15:04:05  |
+| create_user  | string      | Creator       |  Initialization system  |
+| sortno      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ### Content (Table Name: content)
@@ -196,26 +196,26 @@ Site information, such as title, logo, keywords, description, etc.
 | title       | string      | Title     | Yes      |     Uses jieba tokenizer    |
 | keyword     | string      | Content Keywords   | Yes      |     Uses jieba tokenizer    |
 | description | string      | Content Description     | Yes      |     Uses jieba tokenizer    |
-| hrefURL     | string      | Self Page Path | No      |    -                    |
+| href_url     | string      | Self Page Path | No      |    -                    |
 | subtitle    | string      | Subtitle       | Yes      |      Uses jieba tokenizer  |
 | author      | string      | Author         | Yes      |      Uses jieba tokenizer  |
 | tag         | string      | Tags         | Yes      |      Uses jieba tokenizer  |
 | toc         | string      | Table of Contents         | Yes      |      Uses jieba tokenizer  |
 | summary     | string      | Summary         | Yes      |      Uses jieba tokenizer  |
-| categoryName| string      | Navigation Menu | Yes       | Uses jieba tokenizer |
-| categoryID  | string      | Navigation ID       | No      | -               |
-| templateFile| string      | Template File     | No      | Template                    |
+| category_name| string      | Navigation Menu | Yes       | Uses jieba tokenizer |
+| category_id  | string      | Navigation ID       | No      | -               |
+| template_file| string      | Template File     | No      | Template                    |
 | content     | string      | Content     | No      |                         |
 | markdown    | string      | Markdown Content | No      |                         |
 | thumbnail   | string      | Cover Image       | No      |                         |
 | signature   | string      | Private Key Signature of Content | No   |                         |
-| signAddress | string      | Signature Address   | No   |                         |
-| signChain   | string      | Chain of Address | No   |                         |
-| txID        | string      | On-chain Transaction Hash  | No   |                         |
-| createTime  | string      | Creation Time     | -       |  2006-01-02 15:04:05    |
-| updateTime  | string      | Update Time     | -       |  2006-01-02 15:04:05    |
-| createUser  | string      | Creator       | -       |  Initialization system          |
-| sortNo      | int         | Sort Order         | -       |  Descending                   |
+| sign_address | string      | Signature Address   | No   |                         |
+| sign_chain   | string      | Chain of Address | No   |                         |
+| tx_id        | string      | On-chain Transaction Hash  | No   |                         |
+| create_time  | string      | Creation Time     | -       |  2006-01-02 15:04:05    |
+| update_time  | string      | Update Time     | -       |  2006-01-02 15:04:05    |
+| create_user  | string      | Creator       | -       |  Initialization system          |
+| sortno      | int         | Sort Order         | -       |  Descending                   |
 | status      | int         | Status     | -       |  Link Access (0), Public (1), Top (2), Private (3)  |
 
 ## Tag Function

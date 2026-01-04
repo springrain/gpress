@@ -51,7 +51,7 @@ func genSearchDataJson() error {
 	searchDataLock.Lock()
 	defer searchDataLock.Unlock()
 
-	finder := zorm.NewSelectFinder(tableContentName, "id,title,hrefURL,summary,createTime,tag,categoryName,content,description").Append("WHERE status in (1,2) order by status desc, sortNo desc")
+	finder := zorm.NewSelectFinder(tableContentName, "id,title,href_url,summary,create_time,tag,category_name,content,description").Append("WHERE status in (1,2) order by status desc, sortno desc")
 	finder.SelectTotalCount = false
 	//page := zorm.NewPage()
 	//page.PageSize = 10000
@@ -99,14 +99,14 @@ func genStaticFile() error {
 	//ctx := context.Background()
 	contents := make([]Content, 0)
 
-	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<3 order by status desc, sortNo desc")
+	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<3 order by status desc, sortno desc")
 	err := zorm.Query(ctx, f_post, &contents, nil)
 	if err != nil {
 		return err
 	}
 	//生成导航菜单的静态网页
 	categoryIDs := make([]string, 0)
-	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status<3 order by status desc,sortNo desc")
+	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status<3 order by status desc,sortno desc")
 	err = zorm.Query(ctx, f_category, &categoryIDs, nil)
 	if err != nil {
 		return err

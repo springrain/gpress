@@ -294,7 +294,7 @@ func pathExist(path string) bool {
 
 // findThemeTemplate 从数据库查询模板文件
 func findThemeTemplate(ctx context.Context, tableName string, urlPathParam string) (string, error) {
-	finder := zorm.NewSelectFinder(tableName, "templateFile").Append(" WHERE id=?", urlPathParam)
+	finder := zorm.NewSelectFinder(tableName, "template_file").Append(" WHERE id=?", urlPathParam)
 	templatePath := ""
 	has, err := zorm.QueryRow(ctx, finder, &templatePath)
 	if err != nil {

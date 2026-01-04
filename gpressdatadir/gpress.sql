@@ -1,17 +1,17 @@
 CREATE TABLE IF NOT EXISTS config (
 		id TEXT PRIMARY KEY   NOT NULL,
-		basePath         TEXT NOT NULL,
-		jwtSecret        TEXT NOT NULL,
-		jwttokenKey      TEXT NOT NULL,
-		serverPort       TEXT NOT NULL,
+		base_path         TEXT NOT NULL,
+		jwt_secret        TEXT NOT NULL,
+		jwt_token_key      TEXT NOT NULL,
+		server_port       TEXT NOT NULL,
 		timeout          INT  NOT NULL,
-		maxRequestBodySize INT NOT NULL,
+		max_request_body_size INT NOT NULL,
 		locale           TEXT NOT NULL,
 		proxy            TEXT NULL,
-		createTime       TEXT,
-		updateTime       TEXT,
-		createUser       TEXT,
-		sortNo           int,
+		create_time       TEXT,
+		update_time       TEXT,
+		create_user       TEXT,
+		sortno           int,
 		status           int  
 	 ) strict ;
 
@@ -19,47 +19,47 @@ CREATE TABLE IF NOT EXISTS user (
 		id TEXT PRIMARY KEY     NOT NULL,
 		account         TEXT  NOT NULL,
 		password         TEXT   NOT NULL,
-		userName         TEXT NOT NULL,
-		chainType        TEXT,
-		chainAddress     TEXT,
-		createTime       TEXT,
-		updateTime       TEXT,
-		createUser       TEXT,
-		sortNo           int,
+		user_name         TEXT NOT NULL,
+		chain_type        TEXT,
+		chain_address     TEXT,
+		create_time       TEXT,
+		update_time       TEXT,
+		create_user       TEXT,
+		sortno           int,
 		status           int  
 	 ) strict ;
 
 CREATE TABLE IF NOT EXISTS category (
 		id TEXT PRIMARY KEY     NOT NULL,
 		name          TEXT  NOT NULL,
-		hrefURL           TEXT,
-		hrefTarget        TEXT,
+		href_url           TEXT,
+		href_target        TEXT,
 		pid        TEXT,
-		templateFile        TEXT,
-		childTemplateFile        TEXT,
+		template_file        TEXT,
+		child_template_file        TEXT,
 		keyword           TEXT,
 		description           TEXT,
-		createTime        TEXT,
-		updateTime        TEXT,
-		createUser        TEXT,
-		sortNo            int NOT NULL,
+		create_time        TEXT,
+		update_time        TEXT,
+		create_user        TEXT,
+		sortno            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,3,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'','',NULL,'Web','/web/');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'','','/web/gpress','gpress','/gpress/');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,'category-single.html','','','/about','About','/about/');
-INSERT INTO category (status,sortNo,createUser,updateTime,createTime,childTemplateFile,templateFile,pid,hrefTarget,hrefURL,name,id) VALUES (3,0,NULL,'2025-01-01 22:41:20','2025-01-01 22:41:20',NULL,NULL,'','',NULL,'单页','/single/');
+INSERT INTO category (status,sortno,create_user,update_time,create_time,child_template_file,template_file,pid,href_target,href_url,name,id) VALUES (1,3,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'','',NULL,'Web','/web/');
+INSERT INTO category (status,sortno,create_user,update_time,create_time,child_template_file,template_file,pid,href_target,href_url,name,id) VALUES (1,2,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,NULL,'','','/web/gpress','gpress','/gpress/');
+INSERT INTO category (status,sortno,create_user,update_time,create_time,child_template_file,template_file,pid,href_target,href_url,name,id) VALUES (1,1,NULL,'2023-06-27 22:41:20','2023-06-27 22:41:20',NULL,'category-single.html','','','/about','About','/about/');
+INSERT INTO category (status,sortno,create_user,update_time,create_time,child_template_file,template_file,pid,href_target,href_url,name,id) VALUES (3,0,NULL,'2025-01-01 22:41:20','2025-01-01 22:41:20',NULL,NULL,'','',NULL,'单页','/single/');
 
 CREATE TABLE IF NOT EXISTS content (
 		id TEXT PRIMARY KEY     NOT NULL,
 		title         TEXT   NOT NULL,
 		keyword           TEXT,
 		description           TEXT,
-		hrefURL           TEXT,
+		href_url           TEXT,
 		subtitle           TEXT,
-		categoryID           TEXT,
-		categoryName           TEXT,
-		templateFile           TEXT,
+		category_id           TEXT,
+		category_name           TEXT,
+		template_file           TEXT,
 		author           TEXT,
 		tag           TEXT,
 		toc           TEXT,
@@ -68,13 +68,13 @@ CREATE TABLE IF NOT EXISTS content (
 		markdown          TEXT,
 		thumbnail         TEXT,
 		signature         TEXT  ,
-		signAddress       TEXT  ,
-		signChain         TEXT  ,
-		txID              TEXT  ,
-		createTime        TEXT,
-		updateTime        TEXT,
-		createUser        TEXT,
-		sortNo            int NOT NULL,
+		sign_address       TEXT  ,
+		sign_chain         TEXT  ,
+		tx_id              TEXT  ,
+		create_time        TEXT,
+		update_time        TEXT,
+		create_user        TEXT,
+		sortno            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
 
@@ -86,26 +86,26 @@ CREATE TABLE IF NOT EXISTS site (
 		keyword         TEXT,
 		description         TEXT,
 		theme         TEXT NOT NULL,
-		themePC         TEXT,
-		themeWAP         TEXT,
-		themeWX        TEXT,
+		theme_pc         TEXT,
+		theme_wap         TEXT,
+		theme_wx        TEXT,
 		logo         TEXT,
 		favicon         TEXT,
 		footer         TEXT,
-		createTime        TEXT,
-		updateTime        TEXT,
-		createUser        TEXT,
-		sortNo            int NOT NULL,
+		create_time        TEXT,
+		update_time        TEXT,
+		create_user        TEXT,
+		sortno            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
-INSERT INTO site (status,sortNo,createUser,updateTime,createTime,footer,favicon,logo,themeWX,themeWAP,themePC,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2025 <span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','https://jiagou.com','架构','jiagou','gpress_site');
+INSERT INTO site (status,sortno,create_user,update_time,create_time,footer,favicon,logo,theme_wx,theme_wap,theme_pc,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2025 <span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','https://jiagou.com','架构','jiagou','gpress_site');
 
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
 		title, 
 		keyword, 
 		description,
 		subtitle,
-		categoryName,
+		category_name,
 		summary,
 		toc,
 		tag,
@@ -117,30 +117,30 @@ CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
 	);
 CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
 		BEGIN
-			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
-			VALUES (new.rowid,  new.title, new.keyword, new.description,new.subtitle,new.categoryName,new.summary,new.toc,new.tag,new.author);
+			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,category_name,summary,toc,tag,author)
+			VALUES (new.rowid,  new.title, new.keyword, new.description,new.subtitle,new.category_name,new.summary,new.toc,new.tag,new.author);
 		END;
 	
 	CREATE TRIGGER IF NOT EXISTS trigger_content_delete AFTER DELETE ON content
 		BEGIN
-			INSERT INTO fts_content (fts_content,  title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
-			VALUES ('delete',  old.title, old.keyword, old.description,old.subtitle,old.categoryName,old.summary,old.toc,old.tag,old.author);
+			INSERT INTO fts_content (fts_content,  title, keyword, description,subtitle,category_name,summary,toc,tag,author)
+			VALUES ('delete',  old.title, old.keyword, old.description,old.subtitle,old.category_name,old.summary,old.toc,old.tag,old.author);
 		END;
 	
 	CREATE TRIGGER IF NOT EXISTS trigger_content_update AFTER UPDATE ON content
 		BEGIN
-			INSERT INTO fts_content (fts_content, rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
-			VALUES ('delete', old.rowid,  old.title, old.keyword, old.description,old.subtitle,old.categoryName,old.summary,old.toc,old.tag,old.author);
-			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,categoryName,summary,toc,tag,author)
-			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.categoryName,new.summary,new.toc,new.tag,new.author);
+			INSERT INTO fts_content (fts_content, rowid, title, keyword, description,subtitle,category_name,summary,toc,tag,author)
+			VALUES ('delete', old.rowid,  old.title, old.keyword, old.description,old.subtitle,old.category_name,old.summary,old.toc,old.tag,old.author);
+			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,category_name,summary,toc,tag,author)
+			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.category_name,new.summary,new.toc,new.tag,new.author);
 		END;
 
 INSERT INTO content (
                         status,
-                        sortNo,
-                        createUser,
-                        updateTime,
-                        createTime,
+                        sortno,
+                        create_user,
+                        update_time,
+                        create_time,
                         thumbnail,
                         markdown,
                         content,
@@ -148,18 +148,18 @@ INSERT INTO content (
                         toc,
                         tag,
                         author,
-                        templateFile,
-                        categoryName,
-                        categoryID,
+                        template_file,
+                        category_name,
+                        category_id,
                         subtitle,
-                        hrefURL,
+                        href_url,
                         description,
                         keyword,
                         title,
                         signature,
-						signAddress,
-						signChain,
-						txID,
+						sign_address,
+						sign_chain,
+						tx_id,
                         id
                     )
                     VALUES (

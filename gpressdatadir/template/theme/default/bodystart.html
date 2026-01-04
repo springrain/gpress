@@ -1,6 +1,6 @@
 {{ $site := site }}
 {{ $basePath := basePath }}
-{{ $category := selectList "category" "" 1 1000 "* FROM category WHERE status in (1,2) order by status desc,sortNo desc" }}
+{{ $category := selectList "category" "" 1 1000 "* FROM category WHERE status in (1,2) order by status desc,sortno desc" }}
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">

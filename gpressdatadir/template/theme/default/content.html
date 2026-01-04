@@ -1,14 +1,14 @@
 <!-- 查询 content -->
-{{ $contentSQL := "* FROM content WHERE id=? and status<3 order by status desc, sortNo desc" }}
+{{ $contentSQL := "* FROM content WHERE id=? and status<3 order by status desc, sortno desc" }}
 
 {{ if eq .userType 1}}
-  {{ $contentSQL ="* FROM content WHERE id=? order by sortNo desc" }}
+  {{ $contentSQL ="* FROM content WHERE id=? order by sortno desc" }}
 {{end}}
 
 {{ $content := selectOne "content" $contentSQL .UrlPathParam }}
 
-{{ $prevContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortNo < ? order by  status desc,sortNo desc " $content.SortNo  }}
-{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortNo > ? order by  status desc,sortNo asc " $content.SortNo  }}
+{{ $prevContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortno < ? order by  status desc,sortno desc " $content.SortNo  }}
+{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortno > ? order by  status desc,sortno asc " $content.SortNo  }}
 
 <!DOCTYPE html>
 <html lang="zh-cn">

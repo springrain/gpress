@@ -208,7 +208,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 		}
 
 		i := strings.Index(whereSQL, " where ")
-		// fst5 搜索相关性排序 ORDER BY rank; 后期再进行修改调整,先按照sortNo排序
+		// fst5 搜索相关性排序 ORDER BY rank; 后期再进行修改调整,先按照sortno排序
 		if i < 0 { // 没有where
 			finder.Append(sql, values...)
 			finder.Append(" where rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) ", q)
@@ -221,7 +221,7 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 		finder.Append(sql, values...)
 	}
 
-	//finder.Append("order by sortNo desc")
+	//finder.Append("order by sortno desc")
 	page := zorm.NewPage()
 	page.PageNo = pageNo
 	if pageSize > 1000 {

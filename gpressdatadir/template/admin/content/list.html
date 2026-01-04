@@ -1,4 +1,4 @@
-{{ $category := selectList "category" "" 1 1000 "* FROM category order by sortNo desc" }}
+{{ $category := selectList "category" "" 1 1000 "* FROM category order by sortno desc" }}
 {{ $convertJson := convertType  $category.Data "object" "json" }}
 {{template "admin/header.html"}}
 <title>{{T "Content Navigation"}} - GPRESS</title>

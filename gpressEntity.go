@@ -28,22 +28,22 @@ type Config struct {
 	Id string `column:"id" json:"id,omitempty"`
 
 	// BasePath 根路径,默认/
-	BasePath string `column:"basePath" json:"basePath,omitempty"`
+	BasePath string `column:"base_path" json:"basePath,omitempty"`
 
 	// JwtSecret jwt加密密钥
-	JwtSecret string `column:"jwtSecret" json:"jwtSecret,omitempty"`
+	JwtSecret string `column:"jwt_secret" json:"jwtSecret,omitempty"`
 
 	// JwttokenKey jwt加密密钥
-	JwttokenKey string `column:"jwttokenKey" json:"jwttokenKey,omitempty"`
+	JwttokenKey string `column:"jwt_token_key" json:"jwttokenKey,omitempty"`
 
 	// ServerPort 服务器端口
-	ServerPort string `column:"serverPort" json:"serverPort,omitempty"`
+	ServerPort string `column:"server_port" json:"serverPort,omitempty"`
 
 	// Timeout 超时时间,单位秒
 	Timeout int `column:"timeout" json:"timeout,omitempty"`
 
 	// MaxRequestBodySize 最大请求
-	MaxRequestBodySize int `column:"maxRequestBodySize" json:"maxRequestBodySize,omitempty"`
+	MaxRequestBodySize int `column:"max_request_body_size" json:"maxRequestBodySize,omitempty"`
 
 	// Locale 语言包
 	Locale string `column:"locale" json:"locale,omitempty"`
@@ -52,16 +52,16 @@ type Config struct {
 	Proxy string `column:"proxy" json:"proxy,omitempty"`
 
 	// CreateTime 创建时间
-	CreateTime string `column:"createTime" json:"createTime,omitempty"`
+	CreateTime string `column:"create_time" json:"createTime,omitempty"`
 
 	// UpdateTime 更新时间
-	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
+	UpdateTime string `column:"update_time" json:"updateTime,omitempty"`
 
 	// CreateUser 创建人,初始化 system
-	CreateUser string `column:"createUser" json:"createUser,omitempty"`
+	CreateUser string `column:"create_user" json:"createUser,omitempty"`
 
 	// SortNo 排序
-	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
+	SortNo int `column:"sortno" json:"sortno,omitempty"`
 
 	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
@@ -93,19 +93,19 @@ type Category struct {
 	Name string `column:"name" json:"name,omitempty"`
 
 	// HrefURL 链接地址
-	HrefURL string `column:"hrefURL" json:"hrefURL,omitempty"`
+	HrefURL string `column:"href_url" json:"hrefURL,omitempty"`
 
 	// HrefTarget 链接打开方式
-	HrefTarget string `column:"hrefTarget" json:"hrefTarget,omitempty"`
+	HrefTarget string `column:"href_target" json:"hrefTarget,omitempty"`
 
 	// Pid 父级ID
 	Pid string `column:"pid" json:"pid,omitempty"`
 
 	// TemplateFile 模板文件
-	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
+	TemplateFile string `column:"template_file" json:"templateFile,omitempty"`
 
 	// ChildTemplateFile 模板文件
-	ChildTemplateFile string `column:"childTemplateFile" json:"childTemplateFile,omitempty"`
+	ChildTemplateFile string `column:"child_template_file" json:"childTemplateFile,omitempty"`
 
 	// Keyword 关键字
 	Keyword string `column:"keyword" json:"keyword,omitempty"`
@@ -114,16 +114,16 @@ type Category struct {
 	Description string `column:"description" json:"description,omitempty"`
 
 	// CreateTime 创建时间
-	CreateTime string `column:"createTime" json:"createTime,omitempty"`
+	CreateTime string `column:"create_time" json:"createTime,omitempty"`
 
 	// UpdateTime 更新时间
-	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
+	UpdateTime string `column:"update_time" json:"updateTime,omitempty"`
 
 	// CreateUser 创建人,初始化 system
-	CreateUser string `column:"createUser" json:"createUser,omitempty"`
+	CreateUser string `column:"create_user" json:"createUser,omitempty"`
 
 	// SortNo 排序
-	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
+	SortNo int `column:"sortno" json:"sortno,omitempty"`
 
 	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
@@ -164,19 +164,19 @@ type Content struct {
 	Description string `column:"description" json:"description,omitempty"`
 
 	// HrefURL 链接路径
-	HrefURL string `column:"hrefURL" json:"hrefURL,omitempty"`
+	HrefURL string `column:"href_url" json:"hrefURL,omitempty"`
 
 	// Subtitle 副标题
 	Subtitle string `column:"subtitle" json:"subtitle,omitempty"`
 
 	// CategoryID 导航ID
-	CategoryID string `column:"categoryID" json:"categoryID,omitempty"`
+	CategoryID string `column:"category_id" json:"categoryID,omitempty"`
 
 	// CategoryName 导航菜单
-	CategoryName string `column:"categoryName" json:"categoryName,omitempty"`
+	CategoryName string `column:"category_name" json:"categoryName,omitempty"`
 
 	// TemplateFile 模板文件
-	TemplateFile string `column:"templateFile" json:"templateFile,omitempty"`
+	TemplateFile string `column:"template_file" json:"templateFile,omitempty"`
 
 	// Author 文章作者
 	Author string `column:"author" json:"author,omitempty"`
@@ -203,25 +203,25 @@ type Content struct {
 	Signature string `column:"signature" json:"signature,omitempty"`
 
 	// SignAddress 签名的address
-	SignAddress string `column:"signAddress" json:"signAddress,omitempty"`
+	SignAddress string `column:"sign_address" json:"signAddress,omitempty"`
 
 	// SignChain 签名的区块链
-	SignChain string `column:"signChain" json:"signChain,omitempty"`
+	SignChain string `column:"sign_chain" json:"signChain,omitempty"`
 
 	// TxID 上链交易的Hash
-	TxID string `column:"txID" json:"txID,omitempty"`
+	TxID string `column:"tx_id" json:"txID,omitempty"`
 
 	// CreateTime 创建时间
-	CreateTime string `column:"createTime" json:"createTime,omitempty"`
+	CreateTime string `column:"create_time" json:"createTime,omitempty"`
 
 	// UpdateTime 更新时间
-	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
+	UpdateTime string `column:"update_time" json:"updateTime,omitempty"`
 
 	// CreateUser 创建人,初始化 system
-	CreateUser string `column:"createUser" json:"createUser,omitempty"`
+	CreateUser string `column:"create_user" json:"createUser,omitempty"`
 
 	// SortNo 排序
-	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
+	SortNo int `column:"sortno" json:"sortno,omitempty"`
 
 	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
@@ -268,13 +268,13 @@ type Site struct {
 	Theme string `column:"theme" json:"theme,omitempty"`
 
 	// ThemePC PC主题
-	ThemePC string `column:"themePC" json:"themePC,omitempty"`
+	ThemePC string `column:"theme_pc" json:"themePC,omitempty"`
 
 	// ThemeWAP WAP主题WAP
-	ThemeWAP string `column:"themeWAP" json:"themeWAP,omitempty"`
+	ThemeWAP string `column:"theme_wap" json:"themeWAP,omitempty"`
 
 	// ThemeWX 微信主题
-	ThemeWX string `column:"themeWX" json:"themeWX,omitempty"`
+	ThemeWX string `column:"theme_wx" json:"themeWX,omitempty"`
 
 	// Logo 站点logo
 	Logo string `column:"logo" json:"logo,omitempty"`
@@ -286,16 +286,16 @@ type Site struct {
 	Footer string `column:"footer" json:"footer,omitempty"`
 
 	// CreateTime 创建时间
-	CreateTime string `column:"createTime" json:"createTime,omitempty"`
+	CreateTime string `column:"create_time" json:"createTime,omitempty"`
 
 	// UpdateTime 更新时间
-	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
+	UpdateTime string `column:"update_time" json:"updateTime,omitempty"`
 
 	// CreateUser 创建人,初始化 system
-	CreateUser string `column:"createUser" json:"createUser,omitempty"`
+	CreateUser string `column:"create_user" json:"createUser,omitempty"`
 
 	// SortNo 排序
-	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
+	SortNo int `column:"sortno" json:"sortno,omitempty"`
 
 	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
@@ -330,25 +330,25 @@ type User struct {
 	Password string `column:"password" json:"password,omitempty"`
 
 	// UserName 用户名
-	UserName string `column:"userName" json:"userName,omitempty"`
+	UserName string `column:"user_name" json:"userName,omitempty"`
 
 	// ChainType 链类型
-	ChainType string `column:"chainType" json:"chainType,omitempty"`
+	ChainType string `column:"chain_type" json:"chainType,omitempty"`
 
 	// ChainAddress 链address
-	ChainAddress string `column:"chainAddress" json:"chainAddress,omitempty"`
+	ChainAddress string `column:"chain_address" json:"chainAddress,omitempty"`
 
 	// CreateTime 创建时间
-	CreateTime string `column:"createTime" json:"createTime,omitempty"`
+	CreateTime string `column:"create_time" json:"createTime,omitempty"`
 
 	// UpdateTime 更新时间
-	UpdateTime string `column:"updateTime" json:"updateTime,omitempty"`
+	UpdateTime string `column:"update_time" json:"updateTime,omitempty"`
 
 	// CreateUser 创建人,初始化 system
-	CreateUser string `column:"createUser" json:"createUser,omitempty"`
+	CreateUser string `column:"create_user" json:"createUser,omitempty"`
 
 	// SortNo 排序
-	SortNo int `column:"sortNo" json:"sortNo,omitempty"`
+	SortNo int `column:"sortno" json:"sortno,omitempty"`
 
 	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
