@@ -34,6 +34,18 @@ cmake .. -G "Unix Makefiles" -DBUILD_TEST_EXAMPLE=OFF -DCMAKE_INSTALL_PREFIX=rel
 make && make install
 ```
 
+## PostgreSQL 
+gpress uses SQLite as its default database. Starting from version v1.1.9, it supports PostgreSQL. The database configuration is specified in the gpressdatadir/dsn.json file. For specific configuration details, please refer to the [zorm](https://gitee.com/chunanyong/zorm) configuration. For example:
+{
+    "DSN":"postgresql://username:password@host:port/database?sslmode=disable",
+    "DriverName":"postgres",
+    "Dialect":"postgresql",
+    "SlowSQLMillis":0,
+    "MaxOpenConns":50,
+    "MaxIdleConns":50,
+    "ConnMaxLifetimeSecond":600
+}
+
 ## Staticization  
 The backend ```Refresh Site``` function will generate static HTML files to the ```statichtml``` directory, along with ```gzip_static``` files. You need to copy the ```css, js, image``` of the currently used theme and the ```gpressdatadir/public``` directory to the ```statichtml``` directory, or use Nginx reverse proxy to specify the directory without copying files.  
 Nginx configuration example:
