@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS content (
 		sortno            INTEGER NOT NULL,
 		status            INTEGER NOT NULL
 	 ) ;
-CREATE INDEX idx_content ON content USING bm25 (id, (content::pdb.jieba)) WITH (key_field='id');
+     
+CREATE INDEX idx_content ON content USING bm25 (id, (markdown::pdb.jieba), (content::pdb.jieba)) WITH (key_field='id');
 
 CREATE TABLE IF NOT EXISTS site (
 		id VARCHAR(50) NOT NULL PRIMARY KEY,
