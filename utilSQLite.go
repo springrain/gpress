@@ -43,7 +43,7 @@ var isPGSQL = false
 func checkDBStatus() bool {
 
 	// 打开文件
-	jsonFile, err := os.Open(datadir + "dsn.json")
+	jsonFile, err := os.Open(datadir + "db.json")
 	if err == nil {
 		// 关闭文件
 		defer jsonFile.Close()
