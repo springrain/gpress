@@ -17,6 +17,7 @@ ALTER TABLE "user" RENAME COLUMN createTime TO create_time;
 ALTER TABLE "user" RENAME COLUMN updateTime TO update_time;
 ALTER TABLE "user" RENAME COLUMN createUser TO create_user;
 ALTER TABLE "user" RENAME COLUMN sortNo TO sortno;
+ALTER TABLE "user" RENAME TO userinfo;
 
 -- 重命名 category 表的字段
 ALTER TABLE category RENAME COLUMN hrefURL TO href_url;

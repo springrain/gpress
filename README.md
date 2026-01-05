@@ -135,7 +135,7 @@ Reads ```gpressdatadir/install_config.json``` during installation.
 | sortno      | int         | Sort Order         |  Descending  |
 | status      | int         | Status     |  Link Access (0), Public (1), Top (2), Private (3)  |
 
-### User (Table Name: user)
+### User (Table Name: userinfo)
 There is only one user in the backend.
 
 | columnName  | Type         | Description        |  Remarks       | 

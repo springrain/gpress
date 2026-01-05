@@ -211,9 +211,17 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 		// fst5 搜索相关性排序 ORDER BY rank; 后期再进行修改调整,先按照sortno排序
 		if i < 0 { // 没有where
 			finder.Append(sql, values...)
-			finder.Append(" where rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) ", q)
+			if isPGSQL { // pgsql按照 content 全文搜索
+				finder.Append(" where content ||| ? ", q)
+			} else {
+				finder.Append(" where rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) ", q)
+			}
 		} else {
-			finder.Append(sql[:i+7]+" rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) and ", q)
+			if isPGSQL { // pgsql按照 content 全文搜索
+				finder.Append(sql[:i+7]+" content ||| ? and ", q)
+			} else {
+				finder.Append(sql[:i+7]+" rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) and ", q)
+			}
 			finder.Append(sql[i+7:], values...)
 		}
 		finder.Append(orderBy)
@@ -234,8 +242,8 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 		data := make([]Config, 0)
 		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
-	case tableUserName:
-		data := make([]User, 0)
+	case tableUserinfoName:
+		data := make([]Userinfo, 0)
 		zorm.Query(ctx, finder, &data, page)
 		responseData.Data = data
 	case tableSiteName:
@@ -294,13 +302,13 @@ func funcSelectOne(urlPathParam string, sql string, values ...interface{}) (inte
 		} else {
 			selectOneData = Config{}
 		}
-	case tableUserName:
-		data := make([]User, 0)
+	case tableUserinfoName:
+		data := make([]Userinfo, 0)
 		zorm.Query(ctx, finder, &data, page)
 		if len(data) > 0 {
 			selectOneData = data[0]
 		} else {
-			selectOneData = User{}
+			selectOneData = Userinfo{}
 		}
 	case tableSiteName:
 		data := make([]Site, 0)

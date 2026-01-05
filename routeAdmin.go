@@ -118,7 +118,7 @@ func init() {
 	// 修改Site
 	adminGroup.POST("/site/update", funcUpdateSite)
 	// 修改User
-	adminGroup.POST("/user/update", funcUpdateUser)
+	adminGroup.POST("/userinfo/update", funcUpdateUser)
 	// 修改Category
 	adminGroup.POST("/category/update", funcUpdateCategory)
 	// 修改Content
@@ -158,7 +158,7 @@ func funcAdminInstall(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	// 使用后端管理界面配置,jwtSecret也有后端随机产生
-	user := User{}
+	user := Userinfo{}
 	user.Account = c.PostForm("account")
 	user.UserName = c.PostForm("account")
 	user.Password = c.PostForm("password")
@@ -657,7 +657,7 @@ func funcUpdateSite(ctx context.Context, c *app.RequestContext) {
 // funcUpdateUser 更新用户信息
 func funcUpdateUser(ctx context.Context, c *app.RequestContext) {
 	now := time.Now().Format("2006-01-02 15:04:05")
-	entity := &User{}
+	entity := &Userinfo{}
 	ok := funcUpdateInit(ctx, c, entity)
 	if !ok {
 		return
@@ -667,7 +667,7 @@ func funcUpdateUser(ctx context.Context, c *app.RequestContext) {
 		sha3Bytes := sha3.Sum512([]byte(entity.Password))
 		entity.Password = hex.EncodeToString(sha3Bytes[:])
 	} else {
-		f1 := zorm.NewSelectFinder(tableUserName, "password").Append("WHERE id=?", entity.Id)
+		f1 := zorm.NewSelectFinder(tableUserinfoName, "password").Append("WHERE id=?", entity.Id)
 		password := ""
 		zorm.QueryRow(ctx, f1, &password)
 		entity.Password = password

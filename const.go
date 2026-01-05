@@ -33,8 +33,8 @@ const (
 	// config 配置的表名称
 	tableConfigName = "config"
 
-	// user 用户的表名称
-	tableUserName = "user"
+	// userinfo 用户的表名称
+	tableUserinfoName = "userinfo"
 	// site  站点信息
 	tableSiteName = "site"
 

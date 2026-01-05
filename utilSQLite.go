@@ -28,6 +28,7 @@ import (
 	"gitee.com/chunanyong/zorm"
 
 	// 00.引入数据库驱动
+	_ "github.com/lib/pq"
 	"github.com/mattn/go-sqlite3"
 )
 
@@ -65,6 +66,18 @@ func checkDBStatus() bool {
 	}
 
 	if isPGSQL {
+		dbDao, err = zorm.NewDBDao(&dbDaoConfig)
+		if dbDao == nil || err != nil { //数据库初始化失败
+			return false
+		}
+		extname := ""
+		finder := zorm.NewFinder().Append("SELECT extname FROM pg_extension WHERE extname = ?", "pg_search")
+		_, err = zorm.QueryRow(context.Background(), finder, &extname)
+		if err != nil {
+			return false
+		}
+		// 使用pg_search扩展,进行全文检索
+		return extname == "pg_search"
 		//return checkPGSQLStatus()
 	}
 	dbDaoConfig = zorm.DataSourceConfig{

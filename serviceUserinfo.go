@@ -24,9 +24,9 @@ import (
 )
 
 // insertUser 插入用户
-func insertUser(ctx context.Context, user User) error {
+func insertUser(ctx context.Context, user Userinfo) error {
 	// 清空用户,只能有一个管理员
-	deleteAll(ctx, tableUserName)
+	deleteAll(ctx, tableUserinfoName)
 	// 初始化数据
 	user.Id = "gpress_admin"
 	user.SortNo = 1
@@ -39,7 +39,7 @@ func insertUser(ctx context.Context, user User) error {
 
 // findUserId 查询用户ID
 func findUserId(ctx context.Context, account string, password string) (string, error) {
-	finder := zorm.NewSelectFinder(tableUserName, "id").Append(" WHERE account=? and password=?", account, password)
+	finder := zorm.NewSelectFinder(tableUserinfoName, "id").Append(" WHERE account=? and password=?", account, password)
 	userId := ""
 	_, err := zorm.QueryRow(ctx, finder, &userId)
 	return userId, err
@@ -47,7 +47,7 @@ func findUserId(ctx context.Context, account string, password string) (string, e
 
 // findUserAddress 查询用户区块链Address
 func findUserAddress(ctx context.Context) (string, string, string, error) {
-	finder := zorm.NewSelectFinder(tableUserName, "id,chain_type,chain_address")
+	finder := zorm.NewSelectFinder(tableUserinfoName, "id,chain_type,chain_address")
 	userMap, err := zorm.QueryRowMap(ctx, finder)
 	if len(userMap) < 1 || userMap["id"] == nil || userMap["chain_type"] == nil || userMap["chain_address"] == nil { //没有数据
 		return "", "", "", err

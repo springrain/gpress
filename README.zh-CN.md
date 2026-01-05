@@ -34,6 +34,20 @@ cmake .. -G "Unix Makefiles" -DBUILD_TEST_EXAMPLE=OFF -DCMAKE_INSTALL_PREFIX=rel
 make && make install
 ```
 
+## PostgreSQL 
+gpress默认使用sqlite数据库,v1.1.9之后,支持 PostgreSQL 数据库,数据信息配置在```gpressdatadir/dsn.json```文件,具体参见[zorm](https://gitee.com/chunanyong/zorm)的配置,例如:
+```json
+{
+    "DSN":"postgresql://username:password@host:port/database?sslmode=disable",
+    "DriverName":"postgres",
+    "Dialect":"postgresql",
+    "SlowSQLMillis":0,
+    "MaxOpenConns":50,
+    "MaxIdleConns":50,
+    "ConnMaxLifetimeSecond":600
+}
+```
+
 ## 静态化
 后台 ```刷新站点``` 功能会生成静态html文件到 ```statichtml``` 目录,同时生成```gzip_static```文件.需要把正在使用的主题的 ```css,js,image```和```gpressdatadir/public```目录复制到 ```statichtml```目录下,或者用Nginx反向代理指定目录,不复制文件.    
 nginx 配置示例如下:
@@ -134,7 +148,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | sortno      | int         | 排序         |  倒序  |
 | status      | int         | 状态     |  链接访问(0),公开(1),置顶(2),私密(3)  |
 
-### 用户(表名:user)
+### 用户(表名:userinfo)
 后台只有一个用户.
 
 | columnName  | 类型         | 说明        |  备注       | 

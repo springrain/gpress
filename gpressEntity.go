@@ -315,8 +315,8 @@ func (entity *Site) GetPKColumnName() string {
 	return "id"
 }
 
-// User 用户信息
-type User struct {
+// Userinfo 用户信息
+type Userinfo struct {
 	// 引入默认的struct,隔离IEntityStruct的方法改动
 	zorm.EntityStruct
 
@@ -356,11 +356,11 @@ type User struct {
 
 // GetTableName 获取表名称
 // IEntityStruct 接口的方法,实体类需要实现!!!
-func (entity *User) GetTableName() string {
-	return tableUserName
+func (entity *Userinfo) GetTableName() string {
+	return tableUserinfoName
 }
 
-func (entity *User) GetPKColumnName() string {
+func (entity *Userinfo) GetPKColumnName() string {
 	return "id"
 }
 
