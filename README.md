@@ -154,7 +154,7 @@ There is only one user in the backend.
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | Primary Key        | gpress_admin |
 | account     | string      | Login Name    |  Default admin  |
-| passWord    | string      | Password        |    -  |
+| password    | string      | Password        |    -  |
 | user_name    | string      | Description        |    -  |
 | create_time  | string      | Creation Time     |  2006-01-02 15:04:05  |
 | update_time  | string      | Update Time     |  2006-01-02 15:04:05  |

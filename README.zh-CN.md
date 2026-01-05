@@ -155,7 +155,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | ----------- | ----------- | ----------- | ----------- |
 | id          | string      | 主键        | gpress_admin |
 | account     | string      | 登录名称    |  默认admin  |
-| passWord    | string      | 密码        |    -  |
+| password    | string      | 密码        |    -  |
 | user_name    | string      | 说明        |    -  |
 | create_time  | string      | 创建时间     |  2006-01-02 15:04:05  |
 | update_time  | string      | 更新时间     |  2006-01-02 15:04:05  |
