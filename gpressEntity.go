@@ -65,9 +65,6 @@ type Config struct {
 
 	// Status 状态 链接访问(0),公开(1),置顶(2),私密(3)
 	Status int `column:"status" json:"status,omitempty"`
-
-	// DSN 数据库连接字符串,为了支持pgsql
-	DSN string `column:"dsn" json:"dsn,omitempty"`
 }
 
 // GetTableName 获取表名称

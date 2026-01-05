@@ -58,7 +58,7 @@ func loadInstallConfig() (Config, Site) {
 	}
 	configJson := Config{}
 	// Decode从输入流读取下一个json编码值并保存在v指向的值里
-	err = json.Unmarshal([]byte(byteValue), &configJson)
+	err = json.Unmarshal(byteValue, &configJson)
 	if err != nil {
 		FuncLogError(nil, defaultErr)
 		return defaultConfig, site

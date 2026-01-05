@@ -6,6 +6,5 @@
  "basePath":"/",
  "proxy":"",
  "maxRequestBodySize":20971520,
- "locale":"zh-CN",
- "dsn":""
+ "locale":"zh-CN"
 }

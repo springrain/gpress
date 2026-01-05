@@ -20,7 +20,9 @@ package main
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 
 	"gitee.com/chunanyong/zorm"
@@ -31,14 +33,51 @@ import (
 
 var dbDao *zorm.DBDao
 
-var dbDaoConfig = zorm.DataSourceConfig{
-	DSN:                   sqliteDBfile,
-	DriverName:            "sqlite3_simple", // 使用simple分词器会注册这个驱动名
-	Dialect:               "sqlite",
-	MaxOpenConns:          1,
-	MaxIdleConns:          1,
-	ConnMaxLifetimeSecond: 600,
-	SlowSQLMillis:         -1,
+var dbDaoConfig zorm.DataSourceConfig
+
+// 是否是pgsql数据库
+var isPGSQL = false
+
+// checkDBStatus 初始化数据库,并检查是否成功
+func checkDBStatus() bool {
+
+	// 打开文件
+	jsonFile, err := os.Open(datadir + "dsn.json")
+	if err == nil {
+		// 关闭文件
+		defer jsonFile.Close()
+		byteValue, err := io.ReadAll(jsonFile)
+		if err != nil {
+			FuncLogError(nil, err)
+		} else {
+			// Decode从输入流读取下一个json编码值并保存在v指向的值里
+			err = json.Unmarshal(byteValue, &dbDaoConfig)
+			if err != nil {
+				FuncLogError(nil, err)
+			} else {
+				if dbDaoConfig.DSN != "" {
+					isPGSQL = true
+				}
+
+			}
+		}
+
+	}
+
+	if isPGSQL {
+		//return checkPGSQLStatus()
+	}
+	dbDaoConfig = zorm.DataSourceConfig{
+		DSN:                   sqliteDBfile,
+		DriverName:            "sqlite3_simple", // 使用simple分词器会注册这个驱动名
+		Dialect:               "sqlite",
+		MaxOpenConns:          1,
+		MaxIdleConns:          1,
+		ConnMaxLifetimeSecond: 600,
+		SlowSQLMillis:         -1,
+	}
+	return checkSQLiteStatus()
+
 }
 
 // checkSQLiteStatus 初始化sqlite数据库,并检查是否成功

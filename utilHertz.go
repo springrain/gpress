@@ -178,11 +178,11 @@ func walkTemplateDir(tmpl *template.Template, walkDir string, baseDir string, is
 // isInstalled 是否已经安装过了
 func isInstalled() bool {
 	// 检查表状态
-	var sqliteStatus = checkSQLiteStatus()
+	var dbStatus = checkDBStatus()
 
-	// 依赖sqliteStatus变量,确保sqlite在isInstalled之前初始化
-	if !sqliteStatus {
-		err := errors.New(funcT("Table check failed,sqliteStatus is false"))
+	// 依赖dbStatus变量,确保sqlite在isInstalled之前初始化
+	if !dbStatus {
+		err := errors.New(funcT("Table check failed,dbStatus is false"))
 		FuncLogError(nil, err)
 		panic(err)
 	}
