@@ -100,7 +100,7 @@
 	  util.on('lay-on', {
 		'updatesql': function(){
 			layer.prompt(
-			{title: '{{T "Please enter the update SQL"}}', formType: 2,btn: ['{{T "OK"}}', '{{T "Cancel"}}'],}, 
+			{title: '{{T "Please enter the update SQL"}}',maxlength: 1000, formType: 2,btn: ['{{T "OK"}}', '{{T "Cancel"}}'],}, 
 			function(value, index, elem){
 				if(value === '') return elem.focus();
 				$.ajax({
