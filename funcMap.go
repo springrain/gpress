@@ -211,14 +211,14 @@ func funcSelectList(urlPathParam string, q string, pageNo int, pageSize int, sql
 		// fst5 搜索相关性排序 ORDER BY rank; 后期再进行修改调整,先按照sortno排序
 		if i < 0 { // 没有where
 			finder.Append(sql, values...)
-			if isPGSQL { // pgsql按照 content 全文搜索
-				finder.Append(" where content ||| ? ", q)
+			if dbDaoConfig.Dialect == "postgresql" { // postgresql 按照 markdown 全文搜索
+				finder.Append(" where markdown ||| ? ", q)
 			} else {
 				finder.Append(" where rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) ", q)
 			}
 		} else {
-			if isPGSQL { // pgsql按照 content 全文搜索
-				finder.Append(sql[:i+7]+" content ||| ? and ", q)
+			if dbDaoConfig.Dialect == "postgresql" { // postgresql 按照 markdown 全文搜索
+				finder.Append(sql[:i+7]+" markdown ||| ? and ", q)
 			} else {
 				finder.Append(sql[:i+7]+" rowid in (select rowid from fts_content where fts_content match jieba_query(?) ) and ", q)
 			}

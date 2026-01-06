@@ -512,6 +512,7 @@
 			var field = data.field; // 获取表单字段值
 			field.sortno = field.sortno - 0;
 			field.status = field.status - 0;
+			field.contentType = field.contentType - 0;
 			field.thumbnail = thumbnail;
 			field.code = "";
 			field.categoryName = $("#categoryID").find("option:selected").text();
@@ -519,7 +520,7 @@
 			let contentType=$("input:radio[name='contentType']:checked").val(); 
 			if(contentType=="1"){//富文本
 				field.content = content;
-				field.markdown= "";
+				field.markdown = editor.editor.textContent;
 			}else{
 				field.content="";
 				field.markdown = cherry.getMarkdown();

@@ -225,6 +225,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | sign_address | string      | 签名的Address   | 否   |                         |
 | sign_chain   | string      | Address所属的链 | 否   |                         |
 | tx_id        | string      | 上链交易的Hash  | 否   |                         |
+| content_type | int         | 内容类型        | 否   |    0 markdown, 1 html   |
 | create_time  | string      | 创建时间     | -       |  2006-01-02 15:04:05    |
 | update_time  | string      | 更新时间     | -       |  2006-01-02 15:04:05    |
 | create_user  | string      | 创建人       | -       |  初始化 system          |

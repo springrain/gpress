@@ -211,6 +211,9 @@ type Content struct {
 	// TxID 上链交易的Hash
 	TxID string `column:"tx_id" json:"txID,omitempty"`
 
+	// ContentType 内容类型,0 markdown,1 html
+	ContentType int `column:"content_type" json:"contentType,omitempty"`
+
 	// CreateTime 创建时间
 	CreateTime string `column:"create_time" json:"createTime,omitempty"`
 

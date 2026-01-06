@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS content (
 		sign_address       VARCHAR(200),
 		sign_chain         VARCHAR(200),
 		tx_id              VARCHAR(200),
+        content_type      INTEGER NOT NULL DEFAULT 0,
 		create_time       TIMESTAMPTZ,
 		update_time       TIMESTAMPTZ,
 		create_user        VARCHAR(200),
@@ -78,7 +79,7 @@ CREATE TABLE IF NOT EXISTS content (
 		status            INTEGER NOT NULL
 	 ) ;
      
-CREATE INDEX idx_content ON content USING bm25 (id, (markdown::pdb.jieba), (content::pdb.jieba)) WITH (key_field='id');
+CREATE INDEX idx_content ON content USING bm25 (id, (content::pdb.jieba)) WITH (key_field='id');
 
 CREATE TABLE IF NOT EXISTS site (
 		id VARCHAR(50) NOT NULL PRIMARY KEY,
@@ -103,6 +104,7 @@ CREATE TABLE IF NOT EXISTS site (
 INSERT INTO site (status,sortno,create_user,update_time,create_time,footer,favicon,logo,theme_wx,theme_wap,theme_pc,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2025 <span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','https://jiagou.com','架构','jiagou','gpress_site');
 
 INSERT INTO content (
+                        content_type,
                         status,
                         sortno,
                         create_user,
@@ -130,6 +132,7 @@ INSERT INTO content (
                         id
                     )
                     VALUES (
+                        0,
                         0,
                         0,
                         NULL,
@@ -178,6 +181,7 @@ INSERT INTO content (
                         '/single/about'
                     ),
                     (
+                        0,
                         1,
                         1,
                         '',

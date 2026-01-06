@@ -36,9 +36,6 @@ var dbDao *zorm.DBDao
 
 var dbDaoConfig zorm.DataSourceConfig
 
-// 是否是pgsql数据库
-var isPGSQL = false
-
 // checkDBStatus 初始化数据库,并检查是否成功
 func checkDBStatus() bool {
 
@@ -55,17 +52,12 @@ func checkDBStatus() bool {
 			err = json.Unmarshal(byteValue, &dbDaoConfig)
 			if err != nil {
 				FuncLogError(nil, err)
-			} else {
-				if dbDaoConfig.DSN != "" {
-					isPGSQL = true
-				}
-
 			}
 		}
 
 	}
 
-	if isPGSQL {
+	if dbDaoConfig.Dialect == "postgresql" {
 		dbDao, err = zorm.NewDBDao(&dbDaoConfig)
 		if dbDao == nil || err != nil { //数据库初始化失败
 			return false

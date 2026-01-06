@@ -694,7 +694,7 @@ func funcUpdateContent(ctx context.Context, c *app.RequestContext) {
 	if !ok {
 		return
 	}
-	if entity.Markdown != "" {
+	if entity.ContentType == 0 {
 		content, toc, err := renderMarkdownHtml(entity.Markdown)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Markdown to HTML conversion error")})

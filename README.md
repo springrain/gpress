@@ -224,6 +224,7 @@ Site information, such as title, logo, keywords, description, etc.
 | sign_address | string      | Signature Address   | No   |                         |
 | sign_chain   | string      | Chain of Address | No   |                         |
 | tx_id        | string      | On-chain Transaction Hash  | No   |                         |
+| content_type | int         | Content Type               | No   |    0 markdown, 1 html   |
 | create_time  | string      | Creation Time     | -       |  2006-01-02 15:04:05    |
 | update_time  | string      | Update Time     | -       |  2006-01-02 15:04:05    |
 | create_user  | string      | Creator       | -       |  Initialization system          |

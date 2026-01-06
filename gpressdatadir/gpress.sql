@@ -67,13 +67,14 @@ CREATE TABLE IF NOT EXISTS content (
 		content           TEXT,
 		markdown          TEXT,
 		thumbnail         TEXT,
-		signature         TEXT  ,
-		sign_address       TEXT  ,
-		sign_chain         TEXT  ,
-		tx_id              TEXT  ,
-		create_time        TEXT,
-		update_time        TEXT,
-		create_user        TEXT,
+		signature         TEXT,
+		sign_address      TEXT,
+		sign_chain        TEXT,
+		tx_id             TEXT,
+		content_type      int NOT NULL DEFAULT 0,
+		create_time       TEXT,
+		update_time       TEXT,
+		create_user       TEXT,
 		sortno            int NOT NULL,
 		status            int NOT NULL
 	 ) strict ;
@@ -100,42 +101,34 @@ CREATE TABLE IF NOT EXISTS site (
 	 ) strict ;
 INSERT INTO site (status,sortno,create_user,update_time,create_time,footer,favicon,logo,theme_wx,theme_wap,theme_pc,theme,description,keyword,domain,name,title,id)VALUES (1,1,NULL,NULL,NULL,'<div class="copyright"><span class="copyright-year">&copy; 2008 - 2025 <span class="author">jiagou.com 版权所有 <a href=''https://beian.miit.gov.cn'' target=''_blank''>豫ICP备xxxxx号</a>   <a href=''http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=xxxx''  target=''_blank''><img src=''/public/gongan.png''>豫公网安备xxxxx号</a></span></span></div>','public/favicon.png','public/logo.png','default','default','default','default','Web3内容平台,Hertz + Go template + FTS5全文检索,支持以太坊和百度超级链,兼容Hugo、WordPress生态,使用Wasm扩展插件,只需200M内存','gpress,web3,Hugo,WordPress,以太坊,百度超级链','https://jiagou.com','架构','jiagou','gpress_site');
 
+-- 重新创建虚拟表(使用新的字段名)
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
-		title, 
-		keyword, 
-		description,
-		subtitle,
-		category_name,
-		summary,
-		toc,
-		tag,
-		author, 
-
+		markdown, 
 	    tokenize = 'simple 0',
 		content='content', 
 		content_rowid='rowid'
 	);
+
+-- 重新创建触发器(使用新的字段名)
 CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
-		BEGIN
-			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,category_name,summary,toc,tag,author)
-			VALUES (new.rowid,  new.title, new.keyword, new.description,new.subtitle,new.category_name,new.summary,new.toc,new.tag,new.author);
-		END;
-	
-	CREATE TRIGGER IF NOT EXISTS trigger_content_delete AFTER DELETE ON content
-		BEGIN
-			INSERT INTO fts_content (fts_content,  title, keyword, description,subtitle,category_name,summary,toc,tag,author)
-			VALUES ('delete',  old.title, old.keyword, old.description,old.subtitle,old.category_name,old.summary,old.toc,old.tag,old.author);
-		END;
-	
-	CREATE TRIGGER IF NOT EXISTS trigger_content_update AFTER UPDATE ON content
-		BEGIN
-			INSERT INTO fts_content (fts_content, rowid, title, keyword, description,subtitle,category_name,summary,toc,tag,author)
-			VALUES ('delete', old.rowid,  old.title, old.keyword, old.description,old.subtitle,old.category_name,old.summary,old.toc,old.tag,old.author);
-			INSERT INTO fts_content (rowid, title, keyword, description,subtitle,category_name,summary,toc,tag,author)
-			VALUES (new.rowid, new.title, new.keyword, new.description,new.subtitle,new.category_name,new.summary,new.toc,new.tag,new.author);
-		END;
+BEGIN
+    INSERT INTO fts_content (rowid, markdown) VALUES (new.rowid,  new.markdown);
+END;
+
+CREATE TRIGGER IF NOT EXISTS trigger_content_delete AFTER DELETE ON content
+BEGIN
+    INSERT INTO fts_content (fts_content, rowid, markdown) VALUES ('delete', old.rowid, old.markdown);
+END;
+
+CREATE TRIGGER IF NOT EXISTS trigger_content_update AFTER UPDATE ON content
+BEGIN
+    INSERT INTO fts_content (fts_content, rowid, markdown) VALUES ('delete', old.rowid,  old.markdown);
+	INSERT INTO fts_content (rowid, markdown) VALUES (new.rowid, new.markdown);
+END;
+
 
 INSERT INTO content (
+                        content_type,
                         status,
                         sortno,
                         create_user,
@@ -163,6 +156,7 @@ INSERT INTO content (
                         id
                     )
                     VALUES (
+                        0,
                         0,
                         0,
                         NULL,
@@ -211,6 +205,7 @@ INSERT INTO content (
                         '/single/about'
                     ),
                     (
+                        0,
                         1,
                         1,
                         '',

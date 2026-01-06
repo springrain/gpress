@@ -41,6 +41,10 @@ ALTER TABLE content RENAME COLUMN createTime TO create_time;
 ALTER TABLE content RENAME COLUMN updateTime TO update_time;
 ALTER TABLE content RENAME COLUMN createUser TO create_user;
 ALTER TABLE content RENAME COLUMN sortNo TO sortno;
+-- 为 content 表添加 content_type 字段
+ALTER TABLE content ADD COLUMN content_type INTEGER;
+UPDATE content SET content_type = 0 WHERE markdown != '';
+UPDATE content SET content_type = 1 WHERE markdown = '';
 
 -- 重命名 site 表的字段
 ALTER TABLE site RENAME COLUMN themePC TO theme_pc;
@@ -63,41 +67,28 @@ DROP TABLE IF EXISTS fts_content;
 
 -- 重新创建虚拟表(使用新的字段名)
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_content USING fts5(
-    title, 
-    keyword, 
-    description,
-    subtitle,
-    category_name,  
-    summary,
-    toc,
-    tag,
-    author,
-    tokenize = 'simple 0',
-    content='content', 
-    content_rowid='rowid'
-);
+		markdown, 
+	    tokenize = 'simple 0',
+		content='content', 
+		content_rowid='rowid'
+	);
 
 -- 重新创建触发器(使用新的字段名)
 CREATE TRIGGER IF NOT EXISTS trigger_content_insert AFTER INSERT ON content
 BEGIN
-    INSERT INTO fts_content (rowid, title, keyword, description, subtitle, category_name, summary, toc, tag, author)
-    VALUES (new.rowid, new.title, new.keyword, new.description, new.subtitle, new.category_name, new.summary, new.toc, new.tag, new.author);
+    INSERT INTO fts_content (rowid, markdown) VALUES (new.rowid,  new.markdown);
 END;
 
 CREATE TRIGGER IF NOT EXISTS trigger_content_delete AFTER DELETE ON content
 BEGIN
-    INSERT INTO fts_content (fts_content, rowid, title, keyword, description, subtitle, category_name, summary, toc, tag, author)
-    VALUES ('delete', old.rowid, old.title, old.keyword, old.description, old.subtitle, old.category_name, old.summary, old.toc, old.tag, old.author);
+    INSERT INTO fts_content (fts_content, rowid, markdown) VALUES ('delete', old.rowid, old.markdown);
 END;
 
 CREATE TRIGGER IF NOT EXISTS trigger_content_update AFTER UPDATE ON content
 BEGIN
-    INSERT INTO fts_content (fts_content, rowid, title, keyword, description, subtitle, category_name, summary, toc, tag, author)
-    VALUES ('delete', old.rowid, old.title, old.keyword, old.description, old.subtitle, old.category_name, old.summary, old.toc, old.tag, old.author);
-    INSERT INTO fts_content (rowid, title, keyword, description, subtitle, category_name, summary, toc, tag, author)
-    VALUES (new.rowid, new.title, new.keyword, new.description, new.subtitle, new.category_name, new.summary, new.toc, new.tag, new.author);
+    INSERT INTO fts_content (fts_content, rowid, markdown) VALUES ('delete', old.rowid,  old.markdown);
+	INSERT INTO fts_content (rowid, markdown) VALUES (new.rowid, new.markdown);
 END;
 
 
-INSERT INTO fts_content (rowid, title, keyword, description, subtitle, category_name, summary, toc, tag, author)
-SELECT rowid, title, keyword, description, subtitle, category_name, summary, toc, tag, author FROM content;
+INSERT INTO fts_content (rowid, markdown) SELECT rowid, markdown FROM content;

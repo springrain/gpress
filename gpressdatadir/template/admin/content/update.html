@@ -191,13 +191,16 @@
 			$("#i_delete_thumbnail").show();
 		}
 
-		var content = "";
-		if("{{.Data.Markdown}}"==""){//不是markdown格式
-			content="{{.Data.Content}}";
-			$("input:radio[name='contentType'][value='1']").attr("checked",true);  
+		var content = "{{.Data.Content}}";
+		$("input:radio[name='contentType'][value='{{.Data.ContentType}}']").attr("checked",true);  
+		if("{{.Data.ContentType}}"=="1"){ // html 类型
 			$('#markdown-container').hide();
 			$('#editor-wrapper').show();
+		}else{ // markdown 类型
+			$('#editor-wrapper').hide();
+			$('#markdown-container').show();
 		}
+		
 		// 渲染全部表单
 		form.render(); 
 
@@ -487,6 +490,7 @@
 			var field = data.field; // 获取表单字段值
 			field.sortno = field.sortno - 0;
 			field.status = field.status - 0;
+			field.contentType = field.contentType - 0;
 			field.thumbnail = thumbnail;
 			field.code = "";
 			field.categoryName = $("#categoryID").find("option:selected").text();
@@ -494,7 +498,7 @@
 			let contentType=$("input:radio[name='contentType']:checked").val(); 
 			if(contentType=="1"){//富文本
 				field.content = content;
-				field.markdown= "";
+				field.markdown = editor.editor.textContent;
 			}else{
 				field.content="";
 				field.markdown = cherry.getMarkdown();
