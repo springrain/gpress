@@ -488,6 +488,7 @@
 		const editor = Jodit.make('#editor-container', editorConfig);
 
 
+		var firstHtmlFocus=false;
 		// 切换 富文本 和 Markdown
 		form.on('radio(contentType)', function (data) {
 			var elem = data.elem; // 获得 radio 原始 DOM 对象
@@ -500,8 +501,9 @@
 				$('#markdown-container').hide();
 				$('#editor-wrapper').show();
 				
-				if(content==""){
-                   editor.s.focus();
+				if(!firstHtmlFocus){
+					firstHtmlFocus=true;
+				    editor.s.focus();
 				}
 			}
 		})
