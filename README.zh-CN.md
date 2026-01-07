@@ -35,7 +35,7 @@ make && make install
 ```
 
 ## PostgreSQL 
-gpress默认使用sqlite数据库,v1.1.9之后,支持 PostgreSQL 数据库,数据信息配置在```gpressdatadir/db.json```文件,具体参见[zorm](https://gitee.com/chunanyong/zorm)的配置,例如:
+gpress默认使用sqlite数据库,v1.1.9之后,支持 PostgreSQL 数据库,数据库配置在```gpressdatadir/db.json```文件,具体参见[zorm](https://gitee.com/chunanyong/zorm)的配置,例如:
 ```json
 {
     "DSN":"postgresql://username:password@host:port/database?sslmode=disable&TimeZone=Asia/Shanghai",
