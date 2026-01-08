@@ -1,3 +1,6 @@
+v1.2.0
+- 完善文档,注释
+
 v1.1.9
 - 全文检索markdown字段
 - 支持PostgreSQL数据库,使用pg_search实现全文检索
