@@ -3,11 +3,11 @@ module gitee.com/gpress/gpress
 go 1.25
 
 require (
-	gitee.com/chunanyong/zorm v1.8.1
+	gitee.com/chunanyong/zorm v1.8.2
 	github.com/alecthomas/chroma/v2 v2.23.1
 	github.com/cloudwego/hertz v0.10.4
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0
-	github.com/lib/pq v1.10.9
+	github.com/lib/pq v1.11.1
 	github.com/mattn/go-sqlite3 v1.14.33
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/tetratelabs/wazero v1.11.0
