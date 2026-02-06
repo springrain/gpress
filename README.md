@@ -36,6 +36,7 @@ make && make install
 
 ## PostgreSQL 
 gpress uses SQLite as its default database. Starting from version v1.1.9, it supports PostgreSQL. The database configuration is specified in the ```gpressdatadir/db.json``` file. For specific configuration details, please refer to the [zorm](https://gitee.com/chunanyong/zorm) configuration. For example:
+```json
 {
     "DSN":"postgresql://username:password@host:port/database?sslmode=disable&TimeZone=Asia/Shanghai",
     "DriverName":"postgres",
@@ -45,6 +46,7 @@ gpress uses SQLite as its default database. Starting from version v1.1.9, it sup
     "MaxIdleConns":50,
     "ConnMaxLifetimeSecond":600
 }
+```
 
 ## Staticization  
 The backend ```Refresh Site``` function will generate static HTML files to the ```statichtml``` directory, along with ```gzip_static``` files. You need to copy the ```css, js, image``` of the currently used theme and the ```gpressdatadir/public``` directory to the ```statichtml``` directory, or use Nginx reverse proxy to specify the directory without copying files.  
