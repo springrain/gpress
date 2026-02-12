@@ -1,14 +1,14 @@
 module gitee.com/gpress/gpress
 
-go 1.25
+go 1.26
 
 require (
 	gitee.com/chunanyong/zorm v1.8.2
 	github.com/alecthomas/chroma/v2 v2.23.1
 	github.com/cloudwego/hertz v0.10.4
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0
-	github.com/lib/pq v1.11.1
-	github.com/mattn/go-sqlite3 v1.14.33
+	github.com/lib/pq v1.11.2
+	github.com/mattn/go-sqlite3 v1.14.34
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/tetratelabs/wazero v1.11.0
 	github.com/yuin/goldmark v1.7.16
@@ -17,7 +17,7 @@ require (
 	github.com/yuin/goldmark-meta v1.1.0
 	go.abhg.dev/goldmark/mermaid v0.6.0
 	go.abhg.dev/goldmark/toc v0.12.0
-	golang.org/x/crypto v0.47.0
+	golang.org/x/crypto v0.48.0
 )
 
 require (
@@ -37,7 +37,7 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/image v0.23.0 // indirect
-	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/sys v0.41.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
