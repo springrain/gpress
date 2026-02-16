@@ -1,5 +1,5 @@
 # 构建阶段
-FROM golang:1.25.3-alpine3.22 AS builder
+FROM golang:1.26.0-alpine3.23 AS builder
 # 操作系统(linux/darwin/windows,默认linux)
 ARG OS=linux     
 # 架构(amd64/arm64,默认amd64)    
@@ -36,7 +36,7 @@ RUN rm -rf /app/gpressdatadir/dict && \
     rm -rf /app/gpressdatadir/fts
 
 # 运行阶段
-FROM alpine:3.22.2
+FROM alpine:3.23.3
 
 # 安装运行时依赖
 RUN apk add --no-cache libgcc libstdc++ sqlite-libs
