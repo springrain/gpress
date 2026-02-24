@@ -141,7 +141,7 @@ INSERT INTO content (
                         '2024-04-11 11:02:40',
                         '2023-06-27 22:43:53',
                         NULL,
-                        '本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .  
+                        '本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 10 .  
 使用[gpress](https://gitee.com/gpress/gpress)迁移了[Hugo](https://github.com/gohugoio/hugo)的[even](https://github.com/olOwOlo/hugo-theme-even)主题和markdown文件.  
 
 我所见识过的一切都将消失一空,就如眼泪消逝在雨中......  
@@ -152,7 +152,7 @@ INSERT INTO content (
 * [zorm](https://gitee.com/chunanyong/zorm)
 * [gpress](https://gitee.com/gpress/gpress)
 * [minRAG](https://gitee.com/minrag/minrag)',
-                        '<p>本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9 .<br>
+                        '<p>本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 10 .<br>
 使用<a href="https://gitee.com/gpress/gpress">gpress</a>迁移了<a href="https://github.com/gohugoio/hugo">hugo</a>的<a href="https://github.com/olOwOlo/hugo-theme-even">even</a>主题和markdown文件.</p>
 <p>我所见识过的一切都将消失一空,就如眼泪消逝在雨中......<br>
 不妨大胆一些,大胆一些......</p>
@@ -164,7 +164,7 @@ INSERT INTO content (
 <li><a href="https://gitee.com/minrag/minrag">minRAG</a></li>
 </ul>
 ',
-                        '本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 9.使用Hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......	不妨大胆一些,大胆一些......',
+                        '本站服务器配置:阿里云张家口机房,ecs.t6-c4m1.large,2核CPU,512M内存,20G高效云盘,RockyLinux 10.使用Hugo和even模板,编译成静态文件,Nginx作为WEB服务器.我所见识过的一切都将消失一空,就如眼泪消逝在雨中......	不妨大胆一些,大胆一些......',
                         '',
                         NULL,
                         'springrain',
@@ -396,8 +396,6 @@ nginx 配置示例如下:</p>
 <a href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">开发环境</a></li>
 <li>
 <a href="#%E9%9D%99%E6%80%81%E5%8C%96">静态化</a></li>
-<li>
-<a href="#%E9%98%BF%E9%87%8C%E4%BA%91%E8%AE%A1%E7%AE%97%E5%B7%A2">阿里云计算巢</a></li>
 </ul>
 ',
                         '',
