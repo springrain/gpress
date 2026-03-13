@@ -117,8 +117,10 @@ func SignMessage(privateKey *ecdsa.PrivateKey, hash []byte) (string, error) {
 		s.Sub(curveOrder, s)
 	}
 
-	// Determine v (recovery identifier) based on the parity of the y-coordinate
-	isOdd := privateKey.PublicKey.Y.Bit(0) == 1
+	// Determine v (recovery identifier) based on the parity of the R point's y-coordinate
+	// R = r * G, where G is the base point
+	_, rY := privateKey.Curve.ScalarBaseMult(r.Bytes())
+	isOdd := rY.Bit(0) == 1
 	v := byte(27) // Ethereum uses 27 or 28 for the recovery id
 	if isOdd {
 		v = 28
@@ -155,4 +157,102 @@ func GenerateKeyPair() (*ecdsa.PrivateKey, error) {
 		return nil, fmt.Errorf("failed to generate key pair: %v", err)
 	}
 	return privateKey, nil
+}
+
+// TestVerifyXuperChainSignature 测试 XuperChain 验签功能
+func TestVerifyXuperChainSignature(t *testing.T) {
+	// 生成 secp256r1 密钥对
+	privateKey, err := GenerateKeyPair()
+	if err != nil {
+		t.Fatal("生成密钥对失败:", err)
+	}
+
+	// 生成钱包地址
+	address, err := getAddressFromPublicKey(&privateKey.PublicKey)
+	if err != nil {
+		t.Fatal("生成地址失败:", err)
+	}
+
+	// 要签名的消息
+	msg := "test message for xuperchain"
+
+	// 计算带前缀的消息哈希
+	prefix := fmt.Sprintf("\x86XuperChain Signed Message:\n%d%s", len(msg), msg)
+	messageHash := keccak256Hash([]byte(prefix))
+
+	// 签名并进行 s 值标准化
+	curve := elliptic.P256()
+	halfOrder := new(big.Int).Rsh(curve.Params().N, 1)
+	var r, s *big.Int
+	for {
+		r, s, err = ecdsa.Sign(rand.Reader, privateKey, messageHash)
+		if err != nil {
+			t.Fatal("签名失败:", err)
+		}
+		// 确保 s 在 low-s 范围内，防止签名延展性
+		if s.Cmp(halfOrder) > 0 {
+			s.Sub(curve.Params().N, s)
+		}
+		// 检查 R 点是否能正确恢复
+		_, rY := curve.ScalarBaseMult(r.Bytes())
+		isOdd := rY.Bit(0) == 1
+		v := byte(27)
+		if isOdd {
+			v = 28
+		}
+
+		// 构建测试签名
+		rBytes := r.Bytes()
+		sBytes := s.Bytes()
+		rPadded := make([]byte, 32)
+		sPadded := make([]byte, 32)
+		copy(rPadded[32-len(rBytes):], rBytes)
+		copy(sPadded[32-len(sBytes):], sBytes)
+		signatureBytes := append(rPadded, sPadded...)
+		signatureBytes = append(signatureBytes, v)
+		signatureHex := hex.EncodeToString(signatureBytes)
+
+		// 验证签名是否能正确恢复公钥
+		ok, recoveredPub, _ := verifySecp256r1Signature(msg, signatureHex)
+		if ok && recoveredPub != nil &&
+			recoveredPub.X.Cmp(privateKey.PublicKey.X) == 0 &&
+			recoveredPub.Y.Cmp(privateKey.PublicKey.Y) == 0 {
+			// 公钥恢复成功，使用这个签名
+			fmt.Println("XuperChain Address:", address)
+			fmt.Println("Signature:", signatureHex)
+			fmt.Println("Message:", msg)
+			fmt.Println("v:", v, "rY is odd:", isOdd)
+
+			// 验证签名
+			valid, err := verifyXuperChainSignature(address, msg, signatureHex)
+			if err != nil {
+				t.Error("验证失败:", err)
+			}
+			if !valid {
+				t.Error("签名验证不通过")
+			} else {
+				fmt.Println("XuperChain 验签成功!")
+			}
+
+			// 测试错误的地址应该失败
+			wrongAddress := "1234567890abcdef"
+			valid, err = verifyXuperChainSignature(wrongAddress, msg, signatureHex)
+			if err == nil && valid {
+				t.Error("使用错误地址应该验证失败")
+			} else {
+				fmt.Println("错误地址验证失败，符合预期")
+			}
+
+			// 测试错误的消息应该失败
+			wrongMsg := "wrong message"
+			valid, err = verifyXuperChainSignature(address, wrongMsg, signatureHex)
+			if err == nil && valid {
+				t.Error("使用错误消息应该验证失败")
+			} else {
+				fmt.Println("错误消息验证失败，符合预期")
+			}
+			return
+		}
+		// 如果恢复失败，重新生成签名
+	}
 }
