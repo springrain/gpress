@@ -19,6 +19,7 @@ package main
 
 import (
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/hex"
@@ -254,5 +255,65 @@ func TestVerifyXuperChainSignature(t *testing.T) {
 			return
 		}
 		// 如果恢复失败，重新生成签名
+	}
+}
+
+// TestVerifySolanaSignature 测试 Solana 验签功能
+func TestVerifySolanaSignature(t *testing.T) {
+	// 生成 ed25519 密钥对
+	publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		t.Fatal("生成密钥对失败:", err)
+	}
+
+	// 生成 Solana 地址 (base58 编码的公钥)
+	// Solana 地址是公钥的 base58 编码，公钥是 32 字节
+	publicKeyBytes := publicKey[:32]
+	address := base58Encode(publicKeyBytes)
+	fmt.Println("Solana Address:", address)
+	fmt.Println("Public Key Length:", len(publicKeyBytes))
+
+	// 要签名的消息
+	msg := "test message for solana"
+
+	// Solana 消息前缀
+	prefix := fmt.Sprintf("\x19Solana Signed Message:\n%d%s", len(msg), msg)
+	messageHash := hashUsingSha256([]byte(prefix))
+
+	// 使用 ed25519 签名
+	signature := ed25519.Sign(privateKey, messageHash)
+	signatureHex := hex.EncodeToString(signature)
+
+	fmt.Println("Signature:", signatureHex)
+	fmt.Println("Signature Length:", len(signature))
+	fmt.Println("Message:", msg)
+
+	// 验证签名
+	valid, err := verifySolanaSignature(address, msg, signatureHex)
+	if err != nil {
+		t.Error("验证失败:", err)
+	}
+	if !valid {
+		t.Error("签名验证不通过")
+	} else {
+		fmt.Println("Solana 验签成功!")
+	}
+
+	// 测试错误的地址应该失败
+	wrongAddress := "1234567890abcdef1234567890abcdef"
+	valid, err = verifySolanaSignature(wrongAddress, msg, signatureHex)
+	if err == nil && valid {
+		t.Error("使用错误地址应该验证失败")
+	} else {
+		fmt.Println("错误地址验证失败，符合预期")
+	}
+
+	// 测试错误的消息应该失败
+	wrongMsg := "wrong message"
+	valid, err = verifySolanaSignature(address, wrongMsg, signatureHex)
+	if err == nil && valid {
+		t.Error("使用错误消息应该验证失败")
+	} else {
+		fmt.Println("错误消息验证失败，符合预期")
 	}
 }

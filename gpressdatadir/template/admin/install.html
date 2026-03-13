@@ -93,7 +93,7 @@
     <div class="gpress-install-container" id="div_use_wallet" style="display: none;">
         <div class="install_logo"><img src="{{basePath}}public/logo.png"></div>
         <div><h2 class="gpress-install-other">{{T "Blockchain Address"}}</h2></div>
-        <form class="layui-form" action="{{basePath}}admin/chaininstall" method="post">
+        <form class="layui-form" action="{{basePath}}admin/install" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">{{T "Blockchain Type"}}</label>
                 <div class="layui-input-block">
@@ -101,6 +101,7 @@
                     <option value="">{{T "Please select"}}</option>
                     <option value="XUPER">{{T "XuperChain"}}</option>
                     <option value="ETH">{{T "Ethereum"}}</option>
+                    <option value="SOL">{{T "Solana"}}</option>
                   </select>
                 </div>
             </div>

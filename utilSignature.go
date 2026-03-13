@@ -18,9 +18,11 @@
 package main
 
 import (
+	"crypto/ed25519"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -41,7 +43,7 @@ func verifyEthereumSignature(chainAddress string, msg string, signature string) 
 	if len(signatureBytes) < 65 {
 		return false, errors.New("invalid signature")
 	}
-	// 计算消息的哈希,包括 MetaMask 的消息前缀
+	// 计算消息的哈希，包括 MetaMask 的消息前缀
 	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(msg), msg)
 	messageHash := keccak256Hash([]byte(prefix))
 	r, s, v := signatureBytes[:32], signatureBytes[32:64], signatureBytes[64]
@@ -62,14 +64,49 @@ func verifyEthereumSignature(chainAddress string, msg string, signature string) 
 	return strings.EqualFold(address, chainAddress), nil
 }
 
-// verifyXuperChainSignature XuperChain使用 NIST/secp256r1 标准的公钥,验证签名
+// verifySolanaSignature 验证 Solana ed25519 的签名
+func verifySolanaSignature(chainAddress string, msg string, signature string) (bool, error) {
+	var signatureBytes []byte
+	var err error
+
+	// 尝试 hex 解码（优先）
+	signatureBytes, err = fromHex(signature)
+	if err != nil {
+		// Solana 使用 base64 编码的签名
+		signatureBytes, err = base64.StdEncoding.DecodeString(signature)
+		if err != nil {
+			return false, errors.New("invalid signature encoding")
+		}
+	}
+
+	if len(signatureBytes) != 64 {
+		return false, errors.New("invalid signature length")
+	}
+
+	// 解码地址 (Solana 地址是 base58 编码的 32 字节公钥)
+	addressBytes := base58Decode(chainAddress)
+	if len(addressBytes) != 32 {
+		return false, errors.New("invalid address")
+	}
+
+	// Solana 消息前缀
+	prefix := fmt.Sprintf("\x19Solana Signed Message:\n%d%s", len(msg), msg)
+	messageHash := hashUsingSha256([]byte(prefix))
+
+	// ed25519 签名验证：直接使用地址作为公钥验证
+	valid := ed25519.Verify(addressBytes, messageHash, signatureBytes)
+
+	return valid, nil
+}
+
+// verifyXuperChainSignature XuperChain 使用 NIST/secp256r1 标准的公钥，验证签名
 func verifyXuperChainSignature(chainAddress string, msg string, signature string) (valid bool, err error) {
 
 	verify, publicKey, err := verifySecp256r1Signature(msg, signature)
 	if !verify || err != nil {
 		return false, err
 	}
-	// 验证XuperChain的address
+	// 验证 XuperChain 的 address
 	verifyAddress, _ := verifyAddressUsingPublicKey(chainAddress, publicKey)
 	if !verifyAddress {
 		return false, errors.New(funcT("The public key in the signature does not match the address"))
@@ -78,7 +115,7 @@ func verifyXuperChainSignature(chainAddress string, msg string, signature string
 	return true, nil
 }
 
-// verifySecp256r1Signature 验证secp256r1的签名
+// verifySecp256r1Signature 验证 secp256r1 的签名
 func verifySecp256r1Signature(msg string, signature string) (bool, *ecdsa.PublicKey, error) {
 	signatureBytes, err := fromHex(signature)
 	if err != nil {
@@ -87,7 +124,7 @@ func verifySecp256r1Signature(msg string, signature string) (bool, *ecdsa.Public
 	if len(signatureBytes) < 65 {
 		return false, nil, errors.New("invalid signature")
 	}
-	// 计算消息的哈希,包括消息前缀
+	// 计算消息的哈希，包括消息前缀
 	prefix := fmt.Sprintf("\x86XuperChain Signed Message:\n%d%s", len(msg), msg)
 	messageHash := keccak256Hash([]byte(prefix))
 	r := new(big.Int).SetBytes(signatureBytes[:32])
@@ -101,7 +138,7 @@ func verifySecp256r1Signature(msg string, signature string) (bool, *ecdsa.Public
 	return true, publicKey, nil
 }
 
-// fromHex 将16进制字符串解码为字节数组
+// fromHex 将 16 进制字符串解码为字节数组
 func fromHex(s string) ([]byte, error) {
 	if len(s) >= 2 && s[0] == '0' && (s[1] == 'x' || s[1] == 'X') {
 		s = s[2:]
@@ -112,7 +149,7 @@ func fromHex(s string) ([]byte, error) {
 	return hex.DecodeString(s)
 }
 
-// keccak256Hash 对字节数字进行hash
+// keccak256Hash 对字节数字进行 hash
 func keccak256Hash(data []byte) []byte {
 	d := sha3.NewLegacyKeccak256()
 	d.Write(data)
@@ -120,7 +157,7 @@ func keccak256Hash(data []byte) []byte {
 }
 
 /*
-// checkKeyCurve 判断是否是NIST标准的公钥
+// checkKeyCurve 判断是否是 NIST 标准的公钥
 
 	func checkKeyCurve(k *ecdsa.PublicKey) bool {
 		if k.X == nil || k.Y == nil {
@@ -138,11 +175,11 @@ type ECDSASignature struct {
 	R, S *big.Int
 }
 */
-// verifyAddressUsingPublicKey 验证钱包地址是否和指定的公钥匹配. 如果成功,返回true和对应的密码学标记位;如果失败,返回false和默认的密码学标记位0
+// verifyAddressUsingPublicKey 验证钱包地址是否和指定的公钥匹配。如果成功，返回 true 和对应的密码学标记位;如果失败，返回 false 和默认的密码学标记位 0
 func verifyAddressUsingPublicKey(address string, pub *ecdsa.PublicKey) (bool, uint8) {
-	//base58反解回byte[]数组
+	//base58 反解回 byte[] 数组
 	slice := base58Decode(address)
-	//检查是否是合法的base58编码
+	//检查是否是合法的 base58 编码
 	if len(slice) < 1 {
 		return false, 0
 	}
@@ -162,9 +199,9 @@ func verifyAddressUsingPublicKey(address string, pub *ecdsa.PublicKey) (bool, ui
 	return false, 0
 }
 
-// getAddressFromPublicKey 返回33位长度的Address
+// getAddressFromPublicKey 返回 33 位长度的 Address
 func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
-	// 将ECDSA公钥转换为ECDH公钥
+	// 将 ECDSA 公钥转换为 ECDH 公钥
 	ecdhPublicKey, err := pub.ECDH()
 	if err != nil {
 		return "", err
@@ -175,8 +212,8 @@ func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	outputSha256 := hashUsingSha256(data)
 	OutputRipemd160 := hashUsingRipemd160(outputSha256)
 
-	//暂时只支持一个字节长度,也就是uint8的密码学标志位
-	// 判断是否是nist标准的私钥
+	//暂时只支持一个字节长度，也就是 uint8 的密码学标志位
+	// 判断是否是 nist 标准的私钥
 	nVersion := 1
 
 	switch pub.Params().Name {
@@ -201,14 +238,14 @@ func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	copy(slice, strSlice)
 	copy(slice[len(strSlice):], simpleCheckCode)
 
-	//使用base58编码,手写不容易出错.
-	//相比Base64,Base58不使用数字"0",字母大写"O",字母大写"I",和字母小写"l",以及"+"和"/"符号
+	//使用 base58 编码，手写不容易出错.
+	//相比 Base64,Base58 不使用数字"0",字母大写"O",字母大写"I",和字母小写"l",以及"+"和"/"符号
 	strEnc := base58Encode(slice)
 
 	return strEnc, nil
 }
 
-// hashUsingSha256 使用sha256 Hash
+// hashUsingSha256 使用 sha256 Hash
 func hashUsingSha256(data []byte) []byte {
 	h := sha256.New()
 	h.Write(data)
@@ -216,12 +253,12 @@ func hashUsingSha256(data []byte) []byte {
 	return out
 }
 
-// doubleSha256 执行2次SHA256,这是为了防止SHA256算法被攻破
+// doubleSha256 执行 2 次 SHA256,这是为了防止 SHA256 算法被攻破
 func doubleSha256(data []byte) []byte {
 	return hashUsingSha256(hashUsingSha256(data))
 }
 
-// hashUsingRipemd160 Ripemd160 hash算法可以缩短长度
+// hashUsingRipemd160 Ripemd160 hash 算法可以缩短长度
 func hashUsingRipemd160(data []byte) []byte {
 	h := ripemd160.New()
 	h.Write(data)
@@ -229,27 +266,27 @@ func hashUsingRipemd160(data []byte) []byte {
 	return out
 }
 
-// TODO 偶尔会恢复失败,原因待查
-// recoverP256PublicKey 根据签名的r,s,v恢复P256的公钥
+// TODO 偶尔会恢复失败，原因待查
+// recoverP256PublicKey 根据签名的 r,s,v 恢复 P256 的公钥
 func recoverP256PublicKey(hash []byte, r *big.Int, s *big.Int, v uint) (*ecdsa.PublicKey, error) {
 	curve := elliptic.P256()
 	params := curve.Params()
 
-	//v和recoveryID的奇偶性是相反的
+	//v 和 recoveryID 的奇偶性是相反的
 	recoveryID := (v + 1) % 2
 
-	// 检查r和s范围
+	// 检查 r 和 s 范围
 	if r.Sign() <= 0 || s.Sign() <= 0 || r.Cmp(params.N) >= 0 || s.Cmp(params.N) >= 0 {
 		return nil, errors.New("invalid r/s value")
 	}
 
-	// 计算R点x坐标
+	// 计算 R 点 x 坐标
 	x := new(big.Int).Set(r)
 	if x.Cmp(params.P) >= 0 {
 		return nil, errors.New("r >= P")
 	}
 
-	// 计算y² = x³ - 3x + b mod P
+	// 计算 y² = x³ - 3x + b mod P
 	x3 := new(big.Int).Exp(x, big.NewInt(3), params.P)
 	threeX := new(big.Int).Mul(x, big.NewInt(3))
 	threeX.Mod(threeX, params.P)
@@ -257,39 +294,39 @@ func recoverP256PublicKey(hash []byte, r *big.Int, s *big.Int, v uint) (*ecdsa.P
 	ySquared.Add(ySquared, params.B)
 	ySquared.Mod(ySquared, params.P)
 
-	// 计算y坐标
+	// 计算 y 坐标
 	y := new(big.Int).ModSqrt(ySquared, params.P)
 	if y == nil {
 		return nil, errors.New("invalid R point")
 	}
 
-	// 根据恢复ID调整y奇偶性
+	// 根据恢复 ID 调整 y 奇偶性
 	if (y.Bit(0) == 0 && recoveryID == 1) || (y.Bit(0) == 1 && recoveryID == 0) {
 		y.Sub(params.P, y)
 	}
 
-	// 计算r的模逆元
+	// 计算 r 的模逆元
 	rInv := new(big.Int).ModInverse(r, params.N)
 	if rInv == nil {
 		return nil, errors.New("r is not invertible")
 	}
 
-	// 计算sR点
+	// 计算 sR 点
 	sRx, sRy := curve.ScalarMult(x, y, s.Bytes())
 
-	// 计算e = hash mod N
+	// 计算 e = hash mod N
 	e := new(big.Int).SetBytes(hash)
 	e.Mod(e, params.N)
 
-	// 计算eG点
+	// 计算 eG 点
 	eGx, eGy := curve.ScalarBaseMult(e.Bytes())
 
-	// 计算sR - eG
+	// 计算 sR - eG
 	minusEGy := new(big.Int).Neg(eGy)
 	minusEGy.Mod(minusEGy, params.P)
 	sumX, sumY := curve.Add(sRx, sRy, eGx, minusEGy)
 
-	// 乘以r逆元得到公钥Q
+	// 乘以 r 逆元得到公钥 Q
 	qX, qY := curve.ScalarMult(sumX, sumY, rInv.Bytes())
 
 	// 验证点有效性

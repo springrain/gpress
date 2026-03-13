@@ -78,6 +78,10 @@
 					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/okx.png" />OkxWallet </a></td>
 					<td><a href="javascript:walletLogin(window.ethereum);"> <img src="{{basePath}}public/wallet/TrustWallet.png" />TrustWallet </a></td>
 				  </tr>
+				  <tr>
+					<td><a href="javascript:walletLogin(window.solana || (window.phantom && window.phantom.solana));"> <img src="{{basePath}}public/wallet/phantom.png" /> Phantom </a></td>
+					<td><a href="javascript:walletLogin(window.solana);"> <img src="{{basePath}}public/wallet/solflare.png" /> Solflare </a></td>
+				  </tr>
 				</tbody>
 			  </table>
 		</form>
@@ -103,52 +107,65 @@
 		layer.alert('{{T "1. Rename gpressdatadir/template/install.html.bak to install.html </br> 2. Settings updated successfully, restart GPRESS to take effect!, reinitialize administrator account and password, data will not be lost"}}',{title:'{{T "Forgot password"}}'});
 	}
     // 钱包登录
-    function walletLogin(provider) {
-		if (provider) {
-			provider.request({
-				method: 'eth_requestAccounts',
-				params: [],
-			}).then(accounts => {
-				let account = accounts[0]
-				personalSign(provider, account)
-			})
-		} else {
+    async function walletLogin(provider) {
+		if (!provider) {
 			layer.msg('{{T "Please install the corresponding wallet"}}');
+			return;
 		}
-	}
 
-	function stringToHex(str) {
-		let hex = ''
-		for (let i = 0; i < str.length; i++) {
-			hex += str.charCodeAt(i).toString(16)
-		}
-		return hex
-	}
-
-	async function personalSign(provider, accounts) {
-		let jsonObject = {}
-		const response = await fetch('{{basePath}}admin/random', {
-			method: 'post',
-			body: JSON.stringify(jsonObject),
-			headers: { 'Content-Type': 'application/json' }
-		})
-		let res = await response.json()
-		
-		if (res.statusCode == 1) {
-			let arrayboj = [res.data, accounts];
-			
-			provider.request({
-               method: 'personal_sign',
-               params: arrayboj,
-			}).then(result => {
-				document.getElementById("signature").value=result;
-				document.getElementById("chainlogin").submit();
+		try {
+			// 获取随机数
+			let jsonObject = {}
+			const response = await fetch('{{basePath}}admin/random', {
+				method: 'post',
+				body: JSON.stringify(jsonObject),
+				headers: { 'Content-Type': 'application/json' }
 			})
-		} else {
-			layer.msg(res.message);
+			let res = await response.json()
+
+			if (res.statusCode != 1) {
+				layer.msg(res.message);
+				return;
+			}
+
+			// 判断是否为 Solana provider
+			if (provider.isPhantom || provider.isSolflare || provider.providerName === 'solana') {
+				// Solana 钱包登录
+				await provider.connect();
+				const publicKey = provider.publicKey.toString();
+
+				// Solana 消息签名
+				const message = new TextEncoder().encode(res.data);
+				const signed = await provider.signMessage(message, 'utf8');
+
+				// 将签名转换为 base64 字符串
+				const signatureBase64 = btoa(String.fromCharCode(...signed.signature));
+
+				document.getElementById("signature").value = signatureBase64;
+				document.getElementById("chainlogin").submit();
+			} else {
+				// EVM 钱包登录
+				const accounts = await provider.request({
+					method: 'eth_requestAccounts',
+					params: [],
+				});
+				const account = accounts[0];
+
+				// 消息签名
+				const arrayboj = [res.data, account];
+				const result = await provider.request({
+					method: 'personal_sign',
+					params: arrayboj,
+				});
+
+				document.getElementById("signature").value = result;
+				document.getElementById("chainlogin").submit();
+			}
+		} catch (err) {
+			console.error('Wallet login error:', err);
+			layer.msg('Wallet login error: ' + err.message);
 		}
 	}
-
 	</script>
 
 </body>
