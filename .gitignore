@@ -3,6 +3,7 @@
 *.ipr
 *.iml
 *.iws
+.claude
 upload/
 install_config.json
 search-data.json
