@@ -1,4 +1,5 @@
 v1.2.2
+- 删除```deleteFileBeforeTime```时间戳之前的老文件
 - 完善文档,注释
 
 v1.2.1
