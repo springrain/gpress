@@ -2,9 +2,9 @@
 <!-- 查询 content 列表 -->
 {{ $selectList := selectList "content" .q .pageNo 20 "* FROM content WHERE status in (1,2) order by  status desc,sortno desc"  }}
 
-title: {{ $site.Title }}  
-description: {{ $site.Description }}  
-keyword: {{ $site.Keyword }}  
+Title: {{ $site.Title }}  
+Description: {{ $site.Description }}  
+Keyword: {{ $site.Keyword }}  
 ---
 
 {{ range $k,$v := $selectList.Data }}

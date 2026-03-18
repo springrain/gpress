@@ -5,7 +5,7 @@
 
 {{ $content := selectOne "content" $contentSQL $contentID }}
 
-title: {{ $content.Title }}  
+Title: {{ $content.Title }}  
 CreateTime: {{ $content.CreateTime }}  
 UpdateTime: {{ $content.UpdateTime }}  
 CategoryName: {{ $content.CategoryName }}  

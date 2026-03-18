@@ -12,9 +12,9 @@
 
 {{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
 
-title: {{ $nav.Name }}  
-description: {{ $nav.Description }}  
-keyword: {{ $nav.Keyword }}  
+Title: {{ $nav.Name }}  
+Description: {{ $nav.Description }}  
+Keyword: {{ $nav.Keyword }}  
 ---
 
 {{ range $k,$v := $selectList.Data }}
