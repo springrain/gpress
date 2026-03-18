@@ -44,6 +44,9 @@ import (
 var searchDataLock = &sync.Mutex{}
 var genStaticHtmlLock = &sync.Mutex{}
 
+// genMarkdownFile 是否生成markdown文件,如果主题模板中存在index.md,则生成markdown文件,否则不生成,默认值为false
+var genMarkdownFile = false
+
 // genSearchDataJson 生成flexSearch需要的json文件
 func genSearchDataJson() error {
 	//onlyOnce <- struct{}{}
@@ -88,6 +91,7 @@ func genStaticFile() error {
 	defer func() {
 		//重置状态值
 		reloadStatus = 0
+		genMarkdownFile = false
 		if r := recover(); r != nil {
 			FuncLogPanic(ctx, fmt.Errorf("genStaticFile panic recovered: %v", r))
 		}
@@ -118,6 +122,8 @@ func genStaticFile() error {
 	//删除deleteFileBeforeTime时间戳之前的老文件(当前时间后退 2 秒,避免误删刚生成的文件,linux生成文件 ModTime 的精度不够)
 	deleteFileBeforeTime := time.Now().Add(-2 * time.Second)
 
+	genMarkdownFile = pathExist(themeDir + site.Theme + "/index.md")
+
 	// 生成 default,pc,wap,weixin 等平台的静态文件
 	useThemes := map[string]bool{}
 	useThemes[""] = true
@@ -130,6 +136,7 @@ func genStaticFile() error {
 	_, has := useThemes[site.ThemePC]
 	//生成PC模板的静态网页
 	if !has {
+		genMarkdownFile = pathExist(themeDir + site.ThemePC + "/index.md")
 		err = genStaticFileByTheme(contents, categoryIDs, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
 		if err != nil {
 			FuncLogError(ctx, err)
@@ -141,6 +148,7 @@ func genStaticFile() error {
 	// 生成手机WAP模板的静态网页
 	_, has = useThemes[site.ThemeWAP]
 	if !has {
+		genMarkdownFile = pathExist(themeDir + site.ThemeWAP + "/index.md")
 		err = genStaticFileByTheme(contents, categoryIDs, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
 		if err != nil {
 			FuncLogError(ctx, err)
@@ -151,6 +159,7 @@ func genStaticFile() error {
 	//生成微信WX模板的静态网页
 	_, has = useThemes[site.ThemeWX]
 	if !has {
+		genMarkdownFile = pathExist(themeDir + site.ThemeWX + "/index.md")
 		err = genStaticFileByTheme(contents, categoryIDs, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
 		if err != nil {
 			FuncLogError(ctx, err)
@@ -217,7 +226,10 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	defer sitemapFile.Close() // 确保在函数结束时关闭文件
 	sitemapFile.WriteString(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 	sitemapFile.WriteString("<url><loc>" + domain + "</loc></url>")
-	sitemapFile.WriteString("<url><loc>" + domain + "/index.md</loc></url>")
+	if genMarkdownFile {
+		sitemapFile.WriteString("<url><loc>" + domain + "/index.md</loc></url>")
+	}
+
 	//上一个分页
 	prvePageFileHash := ""
 	//生成文章的静态网页
@@ -233,7 +245,9 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 		}
 		if success {
 			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + "</loc></url>")
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + ".md</loc></url>")
+			if genMarkdownFile {
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + ".md</loc></url>")
+			}
 		}
 
 		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent)
@@ -242,7 +256,9 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 		}
 		if success {
 			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + "</loc></url>")
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + ".md</loc></url>")
+			if genMarkdownFile {
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + ".md</loc></url>")
+			}
 		}
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
@@ -256,7 +272,9 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 		}
 		if success {
 			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "</loc></url>")
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + ".md</loc></url>")
+			if genMarkdownFile {
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + ".md</loc></url>")
+			}
 		}
 		for j := 0; j < len(contents); j++ {
 			fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
@@ -265,7 +283,9 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			}
 			if success {
 				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
+				if genMarkdownFile {
+					sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
+				}
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
@@ -289,7 +309,9 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			}
 			if success {
 				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
+				if genMarkdownFile {
+					sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
+				}
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
@@ -367,6 +389,9 @@ func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgen
 	// gzip 压缩 html 文件
 	err = doGzipFile(filePath+"index.html"+compressedFileSuffix, bytes.NewReader(body))
 	if err != nil {
+		return bodyHash, false, err
+	}
+	if !genMarkdownFile {
 		return bodyHash, false, err
 	}
 
