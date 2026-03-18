@@ -152,7 +152,7 @@ func walkTemplateDir(tmpl *template.Template, walkDir string, baseDir string, is
 		if !isAdmin && strings.Contains(path, "/admin/") { //如果用户主题,但是包含admin目录,不解析
 			return fs.SkipDir
 		}
-		if strings.HasSuffix(path, ".html") { // 模板文件
+		if strings.HasSuffix(path, ".html") || strings.HasSuffix(path, ".md") { // 模板文件
 			relativePath := path[len(baseDir):]
 			// 创建对应的模板
 			t := loadTmpl.New(relativePath)

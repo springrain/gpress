@@ -72,6 +72,9 @@ const (
 	// 静态文件压缩后缀,兼容Nginx gzip_static
 	compressedFileSuffix = ".gz"
 
+	// markdown 模板的key
+	markdownKey = "markdown"
+
 	//版本号
 	version = "v1.2.2"
 )

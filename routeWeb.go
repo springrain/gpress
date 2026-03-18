@@ -33,11 +33,16 @@ func init() {
 	//初始化静态文件
 	initStaticFS()
 
+	// 注册中间件, 指定处理.md后缀
+	h.Use(removeExtMiddleware(".md"))
+
 	// 异常页面
 	h.GET("/error", funcError)
+	h.GET("/error.md", funcError)
 
 	// 默认首页
 	h.GET("/", funcIndex)
+	h.GET("/index.md", funcIndex)
 	h.GET("/page/:pageNo", funcIndex)
 	h.GET("/page/:pageNo/", funcIndex)
 
@@ -55,12 +60,20 @@ func init() {
 // funcIndex 模板首页
 func funcIndex(ctx context.Context, c *app.RequestContext) {
 	data := warpRequestMap(c)
-	cHtml(c, http.StatusOK, "index.html", data)
+	templateFile := "index.html"
+	if _, has := c.Get(markdownKey); has {
+		templateFile = "index.md"
+	}
+	cHtml(c, http.StatusOK, templateFile, data)
 }
 
 // funcError 错误页面
 func funcError(ctx context.Context, c *app.RequestContext) {
-	cHtml(c, http.StatusOK, "error.html", nil)
+	templateFile := "error.html"
+	if _, has := c.Get(markdownKey); has {
+		templateFile = "error.md"
+	}
+	cHtml(c, http.StatusOK, templateFile, nil)
 }
 
 // funcListCategory 导航菜单数据列表
@@ -75,6 +88,9 @@ func funcListCategory(ctx context.Context, c *app.RequestContext) {
 	if err != nil || templateFile == "" {
 		templateFile = "category.html"
 	}
+	if _, has := c.Get(markdownKey); has {
+		templateFile = strings.TrimSuffix(templateFile, ".html") + ".md"
+	}
 	cHtml(c, http.StatusOK, templateFile, data)
 }
 
@@ -84,7 +100,12 @@ func funcListTags(ctx context.Context, c *app.RequestContext) {
 	urlPathParam := c.Param("urlPathParam")
 
 	data["UrlPathParam"] = urlPathParam
-	cHtml(c, http.StatusOK, "tag.html", data)
+
+	templateFile := "tag.html"
+	if _, has := c.Get(markdownKey); has {
+		templateFile = "tag.md"
+	}
+	cHtml(c, http.StatusOK, templateFile, data)
 }
 
 // funcOneContent 查询一篇文章
@@ -99,6 +120,9 @@ func funcOneContent(ctx context.Context, c *app.RequestContext) {
 	templateFile, err := findThemeTemplate(ctx, tableContentName, urlPathParam)
 	if err != nil || templateFile == "" {
 		templateFile = "content.html"
+	}
+	if _, has := c.Get(markdownKey); has {
+		templateFile = strings.TrimSuffix(templateFile, ".html") + ".md"
 	}
 	cHtml(c, http.StatusOK, templateFile, data)
 }
@@ -125,6 +149,7 @@ func addCategoryRoute(categoryID string) {
 
 	//导航菜单的访问映射
 	h.GET(funcTrimSuffixSlash(categoryID), addListCategoryRoute(categoryID))
+	h.GET(funcTrimSuffixSlash(categoryID)+".md", addListCategoryRoute(categoryID))
 	h.GET(categoryID, addListCategoryRoute(categoryID))
 	//导航菜单分页数据的访问映射
 	h.GET(categoryID+"page/:pageNo", addListCategoryRoute(categoryID))
@@ -177,4 +202,32 @@ func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 		data[userTypeKey] = 0
 	}
 	return data
+}
+
+// removeExtMiddleware 仅处理.md结尾的请求,非.md直接放行
+func removeExtMiddleware(ext string) app.HandlerFunc {
+	return func(c context.Context, ctx *app.RequestContext) {
+		originalPath := string(ctx.Request.URI().Path())
+
+		// 核心判断: 仅当路径非空/非根路径 且 以指定后缀结尾时才处理
+		if originalPath == "" || originalPath == "/" || !strings.HasSuffix(originalPath, ext) {
+			ctx.Next(c) // 不是.md结尾,直接放行
+			return
+		}
+
+		// 1. 修改URI路径(去掉后缀)
+		newPath := originalPath[:len(originalPath)-len(ext)]
+		ctx.Request.URI().SetPath(newPath)
+
+		// 2. 设置标记: 标记该请求是.md后缀转换而来(存在ctx中,处理器可读取)
+		ctx.Set(markdownKey, true)
+
+		// 3. 修改已解析的Params参数值(移除后缀)
+		for i := range ctx.Params {
+			ctx.Params[i].Value = strings.TrimSuffix(ctx.Params[i].Value, ext)
+		}
+
+		// 继续执行后续逻辑
+		ctx.Next(c)
+	}
 }

@@ -217,6 +217,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	defer sitemapFile.Close() // 确保在函数结束时关闭文件
 	sitemapFile.WriteString(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 	sitemapFile.WriteString("<url><loc>" + domain + "</loc></url>")
+	sitemapFile.WriteString("<url><loc>" + domain + "/index.md</loc></url>")
 	//上一个分页
 	prvePageFileHash := ""
 	//生成文章的静态网页
@@ -232,6 +233,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 		}
 		if success {
 			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + ".md</loc></url>")
 		}
 
 		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent)
@@ -240,6 +242,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 		}
 		if success {
 			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + ".md</loc></url>")
 		}
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
@@ -253,6 +256,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 		}
 		if success {
 			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + ".md</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
 			fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
@@ -261,6 +265,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			}
 			if success {
 				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
@@ -284,6 +289,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			}
 			if success {
 				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
@@ -332,31 +338,17 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 // writeStaticHtml 写入静态html
 func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgent string) (string, bool, error) {
 	httpurl := httpServerPath + urlFilePath
+	markdownHttpurl := httpurl + "/index.md"
+
 	filePath := staticHtmlDir + theme + funcBasePath() + urlFilePath
+	markdownFilePath := staticHtmlDir + theme + funcBasePath() + "index.md"
 	if urlFilePath != "" {
+		markdownHttpurl = httpurl + ".md"
+		markdownFilePath = filePath + ".md"
 		filePath = filePath + "/"
 	}
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", httpurl, nil)
-	if err != nil {
 
-		return "", false, err
-	}
-
-	// 设置请求头
-	if userAgent != "" {
-		req.Header.Set("User-Agent", userAgent)
-	}
-	response, err := client.Do(req)
-	if err != nil {
-		return "", false, err
-	}
-	defer response.Body.Close()
-
-	// 读取资源数据 body: []byte
-	body, err := io.ReadAll(response.Body)
-	// 关闭资源流
-	response.Body.Close()
+	body, err := responseBodyBytes(httpurl, userAgent)
 	if err != nil {
 		return "", false, err
 	}
@@ -374,6 +366,16 @@ func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgen
 	}
 	// 压缩gzip文件
 	err = doGzipFile(filePath+"index.html"+compressedFileSuffix, bytes.NewReader(body))
+	if err != nil {
+		return bodyHash, false, err
+	}
+
+	// 生成 markdown文件
+	markdown, err := responseBodyBytes(markdownHttpurl, userAgent)
+	if err != nil {
+		return "", false, err
+	}
+	err = os.WriteFile(markdownFilePath, markdown, os.ModePerm)
 	if err != nil {
 		return bodyHash, false, err
 	}
@@ -401,4 +403,30 @@ func doGzipFile(gzipFilePath string, reader io.Reader) error {
 	defer gzipWrite.Close()
 	_, err = io.Copy(gzipWrite, reader)
 	return err
+}
+
+// responseBodyBytes 获取http资源的body字节数据
+func responseBodyBytes(httpurl string, userAgent string) ([]byte, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", httpurl, nil)
+	if err != nil {
+
+		return nil, err
+	}
+
+	// 设置请求头
+	if userAgent != "" {
+		req.Header.Set("User-Agent", userAgent)
+	}
+	response, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	// 读取资源数据 body: []byte
+	body, err := io.ReadAll(response.Body)
+	// 关闭资源流
+	response.Body.Close()
+	return body, err
 }
