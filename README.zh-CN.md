@@ -78,6 +78,13 @@ location ~ ^/public/ {
 
 ### markdown文件,匹配.md结尾的请求.静态化的markdown文件,默认放到 _markdown 文件夹
 location ~* \.md$ {
+    #gzip_static on;
+    
+    # text/plain 比较通用, text/markdown 支持的不好
+    default_type text/plain;
+    #default_type text/markdown;
+    charset utf-8;
+
     root   /data/gpress/gpressdatadir/statichtml/_markdown;
 }
 

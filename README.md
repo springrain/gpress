@@ -78,6 +78,15 @@ location ~ ^/public/ {
 
 ### Markdown files, requests ending with .md. Static Markdown files are placed in the _markdown folder by default
 location ~* \.md$ {
+    location ~* \.md$ {
+    #gzip_static on;
+    
+    # text/plain is more general, text/markdown is not well supported
+    default_type text/plain;
+    #default_type text/markdown;
+
+    charset utf-8;
+
     root   /data/gpress/gpressdatadir/statichtml/_markdown;
 }
 
