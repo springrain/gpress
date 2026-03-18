@@ -9,7 +9,7 @@
 
 title: {{ $content.Title }}  
 CreateTime: {{ $content.CreateTime }}  
-UpdateTime: {{ slice $content.UpdateTime 0 10 }}  
+UpdateTime: {{ $content.UpdateTime }}  
 CategoryName: {{ $content.CategoryName }}  
 ---
 
