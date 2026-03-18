@@ -122,8 +122,6 @@ func genStaticFile() error {
 	//删除deleteFileBeforeTime时间戳之前的老文件(当前时间后退 2 秒,避免误删刚生成的文件,linux生成文件 ModTime 的精度不够)
 	deleteFileBeforeTime := time.Now().Add(-2 * time.Second)
 
-	genMarkdownFile = pathExist(themeDir + site.Theme + "/index.md")
-
 	// 生成 default,pc,wap,weixin 等平台的静态文件
 	useThemes := map[string]bool{}
 	useThemes[""] = true
@@ -136,7 +134,6 @@ func genStaticFile() error {
 	_, has := useThemes[site.ThemePC]
 	//生成PC模板的静态网页
 	if !has {
-		genMarkdownFile = pathExist(themeDir + site.ThemePC + "/index.md")
 		err = genStaticFileByTheme(contents, categoryIDs, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
 		if err != nil {
 			FuncLogError(ctx, err)
@@ -148,7 +145,6 @@ func genStaticFile() error {
 	// 生成手机WAP模板的静态网页
 	_, has = useThemes[site.ThemeWAP]
 	if !has {
-		genMarkdownFile = pathExist(themeDir + site.ThemeWAP + "/index.md")
 		err = genStaticFileByTheme(contents, categoryIDs, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
 		if err != nil {
 			FuncLogError(ctx, err)
@@ -159,7 +155,6 @@ func genStaticFile() error {
 	//生成微信WX模板的静态网页
 	_, has = useThemes[site.ThemeWX]
 	if !has {
-		genMarkdownFile = pathExist(themeDir + site.ThemeWX + "/index.md")
 		err = genStaticFileByTheme(contents, categoryIDs, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
 		if err != nil {
 			FuncLogError(ctx, err)
@@ -202,6 +197,7 @@ func genStaticFile() error {
 
 // genStaticFileByTheme 根据主题模板,生成静态文件
 func genStaticFileByTheme(contents []Content, categories []string, theme string, userAgent string) error {
+	genMarkdownFile = pathExist(themeDir + site.Theme + "/index.md")
 	domain := ""
 	if site.Domain != "" {
 		if strings.HasPrefix(site.Domain, "http://") || strings.HasPrefix(site.Domain, "https://") {
