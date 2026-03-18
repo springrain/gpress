@@ -75,6 +75,12 @@ location ~ ^/public/search-data.json {
 location ~ ^/public/ {
     root /data/gpress/gpressdatadir;  
 }
+
+### markdown文件,匹配.md结尾的请求.静态化的markdown文件,默认放到 _markdown 文件夹
+location ~* \.md$ {
+    root   /data/gpress/gpressdatadir/statichtml/_markdown;
+}
+
     
 ### admin 后台管理,请求动态服务
 location ~ ^/admin/ {

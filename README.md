@@ -75,6 +75,12 @@ location ~ ^/public/search-data.json {
 location ~ ^/public/ {
     root /data/gpress/gpressdatadir;  
 }
+
+### Markdown files, requests ending with .md. Static Markdown files are placed in the _markdown folder by default
+location ~* \.md$ {
+    root   /data/gpress/gpressdatadir/statichtml/_markdown;
+}
+
     
 ### Admin backend management, request dynamic service
 location ~ ^/admin/ {

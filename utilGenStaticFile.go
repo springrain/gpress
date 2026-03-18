@@ -341,10 +341,10 @@ func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgen
 	markdownHttpurl := httpurl + "/index.md"
 
 	filePath := staticHtmlDir + theme + funcBasePath() + urlFilePath
-	markdownFilePath := staticHtmlDir + theme + funcBasePath() + "index.md"
+	markdownFilePath := staticHtmlDir + "_markdown" + funcBasePath() + "index.md"
 	if urlFilePath != "" {
 		markdownHttpurl = httpurl + ".md"
-		markdownFilePath = filePath + ".md"
+		markdownFilePath = staticHtmlDir + "_markdown" + funcBasePath() + urlFilePath + ".md"
 		filePath = filePath + "/"
 	}
 
@@ -364,7 +364,7 @@ func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgen
 	if err != nil {
 		return bodyHash, false, err
 	}
-	// 压缩gzip文件
+	// gzip 压缩 html 文件
 	err = doGzipFile(filePath+"index.html"+compressedFileSuffix, bytes.NewReader(body))
 	if err != nil {
 		return bodyHash, false, err
@@ -375,10 +375,18 @@ func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgen
 	if err != nil {
 		return "", false, err
 	}
+	// 写入文件
+	os.MkdirAll(filepath.Dir(markdownFilePath), os.ModePerm)
 	err = os.WriteFile(markdownFilePath, markdown, os.ModePerm)
 	if err != nil {
 		return bodyHash, false, err
 	}
+	// gzip 压缩 markdown 文件
+	err = doGzipFile(markdownFilePath+compressedFileSuffix, bytes.NewReader(markdown))
+	if err != nil {
+		return bodyHash, false, err
+	}
+
 	return bodyHash, true, nil
 }
 
