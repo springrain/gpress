@@ -363,10 +363,10 @@ func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgen
 	markdownHttpurl := httpurl + "/index.md"
 
 	filePath := staticHtmlDir + theme + funcBasePath() + urlFilePath
-	markdownFilePath := staticHtmlDir + "_markdown" + funcBasePath() + "index.md"
+	markdownFilePath := staticHtmlDir + theme + "/_markdown" + funcBasePath() + "index.md"
 	if urlFilePath != "" {
 		markdownHttpurl = httpurl + ".md"
-		markdownFilePath = staticHtmlDir + "_markdown" + funcBasePath() + urlFilePath + ".md"
+		markdownFilePath = staticHtmlDir + theme + "/_markdown" + funcBasePath() + urlFilePath + ".md"
 		filePath = filePath + "/"
 	}
 
