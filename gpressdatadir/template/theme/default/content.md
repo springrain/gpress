@@ -11,7 +11,6 @@ title: {{ $content.Title }}
 CreateTime: {{ $content.CreateTime }}  
 UpdateTime: {{ slice $content.UpdateTime 0 10 }}  
 CategoryName: {{ $content.CategoryName }}  
-TOC: {{ $content.Toc }}  
 ---
 
-{{ $content.Markdown }}
+{{ safeHTML $content.Markdown }}

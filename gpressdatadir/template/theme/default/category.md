@@ -20,5 +20,5 @@ keyword: {{ $nav.Keyword }}
 {{ range $k,$v := $selectList.Data }}
 # [{{ .Title }}]({{basePath}}{{ trimSlash $v.Id }}) 
 - UpdateTime: {{ slice .UpdateTime 0 10 }}  
-- Summary: {{ .Summary }}   
+- Summary: {{ safeHTML .Summary }}   
 {{ end }}
