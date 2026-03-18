@@ -44,9 +44,6 @@ import (
 var searchDataLock = &sync.Mutex{}
 var genStaticHtmlLock = &sync.Mutex{}
 
-// genMarkdownFile 是否生成markdown文件,如果主题模板中存在index.md,则生成markdown文件,否则不生成,默认值为false
-var genMarkdownFile = false
-
 // genSearchDataJson 生成flexSearch需要的json文件
 func genSearchDataJson() error {
 	//onlyOnce <- struct{}{}
@@ -91,7 +88,6 @@ func genStaticFile() error {
 	defer func() {
 		//重置状态值
 		reloadStatus = 0
-		genMarkdownFile = false
 		if r := recover(); r != nil {
 			FuncLogPanic(ctx, fmt.Errorf("genStaticFile panic recovered: %v", r))
 		}
@@ -197,7 +193,8 @@ func genStaticFile() error {
 
 // genStaticFileByTheme 根据主题模板,生成静态文件
 func genStaticFileByTheme(contents []Content, categories []string, theme string, userAgent string) error {
-	genMarkdownFile = pathExist(themeDir + site.Theme + "/index.md")
+	// genMarkdownFile 是否生成markdown文件,如果主题模板中存在index.md,则生成markdown文件,否则不生成,默认值为false
+	genMarkdownFile := pathExist(themeDir + site.Theme + "/index.md")
 	domain := ""
 	if site.Domain != "" {
 		if strings.HasPrefix(site.Domain, "http://") || strings.HasPrefix(site.Domain, "https://") {
@@ -208,7 +205,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	}
 	tagsMap := make(map[string]bool, 0)
 	//生成首页index网页
-	fileHash, _, err := writeStaticHtml("", "", theme, userAgent)
+	fileHash, _, err := writeStaticHtml("", "", theme, userAgent, genMarkdownFile)
 	if fileHash == "" || err != nil {
 		return err
 	}
@@ -235,7 +232,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			tagsMap[tag] = true
 		}
 		//postURL := httpServerPath + "post/" + postId
-		fileHash, success, err := writeStaticHtml(funcTrimPrefixSlash(contents[i].Id), "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(funcTrimPrefixSlash(contents[i].Id), "", theme, userAgent, genMarkdownFile)
 		if fileHash == "" || err != nil {
 			continue
 		}
@@ -246,7 +243,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			}
 		}
 
-		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent)
+		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
 		if fileHash == "" || err != nil {
 			continue
 		}
@@ -262,7 +259,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 
 	for i := 0; i < len(categories); i++ {
 		//生成导航菜单首页index
-		fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i]), "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i]), "", theme, userAgent, genMarkdownFile)
 		if fileHash == "" || err != nil {
 			return err
 		}
@@ -273,7 +270,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			}
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
+			fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
 			if fileHash == "" || err != nil {
 				continue
 			}
@@ -291,7 +288,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	//生成tag的静态页
 	for tag := range tagsMap {
 		//生成导航菜单首页index
-		fileHash, success, err := writeStaticHtml("tag/"+tag, "", theme, userAgent)
+		fileHash, success, err := writeStaticHtml("tag/"+tag, "", theme, userAgent, genMarkdownFile)
 		if fileHash == "" || err != nil {
 			return err
 		}
@@ -299,7 +296,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent)
+			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
 			if fileHash == "" || err != nil {
 				continue
 			}
@@ -354,7 +351,7 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 }
 
 // writeStaticHtml 写入静态html
-func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgent string) (string, bool, error) {
+func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgent string, genMarkdownFile bool) (string, bool, error) {
 	httpurl := httpServerPath + urlFilePath
 	markdownHttpurl := httpurl + "/index.md"
 
@@ -388,7 +385,7 @@ func writeStaticHtml(urlFilePath string, fileHash string, theme string, userAgen
 		return bodyHash, false, err
 	}
 	if !genMarkdownFile {
-		return bodyHash, false, err
+		return bodyHash, true, err
 	}
 
 	// 生成 markdown文件
