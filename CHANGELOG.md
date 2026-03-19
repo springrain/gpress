@@ -1,5 +1,5 @@
 v1.2.2
-- 支持 [llms.txt](https://llmstxt.org/) 协议,方便大模型理解
+- 支持 [llms.txt](https://llmstxt.org/) 协议,让AI更好理解
 - 使用[simple v0.7.1](https://github.com/wangfenjin/simple/releases/tag/v0.7.1)官方的编译文件
 - 访问路径.md结尾,返回markdown格式数据
 - 删除```deleteFileBeforeTime```时间戳之前的老文件
