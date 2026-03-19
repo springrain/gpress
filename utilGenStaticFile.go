@@ -99,15 +99,15 @@ func genStaticFile() error {
 	//ctx := context.Background()
 	contents := make([]Content, 0)
 
-	f_post := zorm.NewSelectFinder(tableContentName, "id,tag").Append(" WHERE status<3 order by status desc, sortno desc")
+	f_post := zorm.NewSelectFinder(tableContentName, "id,tag,title,description,category_id").Append(" WHERE status<3 order by status desc, sortno desc")
 	err := zorm.Query(ctx, f_post, &contents, nil)
 	if err != nil {
 		return err
 	}
 	//生成导航菜单的静态网页
-	categoryIDs := make([]string, 0)
-	f_category := zorm.NewSelectFinder(tableCategoryName, "id").Append(" WHERE status<3 order by status desc,sortno desc")
-	err = zorm.Query(ctx, f_category, &categoryIDs, nil)
+	categories := make([]*Category, 0)
+	f_category := zorm.NewSelectFinder(tableCategoryName, "id,name").Append(" WHERE status<3 order by status desc,sortno desc")
+	err = zorm.Query(ctx, f_category, &categories, nil)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func genStaticFile() error {
 	// 生成 default,pc,wap,weixin 等平台的静态文件
 	useThemes := map[string]bool{}
 	useThemes[""] = true
-	err = genStaticFileByTheme(contents, categoryIDs, site.Theme, "")
+	err = genStaticFileByTheme(contents, categories, site.Theme, "")
 	if err != nil {
 		FuncLogError(ctx, err)
 		//return err
@@ -130,7 +130,7 @@ func genStaticFile() error {
 	_, has := useThemes[site.ThemePC]
 	//生成PC模板的静态网页
 	if !has {
-		err = genStaticFileByTheme(contents, categoryIDs, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+		err = genStaticFileByTheme(contents, categories, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -141,7 +141,7 @@ func genStaticFile() error {
 	// 生成手机WAP模板的静态网页
 	_, has = useThemes[site.ThemeWAP]
 	if !has {
-		err = genStaticFileByTheme(contents, categoryIDs, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
+		err = genStaticFileByTheme(contents, categories, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -151,7 +151,7 @@ func genStaticFile() error {
 	//生成微信WX模板的静态网页
 	_, has = useThemes[site.ThemeWX]
 	if !has {
-		err = genStaticFileByTheme(contents, categoryIDs, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
+		err = genStaticFileByTheme(contents, categories, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -192,7 +192,7 @@ func genStaticFile() error {
 }
 
 // genStaticFileByTheme 根据主题模板,生成静态文件
-func genStaticFileByTheme(contents []Content, categories []string, theme string, userAgent string) error {
+func genStaticFileByTheme(contents []Content, categories []*Category, theme string, userAgent string) error {
 	// genMarkdownFile 是否生成markdown文件,如果主题模板中存在index.md,则生成markdown文件,否则不生成,默认值为false
 	genMarkdownFile := pathExist(themeDir + site.Theme + "/index.md")
 	domain := ""
@@ -219,8 +219,19 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	defer sitemapFile.Close() // 确保在函数结束时关闭文件
 	sitemapFile.WriteString(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 	sitemapFile.WriteString("<url><loc>" + domain + "</loc></url>")
+
+	var llmstxtFile *os.File
 	if genMarkdownFile {
 		sitemapFile.WriteString("<url><loc>" + domain + "/index.md</loc></url>")
+
+		os.Remove(staticHtmlDir + theme + "/llms.txt")
+		llmstxtFile, err = os.OpenFile(staticHtmlDir+theme+"/llms.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		if err != nil {
+			return err
+		}
+		defer llmstxtFile.Close() // 确保在函数结束时关闭文件
+		llmstxtFile.WriteString("# " + site.Title + "  \n\n")
+		llmstxtFile.WriteString("> " + site.Description + "  \n")
 	}
 
 	//上一个分页
@@ -258,26 +269,27 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 	}
 
 	for i := 0; i < len(categories); i++ {
+		categoryID := funcTrimSlash(categories[i].Id)
 		//生成导航菜单首页index
-		fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i]), "", theme, userAgent, genMarkdownFile)
+		fileHash, success, err := writeStaticHtml(categoryID, "", theme, userAgent, genMarkdownFile)
 		if fileHash == "" || err != nil {
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + "</loc></url>")
 			if genMarkdownFile {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + ".md</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + ".md</loc></url>")
 			}
 		}
 		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml(funcTrimSlash(categories[i])+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
+			fileHash, success, err := writeStaticHtml(categoryID+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
 			if fileHash == "" || err != nil {
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 				if genMarkdownFile {
-					sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimSlash(categories[i]) + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
+					sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
 				}
 			}
 			//如果hash完全一致,认为是最后一页
@@ -347,6 +359,21 @@ func genStaticFileByTheme(contents []Content, categories []string, theme string,
 
 		return err
 	})
+
+	if err != nil {
+		return err
+	}
+	if !genMarkdownFile {
+		return err
+	}
+
+	// 生成 llms.txt 文件,供LLMS等AI工具使用
+
+	// 转换为tree结构
+	categories = sliceCategory2Tree(categories)
+
+	writeLlmsTxtFile(categories, contents, llmstxtFile, 2, domain)
+
 	return err
 }
 
@@ -455,4 +482,24 @@ func responseBodyBytes(httpurl string, userAgent string) ([]byte, error) {
 	// 关闭资源流
 	response.Body.Close()
 	return body, err
+}
+
+// writeLlmsTxtFile 生成 llms.txt 文件
+func writeLlmsTxtFile(categories []*Category, contents []Content, llmstxtFile *os.File, level int, domain string) error {
+	for i := 0; i < len(categories); i++ {
+		category := categories[i]
+		llmstxtFile.WriteString("\n")
+		llmstxtFile.WriteString(strings.Repeat("#", level) + " " + category.Name + "  \n\n")
+		for j := 0; j < len(contents); j++ {
+			content := contents[j]
+			if content.CategoryID == category.Id {
+				llmstxtFile.WriteString("- [" + content.Title + "](" + domain + funcBasePath() + funcTrimPrefixSlash(content.Id) + ".md): " + content.Description + "\n")
+			}
+		}
+		if len(category.Leaf) > 0 {
+			writeLlmsTxtFile(category.Leaf, contents, llmstxtFile, level+1, domain)
+		}
+
+	}
+	return nil
 }
