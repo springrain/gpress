@@ -328,6 +328,9 @@
 			},
 		});
 
+		// 初始化后移除焦点,避免页面加载后无法输入字符,必须失去焦点再回来才能正常输入
+		document.activeElement.blur(); // 使用原生 JS blur 方法让当前焦点元素失去焦点
+
 		
 		const editorConfig = {
 			// 语言配置(直接通过配置项设置)
@@ -482,7 +485,7 @@
 				$('#editor-wrapper').show();
 				if(!firstHtmlFocus){
 					firstHtmlFocus=true;
-				    editor.s.focus();
+					editor.s.focus();
 				}
 			}
 		})

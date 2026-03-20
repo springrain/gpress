@@ -7,11 +7,11 @@ require (
 	github.com/alecthomas/chroma/v2 v2.23.1
 	github.com/cloudwego/hertz v0.10.4
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.1
-	github.com/lib/pq v1.11.2
+	github.com/lib/pq v1.12.0
 	github.com/mattn/go-sqlite3 v1.14.37
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/tetratelabs/wazero v1.11.0
-	github.com/yuin/goldmark v1.7.16
+	github.com/yuin/goldmark v1.7.17
 	github.com/yuin/goldmark-emoji v1.0.6
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/yuin/goldmark-meta v1.1.0
