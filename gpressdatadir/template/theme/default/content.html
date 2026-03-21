@@ -1,3 +1,4 @@
+{{ $site:=site }}
 <!-- 查询 content -->
 {{ $contentSQL := "* FROM content WHERE id=? and status<3 order by status desc, sortno desc" }}
 
@@ -11,11 +12,23 @@
 {{ $nextContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortno > ? order by  status desc,sortno asc " $content.SortNo  }}
 
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html>
 <head>
   <title>{{ $content.Title }}</title>
   <meta name="description" content="{{ $content.Description }}" />
   <meta name="keyword" content="{{ $content.Keyword }}" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ $content.Title }}" />
+  <meta name="twitter:description" content="{{ $content.Description }}" />
+  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ $content.Thumbnail }}" />
+  
+  <meta property="og:title" content="{{ $content.Title }}" />
+  <meta property="og:description" content="{{ $content.Description }}" />
+  <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $content.Id }}" />
+  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ $content.Thumbnail }}" />
+  <meta property="og:type" content="article" />
+
 
 {{template "bodystart.html"  }}
 

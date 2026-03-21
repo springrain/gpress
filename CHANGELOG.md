@@ -1,3 +1,7 @@
+v1.2.3
+- 支持```Open Graph```协议,优化链接分享
+- 完善文档,注释
+
 v1.2.2
 - 支持 [llms.txt](https://llmstxt.org/) 协议,让AI更好理解
 - 使用[simple v0.7.1](https://github.com/wangfenjin/simple/releases/tag/v0.7.1)官方的编译文件

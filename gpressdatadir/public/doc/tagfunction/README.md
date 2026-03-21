@@ -18,7 +18,7 @@
 {{ $basePath := basePath }}
 
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html>
 <table class="content-table">
     <thead>
     <tr>

@@ -1,3 +1,4 @@
+{{ $site:=site }}
 <!-- 查询 content 列表 -->
 {{ $contentSQL :="* FROM content WHERE status in (1,2) and category_id=? order by  status desc,sortno desc" }}
 {{ $categorySQL := "* FROM category WHERE id=? and status<3 order by status desc, sortno desc"}}
@@ -13,11 +14,19 @@
 {{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
 {{ $site:=site }}
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html>
 <head>
   <title>{{ $nav.Name }}</title>
   <meta name="description" content="{{ $nav.Description }}" />
   <meta name="keyword" content="{{ $nav.Keyword }}" />
+
+  <meta name="twitter:title" content="{{ $nav.Name }}" />
+  <meta name="twitter:description" content="{{ $nav.Description }}" />
+  
+  <meta property="og:title" content="{{ $nav.Name }}" />
+  <meta property="og:description" content="{{ $nav.Description }}" />
+  <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $nav.Id }}" />
+  <meta property="og:type" content="website" />
 
 {{template "bodystart.html"  }}
 

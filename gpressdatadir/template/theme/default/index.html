@@ -3,11 +3,19 @@
 {{ $selectList := selectList "content" .q .pageNo 20 "* FROM content WHERE status in (1,2) order by  status desc,sortno desc"  }}
 
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html>
 <head>
   <title>{{ $site.Title }}</title>
   <meta name="description" content="{{ $site.Description }}" />
   <meta name="keyword" content="{{ $site.Keyword }}" />
+
+  <meta name="twitter:title" content="{{ $site.Title }}" />
+  <meta name="twitter:description" content="{{ $site.Description }}" />
+  
+  <meta property="og:title" content="{{ $site.Title }}" />
+  <meta property="og:description" content="{{ $site.Description }}" />
+  <meta property="og:url" content="{{$site.Domain}}{{basePath}}" />
+  <meta property="og:type" content="website" />
 
 {{template "bodystart.html" }}
 

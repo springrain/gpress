@@ -3,11 +3,19 @@
 
 {{ $site:=site }}
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html>
 <head>
   <title>{{.UrlPathParam}}</title>
   <meta name="description" content="{{ $site.Description }}" />
   <meta name="keyword" content="{{ $site.Keyword }}" />
+
+  <meta name="twitter:title" content="{{ $site.Title }}" />
+  <meta name="twitter:description" content="{{ $site.Description }}" />
+  
+  <meta property="og:title" content="{{ $site.Title }}" />
+  <meta property="og:description" content="{{ $site.Description }}" />
+  <meta property="og:url" content="{{$site.Domain}}{{basePath}}tag/{{.UrlPathParam}}" />
+  <meta property="og:type" content="website" />
 
 {{template "bodystart.html"  }}
 
