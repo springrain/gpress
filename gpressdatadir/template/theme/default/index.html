@@ -11,10 +11,12 @@
 
   <meta name="twitter:title" content="{{ $site.Title }}" />
   <meta name="twitter:description" content="{{ $site.Description }}" />
-  
+  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}" />
+
   <meta property="og:title" content="{{ $site.Title }}" />
   <meta property="og:description" content="{{ $site.Description }}" />
   <meta property="og:url" content="{{$site.Domain}}{{basePath}}" />
+  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}" />
   <meta property="og:type" content="website" />
 
 {{template "bodystart.html" }}

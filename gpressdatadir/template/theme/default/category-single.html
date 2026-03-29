@@ -17,12 +17,12 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ $content.Title }}" />
   <meta name="twitter:description" content="{{ $content.Description }}" />
-  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ $content.Thumbnail }}" />
-  
+  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ if $content.Thumbnail }}{{ $content.Thumbnail }}{{else}}{{ $site.Logo }}{{end}}" />
+
   <meta property="og:title" content="{{ $content.Title }}" />
   <meta property="og:description" content="{{ $content.Description }}" />
   <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $content.Id }}" />
-  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ $content.Thumbnail }}" />
+  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ if $content.Thumbnail }}{{ $content.Thumbnail }}{{else}}{{ $site.Logo }}{{end}}" />
   <meta property="og:type" content="article" />
 
 

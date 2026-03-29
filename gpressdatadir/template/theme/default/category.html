@@ -22,10 +22,12 @@
 
   <meta name="twitter:title" content="{{ $nav.Name }}" />
   <meta name="twitter:description" content="{{ $nav.Description }}" />
-  
+  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}" />
+
   <meta property="og:title" content="{{ $nav.Name }}" />
   <meta property="og:description" content="{{ $nav.Description }}" />
   <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $nav.Id }}" />
+  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}" />
   <meta property="og:type" content="website" />
 
 {{template "bodystart.html"  }}
