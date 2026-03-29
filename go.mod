@@ -11,7 +11,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.37
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/tetratelabs/wazero v1.11.0
-	github.com/yuin/goldmark v1.7.17
+	github.com/yuin/goldmark v1.8.2
 	github.com/yuin/goldmark-emoji v1.0.6
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	github.com/yuin/goldmark-meta v1.1.0
