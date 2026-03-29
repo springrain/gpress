@@ -1,3 +1,4 @@
+{{ $site:=site }}
 <!-- 查询 content 列表 -->
 {{ $contentSQL :="* FROM content WHERE status in (1,2) and category_id=? order by  status desc,sortno desc" }}
 {{ $categorySQL := "* FROM category WHERE id=? and status<3 order by status desc, sortno desc"}}
@@ -18,7 +19,7 @@ Keyword: {{ $nav.Keyword }}
 ---
 
 {{ range $k,$v := $selectList.Data }}
-# [{{ .Title }}]({{basePath}}{{ trimSlash $v.Id }}) 
+# [{{ .Title }}]({{$site.Domain}}{{basePath}}{{ trimSlash $v.Id }}.md) 
 - UpdateTime: {{ .UpdateTime }}  
 - Summary: {{ safeHTML .Summary }}   
 {{ end }}

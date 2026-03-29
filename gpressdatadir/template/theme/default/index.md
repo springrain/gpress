@@ -8,7 +8,7 @@ Keyword: {{ $site.Keyword }}
 ---
 
 {{ range $k,$v := $selectList.Data }}
-# [{{ .Title }}]({{basePath}}{{ trimSlash $v.Id }}) 
+# [{{ .Title }}]({{$site.Domain}}{{basePath}}{{ trimSlash $v.Id }}.md) 
 - UpdateTime: {{ .UpdateTime }}  
 - Summary: {{ safeHTML .Summary }}   
 {{ end }}

@@ -12,7 +12,7 @@
 {{ $selectList := selectList "content" .q .pageNo 20 $contentSQL .UrlPathParam }}
 
 {{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
-{{ $site:=site }}
+
 <!DOCTYPE html>
 <html>
 <head>
