@@ -209,8 +209,8 @@ func removeExtMiddleware(ext string) app.HandlerFunc {
 	return func(c context.Context, ctx *app.RequestContext) {
 		originalPath := string(ctx.Request.URI().Path())
 
-		// 核心判断: 仅当路径非空/非根路径 且 以指定后缀结尾时才处理
-		if originalPath == "" || originalPath == "/" || !strings.HasSuffix(originalPath, ext) {
+		// 核心判断: 以指定后缀结尾时才处理
+		if !strings.HasSuffix(originalPath, ext) {
 			ctx.Next(c) // 不是.md结尾,直接放行
 			return
 		}

@@ -194,7 +194,7 @@ func genStaticFile() error {
 // genStaticFileByTheme 根据主题模板,生成静态文件
 func genStaticFileByTheme(contents []Content, categories []*Category, theme string, userAgent string) error {
 	// genMarkdownFile 是否生成markdown文件,如果主题模板中存在index.md,则生成markdown文件,否则不生成,默认值为false
-	genMarkdownFile := pathExist(themeDir + site.Theme + "/index.md")
+	genMarkdownFile := pathExist(themeDir + theme + "/index.md")
 	domain := ""
 	if site.Domain != "" {
 		if strings.HasPrefix(site.Domain, "http://") || strings.HasPrefix(site.Domain, "https://") {
