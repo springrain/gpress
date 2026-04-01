@@ -66,6 +66,7 @@ func init() {
 			&mermaid.Extender{MermaidURL: funcBasePath() + "js/mermaid.min.js"},      // mermaid流程图,不使用cdn的js
 			&customExtension{NodeName: "video", NodeTag: `controls="controls" src=`}, //video扩展 !video[test.mp4](test.mp4) --> <video controls="controls" src="test.mp4">test.mp4</video>
 			&customExtension{NodeName: "audio", NodeTag: `controls="controls" src=`},
+			&linkTransformer{walkFunc: removeMdSuffix},
 		),
 		//goldmark.WithRenderer(initLatexRenderer()),
 		/*
@@ -447,4 +448,36 @@ func (ce *customExtension) Extend(m goldmark.Markdown) {
 			util.Prioritized(newCustomHTMLRenderer(ce.NodeName, ce.nodeKind, ce.NodeTag), 100),
 		),
 	)
+}
+
+// linkTransformer 链接转换器, 在 AST 遍历中转换链接
+type linkTransformer struct {
+	walkFunc func(n ast.Node, entering bool) (ast.WalkStatus, error) // AST 遍历函数
+}
+
+// Extend 实现 goldmark.Extender 接口, 注册 AST 转换器
+func (lt linkTransformer) Extend(m goldmark.Markdown) {
+	m.Parser().AddOptions(parser.WithASTTransformers(
+		util.Prioritized(lt, 1000),
+	))
+}
+
+// Transform 实现 parser.ASTTransformer 接口, 遍历并转换 AST 节点
+func (lt linkTransformer) Transform(doc *ast.Document, reader text.Reader, pc parser.Context) {
+	ast.Walk(doc, lt.walkFunc)
+}
+
+// removeMdSuffix 移除 markdown 链接中的.md 后缀
+// 例如：[test](./test.md) -> [test](./test)
+func removeMdSuffix(n ast.Node, entering bool) (ast.WalkStatus, error) {
+	if !entering {
+		return ast.WalkContinue, nil
+	}
+	if link, ok := n.(*ast.Link); ok {
+		dest := string(link.Destination)
+		if strings.HasSuffix(dest, ".md") && !strings.HasPrefix(dest, "http") {
+			link.Destination = []byte(strings.TrimSuffix(dest, ".md"))
+		}
+	}
+	return ast.WalkContinue, nil
 }

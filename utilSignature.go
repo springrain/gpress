@@ -18,8 +18,8 @@
 package main
 
 import (
-	"crypto/ed25519"
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/sha256"
 	"encoding/base64"
@@ -43,7 +43,7 @@ func verifyEthereumSignature(chainAddress string, msg string, signature string) 
 	if len(signatureBytes) < 65 {
 		return false, errors.New("invalid signature")
 	}
-	// 计算消息的哈希，包括 MetaMask 的消息前缀
+	// 计算消息的哈希, 包括 MetaMask 的消息前缀
 	prefix := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(msg), msg)
 	messageHash := keccak256Hash([]byte(prefix))
 	r, s, v := signatureBytes[:32], signatureBytes[32:64], signatureBytes[64]
@@ -99,7 +99,7 @@ func verifySolanaSignature(chainAddress string, msg string, signature string) (b
 	return valid, nil
 }
 
-// verifyXuperChainSignature XuperChain 使用 NIST/secp256r1 标准的公钥，验证签名
+// verifyXuperChainSignature XuperChain 使用 NIST/secp256r1 标准的公钥, 验证签名
 func verifyXuperChainSignature(chainAddress string, msg string, signature string) (valid bool, err error) {
 
 	verify, publicKey, err := verifySecp256r1Signature(msg, signature)
@@ -124,7 +124,7 @@ func verifySecp256r1Signature(msg string, signature string) (bool, *ecdsa.Public
 	if len(signatureBytes) < 65 {
 		return false, nil, errors.New("invalid signature")
 	}
-	// 计算消息的哈希，包括消息前缀
+	// 计算消息的哈希, 包括消息前缀
 	prefix := fmt.Sprintf("\x86XuperChain Signed Message:\n%d%s", len(msg), msg)
 	messageHash := keccak256Hash([]byte(prefix))
 	r := new(big.Int).SetBytes(signatureBytes[:32])
@@ -175,7 +175,7 @@ type ECDSASignature struct {
 	R, S *big.Int
 }
 */
-// verifyAddressUsingPublicKey 验证钱包地址是否和指定的公钥匹配。如果成功，返回 true 和对应的密码学标记位;如果失败，返回 false 和默认的密码学标记位 0
+// verifyAddressUsingPublicKey 验证钱包地址是否和指定的公钥匹配。如果成功, 返回 true 和对应的密码学标记位;如果失败, 返回 false 和默认的密码学标记位 0
 func verifyAddressUsingPublicKey(address string, pub *ecdsa.PublicKey) (bool, uint8) {
 	//base58 反解回 byte[] 数组
 	slice := base58Decode(address)
@@ -212,7 +212,7 @@ func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	outputSha256 := hashUsingSha256(data)
 	OutputRipemd160 := hashUsingRipemd160(outputSha256)
 
-	//暂时只支持一个字节长度，也就是 uint8 的密码学标志位
+	//暂时只支持一个字节长度, 也就是 uint8 的密码学标志位
 	// 判断是否是 nist 标准的私钥
 	nVersion := 1
 
@@ -238,7 +238,7 @@ func getAddressFromPublicKey(pub *ecdsa.PublicKey) (string, error) {
 	copy(slice, strSlice)
 	copy(slice[len(strSlice):], simpleCheckCode)
 
-	//使用 base58 编码，手写不容易出错.
+	//使用 base58 编码, 手写不容易出错.
 	//相比 Base64,Base58 不使用数字"0",字母大写"O",字母大写"I",和字母小写"l",以及"+"和"/"符号
 	strEnc := base58Encode(slice)
 
@@ -266,7 +266,7 @@ func hashUsingRipemd160(data []byte) []byte {
 	return out
 }
 
-// TODO 偶尔会恢复失败，原因待查
+// TODO 偶尔会恢复失败, 原因待查
 // recoverP256PublicKey 根据签名的 r,s,v 恢复 P256 的公钥
 func recoverP256PublicKey(hash []byte, r *big.Int, s *big.Int, v uint) (*ecdsa.PublicKey, error) {
 	curve := elliptic.P256()

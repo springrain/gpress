@@ -121,7 +121,7 @@
 |  urlPathParam | 表名 |
 |  q | 搜索关键字  |
 |  pageNo | 页码 |
-|  pageSize | 每页记录数，默认20 |
+|  pageSize | 每页记录数, 默认20 |
 |  sql | sql语句 |
 |  values | sql语句参数 |
 

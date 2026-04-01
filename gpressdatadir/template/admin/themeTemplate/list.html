@@ -130,7 +130,7 @@
 
 	// 平行数据组装树形结构数据
 	function buildTree(data) {
-		const roots = data.filter(item => !item.pid);// 找到没有父节点的项，即顶级节点
+		const roots = data.filter(item => !item.pid);// 找到没有父节点的项, 即顶级节点
 		// 递归构建树
 		function buildHierarchy(parent) {
 			const children = data.filter(item => item.pid === parent.id);
@@ -213,7 +213,7 @@ function themeMarket(){
 // 数据渲染
 var inst = table.render({
     elem: '#ID-table-themeMarket',
-	//url: 'https://www.gpress.cn/themes.json', // 此处为静态模拟数据，实际使用时需换成真实接口
+	//url: 'https://www.gpress.cn/themes.json', // 此处为静态模拟数据, 实际使用时需换成真实接口
     data: themeData,
 	cols: [[ //标题栏
       {field: 'themeName', title: '{{T "Theme Name"}}', width: 150, templet: function(d){return '<a target="_blank" href="'+d.gitURL+'" > '+d.themeName+' </a>';}},
@@ -242,8 +242,8 @@ function showScreenshot(title,src){
    layer.photos({
     photos: { // 图片层的数据源
     "title": title, // 相册标题
-    "start": 0, // 初始显示的图片序号，默认 0
-    "data": [   // 相册包含的图片，数组格式
+    "start": 0, // 初始显示的图片序号, 默认 0
+    "data": [   // 相册包含的图片, 数组格式
       {
         "src": src, // 原图地址
       },

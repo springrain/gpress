@@ -190,7 +190,7 @@ func TestVerifyXuperChainSignature(t *testing.T) {
 		if err != nil {
 			t.Fatal("签名失败:", err)
 		}
-		// 确保 s 在 low-s 范围内，防止签名延展性
+		// 确保 s 在 low-s 范围内, 防止签名延展性
 		if s.Cmp(halfOrder) > 0 {
 			s.Sub(curve.Params().N, s)
 		}
@@ -218,7 +218,7 @@ func TestVerifyXuperChainSignature(t *testing.T) {
 		if ok && recoveredPub != nil &&
 			recoveredPub.X.Cmp(privateKey.PublicKey.X) == 0 &&
 			recoveredPub.Y.Cmp(privateKey.PublicKey.Y) == 0 {
-			// 公钥恢复成功，使用这个签名
+			// 公钥恢复成功, 使用这个签名
 			fmt.Println("XuperChain Address:", address)
 			fmt.Println("Signature:", signatureHex)
 			fmt.Println("Message:", msg)
@@ -241,7 +241,7 @@ func TestVerifyXuperChainSignature(t *testing.T) {
 			if err == nil && valid {
 				t.Error("使用错误地址应该验证失败")
 			} else {
-				fmt.Println("错误地址验证失败，符合预期")
+				fmt.Println("错误地址验证失败, 符合预期")
 			}
 
 			// 测试错误的消息应该失败
@@ -250,11 +250,11 @@ func TestVerifyXuperChainSignature(t *testing.T) {
 			if err == nil && valid {
 				t.Error("使用错误消息应该验证失败")
 			} else {
-				fmt.Println("错误消息验证失败，符合预期")
+				fmt.Println("错误消息验证失败, 符合预期")
 			}
 			return
 		}
-		// 如果恢复失败，重新生成签名
+		// 如果恢复失败, 重新生成签名
 	}
 }
 
@@ -267,7 +267,7 @@ func TestVerifySolanaSignature(t *testing.T) {
 	}
 
 	// 生成 Solana 地址 (base58 编码的公钥)
-	// Solana 地址是公钥的 base58 编码，公钥是 32 字节
+	// Solana 地址是公钥的 base58 编码, 公钥是 32 字节
 	publicKeyBytes := publicKey[:32]
 	address := base58Encode(publicKeyBytes)
 	fmt.Println("Solana Address:", address)
@@ -305,7 +305,7 @@ func TestVerifySolanaSignature(t *testing.T) {
 	if err == nil && valid {
 		t.Error("使用错误地址应该验证失败")
 	} else {
-		fmt.Println("错误地址验证失败，符合预期")
+		fmt.Println("错误地址验证失败, 符合预期")
 	}
 
 	// 测试错误的消息应该失败
@@ -314,6 +314,6 @@ func TestVerifySolanaSignature(t *testing.T) {
 	if err == nil && valid {
 		t.Error("使用错误消息应该验证失败")
 	} else {
-		fmt.Println("错误消息验证失败，符合预期")
+		fmt.Println("错误消息验证失败, 符合预期")
 	}
 }
