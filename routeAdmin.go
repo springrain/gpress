@@ -855,7 +855,7 @@ func funcSaveContent(ctx context.Context, c *app.RequestContext) {
 	if entity.UpdateTime == "" {
 		entity.UpdateTime = now
 	}
-	if entity.Markdown != "" {
+	if entity.ContentType == 0 {
 		content, toc, err := renderMarkdownHtml(entity.Markdown)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: funcT("Markdown to HTML conversion error")})
