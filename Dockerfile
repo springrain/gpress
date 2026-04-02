@@ -1,5 +1,5 @@
 # 构建阶段
-FROM golang:1.26.0-alpine3.23 AS builder
+FROM golang:1.26.1-alpine3.23 AS builder
 # 操作系统(linux/darwin/windows,默认linux)
 ARG OS=linux     
 # 架构(amd64/arm64,默认amd64)    
