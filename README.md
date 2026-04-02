@@ -35,7 +35,7 @@ make && make install
 ```
 
 ## PostgreSQL 
-gpress uses SQLite as its default database. Starting from version v1.1.9, it supports PostgreSQL. The database configuration is specified in the ```gpressdatadir/db.json``` file. For specific configuration details, please refer to the [zorm](https://gitee.com/chunanyong/zorm) configuration. For example:
+gpress uses SQLite as its default database. Starting from version v1.1.9, it supports PostgreSQL, the full-text search pg_search plugin must be installed,. The database configuration is specified in the ```gpressdatadir/db.json``` file. For specific configuration details, please refer to the [zorm](https://gitee.com/chunanyong/zorm) configuration. For example:
 ```json
 {
     "DSN":"postgresql://username:password@host:port/database?sslmode=disable&TimeZone=Asia/Shanghai",
