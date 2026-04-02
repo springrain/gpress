@@ -1,4 +1,5 @@
 v1.2.4
+- 修复postgresql兼容性问题
 - 优化内部markdown文件链接
 - 完善文档,注释
 

@@ -23,6 +23,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"time"
 
 	"gitee.com/chunanyong/zorm"
 )
@@ -105,6 +106,11 @@ func insertConfig(ctx context.Context) error {
 
 	// 清空配置,重新创建
 	deleteAll(ctx, tableConfigName)
+
+	now := time.Now().Format("2006-01-02 15:04:05")
+	config.CreateTime = now
+	config.UpdateTime = now
+
 	_, err = zorm.Transaction(ctx, func(ctx context.Context) (interface{}, error) {
 		return zorm.Insert(ctx, &config)
 	})

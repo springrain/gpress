@@ -79,8 +79,8 @@ CREATE TABLE IF NOT EXISTS content (
 		status            INTEGER NOT NULL
 	 ) ;
      
--- CREATE INDEX idx_content ON idx_content USING bm25 (id, (content::pdb.jieba)) WITH (key_field='id');
-CREATE INDEX idx_content ON idx_content USING bm25 (id, markdown) WITH (key_field='id',text_fields='{"markdown": {"tokenizer": {"type": "jieba", "_stemmer": false}}}');
+-- CREATE INDEX idx_content ON content USING bm25 (id, (content::pdb.jieba)) WITH (key_field='id');
+CREATE INDEX idx_content ON content USING bm25 (id, markdown) WITH (key_field='id',text_fields='{"markdown": {"tokenizer": {"type": "jieba", "_stemmer": false}}}');
 
 
 CREATE TABLE IF NOT EXISTS site (

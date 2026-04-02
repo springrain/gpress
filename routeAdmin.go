@@ -157,6 +157,7 @@ func funcAdminInstall(ctx context.Context, c *app.RequestContext) {
 		c.Abort() // 终止后续调用
 		return
 	}
+	now := time.Now().Format("2006-01-02 15:04:05")
 	// 使用后端管理界面配置,jwtSecret也有后端随机产生
 	user := Userinfo{}
 	user.Account = c.PostForm("account")
@@ -167,6 +168,9 @@ func funcAdminInstall(ctx context.Context, c *app.RequestContext) {
 	// 重新hash密码,避免拖库后撞库
 	sha3Bytes := sha3.Sum512([]byte(user.Password))
 	user.Password = hex.EncodeToString(sha3Bytes[:])
+
+	user.CreateTime = now
+	user.UpdateTime = now
 
 	loginHtml := "admin/login?message=" + funcT("Congratulations, you have successfully installed GPRESS. Please log in now")
 	if user.ChainAddress != "" && user.ChainType != "" { //如果使用了address作为登录方式
