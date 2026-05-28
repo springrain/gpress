@@ -158,6 +158,7 @@
   "Upload Cover": "上传封面",
   "Author": "作者",
   "Tag": "tag标签",
+  "Href URL": "跳转URL",
   "Content format":"内容格式",
   "Rich Text": "富文本",
   "Path identifier and navigation menu cannot be empty": "路径标识和导航菜单不能为空",

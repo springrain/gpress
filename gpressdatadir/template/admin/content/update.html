@@ -138,12 +138,25 @@
 			</div>
 		</div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">{{T "Content format"}}</label>
-			<div class="layui-input-block">
-				<input type="radio" name="contentType" value="0" title="Markdown" checked lay-filter="contentType" />
-				<input type="radio" name="contentType" value="1" title='{{T "Rich Text"}}' lay-filter="contentType" />
-				<button type="submit" class="layui-btn layui-bg-blue" lay-submit
-					lay-filter="gpress-form-ajax-update">{{T "Submit Changes"}}</button>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">{{T "Content format"}}</label>
+				<div class="layui-input-block" style="white-space: nowrap;">
+					<input type="radio" name="contentType" value="0" title="Markdown" checked lay-filter="contentType" />
+					<input type="radio" name="contentType" value="1" title='{{T "Rich Text"}}' lay-filter="contentType" />
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label"></label>
+				<div class="layui-input-block">
+					<button type="submit" class="layui-btn layui-bg-blue" lay-submit
+						lay-filter="gpress-form-ajax-update">{{T "Submit Changes"}}</button>
+				</div>
+			</div>
+			<div class="layui-col-md3">
+				<label class="layui-form-label">{{T "Href URL"}}</label>
+				<div class="layui-input-block">
+					<input type="text" name="hrefURL" autocomplete="off" class="layui-input" value="{{.Data.HrefURL}}">
+				</div>
 			</div>
 		</div>
 		<div id="markdown-container" style="height: 100%;"></div>
