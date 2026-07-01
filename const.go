@@ -76,5 +76,5 @@ const (
 	markdownKey = "markdown"
 
 	//版本号
-	version = "v1.2.4"
+	version = "v1.2.5"
 )

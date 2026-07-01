@@ -44,6 +44,12 @@
 				  </div>
 				</div>
 				<div class="layui-form-item layui-col-md6">
+					<label class="layui-form-label">{{T "Subtitle"}}</label>
+					<div class="layui-input-block">
+					  <input type="text" name="subtitle" autocomplete="off" lay-reqtext='{{T "Please fill in the subtitle"}}' class="layui-input" value="{{.Data.Subtitle}}">
+					</div>
+				</div>
+				<div class="layui-form-item layui-col-md6">
 					<label class="layui-form-label">{{T "PC Theme"}} &nbsp;<i class="layui-icon layui-icon-tips" title='{{T "Used when accessed by PC browsers"}}'></i></label>
 					<div class="layui-input-block">
 						<select name="themePC" id="themePC" lay-verify="required" lay-reqtext='{{T "Please select a theme"}}'>

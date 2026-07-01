@@ -267,6 +267,9 @@ type Site struct {
 	// Description 描述
 	Description string `column:"description" json:"description,omitempty"`
 
+	// Subtitle 副标题
+	Subtitle string `column:"subtitle" json:"subtitle,omitempty"`
+
 	// Theme 主题
 	Theme string `column:"theme" json:"theme,omitempty"`
 

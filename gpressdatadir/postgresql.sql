@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS site (
 		domain         VARCHAR(200),
 		keyword         VARCHAR(1000),
 		description         VARCHAR(1000),
+        subtitle         VARCHAR(1000),
 		theme          VARCHAR(200) NOT NULL,
 		theme_pc         VARCHAR(200),
 		theme_wap         VARCHAR(200),

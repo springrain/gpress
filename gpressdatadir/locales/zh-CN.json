@@ -69,6 +69,8 @@
   "Please fill in the name": "请填写名称",
   "Title": "标题",
   "Please fill in the title": "请填写标题",
+  "Subtitle": "副标题",
+  "Please fill in the subtitle": "请填写副标题",
   "Domain": "域名",
   "Used to generate the sitemap.xml": "用于生成网站地图sitemap.xml",
   "PC Theme": "PC主题",

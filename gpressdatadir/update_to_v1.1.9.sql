@@ -54,6 +54,7 @@ ALTER TABLE site RENAME COLUMN createTime TO create_time;
 ALTER TABLE site RENAME COLUMN updateTime TO update_time;
 ALTER TABLE site RENAME COLUMN createUser TO create_user;
 ALTER TABLE site RENAME COLUMN sortNo TO sortno;
+ALTER TABLE site ADD COLUMN subtitle TEXT;
 
 
 -- 删除现有的触发器和虚拟表

@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS site (
 		domain         TEXT,
 		keyword         TEXT,
 		description         TEXT,
+        subtitle           TEXT,
 		theme         TEXT NOT NULL,
 		theme_pc         TEXT,
 		theme_wap         TEXT,
