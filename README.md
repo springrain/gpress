@@ -187,6 +187,7 @@ Site information, such as title, logo, keywords, description, etc.
 | title       | string      | Site Name     |     -  |
 | keyword     | string      | Keywords       |     -  |
 | description | string      | Site Description    |     -  |
+| subtitle    | string      | subtitle    |     -  |
 | theme       | string      | Default Theme     | Default uses default  |
 | theme_pc     | string      | PC Theme      | First get from cookie, if not, get from Header, write to cookie, default uses default  |
 | theme_wap    | string      | Mobile Theme    | First get from cookie, if not, get from Header, write to cookie, default uses default  |

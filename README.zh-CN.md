@@ -185,6 +185,7 @@ ID默认使用时间戳(23位)+随机数(9位),全局唯一.
 | title       | string      | 站点名称     |     -  |
 | keyword     | string      | 关键字       |     -  |
 | description | string      | 站点描述    |     -  |
+| subtitle    | string      | 副标题    |     -  |
 | theme       | string      | 默认主题     | 默认使用default  |
 | theme_pc     | string      | PC主题      | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
 | theme_wap    | string      | 手机主题    | 先从cookie获取,如果没有从Header头取值,写入cookie,默认使用default  |
