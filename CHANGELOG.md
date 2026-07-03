@@ -1,4 +1,6 @@
 v1.2.5
+- 优化markdown生成html的`conver2Html`实现
+- 生成静态文件复用`genHTTPClient`
 - 增加网站副标题
 - 增加 href_url
 - 完善文档,注释

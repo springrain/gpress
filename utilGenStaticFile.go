@@ -44,6 +44,9 @@ import (
 var searchDataLock = &sync.Mutex{}
 var genStaticHtmlLock = &sync.Mutex{}
 
+// genHTTPClient 生成静态文件时复用的HTTP客户端,复用TCP连接
+var genHTTPClient = &http.Client{}
+
 // genSearchDataJson 生成flexSearch需要的json文件
 func genSearchDataJson() error {
 	//onlyOnce <- struct{}{}
@@ -203,6 +206,8 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 			domain = "https://" + site.Domain
 		}
 	}
+	// 预先计算 domain + basePath, 避免在循环中重复拼接
+	domainBase := domain + funcBasePath()
 	tagsMap := make(map[string]bool, 0)
 	//生成首页index网页
 	fileHash, _, err := writeStaticHtml("", "", theme, userAgent, genMarkdownFile)
@@ -248,9 +253,9 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domainBase + funcTrimPrefixSlash(contents[i].Id) + "</loc></url>")
 			if genMarkdownFile {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + funcTrimPrefixSlash(contents[i].Id) + ".md</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domainBase + funcTrimPrefixSlash(contents[i].Id) + ".md</loc></url>")
 			}
 		}
 
@@ -259,9 +264,9 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 			continue
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domainBase + "page/" + strconv.Itoa(i+1) + "</loc></url>")
 			if genMarkdownFile {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "page/" + strconv.Itoa(i+1) + ".md</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domainBase + "page/" + strconv.Itoa(i+1) + ".md</loc></url>")
 			}
 		}
 		//如果hash完全一致,认为是最后一页
@@ -276,9 +281,9 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domainBase + categoryID + "</loc></url>")
 			if genMarkdownFile {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + ".md</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domainBase + categoryID + ".md</loc></url>")
 			}
 		}
 		for j := 0; j < len(contents); j++ {
@@ -287,9 +292,9 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domainBase + categoryID + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 				if genMarkdownFile {
-					sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + categoryID + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
+					sitemapFile.WriteString("<url><loc>" + domainBase + categoryID + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
 				}
 			}
 			//如果hash完全一致,认为是最后一页
@@ -305,7 +310,7 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 			return err
 		}
 		if success {
-			sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "</loc></url>")
+			sitemapFile.WriteString("<url><loc>" + domainBase + "tag/" + tag + "</loc></url>")
 		}
 		for j := 0; j < len(contents); j++ {
 			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
@@ -313,9 +318,9 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 				continue
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
+				sitemapFile.WriteString("<url><loc>" + domainBase + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
 				if genMarkdownFile {
-					sitemapFile.WriteString("<url><loc>" + domain + funcBasePath() + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
+					sitemapFile.WriteString("<url><loc>" + domainBase + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
 				}
 			}
 			//如果hash完全一致,认为是最后一页
@@ -460,7 +465,6 @@ func doGzipFile(gzipFilePath string, reader io.Reader) error {
 
 // responseBodyBytes 获取http资源的body字节数据
 func responseBodyBytes(httpurl string, userAgent string) ([]byte, error) {
-	client := &http.Client{}
 	req, err := http.NewRequest("GET", httpurl, nil)
 	if err != nil {
 
@@ -471,7 +475,7 @@ func responseBodyBytes(httpurl string, userAgent string) ([]byte, error) {
 	if userAgent != "" {
 		req.Header.Set("User-Agent", userAgent)
 	}
-	response, err := client.Do(req)
+	response, err := genHTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -499,7 +503,6 @@ func writeLlmsTxtFile(categories []*Category, contents []Content, llmstxtFile *o
 		if len(category.Leaf) > 0 {
 			writeLlmsTxtFile(category.Leaf, contents, llmstxtFile, level+1, domain)
 		}
-
 	}
 	return nil
 }

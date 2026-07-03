@@ -81,25 +81,23 @@ func init() {
 
 // conver2Html 由Markdown转成html
 func conver2Html(source []byte) (map[string]interface{}, *string, *string, error) {
-
-	var htmlBuffer bytes.Buffer
 	// 生成id时支持中文
 	parserContext := parser.NewContext(parser.WithIDs(newIDs()))
-	if err := markdown.Convert(source, &htmlBuffer, parser.WithContext(parserContext)); err != nil {
+	// parse once, reuse AST for both HTML rendering and TOC generation
+	doc := markdown.Parser().Parse(text.NewReader(source), parser.WithContext(parserContext))
+
+	var htmlBuffer bytes.Buffer
+	if err := markdown.Renderer().Render(&htmlBuffer, source, doc); err != nil {
 		return nil, nil, nil, err
 	}
 	// 生成页面html
 	html := htmlBuffer.String()
+
 	// 读取markdown文件中的元属性
 	metaData := meta.Get(parserContext)
 
 	// 生成 toc  Table of Contents,文章目录
 	var tocBuffer bytes.Buffer
-
-	mdParser := markdown.Parser()
-
-	// 生成id时支持中文
-	doc := mdParser.Parse(text.NewReader(source), parser.WithContext(parserContext))
 	tocTree, err := toc.Inspect(doc, source)
 	if err != nil {
 		return metaData, nil, &html, err
@@ -110,7 +108,7 @@ func conver2Html(source []byte) (map[string]interface{}, *string, *string, error
 	}
 	tocHtml := tocBuffer.String()
 
-	return metaData, &tocHtml, &html, err
+	return metaData, &tocHtml, &html, nil
 }
 
 // 重写goldmark的autoHeadingID生成方式 --------------------------
