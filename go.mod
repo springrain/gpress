@@ -8,7 +8,7 @@ require (
 	github.com/cloudwego/hertz v0.10.5
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.1
 	github.com/lib/pq v1.12.3
-	github.com/mattn/go-sqlite3 v1.14.47
+	github.com/mattn/go-sqlite3 v1.14.48
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/tetratelabs/wazero v1.12.0
 	github.com/yuin/goldmark v1.8.4

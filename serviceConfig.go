@@ -123,17 +123,11 @@ func findConfig() (Config, error) {
 
 	finder := zorm.NewSelectFinder(tableConfigName, "*")
 
-	m, err := zorm.QueryRowMap(context.Background(), finder)
-
 	config := defaultConfig
+	_, err := zorm.QueryRow(context.Background(), finder, &config)
 	if err != nil {
 		return config, err
 	}
-	b, err := json.Marshal(m)
-	if err != nil {
-		return config, err
-	}
-	json.Unmarshal(b, &config)
 
 	if config.BasePath == "" {
 		config.BasePath = "/"
