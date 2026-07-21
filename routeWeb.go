@@ -194,6 +194,12 @@ func warpRequestMap(c *app.RequestContext) map[string]interface{} {
 	data := make(map[string]interface{}, 0)
 	data["pageNo"] = pageNo
 	data["q"] = q
+	//URIPath 当前请求去掉basePath后的相对路径(不含查询参数),必须以 / 开头,用于模板判断路径前缀等
+	uriPath := strings.TrimPrefix(string(c.Request.URI().Path()), funcBasePath())
+	if !strings.HasPrefix(uriPath, "/") {
+		uriPath = "/" + uriPath
+	}
+	data["URIPath"] = uriPath
 	//设置用户角色,0是访客,1是管理员
 	userType, ok := c.Get(userTypeKey)
 	if ok {
