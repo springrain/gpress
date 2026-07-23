@@ -258,6 +258,7 @@
 				// 替换空格为- zi dong biao ti - * a b c1 -> zi-dong-biao-ti---*-a-b-c
 				let result = py.replace(/\s/g, '-');
 				result = result.replaceAll("--","-")
+				result = result.toLowerCase();
 				// 最长300个字符
                 result=result.substring(0, 300)
 				$('#id').val(result);
