@@ -60,7 +60,7 @@ var funcMap = template.FuncMap{
 	"categoryURL":      funcCategoryURL,
 	"firstURI":         funcFirstURI,
 	"lastURI":          funcLastURI,
-	"localeURI":        funcLocaleURI,
+	"indexURI":         funcIndexURI,
 	"generateStringID": FuncGenerateStringID,
 	"treeCategory":     funcTreeCategory,
 	"themeName":        funcThemeName,
@@ -419,12 +419,7 @@ func funcCategoryURL(contentID string) string {
 
 // funcFirstURI 获取路径的第一个 uri, 例如 /a/b/c 返回 a
 func funcFirstURI(uri string) string {
-	str := funcTrimSlash(uri)
-	urls := strings.Split(str, "/")
-	if len(urls) < 1 {
-		return str
-	}
-	return urls[0]
+	return funcIndexURI(uri, 0)
 }
 
 // funcLastURI 获取路径的最后一个 uri, 例如 /a/b/c 返回 c
@@ -437,40 +432,15 @@ func funcLastURI(uri string) string {
 	return urls[len(urls)-1]
 }
 
-// supportedLocaleMap 支持的语言包, key是语言代码, value是语言名称
-var supportedLocaleMap = map[string]string{
-	"en": "English",
-	"zh": "中文",
-	"es": "Español",
-	"hi": "हिन्दी",
-	"ar": "العربية",
-	"fr": "Français",
-	"ru": "Русский",
-	"pt": "Português",
-	"de": "Deutsch",
-	"ja": "日本語",
-	"ko": "한국어",
-	"it": "Italiano",
-	"tr": "Türkçe",
-	"nl": "Nederlands",
-	"pl": "Polski",
-	"uk": "Українська",
-	"id": "Bahasa Indonesia",
-	"vi": "Tiếng Việt",
-	"th": "ภาษาไทย",
-	"fa": "فارسی",
-	"ms": "Bahasa Melayu",
-}
-
-// funcLocaleURI 根据路径首段识别语言, 返回语言代码(如 zh, en), 没有语言标识返回空字符串
-// 例如 /en/web/post 返回 en, /web/post 返回 "", / 返回 ""
-func funcLocaleURI(uri string) string {
-	first := funcFirstURI(uri)
-	_, ok := supportedLocaleMap[first]
-	if ok {
-		return first
+// funcIndexURI 按索引获取路径指定位置的 uri, index 从 0 开始
+// 例如 indexURI("a/b/c", 0) 返回 a, indexURI("/a/b/c", 0) 返回 a, indexURI("/a/b/c", 2) 返回 c
+func funcIndexURI(uri string, index int) string {
+	str := funcTrimSlash(uri)
+	urls := strings.Split(str, "/")
+	if index < 0 || index >= len(urls) {
+		return ""
 	}
-	return ""
+	return urls[index]
 }
 
 // sliceCategory2Tree 导航菜单数组转树形结构
