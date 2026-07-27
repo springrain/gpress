@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 gpress Authors.
+// Copyright (c) 2023 gpress Authors.
 //
 // This file is part of gpress.
 //
@@ -24,6 +24,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -54,6 +55,8 @@ var funcMap = template.FuncMap{
 	"hasPrefix":        funcHasPrefix,
 	"hasSuffix":        funcHasSuffix,
 	"contains":         funcContains,
+	"split":            funcSplit,
+	"in":               funcIn,
 	"trimSuffixSlash":  funcTrimSuffixSlash,
 	"trimPrefixSlash":  funcTrimPrefixSlash,
 	"trimSlash":        funcTrimSlash,
@@ -389,6 +392,47 @@ func funcHasSuffix(s, suffix string) bool {
 // funcContains 是否包含某字符串
 func funcContains(s, substr string) bool {
 	return strings.Contains(s, substr)
+}
+
+// funcSplit 按分隔符把字符串分割为切片,例如 split("en,zh", ",") 返回 ["en","zh"]
+func funcSplit(s, sep string) []string {
+	if sep == "" {
+		return []string{s}
+	}
+	return strings.Split(s, sep)
+}
+
+// funcIn 判断元素是否在切片中,支持 []string/[]int/[]any,找不到或类型不支持返回 false
+func funcIn(needle any, haystack any) bool {
+	switch h := haystack.(type) {
+	case []string:
+		n, ok := needle.(string)
+		if !ok {
+			return false
+		}
+		for _, v := range h {
+			if v == n {
+				return true
+			}
+		}
+	case []int:
+		n, ok := needle.(int)
+		if !ok {
+			return false
+		}
+		for _, v := range h {
+			if v == n {
+				return true
+			}
+		}
+	case []any:
+		for _, v := range h {
+			if reflect.DeepEqual(v, needle) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // funcTrimPrefixSlash 去掉开头的 /
