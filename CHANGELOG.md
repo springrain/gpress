@@ -1,4 +1,5 @@
 v1.2.6
+- 优化生成search-data.json
 - 增加`split`和`in`函数
 - 生成的路径标识为小写
 - 增加函数`indexURI`按索引获取路径指定位置的uri
