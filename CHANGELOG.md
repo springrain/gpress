@@ -1,4 +1,5 @@
 v1.2.6
+- 增加`/search`和`/api/search`接口
 - 优化生成search-data.json
 - 增加`split`和`in`函数
 - 生成的路径标识为小写

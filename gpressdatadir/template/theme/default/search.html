@@ -1,0 +1,118 @@
+{{ $site := site }}
+{{/* 0: database full-text search, 1: browser-side FlexSearch */}}
+{{ $searchMode := 0 }}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>搜索 - {{ $site.Title }}</title>
+  <meta name="description" content="搜索 {{ $site.Title }}" />
+  {{template "bodystart.html"}}
+
+<section id="archive" class="archive">
+  <div class="archive-title">
+    <h2 class="archive-name">搜索结果</h2>
+  </div>
+  <input type="hidden" id="search-q" value="{{.q}}" />
+  <p id="search-status" role="status" aria-live="polite"></p>
+  <div id="search-results"></div>
+</section>
+<nav id="search-pagination" class="pagination" aria-label="搜索结果分页"></nav>
+
+{{ if eq $searchMode 1 }}
+<script src="{{basePath}}js/flexsearch.bundle.min.js"></script>
+{{ end }}
+<script>
+$(function () {
+  var searchMode = {{ $searchMode }};
+  var searchParams = new URLSearchParams(window.location.search);
+  var query = searchParams.get('q') || '';
+  var initialPage = Math.max(1, parseInt(searchParams.get('pageNo'), 10) || 1);
+  var status = $('#search-status');
+  var results = $('#search-results');
+  var pagination = $('#search-pagination');
+  var flexDocuments = null;
+  var flexIndex = null;
+
+  function renderItems(items, total, pageNo, pageCount) {
+    status.text(items.length ? '找到 ' + total + ' 条结果' : '没有找到相关内容');
+    $.each(items, function (_, item) {
+      var article = $('<article>').addClass('archive-post');
+      var title = $('<a>').addClass('archive-post-link').text(item.title || '未命名文章');
+      title.attr('href', item.hrefURL || '#');
+      article.append($('<div>').addClass('archive-post-title').append(title));
+      if (item.summary || item.description) {
+        article.append($('<p>').addClass('archive-post-summary').text(item.summary || item.description));
+      }
+      results.append(article);
+    });
+
+    if (pageNo > 1) {
+      pagination.append($('<a>').addClass('prev').attr('href', '{{basePath}}search?q=' + encodeURIComponent(query) + '&pageNo=' + (pageNo - 1)).text('上一页').on('click', function (event) { event.preventDefault(); renderPage(pageNo - 1); }));
+    }
+    if (pageNo < pageCount) {
+      pagination.append($('<a>').addClass('next').attr('href', '{{basePath}}search?q=' + encodeURIComponent(query) + '&pageNo=' + (pageNo + 1)).text('下一页').on('click', function (event) { event.preventDefault(); renderPage(pageNo + 1); }));
+    }
+  }
+
+  function renderDatabasePage(pageNo) {
+    $.getJSON('{{basePath}}api/search', { q: query, pageNo: pageNo })
+      .done(function (response) {
+        if (!response || response.statusCode !== 1) {
+          status.text((response && response.message) || '搜索失败');
+          return;
+        }
+        var page = response.page || {};
+        renderItems(response.data || [], page.totalCount || 0, page.pageNo || pageNo, page.pageCount || 0);
+      })
+      .fail(function () { status.text('搜索暂时不可用，请稍后重试'); });
+  }
+
+  function renderFlexPage(pageNo) {
+    if (typeof FlexSearch === 'undefined') {
+      status.text('搜索组件加载失败');
+      return;
+    }
+    if (!flexIndex) {
+      status.text('正在加载搜索索引...');
+      $.getJSON('{{basePath}}public/search-data.json')
+        .done(function (documents) {
+          flexDocuments = Array.isArray(documents) ? documents : [];
+          flexIndex = new FlexSearch.Index({ tokenize: 'forward', cache: 100 });
+          $.each(flexDocuments, function (index, item) {
+            flexIndex.add(index, [item.title, item.summary, item.description, item.tag, item.categoryName].join(' '));
+          });
+          renderFlexPage(pageNo);
+        })
+        .fail(function () { status.text('搜索索引加载失败'); });
+      return;
+    }
+
+    var matchingIndexes = flexIndex.search(query);
+    var matchingItems = $.map(matchingIndexes, function (index) { return flexDocuments[index]; });
+    var pageSize = 20;
+    var pageCount = Math.ceil(matchingItems.length / pageSize);
+    var start = (pageNo - 1) * pageSize;
+    renderItems(matchingItems.slice(start, start + pageSize), matchingItems.length, pageNo, pageCount);
+  }
+
+  function renderPage(pageNo) {
+    var q = $.trim(query);
+    results.empty();
+    pagination.empty();
+    if (!q) {
+      status.text('请输入搜索关键词');
+      return;
+    }
+    status.text('正在搜索...');
+    if (searchMode === 1) {
+      renderFlexPage(pageNo);
+    } else {
+      renderDatabasePage(pageNo);
+    }
+  }
+
+  $('#input-enter, #input-phone').val(query);
+  if ($.trim(query)) renderPage(initialPage);
+});
+</script>
+{{template "bodyend.html"}}

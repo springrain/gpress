@@ -108,14 +108,15 @@
 <script type="text/javascript" src="{{basePath}}js/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#input-enter').val($('#search-q').val())
-	$('#input-phone').val($('#search-q').val())
+	let initialSearch = $('#search-q').val() || new URLSearchParams(window.location.search).get('q') || ''
+	$('#input-enter').val(initialSearch)
+	$('#input-phone').val(initialSearch)
 
 	$('#input-enter').keypress(function(e){
 		if(e.which == 13){
 			// 回车键开始执行搜索查询
 			let key = $('#input-enter').val()
-			window.location.href="{{basePath}}?q="+key
+			window.location.href="{{basePath}}search?q="+encodeURIComponent(key)
 		}		
 	})
 
@@ -123,7 +124,7 @@ $(document).ready(function(){
 		if(e.which == 13){
 			// 回车键开始执行搜索查询
 			let key = $('#input-phone').val()
-			window.location.href="{{basePath}}?q="+key
+			window.location.href="{{basePath}}search?q="+encodeURIComponent(key)
 		}
 	})
 

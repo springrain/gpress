@@ -54,7 +54,8 @@ func genSearchDataJson() error {
 	searchDataLock.Lock()
 	defer searchDataLock.Unlock()
 
-	finder := zorm.NewSelectFinder(tableContentName, "id,title,href_url,summary,create_time,tag,category_name,markdown as content,description").Append("WHERE status in (1,2) order by status desc, sortno desc")
+	//finder := zorm.NewSelectFinder(tableContentName, "id,title,href_url,summary,create_time,tag,category_name,markdown as content,description").Append("WHERE status in (1,2) order by status desc, sortno desc")
+	finder := zorm.NewSelectFinder(tableContentName, "id,title,href_url,summary,create_time,tag,category_name,description").Append("WHERE status in (1,2) order by status desc, sortno desc")
 	finder.SelectTotalCount = false
 	//page := zorm.NewPage()
 	//page.PageSize = 10000
@@ -224,6 +225,15 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 	defer sitemapFile.Close() // 确保在函数结束时关闭文件
 	sitemapFile.WriteString(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 	sitemapFile.WriteString("<url><loc>" + domain + "</loc></url>")
+
+	// The search page is a static shell; its results are loaded from the JSON API.
+	if pathExist(themeDir + theme + "/search.html") {
+		_, _, searchErr := writeStaticHtml("search", "", theme, userAgent, false)
+		if searchErr != nil {
+			return searchErr
+		}
+
+	}
 
 	var llmstxtFile *os.File
 	if genMarkdownFile {

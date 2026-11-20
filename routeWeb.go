@@ -46,6 +46,11 @@ func init() {
 	h.GET("/page/:pageNo", funcIndex)
 	h.GET("/page/:pageNo/", funcIndex)
 
+	// 搜索页面和JSON搜索接口
+	h.GET("/search", funcSearchPage)
+	h.GET("/search/", funcSearchPage)
+	h.GET("/api/search", funcSearchAPI)
+
 	// 查看标签
 	h.GET("/tag/:urlPathParam", funcListTags)
 	h.GET("/tag/:urlPathParam/", funcListTags)
@@ -65,6 +70,26 @@ func funcIndex(ctx context.Context, c *app.RequestContext) {
 		templateFile = "index.md"
 	}
 	cHtml(c, http.StatusOK, templateFile, data)
+}
+
+func funcSearchPage(ctx context.Context, c *app.RequestContext) {
+	cHtml(c, http.StatusOK, "search.html", warpRequestMap(c))
+}
+
+func funcSearchAPI(ctx context.Context, c *app.RequestContext) {
+	q := c.Query("q")
+	pageNo, err := strconv.Atoi(c.DefaultQuery("pageNo", "1"))
+	if err != nil || pageNo < 1 {
+		pageNo = 1
+	}
+
+	responseData, err := findSearchContent(ctx, q, pageNo)
+	if err != nil {
+		FuncLogError(ctx, err)
+		c.JSON(http.StatusInternalServerError, ResponseData{StatusCode: 0, Message: err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, responseData)
 }
 
 // funcError 错误页面
