@@ -1,118 +1,237 @@
 {{ $site := site }}
 {{/* 0: database full-text search, 1: browser-side FlexSearch */}}
-{{ $searchMode := 0 }}
+{{ $searchMode := 1 }}
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <title>搜索 - {{ $site.Title }}</title>
-  <meta name="description" content="搜索 {{ $site.Title }}" />
-  {{template "bodystart.html"}}
+  <title>搜索结果 - {{ $site.Title }}</title>
+  <meta name="description" content="搜索 {{ $site.Title }}">
+  <meta name="keyword" content="{{ $site.Keyword }}">
+  {{template "bodystart.html" .}}
 
-<section id="archive" class="archive">
-  <div class="archive-title">
-    <h2 class="archive-name">搜索结果</h2>
-  </div>
-  <input type="hidden" id="search-q" value="{{.q}}" />
-  <p id="search-status" role="status" aria-live="polite"></p>
-  <div id="search-results"></div>
-</section>
-<nav id="search-pagination" class="pagination" aria-label="搜索结果分页"></nav>
+<div class="tm-shell tm-page home posts fi-search-page">
+  <header class="fi-search-heading">
+    <h1>搜索结果</h1>
+    <p id="search-status" role="status" aria-live="polite"></p>
+  </header>
+  <section id="search-results" aria-label="搜索结果" hidden></section>
+  <nav id="search-pagination" class="tm-pagination tm-smart-pagination" data-pagination aria-label="分页导航" hidden></nav>
+</div>
+
+<template id="search-result-template">
+  <article class="single summary">
+    <h2 class="single-title"><a></a></h2>
+    <div class="post-meta">
+      <span class="post-publish">发布于 <time></time></span>
+      <span class="post-included-in">
+        <span class="post-meta-sep">·</span>
+        收录于 <a class="post-category"></a>
+      </span>
+    </div>
+    <div class="content"><p></p></div>
+    <div class="post-footer">
+      <a class="read-more">Read More</a>
+    </div>
+  </article>
+</template>
 
 {{ if eq $searchMode 1 }}
 <script src="{{basePath}}js/flexsearch.bundle.min.js"></script>
 {{ end }}
 <script>
-$(function () {
+(function () {
   var searchMode = {{ $searchMode }};
   var searchParams = new URLSearchParams(window.location.search);
-  var query = searchParams.get('q') || '';
-  var initialPage = Math.max(1, parseInt(searchParams.get('pageNo'), 10) || 1);
-  var status = $('#search-status');
-  var results = $('#search-results');
-  var pagination = $('#search-pagination');
+  var query = (searchParams.get('q') || '').trim();
+  var initialPage = Number(searchParams.get('pageNo'));
+  if (!Number.isSafeInteger(initialPage) || initialPage < 1) initialPage = 1;
+  var status = document.getElementById('search-status');
+  var results = document.getElementById('search-results');
+  var resultTemplate = document.getElementById('search-result-template');
+  var pagination = document.getElementById('search-pagination');
+
+  var desktopInput = document.getElementById('tm-search-input');
+  var mobileInput = document.getElementById('tm-mobile-search-input');
+  if (desktopInput) desktopInput.value = query;
+  if (mobileInput) mobileInput.value = query;
   var flexDocuments = null;
   var flexIndex = null;
 
-  function renderItems(items, total, pageNo, pageCount) {
-    status.text(items.length ? '找到 ' + total + ' 条结果' : '没有找到相关内容');
-    $.each(items, function (_, item) {
-      var article = $('<article>').addClass('archive-post');
-      var title = $('<a>').addClass('archive-post-link').text(item.title || '未命名文章');
-      title.attr('href', item.hrefURL || '#');
-      article.append($('<div>').addClass('archive-post-title').append(title));
-      if (item.summary || item.description) {
-        article.append($('<p>').addClass('archive-post-summary').text(item.summary || item.description));
+  function createResult(item) {
+    var article = resultTemplate.content.firstElementChild.cloneNode(true);
+    var title = article.querySelector('.single-title a');
+    var href = item.hrefURL || '#';
+    title.href = href;
+    title.textContent = item.title || '未命名文章';
+    article.querySelector('.read-more').href = href;
+
+    var date = item.updateTime || item.createTime;
+    var published = article.querySelector('.post-publish');
+    if (date) {
+      published.querySelector('time').textContent = date.slice(0, 10);
+    } else {
+      published.remove();
+    }
+
+    var category = article.querySelector('.post-included-in');
+    if (item.categoryName) {
+      var categoryLink = category.querySelector('.post-category');
+      categoryLink.textContent = item.categoryName;
+      if (item.id) {
+        var categoryPath = item.id.replace(/^\/+|\/+$/g, '').split('/').slice(0, -1);
+        categoryLink.href = '{{basePath}}' + categoryPath.map(encodeURIComponent).join('/');
       }
-      results.append(article);
+      if (!date) category.querySelector('.post-meta-sep').remove();
+    } else {
+      category.remove();
+    }
+
+    var summary = item.summary || item.description;
+    var content = article.querySelector('.content');
+    if (summary) {
+      content.querySelector('p').textContent = summary;
+    } else {
+      content.remove();
+    }
+
+    return article;
+  }
+
+  function addPageControl(label, pageNo, disabled, relation) {
+    var control = document.createElement(disabled ? 'span' : 'a');
+    control.className = 'tm-smart-pagination__control' + (disabled ? ' is-disabled' : '');
+    control.textContent = label;
+    if (disabled) {
+      control.setAttribute('aria-disabled', 'true');
+    } else {
+      control.rel = relation;
+      setPageLink(control, pageNo);
+    }
+    pagination.appendChild(control);
+  }
+
+  function addPageNumber(pageNo, currentPage) {
+    if (pageNo === currentPage) {
+      var current = document.createElement('strong');
+      current.className = 'tm-smart-pagination__page is-current';
+      current.setAttribute('aria-current', 'page');
+      current.setAttribute('aria-label', '第 ' + pageNo + ' 页，当前页');
+      current.tabIndex = 0;
+      current.textContent = pageNo;
+      pagination.appendChild(current);
+      return;
+    }
+    var link = document.createElement('a');
+    link.className = 'tm-smart-pagination__page';
+    link.textContent = pageNo;
+    link.setAttribute('aria-label', '第 ' + pageNo + ' 页');
+    setPageLink(link, pageNo);
+    pagination.appendChild(link);
+  }
+
+  function setPageLink(link, pageNo) {
+    var params = new URLSearchParams({ q: query, pageNo: pageNo });
+    link.href = '{{basePath}}search?' + params.toString();
+    link.addEventListener('click', function (event) {
+      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      window.history.replaceState(null, '', link.href);
+      load(pageNo);
     });
-
-    if (pageNo > 1) {
-      pagination.append($('<a>').addClass('prev').attr('href', '{{basePath}}search?q=' + encodeURIComponent(query) + '&pageNo=' + (pageNo - 1)).text('上一页').on('click', function (event) { event.preventDefault(); renderPage(pageNo - 1); }));
-    }
-    if (pageNo < pageCount) {
-      pagination.append($('<a>').addClass('next').attr('href', '{{basePath}}search?q=' + encodeURIComponent(query) + '&pageNo=' + (pageNo + 1)).text('下一页').on('click', function (event) { event.preventDefault(); renderPage(pageNo + 1); }));
-    }
   }
 
-  function renderDatabasePage(pageNo) {
-    $.getJSON('{{basePath}}api/search', { q: query, pageNo: pageNo })
-      .done(function (response) {
+  function addEllipsis() {
+    var ellipsis = document.createElement('span');
+    ellipsis.className = 'tm-smart-pagination__ellipsis';
+    ellipsis.setAttribute('aria-hidden', 'true');
+    ellipsis.textContent = '...';
+    pagination.appendChild(ellipsis);
+  }
+
+  function renderItems(items, total, pageNo, pageCount) {
+    status.textContent = items.length ? '找到 ' + total + ' 条结果' : '没有找到相关内容';
+    results.hidden = !items.length;
+    items.forEach(function (item) { results.appendChild(createResult(item)); });
+    pagination.hidden = pageCount <= 1;
+    if (pagination.hidden) return;
+
+    addPageControl('上一页', pageNo - 1, pageNo <= 1, 'prev');
+    if (pageCount <= 7) {
+      for (var page = 1; page <= pageCount; page++) addPageNumber(page, pageNo);
+    } else {
+      var start = Math.max(2, Math.min(pageNo - 2, pageCount - 5));
+      var end = start + 4;
+      addPageNumber(1, pageNo);
+      if (start > 2) addEllipsis();
+      for (var page = start; page <= end; page++) addPageNumber(page, pageNo);
+      if (end < pageCount - 1) addEllipsis();
+      addPageNumber(pageCount, pageNo);
+    }
+    addPageControl('下一页', pageNo + 1, pageNo >= pageCount, 'next');
+  }
+
+  function loadDatabasePage(pageNo) {
+    fetch('{{basePath}}api/search?q=' + encodeURIComponent(query) + '&pageNo=' + pageNo)
+      .then(function (response) { return response.json(); })
+      .then(function (response) {
         if (!response || response.statusCode !== 1) {
-          status.text((response && response.message) || '搜索失败');
-          return;
+          throw new Error((response && response.message) || '搜索失败');
         }
+        var items = response.data || [];
         var page = response.page || {};
-        renderItems(response.data || [], page.totalCount || 0, page.pageNo || pageNo, page.pageCount || 0);
+        renderItems(items, page.totalCount || 0, page.pageNo || pageNo, page.pageCount || 0);
       })
-      .fail(function () { status.text('搜索暂时不可用，请稍后重试'); });
+      .catch(function (error) { status.textContent = error.message || '搜索暂时不可用，请稍后重试'; });
   }
 
-  function renderFlexPage(pageNo) {
+  function loadFlexPage(pageNo) {
     if (typeof FlexSearch === 'undefined') {
-      status.text('搜索组件加载失败');
+      status.textContent = '搜索组件加载失败';
       return;
     }
     if (!flexIndex) {
-      status.text('正在加载搜索索引...');
-      $.getJSON('{{basePath}}public/search-data.json')
-        .done(function (documents) {
+      status.textContent = '正在加载搜索索引...';
+      fetch('{{basePath}}public/search-data.json')
+        .then(function (response) { return response.json(); })
+        .then(function (documents) {
           flexDocuments = Array.isArray(documents) ? documents : [];
           flexIndex = new FlexSearch.Index({ tokenize: 'forward', cache: 100 });
-          $.each(flexDocuments, function (index, item) {
+          flexDocuments.forEach(function (item, index) {
             flexIndex.add(index, [item.title, item.summary, item.description, item.tag, item.categoryName].join(' '));
           });
-          renderFlexPage(pageNo);
+          loadFlexPage(pageNo);
         })
-        .fail(function () { status.text('搜索索引加载失败'); });
+        .catch(function () { status.textContent = '搜索索引加载失败'; });
       return;
     }
 
-    var matchingIndexes = flexIndex.search(query);
-    var matchingItems = $.map(matchingIndexes, function (index) { return flexDocuments[index]; });
+    var matchingIndexes = flexIndex.search(query, flexDocuments.length);
+    var matchingItems = matchingIndexes.map(function (index) { return flexDocuments[index]; });
     var pageSize = 20;
     var pageCount = Math.ceil(matchingItems.length / pageSize);
     var start = (pageNo - 1) * pageSize;
     renderItems(matchingItems.slice(start, start + pageSize), matchingItems.length, pageNo, pageCount);
   }
 
-  function renderPage(pageNo) {
-    var q = $.trim(query);
-    results.empty();
-    pagination.empty();
-    if (!q) {
-      status.text('请输入搜索关键词');
+  function load(pageNo) {
+    if (!query) {
+      status.textContent = '请输入搜索关键词';
       return;
     }
-    status.text('正在搜索...');
+    status.textContent = '正在搜索...';
+    results.hidden = true;
+    pagination.hidden = true;
+    results.replaceChildren();
+    pagination.replaceChildren();
     if (searchMode === 1) {
-      renderFlexPage(pageNo);
+      loadFlexPage(pageNo);
     } else {
-      renderDatabasePage(pageNo);
+      loadDatabasePage(pageNo);
     }
   }
 
-  $('#input-enter, #input-phone').val(query);
-  if ($.trim(query)) renderPage(initialPage);
-});
+  load(initialPage);
+})();
 </script>
-{{template "bodyend.html"}}
+
+{{template "bodyend.html" .}}

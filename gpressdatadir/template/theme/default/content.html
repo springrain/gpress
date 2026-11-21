@@ -1,115 +1,106 @@
-{{ $site:=site }}
-<!-- 查询 content -->
+{{ $site := site }}
 {{ $contentSQL := "* FROM content WHERE id=? and status<3 order by status desc, sortno desc" }}
-
-{{ if eq .userType 1}}
-  {{ $contentSQL ="* FROM content WHERE id=? order by sortno desc" }}
-{{end}}
-
+{{ if eq .userType 1 }}{{ $contentSQL = "* FROM content WHERE id=? order by sortno desc" }}{{ end }}
 {{ $content := selectOne "content" $contentSQL .UrlPathParam }}
-
-{{ $prevContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortno < ? order by  status desc,sortno desc " $content.SortNo  }}
-{{ $nextContent := selectOne "content"  "id,title FROM content WHERE status in (1,2) and sortno > ? order by  status desc,sortno asc " $content.SortNo  }}
+{{ $prevContent := selectOne "content" "id,title FROM content WHERE status in (1,2) and sortno < ? order by status desc,sortno desc" $content.SortNo }}
+{{ $nextContent := selectOne "content" "id,title FROM content WHERE status in (1,2) and sortno > ? order by status desc,sortno asc" $content.SortNo }}
 
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <title>{{ $content.Title }}</title>
-  <meta name="description" content="{{ $content.Description }}" />
-  <meta name="keyword" content="{{ $content.Keyword }}" />
+  <meta name="description" content="{{ $content.Description }}">
+  <meta name="keyword" content="{{ $content.Keyword }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ $content.Title }}">
+  <meta name="twitter:description" content="{{ $content.Description }}">
+  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ if $content.Thumbnail }}{{ $content.Thumbnail }}{{else}}{{ $site.Logo }}{{end}}">
+  <meta property="og:title" content="{{ $content.Title }}">
+  <meta property="og:description" content="{{ $content.Description }}">
+  <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $content.Id }}">
+  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ if $content.Thumbnail }}{{ $content.Thumbnail }}{{else}}{{ $site.Logo }}{{end}}">
+  <meta property="og:type" content="article">
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="{{ $content.Title }}" />
-  <meta name="twitter:description" content="{{ $content.Description }}" />
-  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ if $content.Thumbnail }}{{ $content.Thumbnail }}{{else}}{{ $site.Logo }}{{end}}" />
-  
-  <meta property="og:title" content="{{ $content.Title }}" />
-  <meta property="og:description" content="{{ $content.Description }}" />
-  <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $content.Id }}" />
-  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ if $content.Thumbnail }}{{ $content.Thumbnail }}{{else}}{{ $site.Logo }}{{end}}" />
-  <meta property="og:type" content="article" />
+{{template "bodystart.html" .}}
 
+<div class="tm-shell tm-page tm-post-page">
+  <nav class="tm-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{basePath}}">首页</a>
+    <span>/</span>
+    <a href="{{basePath}}{{ categoryURL $content.Id }}">{{ $content.CategoryName }}</a>
+    <span>/</span>
+    <strong>{{ $content.Title }}</strong>
+  </nav>
 
-{{template "bodystart.html"  }}
+  <div class="tm-post-grid">
+    <article class="tm-post">
+      <header class="tm-post__header">
+        <h1>{{ $content.Title }}</h1>
+        <div class="tm-post__meta post-meta">
+          {{ if $content.Author }}
+            <span class="post-author"><span class="author">作者 {{ $content.Author }}</span></span>
+          {{ end }}
+          {{ if $content.CreateTime }}
+            <span class="post-publish">
+              {{ if $content.Author }}<span class="post-meta-sep">·</span>{{ end }}
+              发布于 <time datetime="{{ slice $content.CreateTime 0 10 }}">{{ slice $content.CreateTime 0 10 }}</time>
+            </span>
+          {{ end }}
+          {{ if $content.CategoryName }}
+            <span class="post-included-in">
+              {{ if or $content.Author $content.CreateTime }}<span class="post-meta-sep">·</span>{{ end }}
+              收录于 <a href="{{basePath}}{{ categoryURL $content.Id }}" class="post-category">{{ $content.CategoryName }}</a>
+            </span>
+          {{ end }}
+        </div>
+      </header>
 
+      {{ if $content.Thumbnail }}
+        <figure class="tm-post__cover">
+          <img src="{{basePath}}{{ $content.Thumbnail }}" alt="{{ $content.Title }}">
+        </figure>
+      {{ end }}
 
-<article class="post">
-    
-  <header class="post-header">
-    <h1 class="post-title">{{ $content.Title }}</h1>
+      <div class="tm-post__body">
+        {{ safeHTML $content.Content }}
+      </div>
 
-    <div class="post-meta">
-      <span class="post-time"> {{ $content.CreateTime }} </span>
-      <div class="post-category">
-          <a href="{{basePath}}{{ categoryURL $content.Id }}"> {{ $content.CategoryName }} </a>
+      <footer class="tm-post__footer">
+        {{ if $content.Tag }}
+          <div class="tm-post__tags">
+            <a class="tm-tag tm-tag--accent" href="{{basePath}}tag/{{$content.Tag}}">#{{ $content.Tag }}</a>
           </div>
-      
-    </div>
-  </header>
+        {{ end }}
 
-{{ if $content.Toc }}
-<div class="post-toc" id="post-toc">
-<h2 class="post-toc-title">文章目录</h2>
-<div class="post-toc-content always-active">
-<nav id="TableOfContents">
+        <nav class="tm-post-nav" aria-label="Post navigation">
+          {{ if $prevContent.Id }}
+            <a class="tm-post-nav__item" href="{{basePath}}{{ trimSlash $prevContent.Id }}" rel="prev" title="{{ $prevContent.Title }}">
+              <strong>{{ $prevContent.Title }}</strong>
+            </a>
+          {{ end }}
+          {{ if $nextContent.Id }}
+            <a class="tm-post-nav__item tm-post-nav__item--next" href="{{basePath}}{{ trimSlash $nextContent.Id }}" rel="next" title="{{ $nextContent.Title }}">
+              <strong>{{ $nextContent.Title }}</strong>
+            </a>
+          {{ end }}
+        </nav>
+      </footer>
+    </article>
 
-  {{  safeHTML $content.Toc }}
-
-</nav>
+    <aside class="tm-post-aside">
+      {{ if $content.Toc }}
+        <section class="tm-toc" data-toc>
+          <button class="tm-toc__toggle" type="button" data-toc-toggle aria-expanded="true" aria-controls="tm-toc-content">
+            <span>目录</span>
+            <span class="tm-toc__chevron" aria-hidden="true"></span>
+          </button>
+          <div class="tm-toc__content" id="tm-toc-content" data-toc-content>
+            <nav aria-label="文章目录">{{ safeHTML $content.Toc }}</nav>
+          </div>
+        </section>
+      {{ end }}
+    </aside>
+  </div>
 </div>
-</div>
-{{ end }}
 
-
-  <div class="post-content">
-
-    {{ safeHTML $content.Content }}
-
-</div>
-<div class="post-copyright">
-<p class="copyright-item">
-  <span class="item-title">文章作者</span>
-  <span class="item-content"> {{ $content.Author }}</span>
-</p>
-<p class="copyright-item">
-  <span class="item-title">上次更新</span>
-  <span class="item-content">
-    {{ if $content.UpdateTime }}
-     {{ slice $content.UpdateTime 0 10 }}
-    {{end}}
-  </span>
-</p>
-
-
-</div>
-<footer class="post-footer">
-
-    {{if $content.Tag }}
-    <div class="post-tags">
-        <a href="{{basePath}}tag/{{$content.Tag}}">{{$content.Tag}}</a>
-    </div>
-    {{end}}
-
-    <nav class="post-nav">
-      {{if $prevContent.Id }}
-      <a class="prev" href="{{basePath}}{{ trimSlash $prevContent.Id }}">
-          <i class="iconfont icon-left"></i>
-          <span class="prev-text nav-default">{{$prevContent.Title}}</span>
-          <span class="prev-text nav-mobile">上一篇</span>
-        </a>
-      {{end}}
-      {{if $nextContent.Id }}
-      <a class="next" href="{{basePath}}{{ trimSlash $nextContent.Id }}">
-          <span class="next-text nav-default">{{$nextContent.Title}}</span>
-          <span class="next-text nav-mobile">下一篇</span>
-          <i class="iconfont icon-right"></i>
-        </a>
-      {{end}}
-    </nav>
-  </footer>
-</article>
-
-
-
-
-  {{template "bodyend.html" }}
+{{template "bodyend.html" .}}

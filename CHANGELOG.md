@@ -1,4 +1,5 @@
 v1.2.6
+- 使用`FixIt`作为默认主题
 - 增加`/search`和`/api/search`接口
 - 优化生成search-data.json
 - 增加`split`和`in`函数

@@ -1,133 +1,94 @@
 {{ $site := site }}
-{{ $basePath := basePath }}
 {{ $category := selectList "category" "" 1 1000 "* FROM category WHERE status in (1,2) order by status desc,sortno desc" }}
+{{ $current := "" }}{{ if .UrlPathParam }}{{ $current = .UrlPathParam }}{{ end }}
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta name="theme-color" data-light="#f6f8fa" data-dark="#151b23" content="#f6f8fa">
 
-<meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+{{ if $site.Favicon }}
+<link rel="apple-touch-icon" href="{{basePath}}{{$site.Favicon}}">
+<link rel="icon" href="{{basePath}}{{$site.Favicon}}">
+{{ end }}
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-
-
-<link rel="apple-touch-icon" sizes="180x180" href="{{basePath}}{{$site.Favicon}}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{basePath}}{{$site.Favicon}}">
-<link rel="icon" type="image/png" sizes="16x16" href="{{basePath}}{{$site.Favicon}}">
-<link rel="manifest" href="{{basePath}}js/manifest.json">
-<link rel="mask-icon" href="{{basePath}}{{$site.Favicon}}" color="#5bbad5">
-
-<link rel="stylesheet" href="{{basePath}}css/even.css">
+<link rel="stylesheet" href="{{basePath}}css/theme.css">
 <link rel="stylesheet" href="{{basePath}}js/jquery.fancybox.min.css">
-
-
-<!--[if lte IE 9]>
-  <script src="{{basePath}}js/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="{{basePath}}js/html5shiv.min.js"></script>
-  <script src="{{basePath}}js/respond.min.js"></script>
-<![endif]-->
-
 </head>
-<body>
-	<div id="mobile-navbar" class="mobile-navbar">
-		<div class="mobile-header">
-			<div class="mobile-navbar-icon">
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-			<div class="mobile-header-logo">
-				<a href="{{basePath}}" class="logo">{{ $site.Name }}</a>
-			</div>
-			<div class="search-box">
-				<input type="text" placeholder="查询内容..." id="input-phone" />
-			</div>
-		</div>
-	</div>
-	<nav id="mobile-menu" class="mobile-menu slideout-menu">
-		<ul class="mobile-menu-list">
-			<a href="{{basePath}}">
-				<li class="mobile-menu-item">Home</li>
-			</a>
+<body data-header-desktop="sticky" data-header-mobile="auto">
+<input type="hidden" id="search-q" value="{{.q}}">
 
-			{{ range $k,$v := $category.Data }}
-			  {{if $v.HrefURL}}
-			    <a href="{{ hrefURL $v.HrefURL }}">
-			  {{else}}
-			    <a href="{{basePath}}{{ trimSlash $v.Id }}">
-			  {{end}}
-				<li class="mobile-menu-item">{{ $v.Name }}</li>
-			</a>
+<header class="tm-header fi-header" data-header>
+  <div class="tm-shell tm-header__inner">
+    <a class="tm-brand" href="{{basePath}}" aria-label="{{ if $site.Name }}{{ $site.Name }}{{ else }}{{ $site.Title }}{{ end }}">
+      {{ if $site.Logo }}
+        <img class="tm-brand__logo" src="{{basePath}}{{ $site.Logo }}" alt="{{ if $site.Name }}{{ $site.Name }}{{ else }}{{ $site.Title }}{{ end }}">
+      {{ end }}
+      <span class="tm-brand__text">{{ if $site.Name }}{{ $site.Name }}{{ else }}{{ $site.Title }}{{ end }}</span>
+    </a>
 
-			{{ end }}
+    <nav class="tm-nav" aria-label="Primary">
+      <a class="tm-nav__link{{ if not $current }} is-active{{ end }}" href="{{basePath}}">首页</a>
+      {{ range $k,$v := $category.Data }}
+        {{ if $v.HrefURL }}
+          <a class="tm-nav__link" href="{{ hrefURL $v.HrefURL }}"{{ if $v.HrefTarget }} target="{{ $v.HrefTarget }}"{{ end }}>{{ $v.Name }}</a>
+        {{ else }}
+          {{ $catID := trimSlash $v.Id }}
+          {{ $curID := trimSlash $current }}
+          <a class="tm-nav__link{{ if or (eq $catID $curID) (and $curID (hasPrefix $curID $catID)) }} is-active{{ end }}" href="{{basePath}}{{ $catID }}">{{ $v.Name }}</a>
+        {{ end }}
+      {{ end }}
+    </nav>
 
-		</ul>
-	</nav>
-	<div class="container" id="mobile-panel">
-		<header id="header" class="header">
-			<div class="logo-wrapper">
-				<a href="{{basePath}}" class="logo">{{ $site.Name }}</a>
-			</div>
+    <div class="tm-actions">
+      <form class="tm-search tm-search--desktop{{ if .q }} is-open{{ end }}" action="{{basePath}}search" method="get" role="search" data-search-form>
+        <label class="tm-sr-only" for="tm-search-input">Search</label>
+        <button class="tm-search__button" type="submit" aria-label="搜索" data-search-toggle>
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-3.7-3.7"></path>
+          </svg>
+        </button>
+        <input id="tm-search-input" class="tm-search__input" type="search" name="q" value="{{.q}}" placeholder="Search">
+      </form>
+      <button class="tm-icon-button" type="button" data-theme-toggle aria-label="切换深色模式">
+        <svg class="tm-icon-button__sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M6.34 17.66l-1.41 1.41"></path><path d="M19.07 4.93l-1.41 1.41"></path>
+        </svg>
+        <svg class="tm-icon-button__moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6.6 6.6 0 0 0 8.8 8.8A9 9 0 1 1 12 3Z"></path>
+        </svg>
+      </button>
+      <button class="tm-icon-button tm-menu-button" type="button" data-menu-toggle aria-label="打开菜单" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
 
-			<nav class="site-navbar">
-				<ul id="menu" class="menu">
-					<li class="menu-item">
-						<a class="menu-item-link" href="{{basePath}}">Home</a>
-					</li>
-					{{ range $k,$v := $category.Data }}
-					<li class="menu-item">
-					  {{if $v.HrefURL}}
-					     <a class="menu-item-link" href="{{ hrefURL $v.HrefURL }}">{{ $v.Name }}</a>
-					  {{else}}
-					     <a class="menu-item-link" href="{{basePath}}{{ trimSlash $v.Id }}">{{ $v.Name }}</a>
-					  {{end}}
-					</li>
-					{{ end }}
-				</ul>
-			</nav>
-			<div class="search-box">
-				<input type="text" placeholder="查询内容..." id="input-enter" />
-			</div>
-		</header>
+  <div class="tm-mobile-panel" data-mobile-panel hidden>
+    <div class="tm-shell">
+      <form class="tm-search tm-search--mobile" action="{{basePath}}search" method="get" role="search">
+        <label class="tm-sr-only" for="tm-mobile-search-input">Search</label>
+        <input id="tm-mobile-search-input" class="tm-search__input" type="search" name="q" value="{{.q}}" placeholder="Search">
+      </form>
+      <nav class="tm-mobile-nav" aria-label="Mobile primary">
+        <a class="tm-mobile-nav__link{{ if not $current }} is-active{{ end }}" href="{{basePath}}">首页</a>
+        {{ range $k,$v := $category.Data }}
+          {{ if $v.HrefURL }}
+            <a class="tm-mobile-nav__link" href="{{ hrefURL $v.HrefURL }}"{{ if $v.HrefTarget }} target="{{ $v.HrefTarget }}"{{ end }}>{{ $v.Name }}</a>
+          {{ else }}
+            {{ $catID := trimSlash $v.Id }}
+            {{ $curID := trimSlash $current }}
+            <a class="tm-mobile-nav__link{{ if or (eq $catID $curID) (and $curID (hasPrefix $curID $catID)) }} is-active{{ end }}" href="{{basePath}}{{ $catID }}">{{ $v.Name }}</a>
+          {{ end }}
+        {{ end }}
+      </nav>
+    </div>
+  </div>
+</header>
 
-		<main id="main" class="main">
-			<div class="content-wrapper">
-				<div id="content" class="content">
-
-<script type="text/javascript" src="{{basePath}}js/jquery.min.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-	let initialSearch = $('#search-q').val() || new URLSearchParams(window.location.search).get('q') || ''
-	$('#input-enter').val(initialSearch)
-	$('#input-phone').val(initialSearch)
-
-	$('#input-enter').keypress(function(e){
-		if(e.which == 13){
-			// 回车键开始执行搜索查询
-			let key = $('#input-enter').val()
-			window.location.href="{{basePath}}search?q="+encodeURIComponent(key)
-		}		
-	})
-
-	$('#input-phone').keypress(function(e){
-		if(e.which == 13){
-			// 回车键开始执行搜索查询
-			let key = $('#input-phone').val()
-			window.location.href="{{basePath}}search?q="+encodeURIComponent(key)
-		}
-	})
-
-})
-
-</script>
+<main class="tm-main fi-container">

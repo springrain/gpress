@@ -1,21 +1,18 @@
-
-{{ $site:=site }}
+{{ $site := site }}
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <title>{{.UrlPathParam}}</title>
-  <meta name="description" content="{{ $site.Description }}" />
-  <meta name="keyword" content="{{ $site.Keyword }}" />
+  <title>页面未找到 - {{ $site.Title }}</title>
+  <meta name="description" content="{{ $site.Description }}">
 
-{{template "bodystart.html"  }}
+{{template "bodystart.html" .}}
 
-<section id="archive" class="archive">
- 
-    数据异常
-    
-</section>
-  
+<div class="tm-shell tm-page">
+  <section class="tm-empty tm-empty--large">
+    <h1>页面未找到</h1>
+    <p>这个地址暂时没有可展示的内容。</p>
+    <a class="tm-readmore" href="{{basePath}}">返回首页 ></a>
+  </section>
+</div>
 
-        
-
-  {{template "bodyend.html" }}
+{{template "bodyend.html" .}}

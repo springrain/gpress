@@ -1,85 +1,148 @@
-{{ $site:=site }}
-<!-- 查询 content 列表 -->
-{{ $contentSQL :="* FROM content WHERE status in (1,2) and category_id=? order by  status desc,sortno desc" }}
-{{ $categorySQL := "* FROM category WHERE id=? and status<3 order by status desc, sortno desc"}}
-
-
-{{ if eq .userType 1}}
-  {{ $contentSQL ="* FROM content WHERE category_id=? order by sortno desc" }}
-  {{ $categorySQL = "* FROM category WHERE id=? order by sortno desc"}}
-{{end}}
-
+{{ $site := site }}
+{{ $contentSQL := "* FROM content WHERE status in (1,2) and category_id=? order by status desc,sortno desc" }}
+{{ $categorySQL := "* FROM category WHERE id=? and status<3 order by status desc, sortno desc" }}
+{{ if eq .userType 1 }}
+  {{ $contentSQL = "* FROM content WHERE category_id=? order by sortno desc" }}
+  {{ $categorySQL = "* FROM category WHERE id=? order by sortno desc" }}
+{{ end }}
 {{ $selectList := selectList "content" .q .pageNo 20 $contentSQL .UrlPathParam }}
-
 {{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
+{{ $wordCount := 0 }}
+{{ range $k,$v := $selectList.Data }}
+  {{ if $v.Markdown }}{{ $wordCount = addInt $wordCount (len $v.Markdown) }}{{ else }}{{ if $v.Content }}{{ $wordCount = addInt $wordCount (len $v.Content) }}{{ end }}{{ end }}
+{{ end }}
 
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <title>{{ $nav.Name }}</title>
-  <meta name="description" content="{{ $nav.Description }}" />
-  <meta name="keyword" content="{{ $nav.Keyword }}" />
+  <title>{{ $nav.Name }} - {{ $site.Title }}</title>
+  <meta name="description" content="{{ $nav.Description }}">
+  <meta name="keyword" content="{{ $nav.Keyword }}">
+  <meta name="twitter:title" content="{{ $nav.Name }}">
+  <meta name="twitter:description" content="{{ $nav.Description }}">
+  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}">
+  <meta property="og:title" content="{{ $nav.Name }}">
+  <meta property="og:description" content="{{ $nav.Description }}">
+  <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $nav.Id }}">
+  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}">
+  <meta property="og:type" content="website">
 
-  <meta name="twitter:title" content="{{ $nav.Name }}" />
-  <meta name="twitter:description" content="{{ $nav.Description }}" />
-  <meta name="twitter:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}" />
+{{template "bodystart.html" .}}
 
-  <meta property="og:title" content="{{ $nav.Name }}" />
-  <meta property="og:description" content="{{ $nav.Description }}" />
-  <meta property="og:url" content="{{$site.Domain}}{{basePath}}{{ trimSlash $nav.Id }}" />
-  <meta property="og:image" content="{{$site.Domain}}{{basePath}}{{ $site.Logo }}" />
-  <meta property="og:type" content="website" />
+<div class="tm-shell tm-page fi-category-page">
+  <section class="fi-category-archive" aria-label="{{ $nav.Name }} article archive">
+    <header class="fi-category-archive__header">
+      <div class="fi-category-archive__title">
+        <span class="fi-category-archive__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true">
+            <path d="M20.6 4.6c-1.6-1.6-4.4-1.3-7.3.5-2.1 1.3-4 3.3-5.4 5.6l-3.3 1.1c-.4.1-.7.5-.7.9s.3.8.7.9l2.1.7-.7 2.1c-.1.4 0 .8.3 1.1.2.2.4.3.7.3.1 0 .2 0 .3-.1l3.5-1.3c2.3-1.3 4.2-3.2 5.6-5.3 1.8-2.9 2.1-5.7.5-7.3ZM9 15.6l-.9.3.3-.9c.2.2.4.4.6.6Zm6.4-5.5c-1.1 1.8-2.8 3.4-4.7 4.5l-1.4-1.4c1.1-1.9 2.7-3.6 4.5-4.7 2.1-1.3 3.7-1.3 4.3-.7.6.6.6 2.2-.7 4.3Z"></path>
+          </svg>
+        </span>
+        <h1>所有{{ $nav.Name }}</h1>
+        <strong>{{ len $selectList.Data }}</strong>
+      </div>
+      <p class="fi-category-archive__meta">
+        <span aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="M7 9h10"></path><path d="M7 13h4"></path><path d="M14 13h3"></path>
+          </svg>
+        </span>
+        <span>总计约 {{ $wordCount }} 字</span>
+      </p>
+    </header>
 
-{{template "bodystart.html"  }}
-
-<section id="archive" class="archive">
-  <div class="archive-title category">
-        <h2 class="archive-name">{{$nav.Name}}</h2>
-  </div>
-  {{ range $k,$v := $selectList.Data }}
-  <div class="archive-post">
-      <span class="archive-post-time">
-        {{ slice .UpdateTime 0 10 }}
-      </span>
-      <span class="archive-post-title">
-        {{ if eq $.userType 1}}
-        <a href="{{basePath}}admin/content/look?id={{.Id}}" class="archive-post-link">
-        {{else}}
-        <a href="{{basePath}}{{ trimSlash $v.Id }}" class="archive-post-link">
+    <div class="fi-category-archive__list">
+      {{ $currentYear := "" }}
+      {{ range $k,$v := $selectList.Data }}
+        {{ $dateSource := $v.UpdateTime }}{{ if not $dateSource }}{{ $dateSource = $v.CreateTime }}{{ end }}
+        {{ $year := "未归档" }}{{ if ge (len $dateSource) 4 }}{{ $year = slice $dateSource 0 4 }}{{ end }}
+        {{ $day := "" }}{{ if ge (len $dateSource) 10 }}{{ $day = slice $dateSource 5 10 }}{{ end }}
+        {{ if ne $year $currentYear }}
+          {{ $currentYear = $year }}
+          <h2 class="fi-category-year">
+            <span aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                <path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path>
+              </svg>
+            </span>
+            {{ $year }}
+          </h2>
         {{ end }}
+        <article class="fi-category-item">
+          {{ if eq $.userType 1 }}
+            <a href="{{basePath}}admin/content/look?id={{.Id}}">{{ .Title }}</a>
+          {{ else }}
+            <a href="{{basePath}}{{ trimSlash $v.Id }}">{{ .Title }}</a>
+          {{ end }}
+          <time>{{ $day }}</time>
+        </article>
+      {{ else }}
+        <div class="tm-empty">该分类下暂无文章。</div>
+      {{ end }}
+    </div>
+  </section>
 
-          {{ .Title }}
-        </a>
-      </span>
-  </div>
-  {{end}}
-    
-    
-</section>
-  
-{{if gt $selectList.Page.PageCount 1}}
-<nav class="pagination">
-  {{$currPageNo := $selectList.Page.PageNo}}
-  {{if lt $currPageNo 1}}
-    {{$currPageNo = 1}}
-  {{end}}
-  {{if gt $currPageNo $selectList.Page.PageCount }}
-     {{$currPageNo = $selectList.Page.PageCount}}
-  {{end}}
+  {{ if gt $selectList.Page.PageCount 1 }}
+    <nav class="tm-pagination tm-smart-pagination" data-pagination aria-label="分页导航">
+      {{$currPageNo := $selectList.Page.PageNo}}
+      {{$totalPages := $selectList.Page.PageCount}}
+      {{if lt $currPageNo 1}}{{$currPageNo = 1}}{{end}}
+      {{if gt $currPageNo $totalPages}}{{$currPageNo = $totalPages}}{{end}}
+      {{if gt $currPageNo 1}}
+        <a class="tm-smart-pagination__control" href="{{basePath}}{{ trimSlash $nav.Id }}/page/{{ addInt $currPageNo -1 }}?q={{.q}}" rel="prev">上一页</a>
+      {{else}}
+        <span class="tm-smart-pagination__control is-disabled" aria-disabled="true">上一页</span>
+      {{end}}
 
-  {{if gt $currPageNo 1}}
-  <a class="prev" href="{{basePath}}{{ trimSlash $nav.Id }}/page/{{ addInt $currPageNo -1 }}?q={{.q}}">
-      <i class="iconfont icon-left"></i>
-      <span class="prev-text">上一页</span>
-    </a>
-  {{end}}
-  {{if lt $currPageNo $selectList.Page.PageCount}}
-  <a class="next" href="{{basePath}}{{ trimSlash $nav.Id }}/page/{{ addInt $currPageNo 1 }}?q={{.q}}">
-      <span class="next-text">下一页</span>
-      <i class="iconfont icon-right"></i>
-    </a>
-    {{end}}   
-</nav>
-{{end}}         
+      {{if le $totalPages 7}}
+        {{range $pageNo := seq 1 $totalPages}}
+          {{if eq $pageNo $currPageNo}}
+            <strong class="tm-smart-pagination__page is-current" aria-current="page" aria-label="第 {{ $pageNo }} 页，当前页" tabindex="0">{{ $pageNo }}</strong>
+          {{else}}
+            <a class="tm-smart-pagination__page" href="{{basePath}}{{ trimSlash $nav.Id }}/page/{{ $pageNo }}?q={{$.q}}" aria-label="第 {{ $pageNo }} 页">{{ $pageNo }}</a>
+          {{end}}
+        {{end}}
+      {{else}}
+        {{$windowStart := addInt $currPageNo -2}}
+        {{$windowEnd := addInt $currPageNo 2}}
+        {{if le $currPageNo 4}}
+          {{$windowStart = 2}}
+          {{$windowEnd = 6}}
+        {{else if ge $currPageNo (addInt $totalPages -3)}}
+          {{$windowStart = addInt $totalPages -5}}
+          {{$windowEnd = addInt $totalPages -1}}
+        {{end}}
 
-  {{template "bodyend.html" }}
+        {{if eq $currPageNo 1}}
+          <strong class="tm-smart-pagination__page is-current" aria-current="page" aria-label="第 1 页，当前页" tabindex="0">1</strong>
+        {{else}}
+          <a class="tm-smart-pagination__page" href="{{basePath}}{{ trimSlash $nav.Id }}/page/1?q={{.q}}" aria-label="第 1 页">1</a>
+        {{end}}
+        {{if gt $windowStart 2}}<span class="tm-smart-pagination__ellipsis" aria-hidden="true">...</span>{{end}}
+        {{range $pageNo := seq $windowStart $windowEnd}}
+          {{if eq $pageNo $currPageNo}}
+            <strong class="tm-smart-pagination__page is-current" aria-current="page" aria-label="第 {{ $pageNo }} 页，当前页" tabindex="0">{{ $pageNo }}</strong>
+          {{else}}
+            <a class="tm-smart-pagination__page" href="{{basePath}}{{ trimSlash $nav.Id }}/page/{{ $pageNo }}?q={{$.q}}" aria-label="第 {{ $pageNo }} 页">{{ $pageNo }}</a>
+          {{end}}
+        {{end}}
+        {{if lt $windowEnd (addInt $totalPages -1)}}<span class="tm-smart-pagination__ellipsis" aria-hidden="true">...</span>{{end}}
+        {{if eq $currPageNo $totalPages}}
+          <strong class="tm-smart-pagination__page is-current" aria-current="page" aria-label="第 {{ $totalPages }} 页，当前页" tabindex="0">{{ $totalPages }}</strong>
+        {{else}}
+          <a class="tm-smart-pagination__page" href="{{basePath}}{{ trimSlash $nav.Id }}/page/{{ $totalPages }}?q={{.q}}" aria-label="第 {{ $totalPages }} 页">{{ $totalPages }}</a>
+        {{end}}
+      {{end}}
+
+      {{if lt $currPageNo $totalPages}}
+        <a class="tm-smart-pagination__control" href="{{basePath}}{{ trimSlash $nav.Id }}/page/{{ addInt $currPageNo 1 }}?q={{.q}}" rel="next">下一页</a>
+      {{else}}
+        <span class="tm-smart-pagination__control is-disabled" aria-disabled="true">下一页</span>
+      {{end}}
+    </nav>
+  {{ end }}
+</div>
+
+{{template "bodyend.html" .}}

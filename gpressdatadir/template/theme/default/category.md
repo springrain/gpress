@@ -1,8 +1,6 @@
 {{ $site:=site }}
-<!-- 查询 content 列表 -->
-{{ $contentSQL :="* FROM content WHERE status in (1,2) and category_id=? order by  status desc,sortno desc" }}
+{{ $contentSQL :="* FROM content WHERE status in (1,2) and category_id=? order by status desc,sortno desc" }}
 {{ $categorySQL := "* FROM category WHERE id=? and status<3 order by status desc, sortno desc"}}
-
 
 {{ if eq .userType 1}}
   {{ $contentSQL ="* FROM content WHERE category_id=? order by sortno desc" }}
@@ -10,16 +8,15 @@
 {{end}}
 
 {{ $selectList := selectList "content" .q .pageNo 20 $contentSQL .UrlPathParam }}
-
 {{ $nav := selectOne "category" $categorySQL .UrlPathParam }}
 
-Title: {{ $nav.Name }}  
-Description: {{ $nav.Description }}  
-Keyword: {{ $nav.Keyword }}  
+Title: {{ $nav.Name }}
+Description: {{ $nav.Description }}
+Keyword: {{ $nav.Keyword }}
 ---
 
 {{ range $k,$v := $selectList.Data }}
-# [{{ .Title }}]({{$site.Domain}}{{basePath}}{{ trimSlash $v.Id }}.md) 
-- UpdateTime: {{ .UpdateTime }}  
-- Summary: {{ safeHTML .Summary }}   
+# [{{ .Title }}]({{$site.Domain}}{{basePath}}{{ trimSlash $v.Id }}.md)
+- UpdateTime: {{ .UpdateTime }}
+- Summary: {{ safeHTML .Summary }}
 {{ end }}
