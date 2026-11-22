@@ -27,10 +27,6 @@
   <article class="tm-post">
     <header class="tm-post__header">
       <h1>{{ $content.Title }}</h1>
-      <div class="tm-post__meta">
-        <time>{{ if $content.CreateTime }}{{ slice $content.CreateTime 0 10 }}{{ end }}</time>
-        {{ if $content.Tag }}<a href="{{basePath}}tag/{{$content.Tag}}">#{{ $content.Tag }}</a>{{ end }}
-      </div>
     </header>
 
     {{ if $content.Thumbnail }}
