@@ -2459,7 +2459,7 @@ a:active {
 }
 
 .tm-main.fi-container > .tm-shell.fi-category-page {
-  width: min(1132px, 100%);
+  width: min(1024px, 100%);
 }
 
 .tm-main.fi-container > .tm-shell.tm-post-page > article.tm-post:only-child {
