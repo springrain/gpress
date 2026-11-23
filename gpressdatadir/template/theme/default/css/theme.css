@@ -1314,7 +1314,7 @@ input {
   width: 100%;
   max-width: 100%;
   margin-inline: auto;
-  font-size: 0.8125rem;
+  font-size: 13px;
   color: #999;
   text-align: center;
 }
@@ -2310,7 +2310,7 @@ a:active {
 .tm-footer__bottom {
   display: block;
   color: var(--tm-muted-foreground);
-  font-size: 0.875rem;
+  font-size: 13px;
   line-height: 1.5rem;
   text-align: center;
 }
