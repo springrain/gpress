@@ -29,7 +29,9 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -191,8 +193,44 @@ func genStaticFile() error {
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
 
-	return err
+	if err = genPagefindIndex(); err != nil {
+		FuncLogError(ctx, err)
+		return err
+	}
+
+	return nil
+}
+
+// genPagefindIndex builds the Pagefind search index after static HTML generation.
+func genPagefindIndex() error {
+	pagefindPath := filepath.Join(datadir, "pagefind", "pagefind_extended")
+	if runtime.GOOS == "windows" {
+		pagefindPath += ".exe"
+	}
+	// 文件不存在,不需要执行
+	if !pathExist(pagefindPath) {
+		return nil
+	}
+
+	outpath := filepath.Join(datadir, "public", "pagefind")
+	// 删除pagefind 索引目录,重新生成
+	os.RemoveAll(outpath)
+
+	// 暂时还不能是指定跳过的目录,分页目录 page 会被重新执行,搜索的结果会有重复
+	cmd := exec.Command(
+		pagefindPath,
+		"--site", filepath.Join(staticHtmlDir, site.Theme),
+		"--output-path", outpath,
+	)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("pagefind index generation failed: %w: %s", err, strings.TrimSpace(string(output)))
+	}
+	return nil
 }
 
 // genStaticFileByTheme 根据主题模板,生成静态文件

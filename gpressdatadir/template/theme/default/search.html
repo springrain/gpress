@@ -1,5 +1,5 @@
 {{ $site := site }}
-{{/* 0: database full-text search, 1: browser-side FlexSearch */}}
+{{/* 0: database full-text search, 1: browser-side FlexSearch, 2: Pagefind */}}
 {{ $searchMode := 1 }}
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -56,6 +56,7 @@
   if (mobileInput) mobileInput.value = query;
   var flexDocuments = null;
   var flexIndex = null;
+  var pagefindPromise = null;
 
   function createResult(item) {
     var article = resultTemplate.content.firstElementChild.cloneNode(true);
@@ -213,6 +214,40 @@
     renderItems(matchingItems.slice(start, start + pageSize), matchingItems.length, pageNo, pageCount);
   }
 
+  function loadPagefindPage(pageNo) {
+    if (!pagefindPromise) {
+      pagefindPromise = import('{{basePath}}public/pagefind/pagefind.js').then(function (pagefind) {
+        return pagefind.options({ baseUrl: '{{basePath}}' }).then(function () {
+          return pagefind;
+        });
+      });
+    }
+
+    pagefindPromise
+      .then(function (pagefind) { return pagefind.search(query); })
+      .then(function (searchResult) {
+        var matchingResults = searchResult.results || [];
+        var pageSize = 20;
+        var pageCount = Math.ceil(matchingResults.length / pageSize);
+        var start = (pageNo - 1) * pageSize;
+        return Promise.all(matchingResults.slice(start, start + pageSize).map(function (result) {
+          return result.data();
+        })).then(function (items) {
+          items = items.map(function (item) {
+            return {
+              title: item.meta && item.meta.title,
+              hrefURL: item.url.replace(/\/$/, ''),
+              summary: item.plain_excerpt
+            };
+          });
+          renderItems(items, matchingResults.length, pageNo, pageCount);
+        });
+      })
+      .catch(function (error) {
+        status.textContent = error.message || 'Pagefind search is temporarily unavailable';
+      });
+  }
+
   function load(pageNo) {
     if (!query) {
       status.textContent = '请输入搜索关键词';
@@ -225,6 +260,8 @@
     pagination.replaceChildren();
     if (searchMode === 1) {
       loadFlexPage(pageNo);
+    } else if (searchMode === 2) {
+      loadPagefindPage(pageNo);
     } else {
       loadDatabasePage(pageNo);
     }
