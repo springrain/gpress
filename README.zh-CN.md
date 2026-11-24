@@ -105,7 +105,7 @@ location / {
     proxy_set_header   X-Real-IP $remote_addr;
     proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
     proxy_set_header   X-Forwarded-Proto $scheme; 
-    ## 存在q查询参数,使用动态服务.也支持FlexSearch解析public/search-data.json
+    ## 存在q查询参数,使用动态服务.也支持FlexSearch解析public/search-data.json. 也支持pagefind, 参考 gpressdatadir/pagefind/readme.md
     if ($arg_q) { 
        proxy_pass  http://127.0.0.1:660;  
        break;
