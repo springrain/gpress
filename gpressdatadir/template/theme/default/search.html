@@ -1,5 +1,5 @@
 {{ $site := site }}
-{{/* 0: database full-text search, 1: browser-side FlexSearch, 2: Pagefind */}}
+{{/* 0: database full-text search, 1: Pagefind */}}
 {{ $searchMode := 1 }}
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -35,9 +35,6 @@
   </article>
 </template>
 
-{{ if eq $searchMode 1 }}
-<script src="{{basePath}}js/flexsearch.bundle.min.js"></script>
-{{ end }}
 <script>
 (function () {
   var searchMode = {{ $searchMode }};
@@ -54,8 +51,6 @@
   var mobileInput = document.getElementById('tm-mobile-search-input');
   if (desktopInput) desktopInput.value = query;
   if (mobileInput) mobileInput.value = query;
-  var flexDocuments = null;
-  var flexIndex = null;
   var pagefindPromise = null;
 
   function createResult(item) {
@@ -185,35 +180,6 @@
       .catch(function (error) { status.textContent = error.message || '搜索暂时不可用，请稍后重试'; });
   }
 
-  function loadFlexPage(pageNo) {
-    if (typeof FlexSearch === 'undefined') {
-      status.textContent = '搜索组件加载失败';
-      return;
-    }
-    if (!flexIndex) {
-      status.textContent = '正在加载搜索索引...';
-      fetch('{{basePath}}public/search-data.json')
-        .then(function (response) { return response.json(); })
-        .then(function (documents) {
-          flexDocuments = Array.isArray(documents) ? documents : [];
-          flexIndex = new FlexSearch.Index({ tokenize: 'forward', cache: 100 });
-          flexDocuments.forEach(function (item, index) {
-            flexIndex.add(index, [item.title, item.summary, item.description, item.tag, item.categoryName].join(' '));
-          });
-          loadFlexPage(pageNo);
-        })
-        .catch(function () { status.textContent = '搜索索引加载失败'; });
-      return;
-    }
-
-    var matchingIndexes = flexIndex.search(query, flexDocuments.length);
-    var matchingItems = matchingIndexes.map(function (index) { return flexDocuments[index]; });
-    var pageSize = 20;
-    var pageCount = Math.ceil(matchingItems.length / pageSize);
-    var start = (pageNo - 1) * pageSize;
-    renderItems(matchingItems.slice(start, start + pageSize), matchingItems.length, pageNo, pageCount);
-  }
-
   function loadPagefindPage(pageNo) {
     if (!pagefindPromise) {
       pagefindPromise = import('{{basePath}}public/pagefind/pagefind.js').then(function (pagefind) {
@@ -259,8 +225,6 @@
     results.replaceChildren();
     pagination.replaceChildren();
     if (searchMode === 1) {
-      loadFlexPage(pageNo);
-    } else if (searchMode === 2) {
       loadPagefindPage(pageNo);
     } else {
       loadDatabasePage(pageNo);

@@ -267,8 +267,8 @@ location ~ ^/js/ {
 location ~ ^/image/ {
     root /data/gpress/gpressdatadir/template/theme/default;  
 }
-### search-data.json FlexSearch搜索的JSON数据
-location ~ ^/public/search-data.json {
+### pagefind
+location ~ ^/public/pagefind/ {
     #gzip_static on;
     root /data/gpress/gpressdatadir;  
 }
@@ -293,7 +293,7 @@ location / {
     proxy_set_header   X-Real-IP $remote_addr;
     proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
     proxy_set_header   X-Forwarded-Proto $scheme; 
-    ## 存在q查询参数,使用动态服务.也支持FlexSearch解析public/search-data.json
+    ## 存在q查询参数,使用动态服务.
     if ($arg_q) { 
        proxy_pass  http://127.0.0.1:660;  
        break;
@@ -363,8 +363,8 @@ nginx 配置示例如下:</p>
 </span></span><span class="line"><span class="cl">location ~ ^/image/ {
 </span></span><span class="line"><span class="cl">    root /data/gpress/gpressdatadir/template/theme/default;  
 </span></span><span class="line"><span class="cl">}
-</span></span><span class="line"><span class="cl">### search-data.json FlexSearch搜索的JSON数据
-</span></span><span class="line"><span class="cl">location ~ ^/public/search-data.json {
+</span></span><span class="line"><span class="cl">### pagefind
+</span></span><span class="line"><span class="cl">location ~ ^/public/pagefind/ {
 </span></span><span class="line"><span class="cl">    #gzip_static on;
 </span></span><span class="line"><span class="cl">    root /data/gpress/gpressdatadir;  
 </span></span><span class="line"><span class="cl">}
@@ -389,7 +389,7 @@ nginx 配置示例如下:</p>
 </span></span><span class="line"><span class="cl">    proxy_set_header   X-Real-IP $remote_addr;
 </span></span><span class="line"><span class="cl">    proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
 </span></span><span class="line"><span class="cl">    proxy_set_header   X-Forwarded-Proto $scheme; 
-</span></span><span class="line"><span class="cl">    ## 存在q查询参数,使用动态服务.也支持FlexSearch解析public/search-data.json
+</span></span><span class="line"><span class="cl">    ## 存在q查询参数,使用动态服务.
 </span></span><span class="line"><span class="cl">    if ($arg_q) { 
 </span></span><span class="line"><span class="cl">       proxy_pass  http://127.0.0.1:660;  
 </span></span><span class="line"><span class="cl">       break;

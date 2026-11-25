@@ -66,8 +66,8 @@ location ~ ^/js/ {
 location ~ ^/image/ {
     root /data/gpress/gpressdatadir/template/theme/default;  
 }
-### search-data.json FlexSearch JSON data
-location ~ ^/public/search-data.json {
+### pagefind
+location ~ ^/public/pagefind/ {
     #gzip_static on;
     root /data/gpress/gpressdatadir;  
 }
@@ -106,7 +106,7 @@ location / {
     proxy_set_header   X-Real-IP $remote_addr;
     proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
     proxy_set_header   X-Forwarded-Proto $scheme; 
-    ## If there is a q query parameter, use the dynamic service. Also supports FlexSearch parsing public/search-data.json
+    ## If there is a q query parameter, use the dynamic search service
     if ($arg_q) { 
        proxy_pass  http://127.0.0.1:660;  
        break;

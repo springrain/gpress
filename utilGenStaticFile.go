@@ -23,7 +23,6 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
@@ -43,50 +42,12 @@ import (
 
 // onlyOnce控制并发
 // var onlyOnce = make(chan struct{}, 1)
-var searchDataLock = &sync.Mutex{}
 var genStaticHtmlLock = &sync.Mutex{}
 
 // genHTTPClient 生成静态文件时复用的HTTP客户端,复用TCP连接
 var genHTTPClient = &http.Client{}
 
-// genSearchDataJson 生成flexSearch需要的json文件
-func genSearchDataJson() error {
-	//onlyOnce <- struct{}{}
-	//defer func() { <-onlyOnce }()
-	searchDataLock.Lock()
-	defer searchDataLock.Unlock()
-
-	//finder := zorm.NewSelectFinder(tableContentName, "id,title,href_url,summary,create_time,tag,category_name,markdown as content,description").Append("WHERE status in (1,2) order by status desc, sortno desc")
-	finder := zorm.NewSelectFinder(tableContentName, "id,title,href_url,summary,create_time,tag,category_name,description").Append("WHERE status in (1,2) order by status desc, sortno desc")
-	finder.SelectTotalCount = false
-	//page := zorm.NewPage()
-	//page.PageSize = 10000
-	datas := make([]Content, 0)
-	err := zorm.Query(context.Background(), finder, &datas, nil)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < len(datas); i++ {
-		if datas[i].HrefURL == "" {
-			datas[i].HrefURL = funcBasePath() + funcTrimPrefixSlash(datas[i].Id)
-		}
-	}
-	dataBytes, err := json.Marshal(datas)
-	if err != nil {
-		return err
-	}
-	err = os.WriteFile(searchDataJsonFile, dataBytes, os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	//压缩文件
-	err = doGzipFile(searchDataJsonFile+compressedFileSuffix, bytes.NewReader(dataBytes))
-
-	return err
-}
-
-// genStaticFile 生成全站静态文件和gzip文件,包括静态的html和search-data.json
+// genStaticFile 生成全站静态文件和gzip文件,包括静态的html
 func genStaticFile() error {
 	reloadStatus = 1
 	ctx := context.Background()
@@ -165,12 +126,6 @@ func genStaticFile() error {
 		useThemes[site.ThemeWX] = true
 	}
 
-	// 重新生成 search-data.json
-	err = genSearchDataJson()
-	if err != nil {
-		FuncLogError(ctx, err)
-	}
-
 	// 按照时间戳删除无效的文件
 	err = filepath.WalkDir(staticHtmlDir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
@@ -207,10 +162,12 @@ func genStaticFile() error {
 
 // genPagefindIndex builds the Pagefind search index after static HTML generation.
 func genPagefindIndex() error {
-	pagefindPath := filepath.Join(datadir, "pagefind", "pagefind_extended")
+	filename := fmt.Sprintf("pagefind_extended-%s-%s", runtime.GOARCH, runtime.GOOS)
 	if runtime.GOOS == "windows" {
-		pagefindPath += ".exe"
+		filename += ".exe"
 	}
+	pagefindPath := filepath.Join(datadir, "pagefind", filename)
+
 	// 文件不存在,不需要执行
 	if !pathExist(pagefindPath) {
 		return nil

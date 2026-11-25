@@ -67,8 +67,6 @@ const (
 
 	defaultPageSize = 10
 
-	searchDataJsonFile = datadir + "public/search-data.json"
-
 	// 静态文件压缩后缀,兼容Nginx gzip_static
 	compressedFileSuffix = ".gz"
 
