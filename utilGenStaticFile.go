@@ -40,6 +40,9 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
+// 静态化时每批查询的数据条数,与主题模板的每页条数无关。
+const staticQueryBatchSize = 100
+
 // onlyOnce控制并发
 // var onlyOnce = make(chan struct{}, 1)
 var genStaticHtmlLock = &sync.Mutex{}
@@ -63,18 +66,10 @@ func genStaticFile() error {
 	genStaticHtmlLock.Lock()
 	defer genStaticHtmlLock.Unlock()
 
-	//ctx := context.Background()
-	contents := make([]Content, 0)
-
-	f_post := zorm.NewSelectFinder(tableContentName, "id,tag,title,description,category_id").Append(" WHERE status<3 order by status desc, sortno desc")
-	err := zorm.Query(ctx, f_post, &contents, nil)
-	if err != nil {
-		return err
-	}
 	//生成导航菜单的静态网页
 	categories := make([]*Category, 0)
 	f_category := zorm.NewSelectFinder(tableCategoryName, "id,name").Append(" WHERE status<3 order by status desc,sortno desc")
-	err = zorm.Query(ctx, f_category, &categories, nil)
+	err := zorm.Query(ctx, f_category, &categories, nil)
 	if err != nil {
 		return err
 	}
@@ -88,7 +83,7 @@ func genStaticFile() error {
 	// 生成 default,pc,wap,weixin 等平台的静态文件
 	useThemes := map[string]bool{}
 	useThemes[""] = true
-	err = genStaticFileByTheme(contents, categories, site.Theme, "")
+	err = genStaticFileByTheme(categories, site.Theme, "")
 	if err != nil {
 		FuncLogError(ctx, err)
 		//return err
@@ -97,7 +92,7 @@ func genStaticFile() error {
 	_, has := useThemes[site.ThemePC]
 	//生成PC模板的静态网页
 	if !has {
-		err = genStaticFileByTheme(contents, categories, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+		err = genStaticFileByTheme(categories, site.ThemePC, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -108,7 +103,7 @@ func genStaticFile() error {
 	// 生成手机WAP模板的静态网页
 	_, has = useThemes[site.ThemeWAP]
 	if !has {
-		err = genStaticFileByTheme(contents, categories, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
+		err = genStaticFileByTheme(categories, site.ThemeWAP, "Mozilla/5.0 (Linux; Android 13;) Mobile")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -118,7 +113,7 @@ func genStaticFile() error {
 	//生成微信WX模板的静态网页
 	_, has = useThemes[site.ThemeWX]
 	if !has {
-		err = genStaticFileByTheme(contents, categories, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
+		err = genStaticFileByTheme(categories, site.ThemeWX, "Mozilla/5.0 (Linux; Android 13;) Mobile MicroMessenger WeChat Weixin")
 		if err != nil {
 			FuncLogError(ctx, err)
 			//return err
@@ -191,7 +186,8 @@ func genPagefindIndex() error {
 }
 
 // genStaticFileByTheme 根据主题模板,生成静态文件
-func genStaticFileByTheme(contents []Content, categories []*Category, theme string, userAgent string) error {
+func genStaticFileByTheme(categories []*Category, theme string, userAgent string) error {
+	ctx := context.Background()
 	// genMarkdownFile 是否生成markdown文件,如果主题模板中存在index.md,则生成markdown文件,否则不生成,默认值为false
 	genMarkdownFile := pathExist(themeDir + theme + "/index.md")
 	domain := ""
@@ -204,7 +200,6 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 	}
 	// 预先计算 domain + basePath, 避免在循环中重复拼接
 	domainBase := domain + funcBasePath()
-	tagsMap := make(map[string]bool, 0)
 	//生成首页index网页
 	fileHash, _, err := writeStaticHtml("", "", theme, userAgent, genMarkdownFile)
 	if fileHash == "" || err != nil {
@@ -246,33 +241,42 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 
 	//上一个分页
 	prvePageFileHash := ""
-	//生成文章的静态网页
-	for i := 0; i < len(contents); i++ {
-		tag := contents[i].Tag
-		if tag != "" {
-			tagsMap[tag] = true
+	// 先查询文章总数,再按每批100条查询ID并生成静态页。
+	contentCountFinder := zorm.NewSelectFinder(tableContentName, "COUNT(*)").Append(" WHERE status<3")
+	contentPage, err := newStaticQueryPage(ctx, contentCountFinder)
+	if err != nil {
+		return err
+	}
+	contentCount := contentPage.TotalCount
+	contentFinder := zorm.NewSelectFinder(tableContentName, "id").Append(" WHERE status<3 ORDER BY status DESC, sortno DESC, id")
+	contentFinder.SelectTotalCount = false
+	for ; contentPage.PageNo <= contentPage.PageCount; contentPage.PageNo++ {
+		contentIDs := make([]string, 0)
+		if err := zorm.Query(ctx, contentFinder, &contentIDs, contentPage); err != nil {
+			return err
 		}
-		//postURL := httpServerPath + "post/" + postId
-		fileHash, success, err := writeStaticHtml(funcTrimPrefixSlash(contents[i].Id), "", theme, userAgent, genMarkdownFile)
-		if fileHash == "" || err != nil {
-			continue
-		}
-		if success {
-			sitemapFile.WriteString("<url><loc>" + domainBase + funcTrimPrefixSlash(contents[i].Id) + "</loc></url>")
-			if genMarkdownFile {
-				sitemapFile.WriteString("<url><loc>" + domainBase + funcTrimPrefixSlash(contents[i].Id) + ".md</loc></url>")
+		for _, contentID := range contentIDs {
+			fileHash, success, err := writeStaticHtml(funcTrimPrefixSlash(contentID), "", theme, userAgent, genMarkdownFile)
+			if fileHash == "" || err != nil {
+				continue
+			}
+			if success {
+				sitemapFile.WriteString("<url><loc>" + domainBase + funcTrimPrefixSlash(contentID) + "</loc></url>")
+				if genMarkdownFile {
+					sitemapFile.WriteString("<url><loc>" + domainBase + funcTrimPrefixSlash(contentID) + ".md</loc></url>")
+				}
 			}
 		}
+	}
 
-		fileHash, success, err = writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
+	// 文章生成完成后再生成分页文件,分页URL不写入sitemap。
+	for i := 0; i < contentCount; i++ {
+		fileHash, _, err := writeStaticHtml("page/"+strconv.Itoa(i+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
 		if fileHash == "" || err != nil {
 			continue
 		}
-		if success {
-			sitemapFile.WriteString("<url><loc>" + domainBase + "page/" + strconv.Itoa(i+1) + "</loc></url>")
-			if genMarkdownFile {
-				sitemapFile.WriteString("<url><loc>" + domainBase + "page/" + strconv.Itoa(i+1) + ".md</loc></url>")
-			}
+		if prvePageFileHash != "" && fileHash == prvePageFileHash {
+			break
 		}
 		//如果hash完全一致,认为是最后一页
 		prvePageFileHash = fileHash
@@ -291,45 +295,54 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 				sitemapFile.WriteString("<url><loc>" + domainBase + categoryID + ".md</loc></url>")
 			}
 		}
-		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml(categoryID+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
+		prvePageFileHash = ""
+		for j := 0; j < contentCount; j++ {
+			fileHash, _, err := writeStaticHtml(categoryID+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
 			if fileHash == "" || err != nil {
 				continue
 			}
-			if success {
-				sitemapFile.WriteString("<url><loc>" + domainBase + categoryID + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
-				if genMarkdownFile {
-					sitemapFile.WriteString("<url><loc>" + domainBase + categoryID + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
-				}
+			if prvePageFileHash != "" && fileHash == prvePageFileHash {
+				break
 			}
 			//如果hash完全一致,认为是最后一页
 			prvePageFileHash = fileHash
 		}
 	}
 
-	//生成tag的静态页
-	for tag := range tagsMap {
-		//生成导航菜单首页index
-		fileHash, success, err := writeStaticHtml("tag/"+tag, "", theme, userAgent, genMarkdownFile)
-		if fileHash == "" || err != nil {
+	// 分批查询去重后的tag并生成静态页。
+	tagCountFinder := zorm.NewSelectFinder(tableContentName, "COUNT(DISTINCT tag)").Append(" WHERE status<3 AND tag<>?", "")
+	tagPage, err := newStaticQueryPage(ctx, tagCountFinder)
+	if err != nil {
+		return err
+	}
+	tagFinder := zorm.NewSelectFinder(tableContentName, "DISTINCT tag").Append(" WHERE status<3 AND tag<>? ORDER BY tag", "")
+	tagFinder.SelectTotalCount = false
+	for ; tagPage.PageNo <= tagPage.PageCount; tagPage.PageNo++ {
+		tags := make([]string, 0)
+		if err := zorm.Query(ctx, tagFinder, &tags, tagPage); err != nil {
 			return err
 		}
-		if success {
-			sitemapFile.WriteString("<url><loc>" + domainBase + "tag/" + tag + "</loc></url>")
-		}
-		for j := 0; j < len(contents); j++ {
-			fileHash, success, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
+		for _, tag := range tags {
+			//生成导航菜单首页index
+			fileHash, success, err := writeStaticHtml("tag/"+tag, "", theme, userAgent, genMarkdownFile)
 			if fileHash == "" || err != nil {
-				continue
+				return err
 			}
 			if success {
-				sitemapFile.WriteString("<url><loc>" + domainBase + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + "</loc></url>")
-				if genMarkdownFile {
-					sitemapFile.WriteString("<url><loc>" + domainBase + "tag/" + tag + "/page/" + strconv.Itoa(j+1) + ".md</loc></url>")
-				}
+				sitemapFile.WriteString("<url><loc>" + domainBase + "tag/" + tag + "</loc></url>")
 			}
-			//如果hash完全一致,认为是最后一页
-			prvePageFileHash = fileHash
+			prvePageFileHash = ""
+			for j := 0; j < contentCount; j++ {
+				fileHash, _, err := writeStaticHtml("tag/"+tag+"/page/"+strconv.Itoa(j+1), prvePageFileHash, theme, userAgent, genMarkdownFile)
+				if fileHash == "" || err != nil {
+					continue
+				}
+				if prvePageFileHash != "" && fileHash == prvePageFileHash {
+					break
+				}
+				//如果hash完全一致,认为是最后一页
+				prvePageFileHash = fileHash
+			}
 		}
 	}
 	//结束写入sitemap文件
@@ -382,9 +395,7 @@ func genStaticFileByTheme(contents []Content, categories []*Category, theme stri
 	// 转换为tree结构
 	categories = sliceCategory2Tree(categories)
 
-	writeLlmsTxtFile(categories, contents, llmstxtFile, 2, domain)
-
-	return err
+	return writeLlmsTxtFile(categories, llmstxtFile, 2, domain)
 }
 
 // writeStaticHtml 写入静态html
@@ -493,20 +504,48 @@ func responseBodyBytes(httpurl string, userAgent string) ([]byte, error) {
 	return body, err
 }
 
+// newStaticQueryPage 查询总条数并计算固定批次的分页范围。
+func newStaticQueryPage(ctx context.Context, countFinder *zorm.Finder) (*zorm.Page, error) {
+	page := zorm.NewPage()
+	page.PageSize = staticQueryBatchSize
+	if _, err := zorm.QueryRow(ctx, countFinder, &page.TotalCount); err != nil {
+		return nil, err
+	}
+	page.PageCount = (page.TotalCount + page.PageSize - 1) / page.PageSize
+	return page, nil
+}
+
 // writeLlmsTxtFile 生成 llms.txt 文件
-func writeLlmsTxtFile(categories []*Category, contents []Content, llmstxtFile *os.File, level int, domain string) error {
+func writeLlmsTxtFile(categories []*Category, llmstxtFile *os.File, level int, domain string) error {
+	ctx := context.Background()
 	for i := 0; i < len(categories); i++ {
 		category := categories[i]
-		llmstxtFile.WriteString("\n")
-		llmstxtFile.WriteString(strings.Repeat("#", level) + " " + category.Name + "  \n\n")
-		for j := 0; j < len(contents); j++ {
-			content := contents[j]
-			if content.CategoryID == category.Id {
-				llmstxtFile.WriteString("- [" + content.Title + "](" + domain + funcBasePath() + funcTrimPrefixSlash(content.Id) + ".md): " + content.Description + "\n")
+		if _, err := llmstxtFile.WriteString("\n" + strings.Repeat("#", level) + " " + category.Name + "  \n\n"); err != nil {
+			return err
+		}
+		// 按分类分批查询,避免一次性加载所有文章的标题和描述。
+		countFinder := zorm.NewSelectFinder(tableContentName, "COUNT(*)").Append(" WHERE status<3 AND category_id=?", category.Id)
+		page, err := newStaticQueryPage(ctx, countFinder)
+		if err != nil {
+			return err
+		}
+		finder := zorm.NewSelectFinder(tableContentName, "id,title,description").Append(" WHERE status<3 AND category_id=? ORDER BY status DESC, sortno DESC, id", category.Id)
+		finder.SelectTotalCount = false
+		for ; page.PageNo <= page.PageCount; page.PageNo++ {
+			contents := make([]Content, 0)
+			if err := zorm.Query(ctx, finder, &contents, page); err != nil {
+				return err
+			}
+			for _, content := range contents {
+				if _, err := llmstxtFile.WriteString("- [" + content.Title + "](" + domain + funcBasePath() + funcTrimPrefixSlash(content.Id) + ".md): " + content.Description + "\n"); err != nil {
+					return err
+				}
 			}
 		}
 		if len(category.Leaf) > 0 {
-			writeLlmsTxtFile(category.Leaf, contents, llmstxtFile, level+1, domain)
+			if err := writeLlmsTxtFile(category.Leaf, llmstxtFile, level+1, domain); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
